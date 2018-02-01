@@ -1,0 +1,7 @@
+@font-face {
+	font-family: DIN;
+	src: url(../assets/fonts/DIN.otf);
+}
+body {
+	font-family: DIN;
+}
