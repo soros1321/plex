@@ -1,7 +1,10 @@
 .left-nav-bar {
 	background-color: #082C30;
-	height: 100vh;
 	width: 213px;
+	position: fixed;
+	top: 54px;
+	left: 0;
+	bottom: 0;
 }
 .left-nav-bar .top-nav-item {
 	margin-top: 40px;
@@ -27,9 +30,11 @@
 @media only screen and (max-width: 480px) {
 	.left-nav-bar {
 		background-color: #002326;
-		height: auto;
 		margin-top: -1px;
 		width: 100%;
+		top: auto;
+		left: auto;
+		bottom: auto;
 	}
 	.left-nav-bar .top-nav-item {
 		margin-top: 0px;
