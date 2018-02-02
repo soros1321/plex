@@ -1,11 +1,14 @@
 import * as React from 'react';
-import PageLayout from './layouts/PageLayout';
+import PageLayout from './layouts/PageLayout/PageLayout';
+import RequestLoan from './modules/RequestLoan/RequestLoan';
 
 class App extends React.Component {
 	render() {
 		return (
 			<div>
-				<PageLayout />
+				<PageLayout>
+					<RequestLoan />
+				</PageLayout>
 			</div>
 		);
 	}

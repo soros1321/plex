@@ -1,0 +1,17 @@
+.left-form {
+	padding-right: 20px !important;
+}
+.right-form {
+	background-color: #F0F0F0;
+	padding: 20px !important;
+}
+.right-form select.form-control {
+	background-color: #F0F0F0 !important;
+}
+
+@media only screen and (max-width: 480px) {
+	button#request-order {
+		position: absolute;
+		bottom: 0;
+	}
+}
