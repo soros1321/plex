@@ -128,9 +128,6 @@ label.radio-container input {
 	position: absolute;
 	opacity: 0;
 }
-label.radio-container .hide-label {
-	opacity: 0;
-}
 /* Create a custom radio button */
 label.radio-container .checkmark {
 	position: absolute;
