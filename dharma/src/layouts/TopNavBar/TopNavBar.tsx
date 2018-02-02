@@ -26,8 +26,23 @@ class TopNavBar extends React.Component<{}, TopNavBarState> {
 		this.setState({isOpen: !this.state.isOpen});
 	}
 
-  render() {
-    return (
+	render() {
+		const links = [
+			{url: '/bazaar', display: 'BAZAAR'},
+			{url: '/whitepaper', display: 'WHITEPAPER'},
+			{url: '/blog', display: 'BLOG'},
+			{url: '/github', display: 'GITHUB'},
+			{url: '/chat', display: 'CHAT'},
+			{url: '/twitter', display: 'TWITTER'}
+		];
+		const linkItems = links.map((link) =>
+			(
+				<NavItem key={link.display}>
+					<NavLink href={link.url}>{link.display}</NavLink>
+				</NavItem>
+			)
+		);
+		return (
 			<div className="top-nav-bar">
 				<Navbar color="faded" light={true} expand="md">
 					<NavbarBrand href="/">
@@ -36,29 +51,12 @@ class TopNavBar extends React.Component<{}, TopNavBarState> {
 					<NavbarToggler onClick={this.toggle} />
 					<Collapse isOpen={this.state.isOpen} navbar={true}>
 						<Nav className="ml-auto" navbar={true}>
-							<NavItem>
-								<NavLink href="/bazaar">BAZAAR</NavLink>
-							</NavItem>
-							<NavItem>
-								<NavLink href="/whitepaper">WHITEPAPER</NavLink>
-							</NavItem>
-							<NavItem>
-								<NavLink href="/blog">BLOG</NavLink>
-							</NavItem>
-							<NavItem>
-								<NavLink href="/github">GITHUB</NavLink>
-							</NavItem>
-							<NavItem>
-								<NavLink href="/chat">CHAT</NavLink>
-							</NavItem>
-							<NavItem>
-								<NavLink href="/twitter">TWITTER</NavLink>
-							</NavItem>
+							{linkItems}
 						</Nav>
 					</Collapse>
 				</Navbar>
 			</div>
-    );
+		);
   }
 }
 

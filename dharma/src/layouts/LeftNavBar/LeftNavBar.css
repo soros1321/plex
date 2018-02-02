@@ -45,7 +45,9 @@
 		padding: 15px 0;
 		line-height: 20px;
 	}
-
+	.left-nav-bar .nav-link .title-rest {
+		display: none;
+	}
 	.left-nav-bar .nav-link:hover {
 		margin-left: 0px;
 		margin-bottom: -5px;
