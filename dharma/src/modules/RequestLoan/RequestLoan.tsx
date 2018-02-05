@@ -37,11 +37,12 @@ class RequestLoan extends React.Component<{}, States> {
 			collateral_currency: 'ETH',
 			collateral_lockup_period: CollateralLockupPeriod.Week1,
 			collateral_custom_lockup_period: '',
-			terms: ''
+			terms: 'recommended'
 		};
 		this.handleInputChange = this.handleInputChange.bind(this);
 		this.handleCollateralizedChange = this.handleCollateralizedChange.bind(this);
 		this.handleLockupPeriodChange = this.handleLockupPeriodChange.bind(this);
+		this.handleSubmit = this.handleSubmit.bind(this);
 	}
 
 	handleInputChange(e: React.FormEvent<HTMLInputElement>) {
@@ -95,6 +96,11 @@ class RequestLoan extends React.Component<{}, States> {
 				collateral_custom_lockup_period: ''
 			});
 		}
+	}
+
+	handleSubmit(e: React.FormEvent<HTMLInputElement>) {
+		e.preventDefault();
+		console.log(this.state);
 	}
 
 	render() {
@@ -161,13 +167,13 @@ class RequestLoan extends React.Component<{}, States> {
 									</FormGroup>
 								</FormGroup>
 								<div className="button-container">
-									<Button className="button" id="request-order">Request Order</Button>
+									<Button className="button" type="submit" onClick={this.handleSubmit}>Request Order</Button>
 								</div>
 						</Col>
 						<Col xs="12" md="6" className="right-form">
 							<FormGroup>
 								<Label for="terms">Terms</Label>
-								<Input type="select" name="terms" value={this.state.currency} onChange={this.handleInputChange}>
+								<Input type="select" name="terms" value={this.state.terms} onChange={this.handleInputChange}>
 									<option value="recommended">Recommended</option>
 								</Input>
 							</FormGroup>
