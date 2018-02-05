@@ -19,7 +19,7 @@ class LeftNavBar extends React.Component {
 			(
 				<Col xs="4" md="12" key={link.display} className={index === 0 ? 'top-nav-item' : ''}>
 					<NavItem>
-						<Link to={link.url} className="nav-link">
+						<Link to={link.url} className="nav-link" activeClassName="active">
 							<span className="title-first">
 								{link.display.indexOf(' ') >= 0 ? link.display.substr(0, link.display.indexOf(' ')) : link.display}
 							</span>

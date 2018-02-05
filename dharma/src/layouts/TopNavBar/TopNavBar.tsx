@@ -38,7 +38,7 @@ class TopNavBar extends React.Component<{}, TopNavBarState> {
 		const linkItems = links.map((link) =>
 			(
 				<NavItem key={link.display}>
-					<Link to={link.url} className="nav-link">{link.display}</Link>
+					<Link to={link.url} className="nav-link" activeClassName="active">{link.display}</Link>
 				</NavItem>
 			)
 		);
