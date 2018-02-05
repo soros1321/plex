@@ -1,13 +1,12 @@
 import * as React from 'react';
-import PageLayout from './layouts/PageLayout/PageLayout';
-import RequestLoan from './modules/RequestLoan/RequestLoan';
+import { PageLayout } from './layouts';
 
 class App extends React.Component {
 	render() {
 		return (
 			<div>
 				<PageLayout>
-					<RequestLoan />
+					{this.props.children}
 				</PageLayout>
 			</div>
 		);

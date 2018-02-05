@@ -28,4 +28,4 @@ class Checkbox extends React.Component<CheckboxProps, {}> {
 	}
 }
 
-export default Checkbox;
+export {Checkbox};

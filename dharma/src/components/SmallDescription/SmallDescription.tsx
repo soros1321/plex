@@ -15,4 +15,4 @@ class SmallDescription extends React.Component<Props, {}> {
 	}
 }
 
-export default SmallDescription;
+export {SmallDescription};

@@ -8,9 +8,7 @@ import {
 	Input,
 	Button
 } from 'reactstrap';
-import Header from '../../components/Header/Header';
-import Checkbox from '../../components/Checkbox/Checkbox';
-import SmallDescription from '../../components/SmallDescription/SmallDescription';
+import { Header, Checkbox, SmallDescription } from '../../components';
 import './RequestLoan.css';
 
 interface RequestLoanState {
@@ -139,4 +137,4 @@ class RequestLoan extends React.Component<{}, RequestLoanState> {
 	}
 }
 
-export default RequestLoan;
+export { RequestLoan };

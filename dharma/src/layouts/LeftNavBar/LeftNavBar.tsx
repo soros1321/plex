@@ -3,30 +3,30 @@ import {
 	Row,
 	Col,
 	Nav,
-	NavItem,
-	NavLink
+	NavItem
 } from 'reactstrap';
+import { Link } from 'react-router';
 import './LeftNavBar.css';
 
 class LeftNavBar extends React.Component {
 	render() {
 		const links = [
-			{url: '#', display: 'DASHBOARD'},
-			{url: '#', display: 'REQUEST LOAN'},
-			{url: '#', display: 'FILL LOAN'}
+			{url: '/dashboard', display: 'DASHBOARD'},
+			{url: '/request', display: 'REQUEST LOAN'},
+			{url: '/fill', display: 'FILL LOAN'}
 		];
 		const linkItems = links.map((link, index) =>
 			(
 				<Col xs="4" md="12" key={link.display} className={index === 0 ? 'top-nav-item' : ''}>
 					<NavItem>
-						<NavLink href={link.url}>
+						<Link to={link.url} className="nav-link">
 							<span className="title-first">
 								{link.display.indexOf(' ') >= 0 ? link.display.substr(0, link.display.indexOf(' ')) : link.display}
 							</span>
 							<span className="title-rest">
 								{link.display.indexOf(' ') >= 0 ? link.display.substr(link.display.indexOf(' ')) : ''}
 							</span>
-						</NavLink>
+						</Link>
 					</NavItem>
 				</Col>
 			)

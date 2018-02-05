@@ -5,9 +5,9 @@ import {
 	NavbarToggler,
 	NavbarBrand,
 	Nav,
-	NavItem,
-	NavLink
+	NavItem
 } from 'reactstrap';
+import { Link } from 'react-router';
 import './TopNavBar.css';
 
 interface TopNavBarState {
@@ -38,15 +38,17 @@ class TopNavBar extends React.Component<{}, TopNavBarState> {
 		const linkItems = links.map((link) =>
 			(
 				<NavItem key={link.display}>
-					<NavLink href={link.url}>{link.display}</NavLink>
+					<Link to={link.url} className="nav-link">{link.display}</Link>
 				</NavItem>
 			)
 		);
 		return (
 			<div className="top-nav-bar">
 				<Navbar color="faded" light={true} expand="md">
-					<NavbarBrand href="/">
-						<img src={require('../../assets/img/logo_icon_white.png')} className="brand-logo"/>
+					<NavbarBrand>
+						<Link to="/">
+							<img src={require('../../assets/img/logo_icon_white.png')} className="brand-logo"/>
+						</Link>
 					</NavbarBrand>
 					<NavbarToggler onClick={this.toggle} />
 					<Collapse isOpen={this.state.isOpen} navbar={true}>

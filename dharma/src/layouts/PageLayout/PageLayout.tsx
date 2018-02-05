@@ -24,4 +24,4 @@ class PageLayout extends React.Component {
   }
 }
 
-export default PageLayout;
+export { PageLayout };
