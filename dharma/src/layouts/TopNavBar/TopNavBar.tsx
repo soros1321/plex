@@ -3,11 +3,10 @@ import {
 	Collapse,
 	Navbar,
 	NavbarToggler,
-	NavbarBrand,
 	Nav,
 	NavItem
 } from 'reactstrap';
-import { Link } from 'react-router';
+import { Link, IndexLink } from 'react-router';
 import './TopNavBar.css';
 
 interface TopNavBarState {
@@ -45,11 +44,9 @@ class TopNavBar extends React.Component<{}, TopNavBarState> {
 		return (
 			<div className="top-nav-bar">
 				<Navbar color="faded" light={true} expand="md">
-					<NavbarBrand>
-						<Link to="/">
-							<img src={require('../../assets/img/logo_icon_white.png')} className="brand-logo"/>
-						</Link>
-					</NavbarBrand>
+					<IndexLink to="/" className="navbar-brand">
+						<img src={require('../../assets/img/logo_icon_white.png')} className="brand-logo"/>
+					</IndexLink>
 					<NavbarToggler onClick={this.toggle} />
 					<Collapse isOpen={this.state.isOpen} navbar={true}>
 						<Nav className="ml-auto" navbar={true}>
