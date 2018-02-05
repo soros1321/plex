@@ -1,3 +1,3 @@
-export * from './Checkbox/Checkbox';
+export * from './Form';
 export * from './Header/Header';
 export * from './SmallDescription/SmallDescription';

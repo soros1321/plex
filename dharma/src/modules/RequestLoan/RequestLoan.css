@@ -10,7 +10,7 @@
 .left-form label.radio-container.no-label .checkmark {
 	top: -8px;
 }
-.left-form #request-custom-lockup-period {
+.left-form input[name="collateral-custom-lockup-period"] {
 	width: 120px;
 	display: inline;
 }

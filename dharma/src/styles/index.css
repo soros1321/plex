@@ -39,6 +39,9 @@ select.form-control {
 input.width-95 {
 	width: 95%;
 }
+.form-check {
+	padding-left: 0px;
+}
 /* Checkbox */
 label.checkbox-container {
 	display: block;

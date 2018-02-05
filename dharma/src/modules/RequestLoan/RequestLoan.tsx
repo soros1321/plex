@@ -11,24 +11,90 @@ import {
 import { Header, Checkbox, SmallDescription } from '../../components';
 import './RequestLoan.css';
 
-interface RequestLoanState {
+enum CollateralLockupPeriod {Week1, Day1, Custom}
+
+interface States {
 	amount: string;
+	currency: string;
+	collateralized: boolean;
+	collateral_source: string;
+	collateral_amount: string;
+	collateral_currency: string;
+	collateral_lockup_period: CollateralLockupPeriod;
+	collateral_custom_lockup_period: string;
+	terms: string;
 }
 
-class RequestLoan extends React.Component<{}, RequestLoanState> {
+class RequestLoan extends React.Component<{}, States> {
 	constructor(props: {}) {
 		super(props);
-		this.state = {amount: ''};
+		this.state = {
+			amount: '',
+			currency: 'ETH',
+			collateralized: true,
+			collateral_source: '',
+			collateral_amount: '',
+			collateral_currency: 'ETH',
+			collateral_lockup_period: CollateralLockupPeriod.Week1,
+			collateral_custom_lockup_period: '',
+			terms: ''
+		};
 		this.handleInputChange = this.handleInputChange.bind(this);
+		this.handleCollateralizedChange = this.handleCollateralizedChange.bind(this);
+		this.handleLockupPeriodChange = this.handleLockupPeriodChange.bind(this);
 	}
 
 	handleInputChange(e: React.FormEvent<HTMLInputElement>) {
 		const target = e.currentTarget;
 		const value: string = target.value;
+		switch (target.name) {
+			case 'amount':
+				this.setState({amount: value});
+				break;
+			case 'currency':
+				this.setState({currency: value});
+				break;
+			case 'collateral-source':
+				this.setState({collateral_source: value});
+				break;
+			case 'collateral-amount':
+				this.setState({collateral_amount: value});
+				break;
+			case 'collateral-currency':
+				this.setState({collateral_currency: value});
+				break;
+			case 'collateral-custom-lockup-period':
+				this.setState({collateral_custom_lockup_period: value});
+				break;
+			case 'terms':
+				this.setState({terms: value});
+				break;
+			default:
+				break;
+		}
+	}
+
+	handleCollateralizedChange(checked: boolean) {
 		this.setState({
-			amount: value
+			collateralized: checked,
+			collateral_source: '',
+			collateral_amount: '',
+			collateral_currency: '',
+			collateral_lockup_period: CollateralLockupPeriod.Week1,
+			collateral_custom_lockup_period: ''
 		});
-		console.log(value);
+	}
+
+	handleLockupPeriodChange(e: React.FormEvent<HTMLInputElement>) {
+		const target = e.currentTarget;
+		this.setState({
+			collateral_lockup_period: CollateralLockupPeriod[target.value]
+		});
+		if (CollateralLockupPeriod[target.value] !== '2') {
+			this.setState({
+				collateral_custom_lockup_period: ''
+			});
+		}
 	}
 
 	render() {
@@ -42,10 +108,10 @@ class RequestLoan extends React.Component<{}, RequestLoanState> {
 									<Label for="amount">Amount</Label>
 									<Row>
 										<Col xs="9">
-											<Input type="text" name="amount" id="request-amount" placeholder="0.00" className="width-95" value={this.state.amount} onChange={e => this.handleInputChange(e)} />
+											<Input type="text" name="amount" placeholder="0.00" className="width-95" value={this.state.amount} onChange={this.handleInputChange} />
 										</Col>
 										<Col xs="3">
-											<Input type="select" name="currency" id="request-currency">
+											<Input type="select" name="currency" value={this.state.currency} onChange={this.handleInputChange}>
 												<option value="ETH">ETH</option>
 												<option value="BTC">BTC</option>
 											</Input>
@@ -53,20 +119,20 @@ class RequestLoan extends React.Component<{}, RequestLoanState> {
 									</Row>
 								</FormGroup>
 								<div className="margin-top-30">
-									<Checkbox name="collateralized" prepend="request" label="Collateralized" />
+									<Checkbox name="collateralized" prepend="request" label="Collateralized" onChange={this.handleCollateralizedChange} checked={this.state.collateralized} />
 								</div>
 								<SmallDescription description={'A quick, layman\'s definition of what collateralized means and why it\'s a smart idea goes here.'} />
 								<FormGroup className="margin-top-30">
 									<Label for="collateral">Collateral</Label>
-									<Input type="select" name="collateral-source" id="request-collateral-source">
+									<Input type="select" name="collateral-source" disabled={!this.state.collateralized} onChange={this.handleInputChange}>
 										<option value="">Select your source of collateral</option>
 									</Input>
 									<Row className="margin-top-10">
 										<Col xs="9">
-											<Input type="text" name="collateral-amount" id="request-collateral-amount" placeholder="Amount of collateral" className="width-95" />
+											<Input type="text" name="collateral-amount" placeholder="Amount of collateral" className="width-95" disabled={!this.state.collateralized} onChange={this.handleInputChange}/>
 										</Col>
 										<Col xs="3">
-											<Input type="select" name="collateral-currency" id="request-collateral-currency">
+											<Input type="select" name="collateral-currency" disabled={!this.state.collateralized} onChange={this.handleInputChange}>
 												<option value="ETH">ETH</option>
 												<option value="BTC">BTC</option>
 											</Input>
@@ -78,20 +144,20 @@ class RequestLoan extends React.Component<{}, RequestLoanState> {
 										Lockup period:
 										<Label className="radio-container" check={true}>
 											1 Week
-											<input type="radio" name="lockup-period" id="request-lockup-period-1week" value="1week" />{' '}
+											<input type="radio" name="lockup-period" value="Week1" onChange={this.handleLockupPeriodChange} checked={this.state.collateralized && this.state.collateral_lockup_period === CollateralLockupPeriod.Week1 ? true : false} disabled={!this.state.collateralized} />{' '}
 											<span className="checkmark" />
 										</Label>
 										<Label className="radio-container" check={false}>
 											1 Day
-											<input type="radio" name="lockup-period" id="request-lockup-period-1day" value="1day" />{' '}
+											<input type="radio" name="lockup-period" value="Day1" onChange={this.handleLockupPeriodChange} checked={this.state.collateralized && this.state.collateral_lockup_period === CollateralLockupPeriod.Day1 ? true : false} disabled={!this.state.collateralized} />{' '}
 											<span className="checkmark" />
 										</Label>
 										<Label className="radio-container no-label" check={false}>
 											<span className="no-label">Custom</span>
-											<input type="radio" name="lockup-period" id="request-lockup-period-custom" value="custom" />{' '}
+											<input type="radio" name="lockup-period" value="Custom" onChange={this.handleLockupPeriodChange} checked={this.state.collateralized && this.state.collateral_lockup_period === CollateralLockupPeriod.Custom ? true : false} disabled={!this.state.collateralized}  />{' '}
 											<span className="checkmark" />
 										</Label>
-										<Input type="text" name="custom-lockup-period" id="request-custom-lockup-period" placeholder="X Weeks" />
+										<Input type="text" name="collateral-custom-lockup-period" value={this.state.collateral_custom_lockup_period} placeholder="X Weeks" onChange={this.handleInputChange} disabled={!this.state.collateralized || this.state.collateral_lockup_period !== CollateralLockupPeriod.Custom}/>
 									</FormGroup>
 								</FormGroup>
 								<div className="button-container">
@@ -101,7 +167,7 @@ class RequestLoan extends React.Component<{}, RequestLoanState> {
 						<Col xs="12" md="6" className="right-form">
 							<FormGroup>
 								<Label for="terms">Terms</Label>
-								<Input type="select" name="terms" id="request-terms">
+								<Input type="select" name="terms" value={this.state.currency} onChange={this.handleInputChange}>
 									<option value="recommended">Recommended</option>
 								</Input>
 							</FormGroup>
