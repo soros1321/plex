@@ -37,7 +37,7 @@ class ConfirmationModal extends React.Component<Props, {}> {
 	render() {
 		return (
 			<div>
-				<Modal isOpen={this.props.modal} toggle={this.handleToggle}>
+				<Modal isOpen={this.props.modal} toggle={this.handleToggle} keyboard={false} backdrop={'static'}>
 					<ModalHeader toggle={this.handleToggle}>{this.props.title}</ModalHeader>
 					<ModalBody>
 						{this.props.content}

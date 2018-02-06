@@ -7,6 +7,7 @@ import {
 import { Header, ConfirmationModal } from '../../components';
 import { Link } from 'react-router';
 import { SuccessModal } from './SuccessModal';
+import { browserHistory } from 'react-router';
 import './FillLoanEntered.css';
 
 interface Props {
@@ -50,6 +51,9 @@ class FillLoanEntered extends React.Component<Props, States> {
 			confirmationModal: false,
 			successModal: !this.state.successModal
 		});
+		if (this.state.successModal) {
+			browserHistory.push('/dashboard');
+		}
 	}
 
 	render() {

@@ -9,6 +9,7 @@ import {
 	Button
 } from 'reactstrap';
 import { Header, Checkbox, SmallDescription, ConfirmationModal } from '../../components';
+import { browserHistory } from 'react-router';
 import './RequestLoan.css';
 
 enum CollateralLockupPeriod {Week1, Day1, Custom}
@@ -108,7 +109,7 @@ class RequestLoan extends React.Component<{}, States> {
 	}
 
 	successModalToggle() {
-		console.log('here');
+		browserHistory.push('/request/success');
 	}
 
 	render() {

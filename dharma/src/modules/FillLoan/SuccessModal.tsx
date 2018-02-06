@@ -26,7 +26,7 @@ class SuccessModal extends React.Component<Props, {}> {
 	render() {
 		return (
 			<div>
-				<Modal isOpen={this.props.modal} toggle={this.handleToggle}>
+				<Modal isOpen={this.props.modal} toggle={this.handleToggle} keyboard={false} backdrop={'static'}>
 					<ModalHeader toggle={this.handleToggle}>Filled</ModalHeader>
 					<ModalBody>
 						You filled debt order {this.props.requestId}. You will find this order at the top of your dashboard.
