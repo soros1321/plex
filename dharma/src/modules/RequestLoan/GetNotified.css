@@ -19,19 +19,15 @@
 }
 .get-notified-form .button {
 	min-width: auto;
+	width: 100%;
 }
 
 @media only screen and (max-width: 480px) {
 	.get-notified-form {
 		width: 100%;
 	}
-
 	.get-notified-form input[name="email"] {
 		width: 100%;
 		margin-bottom: 20px;
-	}
-	.get-notified-form .button {
-		min-width: auto;
-		width: 100%;
 	}
 }
