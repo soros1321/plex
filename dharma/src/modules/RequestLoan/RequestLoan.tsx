@@ -8,7 +8,7 @@ import {
 	Input,
 	Button
 } from 'reactstrap';
-import { Header, Checkbox, SmallDescription } from '../../components';
+import { Header, Checkbox, SmallDescription, ConfirmationModal } from '../../components';
 import './RequestLoan.css';
 
 enum CollateralLockupPeriod {Week1, Day1, Custom}
@@ -23,6 +23,7 @@ interface States {
 	collateralLockupPeriod: CollateralLockupPeriod;
 	collateralCustomLockupPeriod: string;
 	terms: string;
+	confirmationModal: boolean;
 }
 
 class RequestLoan extends React.Component<{}, States> {
@@ -37,12 +38,14 @@ class RequestLoan extends React.Component<{}, States> {
 			collateralCurrency: 'ETH',
 			collateralLockupPeriod: CollateralLockupPeriod.Week1,
 			collateralCustomLockupPeriod: '',
-			terms: 'recommended'
+			terms: 'recommended',
+			confirmationModal: false
 		};
 		this.handleInputChange = this.handleInputChange.bind(this);
 		this.handleCollateralizedChange = this.handleCollateralizedChange.bind(this);
 		this.handleLockupPeriodChange = this.handleLockupPeriodChange.bind(this);
-		this.handleSubmit = this.handleSubmit.bind(this);
+		this.confirmationModalToggle = this.confirmationModalToggle.bind(this);
+		this.successModalToggle = this.successModalToggle.bind(this);
 	}
 
 	handleInputChange(e: React.FormEvent<HTMLInputElement>) {
@@ -98,9 +101,14 @@ class RequestLoan extends React.Component<{}, States> {
 		}
 	}
 
-	handleSubmit(e: React.FormEvent<HTMLInputElement>) {
-		e.preventDefault();
-		console.log(this.state);
+	confirmationModalToggle() {
+		this.setState({
+			confirmationModal: !this.state.confirmationModal
+		});
+	}
+
+	successModalToggle() {
+		console.log('here');
 	}
 
 	render() {
@@ -167,7 +175,7 @@ class RequestLoan extends React.Component<{}, States> {
 									</FormGroup>
 								</FormGroup>
 								<div className="button-container">
-									<Button className="button" type="submit" onClick={this.handleSubmit}>Request Order</Button>
+									<Button className="button" onClick={this.confirmationModalToggle}>Request Order</Button>
 								</div>
 						</Col>
 						<Col xs="12" md="6" className="right-form">
@@ -204,6 +212,7 @@ class RequestLoan extends React.Component<{}, States> {
 						</Col>
 					</Row>
 				</Form>
+				<ConfirmationModal modal={this.state.confirmationModal} title="Please confirm" content={`You are requesting a loan of ${this.state.amount} ${this.state.currency} using your ${this.state.collateralSource} as collateral per the terms in the contract on the previous page. Are you sure you want to do this?`} onToggle={this.confirmationModalToggle} onSubmit={this.successModalToggle} closeButtonText="&#8592; Modify Request" submitButtonText="Complete Request" />
 			</div>
 		);
 	}

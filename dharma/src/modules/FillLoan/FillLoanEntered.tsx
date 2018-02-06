@@ -4,9 +4,8 @@ import {
 	Col,
 	Button
 } from 'reactstrap';
-import { Header } from '../../components';
+import { Header, ConfirmationModal } from '../../components';
 import { Link } from 'react-router';
-import { ConfirmationModal } from './ConfirmationModal';
 import { SuccessModal } from './SuccessModal';
 import './FillLoanEntered.css';
 
@@ -110,7 +109,7 @@ class FillLoanEntered extends React.Component<Props, States> {
 						<Button className="button width-95" onClick={this.confirmationModalToggle}>Fill Loan</Button>
 					</Col>
 				</Row>
-				<ConfirmationModal modal={this.state.confirmationModal} onToggle={this.confirmationModalToggle} requestId={this.props.requestId} amount={this.props.amount} currency={this.props.currency} onSubmit={this.successModalToggle} />
+				<ConfirmationModal modal={this.state.confirmationModal} title="Please confirm" content={`You will fill this debt order ${this.props.requestId}. This operation will debit ${this.props.amount} ${this.props.currency} from your account.`} onToggle={this.confirmationModalToggle} onSubmit={this.successModalToggle} closeButtonText="Cancel" submitButtonText="Fill Order" />
 				<SuccessModal modal={this.state.successModal} onToggle={this.successModalToggle} requestId={this.props.requestId} />
 			</div>
 		);

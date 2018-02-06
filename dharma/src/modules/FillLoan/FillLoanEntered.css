@@ -23,23 +23,10 @@
 	font-weight: bold;
 	line-height: 25px;
 }
-.row.button-container {
-	width: 600px;
-}
-.row .width-95.button {
-	width: 95%;
-}
 @media only screen and (max-width: 480px) {
 	.row.loan-info-container {
 		padding: 15px;
 		background-color: #F5F5F5;
 		width: 100%;
-	}
-	.row.button-container {
-		width: 100%;
-	}
-	.row .width-95.button {
-		width: 100%;
-		margin-bottom: 10px;
 	}
 }

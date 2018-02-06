@@ -205,6 +205,12 @@ label.radio-container .checkmark:after {
 	margin-left: 0;
 	margin-right: 0;
 }
+.row.button-container {
+	width: 600px;
+}
+.row .width-95.button {
+	width: 95%;
+}
 .align-right {
 	text-align: right;
 }
@@ -225,6 +231,9 @@ label.radio-container .checkmark:after {
 	font-weight: 900;
 	line-height: 50px;
 }
+.modal .modal-header .close {
+	display: none;
+}
 .modal .modal-footer {
 	border-top: 0;
 }
@@ -237,5 +246,11 @@ label.radio-container .checkmark:after {
 		font-weight: 500;
 		line-height: 30px;
 	}
-
+	.row.button-container {
+		width: 100%;
+	}
+	.row .width-95.button {
+		width: 100%;
+		margin-bottom: 10px;
+	}
 }
