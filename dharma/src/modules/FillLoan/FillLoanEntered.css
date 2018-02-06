@@ -1,0 +1,45 @@
+.row.loan-info-container {
+	padding: 20px;
+	background-color: #F5F5F5;
+	width: 600px;
+}
+.loan-info-container .info-item {
+	margin-bottom: 30px;
+}
+.loan-info-container .info-item .title {
+	font-family: DIN-Bold;
+	opacity: 0.5;
+	color: #002326;
+	font-size: 15px;
+	font-weight: bold;
+	line-height: 25px;
+}
+.loan-info-container .info-item .content {
+	margin-top: 5px;
+	font-family: DIN-Bold;
+	opacity: 1;
+	color: #002326;
+	font-size: 18px;
+	font-weight: bold;
+	line-height: 25px;
+}
+.row.button-container {
+	width: 600px;
+}
+.row .width-95.button {
+	width: 95%;
+}
+@media only screen and (max-width: 480px) {
+	.row.loan-info-container {
+		padding: 15px;
+		background-color: #F5F5F5;
+		width: 100%;
+	}
+	.row.button-container {
+		width: 100%;
+	}
+	.row .width-95.button {
+		width: 100%;
+		margin-bottom: 10px;
+	}
+}

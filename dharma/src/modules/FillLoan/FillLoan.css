@@ -1,0 +1,19 @@
+.fill-loan-form {
+	width: 600px;
+}
+.instructions {
+	margin-top: 50px;
+}
+.instructions .instructions-link {
+	margin: 10px 0;
+}
+.instructions .instructions-link a {
+	font-family: DIN-Bold;
+	color: #002326;
+	font-size: 15px;
+}
+@media only screen and (max-width: 480px) {
+	.fill-loan-form {
+		width: 100%;
+	}
+}

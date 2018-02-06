@@ -17,11 +17,11 @@ interface States {
 	amount: string;
 	currency: string;
 	collateralized: boolean;
-	collateral_source: string;
-	collateral_amount: string;
-	collateral_currency: string;
-	collateral_lockup_period: CollateralLockupPeriod;
-	collateral_custom_lockup_period: string;
+	collateralSource: string;
+	collateralAmount: string;
+	collateralCurrency: string;
+	collateralLockupPeriod: CollateralLockupPeriod;
+	collateralCustomLockupPeriod: string;
 	terms: string;
 }
 
@@ -32,11 +32,11 @@ class RequestLoan extends React.Component<{}, States> {
 			amount: '',
 			currency: 'ETH',
 			collateralized: true,
-			collateral_source: '',
-			collateral_amount: '',
-			collateral_currency: 'ETH',
-			collateral_lockup_period: CollateralLockupPeriod.Week1,
-			collateral_custom_lockup_period: '',
+			collateralSource: '',
+			collateralAmount: '',
+			collateralCurrency: 'ETH',
+			collateralLockupPeriod: CollateralLockupPeriod.Week1,
+			collateralCustomLockupPeriod: '',
 			terms: 'recommended'
 		};
 		this.handleInputChange = this.handleInputChange.bind(this);
@@ -56,16 +56,16 @@ class RequestLoan extends React.Component<{}, States> {
 				this.setState({currency: value});
 				break;
 			case 'collateral-source':
-				this.setState({collateral_source: value});
+				this.setState({collateralSource: value});
 				break;
 			case 'collateral-amount':
-				this.setState({collateral_amount: value});
+				this.setState({collateralAmount: value});
 				break;
 			case 'collateral-currency':
-				this.setState({collateral_currency: value});
+				this.setState({collateralCurrency: value});
 				break;
 			case 'collateral-custom-lockup-period':
-				this.setState({collateral_custom_lockup_period: value});
+				this.setState({collateralCustomLockupPeriod: value});
 				break;
 			case 'terms':
 				this.setState({terms: value});
@@ -78,22 +78,22 @@ class RequestLoan extends React.Component<{}, States> {
 	handleCollateralizedChange(checked: boolean) {
 		this.setState({
 			collateralized: checked,
-			collateral_source: '',
-			collateral_amount: '',
-			collateral_currency: '',
-			collateral_lockup_period: CollateralLockupPeriod.Week1,
-			collateral_custom_lockup_period: ''
+			collateralSource: '',
+			collateralAmount: '',
+			collateralCurrency: '',
+			collateralLockupPeriod: CollateralLockupPeriod.Week1,
+			collateralCustomLockupPeriod: ''
 		});
 	}
 
 	handleLockupPeriodChange(e: React.FormEvent<HTMLInputElement>) {
 		const target = e.currentTarget;
 		this.setState({
-			collateral_lockup_period: CollateralLockupPeriod[target.value]
+			collateralLockupPeriod: CollateralLockupPeriod[target.value]
 		});
 		if (CollateralLockupPeriod[target.value] !== '2') {
 			this.setState({
-				collateral_custom_lockup_period: ''
+				collateralCustomLockupPeriod: ''
 			});
 		}
 	}
@@ -150,20 +150,20 @@ class RequestLoan extends React.Component<{}, States> {
 										Lockup period:
 										<Label className="radio-container" check={true}>
 											1 Week
-											<input type="radio" name="lockup-period" value="Week1" onChange={this.handleLockupPeriodChange} checked={this.state.collateralized && this.state.collateral_lockup_period === CollateralLockupPeriod.Week1 ? true : false} disabled={!this.state.collateralized} />{' '}
+											<input type="radio" name="lockup-period" value="Week1" onChange={this.handleLockupPeriodChange} checked={this.state.collateralized && this.state.collateralLockupPeriod === CollateralLockupPeriod.Week1 ? true : false} disabled={!this.state.collateralized} />{' '}
 											<span className="checkmark" />
 										</Label>
 										<Label className="radio-container" check={false}>
 											1 Day
-											<input type="radio" name="lockup-period" value="Day1" onChange={this.handleLockupPeriodChange} checked={this.state.collateralized && this.state.collateral_lockup_period === CollateralLockupPeriod.Day1 ? true : false} disabled={!this.state.collateralized} />{' '}
+											<input type="radio" name="lockup-period" value="Day1" onChange={this.handleLockupPeriodChange} checked={this.state.collateralized && this.state.collateralLockupPeriod === CollateralLockupPeriod.Day1 ? true : false} disabled={!this.state.collateralized} />{' '}
 											<span className="checkmark" />
 										</Label>
 										<Label className="radio-container no-label" check={false}>
 											<span className="no-label">Custom</span>
-											<input type="radio" name="lockup-period" value="Custom" onChange={this.handleLockupPeriodChange} checked={this.state.collateralized && this.state.collateral_lockup_period === CollateralLockupPeriod.Custom ? true : false} disabled={!this.state.collateralized}  />{' '}
+											<input type="radio" name="lockup-period" value="Custom" onChange={this.handleLockupPeriodChange} checked={this.state.collateralized && this.state.collateralLockupPeriod === CollateralLockupPeriod.Custom ? true : false} disabled={!this.state.collateralized}  />{' '}
 											<span className="checkmark" />
 										</Label>
-										<Input type="text" name="collateral-custom-lockup-period" value={this.state.collateral_custom_lockup_period} placeholder="X Weeks" onChange={this.handleInputChange} disabled={!this.state.collateralized || this.state.collateral_lockup_period !== CollateralLockupPeriod.Custom}/>
+										<Input type="text" name="collateral-custom-lockup-period" value={this.state.collateralCustomLockupPeriod} placeholder="X Weeks" onChange={this.handleInputChange} disabled={!this.state.collateralized || this.state.collateralLockupPeriod !== CollateralLockupPeriod.Custom}/>
 									</FormGroup>
 								</FormGroup>
 								<div className="button-container">

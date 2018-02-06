@@ -1,7 +1,13 @@
 import * as React from 'react';
 import { Router, Route, IndexRoute, browserHistory } from 'react-router';
 import App from '../App';
-import { Welcome, RequestLoan, DefaultContent } from '../modules';
+import {
+	Welcome,
+	RequestLoan,
+	FillLoan,
+	FillLoanEntered,
+	DefaultContent
+} from '../modules';
 
 export const AppRouter: React.StatelessComponent<{}> = () => {
 	return (
@@ -17,7 +23,8 @@ export const AppRouter: React.StatelessComponent<{}> = () => {
 				<Route path="/twitter" component={DefaultContent} />
 				<Route path="/dashboard" component={DefaultContent} />
 				<Route path="/request" component={RequestLoan} />
-				<Route path="/fill" component={DefaultContent} />
+				<Route path="/fill" component={FillLoan} />
+				<Route path="/fill/entered" component={FillLoanEntered} />
 			</Route>
 		</Router>
 	);
