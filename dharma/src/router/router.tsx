@@ -3,14 +3,13 @@ import { Router, Route, IndexRoute, browserHistory } from 'react-router';
 import App from '../App';
 import {
 	Welcome,
-	RequestLoan,
 	RequestLoanForm,
 	RequestLoanSuccess,
-	FillLoan,
 	FillLoanEmpty,
 	FillLoanEntered,
 	DefaultContent
 } from '../modules';
+import { ParentContainer } from '../layouts';
 
 export const AppRouter: React.StatelessComponent<{}> = () => {
 	return (
@@ -24,11 +23,11 @@ export const AppRouter: React.StatelessComponent<{}> = () => {
 				<Route path="/chat" component={DefaultContent} />
 				<Route path="/twitter" component={DefaultContent} />
 				<Route path="/dashboard" component={DefaultContent} />
-				<Route path="/request" component={RequestLoan}>
+				<Route path="/request" component={ParentContainer}>
 					<IndexRoute component={RequestLoanForm} />
 					<Route path="success" component={RequestLoanSuccess} />
 				</Route>
-				<Route path="/fill" component={FillLoan}>
+				<Route path="/fill" component={ParentContainer}>
 					<IndexRoute component={FillLoanEmpty} />
 					<Route path="entered" component={FillLoanEntered} />
 				</Route>
