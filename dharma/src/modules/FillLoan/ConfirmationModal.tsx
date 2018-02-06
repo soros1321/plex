@@ -15,16 +15,22 @@ interface Props {
 	amount: string;
 	currency: string;
 	onToggle: () => void;
+	onSubmit: () => void;
 }
 
 class ConfirmationModal extends React.Component<Props, {}> {
 	constructor (props: Props) {
 		super(props);
 		this.handleToggle = this.handleToggle.bind(this);
+		this.handleSubmit = this.handleSubmit.bind(this);
 	}
 
 	handleToggle() {
 		this.props.onToggle();
+	}
+
+	handleSubmit() {
+		this.props.onSubmit();
 	}
 
 	render() {
@@ -41,7 +47,7 @@ class ConfirmationModal extends React.Component<Props, {}> {
 								<Button className="button secondary width-95" onClick={this.handleToggle}>Cancel</Button>
 							</Col>
 							<Col xs="12" md="6" className="align-right">
-								<Button className="button width-95" onClick={this.handleToggle}>Fill Order</Button>
+								<Button className="button width-95" onClick={this.handleSubmit}>Fill Order</Button>
 							</Col>
 						</Row>
 					</ModalFooter>

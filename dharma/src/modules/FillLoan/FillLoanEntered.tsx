@@ -7,6 +7,7 @@ import {
 import { Header } from '../../components';
 import { Link } from 'react-router';
 import { ConfirmationModal } from './ConfirmationModal';
+import { SuccessModal } from './SuccessModal';
 import './FillLoanEntered.css';
 
 interface Props {
@@ -23,7 +24,8 @@ interface Props {
 }
 
 interface States {
-	modal: boolean;
+	confirmationModal: boolean;
+	successModal: boolean;
 }
 
 class FillLoanEntered extends React.Component<Props, States> {
@@ -31,14 +33,23 @@ class FillLoanEntered extends React.Component<Props, States> {
 		super(props);
 
 		this.state = {
-			modal: false
+			confirmationModal: false,
+			successModal: false
 		};
-		this.handleToggle = this.handleToggle.bind(this);
+		this.confirmationModalToggle = this.confirmationModalToggle.bind(this);
+		this.successModalToggle = this.successModalToggle.bind(this);
 	}
 
-	handleToggle() {
+	confirmationModalToggle() {
 		this.setState({
-			modal: !this.state.modal
+			confirmationModal: !this.state.confirmationModal
+		});
+	}
+
+	successModalToggle() {
+		this.setState({
+			confirmationModal: false,
+			successModal: !this.state.successModal
 		});
 	}
 
@@ -96,10 +107,11 @@ class FillLoanEntered extends React.Component<Props, States> {
 						</Link>
 					</Col>
 					<Col xs="12" md="6" className="align-right">
-						<Button className="button width-95" onClick={this.handleToggle}>Fill Loan</Button>
+						<Button className="button width-95" onClick={this.confirmationModalToggle}>Fill Loan</Button>
 					</Col>
 				</Row>
-				<ConfirmationModal modal={this.state.modal} onToggle={this.handleToggle} requestId={this.props.requestId} amount={this.props.amount} currency={this.props.currency} />
+				<ConfirmationModal modal={this.state.confirmationModal} onToggle={this.confirmationModalToggle} requestId={this.props.requestId} amount={this.props.amount} currency={this.props.currency} onSubmit={this.successModalToggle} />
+				<SuccessModal modal={this.state.successModal} onToggle={this.successModalToggle} requestId={this.props.requestId} />
 			</div>
 		);
 	}

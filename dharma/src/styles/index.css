@@ -228,6 +228,9 @@ label.radio-container .checkmark:after {
 .modal .modal-footer {
 	border-top: 0;
 }
+.modal .modal-footer.center {
+	justify-content: center;
+}
 @media only screen and (max-width: 480px) {
 	h1 {
 		font-size: 30px;
