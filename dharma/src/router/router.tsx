@@ -14,7 +14,6 @@ export const AppRouter: React.StatelessComponent<{}> = () => {
 		<Router history={browserHistory}>
 			<Route path="/" component={App} >
 				<IndexRoute component={Welcome} />
-				<Route path="/" component={Welcome} />
 				<Route path="/bazaar" component={DefaultContent} />
 				<Route path="/whitepaper" component={DefaultContent} />
 				<Route path="/blog" component={DefaultContent} />

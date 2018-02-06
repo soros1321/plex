@@ -2,14 +2,11 @@ import * as React from 'react';
 import {
 	Row,
 	Col,
-	Button,
-	Modal,
-	ModalHeader,
-	ModalBody,
-	ModalFooter
+	Button
 } from 'reactstrap';
 import { Header } from '../../components';
 import { Link } from 'react-router';
+import { ConfirmationModal } from './ConfirmationModal';
 import './FillLoanEntered.css';
 
 interface Props {
@@ -102,22 +99,7 @@ class FillLoanEntered extends React.Component<Props, States> {
 						<Button className="button width-95" onClick={this.handleToggle}>Fill Loan</Button>
 					</Col>
 				</Row>
-				<Modal isOpen={this.state.modal} toggle={this.handleToggle}>
-					<ModalHeader toggle={this.handleToggle}>Please confirm</ModalHeader>
-					<ModalBody>
-						You will fill this debt order {this.props.requestId}. This operation will debit {this.props.amount} {this.props.currency} from your account.
-					</ModalBody>
-					<ModalFooter>
-						<Row className="button-container">
-							<Col xs="12" md="6">
-								<Button className="button secondary width-95" onClick={this.handleToggle}>Cancel</Button>
-							</Col>
-							<Col xs="12" md="6" className="align-right">
-								<Button className="button width-95" onClick={this.handleToggle}>Fill Order</Button>
-							</Col>
-						</Row>
-					</ModalFooter>
-				</Modal>
+				<ConfirmationModal modal={this.state.modal} onToggle={this.handleToggle} requestId={this.props.requestId} amount={this.props.amount} currency={this.props.currency} />
 			</div>
 		);
 	}
