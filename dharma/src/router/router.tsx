@@ -7,7 +7,8 @@ import {
 	RequestLoanSuccess,
 	FillLoanEmpty,
 	FillLoanEntered,
-	DefaultContent
+	DefaultContent,
+	Dashboard
 } from '../modules';
 import { ParentContainer } from '../layouts';
 
@@ -22,7 +23,7 @@ export const AppRouter: React.StatelessComponent<{}> = () => {
 				<Route path="/github" component={DefaultContent} />
 				<Route path="/chat" component={DefaultContent} />
 				<Route path="/twitter" component={DefaultContent} />
-				<Route path="/dashboard" component={DefaultContent} />
+				<Route path="/dashboard" component={Dashboard} />
 				<Route path="/request" component={ParentContainer}>
 					<IndexRoute component={RequestLoanForm} />
 					<Route path="success" component={RequestLoanSuccess} />
