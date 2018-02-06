@@ -41,12 +41,14 @@
 @media only screen and (max-width: 480px) {
 	.share-request-url-container {
 		width: 100%;
-		margin-top: 20px;
 	}
 	.share-request-url-container .share-buttons-container {
 		text-align: center;
 	}
-	.share-request-url-container input[name="request-url"] {
+	.share-request-url-container .form-group {
+		margin-left: 0;
+	}
+	.share-request-url-container .form-group input[name="request-url"] {
 		width: 100%;
 		margin-bottom: 20px;
 	}

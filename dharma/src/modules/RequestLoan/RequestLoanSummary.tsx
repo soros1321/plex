@@ -66,7 +66,7 @@ class RequestLoanSummary extends React.Component<Props, {}> {
 
 		return (
 			<div className="request-loan-summary-container">
-				<Label>Loan request summary</Label>
+				<Label className="title">Loan request summary</Label>
 				<Row className="gray">
 					<Row>
 						<Col xs="12" md="6">
@@ -76,8 +76,9 @@ class RequestLoanSummary extends React.Component<Props, {}> {
 							{rightInfoItemRows}
 						</Col>
 					</Row>
-					<FormGroup>
-						<Input type="textarea" name="request-url" value={this.props.summaryJSON} readOnly={true} />
+					<FormGroup className="summary-json-container">
+						<Label for="summary-json">JSON</Label>
+						<Input type="textarea" name="summary-json" value={this.props.summaryJSON} readOnly={true} />
 						<Button className="button" onClick={this.handleCopyClipboard}>Copy</Button>
 					</FormGroup>
 				</Row>

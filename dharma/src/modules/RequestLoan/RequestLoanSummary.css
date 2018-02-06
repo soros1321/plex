@@ -2,7 +2,7 @@
 	width: 600px;
 	margin-top: 30px;
 }
-.request-loan-summary-container label {
+.request-loan-summary-container label.title {
 	text-transform: none;
 	color: #002326;
 	font-family: DIN;
@@ -34,4 +34,30 @@
 	font-weight: bold;
 	line-height: 25px;
 }
-
+.request-loan-summary-container .summary-json-container {
+	width: 100%;
+	position: relative;
+}
+.request-loan-summary-container textarea[name="summary-json"] {
+	width: 100%;
+	min-height: 150px;
+}
+.request-loan-summary-container .button {
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	min-width: auto;
+}
+@media only screen and (max-width: 480px) {
+	.request-loan-summary-container {
+		width: 100%;
+		margin-top: 45px;
+	}
+	.request-loan-summary-container .button {
+		margin-top: 20px;
+		position: relative;
+		right: auto;
+		bottom: auto;
+		width: 100%;
+	}
+}
