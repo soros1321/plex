@@ -4,6 +4,7 @@ import App from '../App';
 import {
 	Welcome,
 	RequestLoan,
+	RequestLoanSuccess,
 	FillLoan,
 	FillLoanEntered,
 	DefaultContent
@@ -22,6 +23,7 @@ export const AppRouter: React.StatelessComponent<{}> = () => {
 				<Route path="/twitter" component={DefaultContent} />
 				<Route path="/dashboard" component={DefaultContent} />
 				<Route path="/request" component={RequestLoan} />
+				<Route path="/request/success" component={RequestLoanSuccess} />
 				<Route path="/fill" component={FillLoan} />
 				<Route path="/fill/entered" component={FillLoanEntered} />
 			</Route>
