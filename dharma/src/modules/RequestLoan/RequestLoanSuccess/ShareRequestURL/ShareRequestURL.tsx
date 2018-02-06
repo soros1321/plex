@@ -32,9 +32,9 @@ class ShareRequestURL extends React.Component<Props, {}> {
 
 	render() {
 		const socialButtons = [
-			{name: 'twitter', imgURL: require('../../assets/img/logo_twitter.png')},
-			{name: 'facebook', imgURL: require('../../assets/img/logo_facebook.png')},
-			{name: 'instagram', imgURL: require('../../assets/img/logo_instagram.png')}
+			{name: 'twitter', imgURL: require('../../../../assets/img/logo_twitter.png')},
+			{name: 'facebook', imgURL: require('../../../../assets/img/logo_facebook.png')},
+			{name: 'instagram', imgURL: require('../../../../assets/img/logo_instagram.png')}
 		];
 		const socialButtonsRow = socialButtons.map((social) => (
 			<div className="share-button" key={social.name} onClick={(e) => this.handleShareSocial(social.name, e)}>

@@ -8,7 +8,7 @@ import {
 	Input,
 	Button
 } from 'reactstrap';
-import { Header, Checkbox, SmallDescription, ConfirmationModal } from '../../components';
+import { Header, Checkbox, SmallDescription, ConfirmationModal } from '../../../components';
 import { browserHistory } from 'react-router';
 import './RequestLoanForm.css';
 

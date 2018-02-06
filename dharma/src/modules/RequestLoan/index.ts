@@ -1,2 +1,2 @@
-export * from './RequestLoanForm';
-export * from './RequestLoanSuccess';
+export * from './RequestLoanForm/RequestLoanForm';
+export * from './RequestLoanSuccess/RequestLoanSuccess';

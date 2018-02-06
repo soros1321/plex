@@ -4,9 +4,9 @@ import {
 	Col,
 	Button
 } from 'reactstrap';
-import { Header, ConfirmationModal } from '../../components';
+import { Header, ConfirmationModal } from '../../../components';
 import { Link } from 'react-router';
-import { SuccessModal } from './SuccessModal';
+import { SuccessModal } from './SuccessModal/SuccessModal';
 import { browserHistory } from 'react-router';
 import './FillLoanEntered.css';
 
