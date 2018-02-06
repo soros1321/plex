@@ -2,13 +2,25 @@ import * as React from 'react';
 import { Header } from '../../components';
 import { GetNotified } from './GetNotified';
 import { ShareRequestURL } from './ShareRequestURL';
+import { RequestLoanSummary } from './RequestLoanSummary';
+
+interface Props {
+	requestURL: string;
+	amount: string;
+	description: string;
+	principle: string;
+	interest: string;
+	repaymentDate: string;
+	repaymentTerms: string;
+	summaryJSON: string;
+}
 
 interface States {
 	email: string;
 }
 
-class RequestLoanSuccess extends React.Component<{}, States> {
-	constructor(props: {}) {
+class RequestLoanSuccess extends React.Component<Props, States> {
+	constructor(props: Props) {
 		super(props);
 		this.state = {
 			email: ''
@@ -40,7 +52,17 @@ class RequestLoanSuccess extends React.Component<{}, States> {
 			<div>
 				<Header title={'Next, share your loan request with lenders'} description={'Get lenders to fill your loan request by directing them to your request URL.'} />
 				<GetNotified email={this.state.email} onInputChange={this.handleEmailChange} onFormSubmit={this.handleGetNotified} />
-				<ShareRequestURL requestURL="dharma.io/aUAFSDKjsdf" onCopyClipboard={this.handleCopyClipboard} onShareSocial={this.handleShareSocial} />
+				<ShareRequestURL requestURL={this.props.requestURL} onCopyClipboard={this.handleCopyClipboard} onShareSocial={this.handleShareSocial} />
+				<RequestLoanSummary
+					amount={this.props.amount}
+					description={this.props.description}
+					principle={this.props.principle}
+					interest={this.props.interest}
+					repaymentDate={this.props.repaymentDate}
+					repaymentTerms={this.props.repaymentTerms}
+					summaryJSON={this.props.summaryJSON}
+					onCopyClipboard={this.handleCopyClipboard}
+				/>
 			</div>
 		);
 	}

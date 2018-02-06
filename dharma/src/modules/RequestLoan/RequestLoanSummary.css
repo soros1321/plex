@@ -1,0 +1,37 @@
+.request-loan-summary-container {
+	width: 600px;
+	margin-top: 30px;
+}
+.request-loan-summary-container label {
+	text-transform: none;
+	color: #002326;
+	font-family: DIN;
+	font-size: 17px;
+	line-height: 25px;
+	opacity: 1;
+}
+.request-loan-summary-container .gray {
+	padding: 20px;
+	background-color: #F5F5F5;
+}
+.request-loan-summary-container .info-item {
+	margin-bottom: 30px;
+}
+.request-loan-summary-container .info-item .title {
+	font-family: DIN-Bold;
+	opacity: 0.5;
+	color: #002326;
+	font-size: 15px;
+	font-weight: bold;
+	line-height: 25px;
+}
+.request-loan-summary-container .info-item .content {
+	margin-top: 5px;
+	font-family: DIN;
+	opacity: 1;
+	color: #002326;
+	font-size: 18px;
+	font-weight: bold;
+	line-height: 25px;
+}
+
