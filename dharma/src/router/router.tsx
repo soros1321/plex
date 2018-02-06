@@ -7,6 +7,7 @@ import {
 	RequestLoanForm,
 	RequestLoanSuccess,
 	FillLoan,
+	FillLoanEmpty,
 	FillLoanEntered,
 	DefaultContent
 } from '../modules';
@@ -27,8 +28,10 @@ export const AppRouter: React.StatelessComponent<{}> = () => {
 					<IndexRoute component={RequestLoanForm} />
 					<Route path="success" component={RequestLoanSuccess} />
 				</Route>
-				<Route path="/fill" component={FillLoan} />
-				<Route path="/fill/entered" component={FillLoanEntered} />
+				<Route path="/fill" component={FillLoan}>
+					<IndexRoute component={FillLoanEmpty} />
+					<Route path="entered" component={FillLoanEntered} />
+				</Route>
 			</Route>
 		</Router>
 	);
