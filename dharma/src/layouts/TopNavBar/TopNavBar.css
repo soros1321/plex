@@ -1,5 +1,8 @@
 .top-nav-bar {
 	background-color: #0D3034;
+	position: fixed;
+	width: 100%;
+	z-index: 1;
 }
 .top-nav-bar .navbar-light .navbar-brand .brand-logo {
 	width: 35px;
@@ -33,6 +36,9 @@
 @media only screen and (max-width: 480px) {
 	.top-nav-bar {
 		background-color: #002326;
+		position: relative;
+		width: 100%;
+		z-index: 1;
 	}
 	.top-nav-bar .navbar-light .navbar-brand .brand-logo {
 		width: 30px;

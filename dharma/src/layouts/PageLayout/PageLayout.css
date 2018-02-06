@@ -1,9 +1,10 @@
 .right-container {
-	position: fixed !important;
-	margin-left: 221px;
+	position: relative;
+	margin: 40px 0 0 221px;
 	width: -webkit-calc(100% - 221px) !important;
 	width:    -moz-calc(100% - 221px) !important;
 	width:         calc(100% - 221px) !important;
+	flex: none !important;
 }
 .right-container .main-wrapper {
 	padding: 30px;
@@ -11,8 +12,9 @@
 @media only screen and (max-width: 480px) {
 	.right-container {
 		position: static !important;
-		margin-left: 0;
+		margin: 0;
 		width: 100%;
+		flex: 0 0 100% !important;
 	}
 	.right-container .main-wrapper {
 		padding: 15px;
