@@ -6,6 +6,7 @@ import {
 	TabContent,
 	TabPane
 } from 'reactstrap';
+import { Debts } from './Debts/Debts';
 import './Dashboard.css';
 
 interface Props {
@@ -37,7 +38,7 @@ class Dashboard extends React.Component<Props, States> {
 
 	render() {
 		const tabs = [
-			{id: '1', title: 'Your Debts (' + (this.props.numDebts || 0) + ')', content: ''},
+			{id: '1', title: 'Your Debts (' + (this.props.numDebts || 0) + ')', content: <Debts totalRequested={106} totalRepayed={123} />},
 			{id: '2', title: 'Your Investments (' + (this.props.numInvestments || 0) + ')', content: ''}
 		];
 		const tabNavs = tabs.map((tab) => (
