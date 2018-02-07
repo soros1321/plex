@@ -14,9 +14,7 @@ class PageLayout extends React.Component {
 						<LeftNavBar />
 					</Col>
 					<Col xs="12" className="right-container">
-						<div className="main-wrapper">
-							{this.props.children}
-						</div>
+						{this.props.children}
 					</Col>
 				</Row>
 			</div>

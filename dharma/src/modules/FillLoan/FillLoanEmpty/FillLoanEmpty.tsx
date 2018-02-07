@@ -43,7 +43,7 @@ class FillLoanEmpty extends React.Component<{}, States> {
 
 	render() {
 		return (
-			<div>
+			<div className="main-wrapper">
 				<Header title={'Fill a loan'} description={'Here\'s a quick description of what a loan is and why you should fill one.'} />
 				<Form className="form-container fill-loan-form">
 					<FormGroup>

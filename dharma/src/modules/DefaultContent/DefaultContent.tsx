@@ -3,7 +3,7 @@ import * as React from 'react';
 class DefaultContent extends React.Component<{}, {}> {
 	render() {
 		return (
-			<div>
+			<div className="main-wrapper">
 				<h1>Insert something here</h1>
 			</div>
 		);

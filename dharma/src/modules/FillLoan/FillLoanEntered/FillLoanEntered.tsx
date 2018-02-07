@@ -93,7 +93,7 @@ class FillLoanEntered extends React.Component<Props, States> {
 		));
 
 		return (
-			<div>
+			<div className="main-wrapper">
 				<Header title={'Fill a loan'} description={'Here are the details of loan request ' + this.props.requestId + '. If the terms look fair to you, fill the loan and Dharma will //insert statement.'} />
 				<Row className="loan-info-container">
 					<Col xs="12" md="6">
