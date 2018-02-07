@@ -240,6 +240,26 @@ label.radio-container .checkmark:after {
 .modal .modal-footer.center {
 	justify-content: center;
 }
+/* Tabs */
+.nav.nav-tabs {
+	background-color: #F5F5F5;
+	border: 0;
+}
+.nav.nav-tabs .nav-item .nav-link {
+	opacity: 0.5;
+	color: #002326;
+	font-family: DIN-Bold;
+	font-size: 15px;
+	line-height: 25px;
+	text-align: center;
+	text-transform: uppercase;
+	border: 0;
+}
+.nav.nav-tabs .nav-item .nav-link.active {
+	opacity: 1;
+	background-color: #F5F5F5;
+	border-bottom: 4px solid #F3764B;
+}
 @media only screen and (max-width: 480px) {
 	h1 {
 		font-size: 30px;

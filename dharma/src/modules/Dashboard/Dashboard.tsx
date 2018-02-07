@@ -6,6 +6,7 @@ import {
 	TabContent,
 	TabPane
 } from 'reactstrap';
+import './Dashboard.css';
 
 interface Props {
 	numDebts: number;
@@ -36,8 +37,8 @@ class Dashboard extends React.Component<Props, States> {
 
 	render() {
 		const tabs = [
-			{id: '1', title: 'Your Debts (' + this.props.numDebts + ')', content: ''},
-			{id: '2', title: 'Your Investments (' + this.props.numDebts + ')', content: ''}
+			{id: '1', title: 'Your Debts (' + (this.props.numDebts || 0) + ')', content: ''},
+			{id: '2', title: 'Your Investments (' + (this.props.numInvestments || 0) + ')', content: ''}
 		];
 		const tabNavs = tabs.map((tab) => (
 			<NavItem key={tab.id}>
@@ -45,7 +46,12 @@ class Dashboard extends React.Component<Props, States> {
 					className={this.state.activeTab === tab.id ? 'active' : ''}
 					onClick={() => { this.toggle(tab.id); }}
 				>
-					{tab.title}
+					<span className="title-first">
+						{tab.title.indexOf(' ') >= 0 ? tab.title.substr(0, tab.title.indexOf(' ')) : tab.title}
+					</span>
+					<span className="title-rest">
+						{tab.title.indexOf(' ') >= 0 ? tab.title.substr(tab.title.indexOf(' ')) : ''}
+					</span>
 				</NavLink>
 			</NavItem>
 		));
