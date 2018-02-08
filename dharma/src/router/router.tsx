@@ -3,7 +3,6 @@ import { Router, Route, IndexRoute, browserHistory } from 'react-router';
 import App from '../App';
 import {
 	Welcome,
-	RequestLoanForm,
 	RequestLoanSuccess,
 	FillLoanEmpty,
 	FillLoanEntered,
@@ -26,8 +25,7 @@ export const AppRouter: React.StatelessComponent<{}> = () => {
 				<Route path="/twitter" component={DefaultContent} />
 				<Route path="/dashboard" component={Dashboard} />
 				<Route path="/request" component={ParentContainer}>
-					<IndexRoute component={RequestLoanForm} />
-					<Route path="typeform" component={TypeForm} />
+					<IndexRoute component={TypeForm} />
 					<Route path="success" component={RequestLoanSuccess} />
 				</Route>
 				<Route path="/fill" component={ParentContainer}>
