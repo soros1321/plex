@@ -15,7 +15,7 @@ class TypeForm extends React.Component<{}, States> {
 		};
 	}
 	componentDidMount() {
-		const intervalId = window.setInterval(this.checkForm, 1000);
+		const intervalId = window.setInterval(this.checkForm, 100);
 		this.setState({intervalId: intervalId});
 	}
 	componentWillUnmount() {
