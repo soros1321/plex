@@ -24,8 +24,9 @@ class TypeForm extends React.Component<{}, States> {
 	}
 
 	checkForm() {
-		if (document!.getElementById('form-values')!.innerHTML !== '') {
-			const formValues = JSON.parse(document!.getElementById('form-values')!.innerHTML);
+		const formValuesJSON = document!.getElementById('form-values')!.innerHTML;
+		if (formValuesJSON !== '') {
+			const formValues = JSON.parse(formValuesJSON);
 			document!.getElementById('form-values')!.innerHTML = '';
 			window.clearInterval(this.state.intervalId);
 			this.setState({intervalId: 0});
