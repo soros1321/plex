@@ -13,7 +13,25 @@ export const loans: LoanEntity[] =
 		collateralLockupPeriod: '1 Week',
 		collateralCustomLockupPeriod: '',
 		terms: 'Simple Interest',
-		active: true
+		active: true,
+		repaymentSchedules: [
+			{
+				id: 1,
+				date: 1514764800
+			},
+			{
+				id: 2,
+				date: 1517443200
+			},
+			{
+				id: 3,
+				date: 1519862400
+			},
+			{
+				id: 4,
+				date: 1522540800
+			}
+		]
 	},
 	{
 		id: 'Iihwdko',
@@ -26,7 +44,25 @@ export const loans: LoanEntity[] =
 		collateralLockupPeriod: '1 Day',
 		collateralCustomLockupPeriod: '',
 		terms: 'Compound Interest (Installments)',
-		active: true
+		active: true,
+		repaymentSchedules: [
+			{
+				id: 1,
+				date: 1514764800
+			},
+			{
+				id: 2,
+				date: 1517443200
+			},
+			{
+				id: 3,
+				date: 1519862400
+			},
+			{
+				id: 4,
+				date: 1522540800
+			}
+		]
 	},
 	{
 		id: 'OWJceb',
@@ -39,6 +75,24 @@ export const loans: LoanEntity[] =
 		collateralLockupPeriod: 'Custom',
 		collateralCustomLockupPeriod: '10',
 		terms: 'Simple Interest (Installments)',
-		active: true
+		active: true,
+		repaymentSchedules: [
+			{
+				id: 1,
+				date: 1514764800
+			},
+			{
+				id: 2,
+				date: 1517443200
+			},
+			{
+				id: 3,
+				date: 1519862400
+			},
+			{
+				id: 4,
+				date: 1522540800
+			}
+		]
 	}
 ];

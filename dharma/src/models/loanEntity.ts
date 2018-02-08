@@ -1,3 +1,8 @@
+export interface RepaymentScheduleEntity {
+	id: number;
+	date: number;
+}
+
 export interface LoanEntity {
 	id: string;
 	amount: string;
@@ -10,4 +15,5 @@ export interface LoanEntity {
 	collateralCustomLockupPeriod: string;
 	terms: string;
 	active: boolean;
+	repaymentSchedules: RepaymentScheduleEntity[];
 }
