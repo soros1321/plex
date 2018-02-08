@@ -1,10 +1,10 @@
 @font-face {
 	font-family: DIN;
-	src: url(../assets/fonts/DIN.otf);
+	src: url(../fonts/DIN.otf);
 }
 @font-face {
 	font-family: DIN-Bold;
-	src: url(../assets/fonts/DINBold.otf);
+	src: url(../fonts/DINBold.otf);
 }
 
 body {
@@ -34,7 +34,7 @@ select.form-control {
 	appearance: none;
 }
 select.form-control {
-	background: url(../assets/img/arrow_down.png) calc(100% - 10px) / 10px no-repeat #FFFFFF;
+	background: url(../img/arrow_down.png) calc(100% - 10px) / 10px no-repeat #FFFFFF;
 }
 input.width-95 {
 	width: 95%;
@@ -254,11 +254,14 @@ label.radio-container .checkmark:after {
 	text-align: center;
 	text-transform: uppercase;
 	border: 0;
+	padding: 15px 40px;
+	cursor: pointer;
 }
 .nav.nav-tabs .nav-item .nav-link.active {
 	opacity: 1;
 	background-color: #F5F5F5;
 	border-bottom: 4px solid #F3764B;
+	padding: 15px 40px 11px;
 }
 @media only screen and (max-width: 480px) {
 	h1 {
@@ -272,5 +275,11 @@ label.radio-container .checkmark:after {
 	.row .width-95.button {
 		width: 100%;
 		margin-bottom: 10px;
+	}
+	.nav.nav-tabs .nav-item .nav-link {
+		padding: 12px 0px;
+	}
+	.nav.nav-tabs .nav-item .nav-link.active {
+		padding: 12px 0px 8px;
 	}
 }

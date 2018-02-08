@@ -1,2 +1,2 @@
-export * from './PageLayout/PageLayout';
-export * from './ParentContainer/ParentContainer';
+export * from './PageLayout';
+export * from './ParentContainer';

@@ -32,7 +32,7 @@ class TypeForm extends React.Component<{}, States> {
 			this.setState({intervalId: 0});
 
 			console.log(formValues);
-			window.setTimeout(() => { browserHistory.push('/request/success'); }, 1500);
+			window.setTimeout(() => { browserHistory.push('/request/success'); }, 2000);
 		}
 	}
 

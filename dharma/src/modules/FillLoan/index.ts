@@ -1,2 +1,2 @@
-export * from './FillLoanEmpty/FillLoanEmpty';
-export * from './FillLoanEntered/FillLoanEntered';
+export * from './FillLoanEmpty';
+export * from './FillLoanEntered';

@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { LoanEntity } from '../../models';
+import { loanAPI } from '../../services/loan';
 import {
 	Nav,
 	NavItem,
@@ -6,26 +8,37 @@ import {
 	TabContent,
 	TabPane
 } from 'reactstrap';
-import { Debts } from './Debts/Debts';
+import { Debts } from './Debts';
 import './Dashboard.css';
-
-interface Props {
-	numDebts: number;
-	numInvestments: number;
-}
 
 interface States {
 	activeTab: string;
+	loans: LoanEntity[];
+	numDebts: number;
+	numInvestments: number;
+	totalRequested: number;
+	totalRepayed: number;
 }
 
-class Dashboard extends React.Component<Props, States> {
-	constructor(props: Props) {
+class Dashboard extends React.Component<{}, States> {
+	constructor(props: {}) {
 		super(props);
 
 		this.toggle = this.toggle.bind(this);
 		this.state = {
-			activeTab: '1'
+			activeTab: '1',
+			loans: [],
+			numDebts: 0,
+			numInvestments: 0,
+			totalRequested: 0,
+			totalRepayed: 0
 		};
+	}
+
+	componentDidMount() {
+		loanAPI.fetchLoans().then((loans) => {
+			this.setState({loans});
+		});
 	}
 
 	toggle(tab: string) {
@@ -38,8 +51,16 @@ class Dashboard extends React.Component<Props, States> {
 
 	render() {
 		const tabs = [
-			{id: '1', title: 'Your Debts (' + (this.props.numDebts || 0) + ')', content: <Debts totalRequested={106} totalRepayed={123} />},
-			{id: '2', title: 'Your Investments (' + (this.props.numInvestments || 0) + ')', content: ''}
+			{
+				id: '1',
+				title: 'Your Debts (' + (this.state.numDebts) + ')',
+				content: <Debts totalRequested={this.state.totalRequested} totalRepayed={this.state.totalRepayed} loans={this.state.loans} />
+			},
+			{
+				id: '2',
+				title: 'Your Investments (' + (this.state.numInvestments) + ')',
+				content: ''
+			}
 		];
 		const tabNavs = tabs.map((tab) => (
 			<NavItem key={tab.id}>

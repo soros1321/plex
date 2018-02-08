@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { Header } from '../../../components';
-import { GetNotified } from './GetNotified/GetNotified';
-import { ShareRequestURL } from './ShareRequestURL/ShareRequestURL';
-import { RequestLoanSummary } from './RequestLoanSummary/RequestLoanSummary';
+import { GetNotified } from './GetNotified';
+import { ShareRequestURL } from './ShareRequestURL';
+import { RequestLoanSummary } from './RequestLoanSummary';
 
 interface Props {
 	requestURL: string;

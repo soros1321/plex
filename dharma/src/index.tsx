@@ -3,7 +3,7 @@ import * as ReactDOM from 'react-dom';
 import { AppRouter } from './router/router';
 import registerServiceWorker from './registerServiceWorker';
 import 'bootstrap/dist/css/bootstrap.css';
-import './styles/index.css';
+import './assets/css/index.css';
 
 ReactDOM.render(
   <AppRouter />,

@@ -6,7 +6,7 @@ import {
 } from 'reactstrap';
 import { Header, ConfirmationModal } from '../../../components';
 import { Link } from 'react-router';
-import { SuccessModal } from './SuccessModal/SuccessModal';
+import { SuccessModal } from './SuccessModal';
 import { browserHistory } from 'react-router';
 import './FillLoanEntered.css';
 

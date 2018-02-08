@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Row, Col } from 'reactstrap';
-import TopNavBar from '../TopNavBar/TopNavBar';
-import LeftNavBar from '../LeftNavBar/LeftNavBar';
+import TopNavBar from '../TopNavBar';
+import LeftNavBar from '../LeftNavBar';
 import './PageLayout.css';
 
 class PageLayout extends React.Component {
