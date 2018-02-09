@@ -14,10 +14,7 @@ import './Dashboard.css';
 interface States {
 	activeTab: string;
 	loans: LoanEntity[];
-	numDebts: number;
 	numInvestments: number;
-	totalRequested: number;
-	totalRepayed: number;
 }
 
 class Dashboard extends React.Component<{}, States> {
@@ -28,10 +25,7 @@ class Dashboard extends React.Component<{}, States> {
 		this.state = {
 			activeTab: '1',
 			loans: [],
-			numDebts: 0,
-			numInvestments: 0,
-			totalRequested: 0,
-			totalRepayed: 0
+			numInvestments: 0
 		};
 	}
 
@@ -53,8 +47,8 @@ class Dashboard extends React.Component<{}, States> {
 		const tabs = [
 			{
 				id: '1',
-				title: 'Your Debts (' + (this.state.numDebts) + ')',
-				content: <Debts totalRequested={this.state.totalRequested} totalRepayed={this.state.totalRepayed} loans={this.state.loans} />
+				title: 'Your Debts (' + (this.state.loans.length) + ')',
+				content: <Debts loans={this.state.loans} />
 			},
 			{
 				id: '2',

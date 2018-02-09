@@ -7,8 +7,6 @@ import { LoanHistory } from './LoanHistory';
 import './Debts.css';
 
 interface Props {
-	totalRequested: number;
-	totalRepayed: number;
 	loans: LoanEntity[];
 }
 
@@ -27,7 +25,7 @@ class Debts extends React.Component<Props, {}> {
 		return (
 			<div className="main-wrapper">
 				<Header title="Your debts" />
-				<DebtsMetrics totalRequested={this.props.totalRequested} totalRepayed={this.props.totalRepayed} />
+				<DebtsMetrics loans={this.props.loans} />
 				{ activeLoans.map((loan) => (
 						<ActiveLoan loan={loan} key={loan.id} />
 					))
