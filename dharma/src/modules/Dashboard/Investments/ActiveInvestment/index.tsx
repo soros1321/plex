@@ -23,7 +23,6 @@ import {
 	PaymentDate,
 	ShowMore
 } from './styledComponents';
-import './ActiveInvestment.css';
 
 interface Props {
 	investment: InvestmentEntity;
