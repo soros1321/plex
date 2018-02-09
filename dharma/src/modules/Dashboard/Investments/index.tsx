@@ -3,6 +3,7 @@ import { InvestmentEntity } from '../../../models';
 import { Header } from '../../../components';
 import { InvestmentsMetrics } from './InvestmentsMetrics';
 import { ActiveInvestment } from './ActiveInvestment';
+import { InvestmentHistory } from './InvestmentHistory';
 
 interface Props {
 	investments: InvestmentEntity[];
@@ -28,6 +29,7 @@ class Investments extends React.Component<Props, {}> {
 						<ActiveInvestment investment={investment} key={investment.id} />
 					))
 				}
+				<InvestmentHistory investments={pastInvestments} />
 			</div>
 		);
 	}
