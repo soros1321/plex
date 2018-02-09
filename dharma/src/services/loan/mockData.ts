@@ -15,7 +15,9 @@ export const loans: LoanEntity[] =
 		terms: 'simple',
 		installments: true,
 		active: true,
-		createdOnDate: 1514764800
+		paid: false,
+		createdOnTimestamp: 1514764800,
+		paidOnTimestamp: 0
 	},
 	{
 		id: 'Iihwdko',
@@ -30,7 +32,9 @@ export const loans: LoanEntity[] =
 		terms: 'compound',
 		installments: false,
 		active: true,
-		createdOnDate: 1517961600
+		paid: false,
+		createdOnTimestamp: 1517961600,
+		paidOnTimestamp: 0
 	},
 	{
 		id: 'OWJceb',
@@ -45,6 +49,42 @@ export const loans: LoanEntity[] =
 		terms: 'simple',
 		installments: true,
 		active: true,
-		createdOnDate: 1515974400
+		paid: false,
+		createdOnTimestamp: 1515974400,
+		paidOnTimestamp: 0
+	},
+	{
+		id: 'owek9n',
+		amount: '10',
+		currency: 'ETH',
+		collateralized: true,
+		collateralSource: 'SNT',
+		collateralAmount: '15',
+		collateralCurrency: 'BTC',
+		collateralLockupPeriod: 'custom',
+		collateralCustomLockupPeriod: 6,
+		terms: 'simple',
+		installments: true,
+		active: false,
+		paid: true,
+		createdOnTimestamp: 1511827200,
+		paidOnTimestamp: 1517097600
+	},
+	{
+		id: 'kqjYlk',
+		amount: '3',
+		currency: 'BTC',
+		collateralized: true,
+		collateralSource: 'ADA',
+		collateralAmount: '20',
+		collateralCurrency: 'ETH',
+		collateralLockupPeriod: '1week',
+		collateralCustomLockupPeriod: 0,
+		terms: 'compound',
+		installments: false,
+		active: false,
+		paid: true,
+		createdOnTimestamp: 1515628800,
+		paidOnTimestamp: 1516320000
 	}
 ];

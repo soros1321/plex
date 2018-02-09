@@ -30,29 +30,29 @@ class ActiveLoan extends React.Component<Props, {}> {
 		const pastIcon = require('../../../../assets/img/ok_circle.png');
 		const futureIcon = require('../../../../assets/img/circle_outline.png');
 		const repaymentSchedules: RepaymentSchedule[] = [];
-		let repaymentDate = loan.createdOnDate;
+		let repaymentTimestamp = loan.createdOnTimestamp;
 		if (loan.installments) {
 			let count = 0;
 			switch (loan.collateralLockupPeriod) {
 				case '1day':
 					while (count < 4) {
-						repaymentDate += (60 * 60 * 4); // per 4 hours
-						repaymentSchedules.push({timestamp: repaymentDate, type: 'time'});
+						repaymentTimestamp += (60 * 60 * 4); // per 4 hours
+						repaymentSchedules.push({timestamp: repaymentTimestamp, type: 'time'});
 						count++;
 					}
 					break;
 				case '1week':
 					while (count < 7) {
-						repaymentDate += (60 * 60 * 24); // per day
-						repaymentSchedules.push({timestamp: repaymentDate, type: 'date'});
+						repaymentTimestamp += (60 * 60 * 24); // per day
+						repaymentSchedules.push({timestamp: repaymentTimestamp, type: 'date'});
 						count++;
 					}
 					break;
 				case 'custom':
 					if (loan.collateralCustomLockupPeriod) {
 						while (count < loan.collateralCustomLockupPeriod) {
-							repaymentDate += (60 * 60 * 24 * 7); // per week
-							repaymentSchedules.push({timestamp: repaymentDate, type: 'date'});
+							repaymentTimestamp += (60 * 60 * 24 * 7); // per week
+							repaymentSchedules.push({timestamp: repaymentTimestamp, type: 'date'});
 							count++;
 						}
 					}
@@ -63,20 +63,20 @@ class ActiveLoan extends React.Component<Props, {}> {
 		} else {
 			switch (loan.collateralLockupPeriod) {
 				case '1day':
-					repaymentDate += (60 * 60 * 24);
+					repaymentTimestamp += (60 * 60 * 24);
 					break;
 				case '1week':
-					repaymentDate += (60 * 60 * 24 * 7);
+					repaymentTimestamp += (60 * 60 * 24 * 7);
 					break;
 				case 'custom':
 					if (loan.collateralCustomLockupPeriod) {
-						repaymentDate += (60 * 60 * 24 * loan.collateralCustomLockupPeriod);
+						repaymentTimestamp += (60 * 60 * 24 * loan.collateralCustomLockupPeriod);
 					}
 					break;
 				default:
 					break;
 			}
-			repaymentSchedules.push({timestamp: repaymentDate, type: 'date'});
+			repaymentSchedules.push({timestamp: repaymentTimestamp, type: 'date'});
 		}
 
 		const repaymentScheduleItems: JSX.Element[] = [];

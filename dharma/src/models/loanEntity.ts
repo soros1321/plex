@@ -11,5 +11,7 @@ export interface LoanEntity {
 	terms: string;
 	installments: boolean;
 	active: boolean;
-	createdOnDate: number;
+	paid: boolean;
+	createdOnTimestamp: number;
+	paidOnTimestamp: number;
 }
