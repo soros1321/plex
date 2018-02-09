@@ -1,0 +1,117 @@
+.row.active-investment-container {
+	margin: 20px 0px;
+	background-color: #FFFFFF;
+	box-shadow: 0 12px 24px 0 rgba(0,0,0,0.12);
+}
+.row.active-investment-container .image-container {
+	padding: 15px 0 15px 15px;
+}
+.row.active-investment-container .image-container .image {
+	height: 60px;
+	width: inherit;
+	background-color: #082C30;
+}
+.row.active-investment-container .detail-container {
+	padding: 15px;
+}
+.row.active-investment-container .detail-container .amount {
+	color: #002326;
+	font-family: DIN-Bold;
+	font-size: 17px;
+	line-height: 25px;
+}
+.row.active-investment-container .detail-container .url a {
+	color: #002326;
+	font-size: 15px;
+	line-height: 25px;
+}
+.row.active-investment-container .detail-container .active,
+.row.active-investment-container .detail-container .defaulted {
+	display: inline-block;
+	color: #FFFFFF;
+	font-size: 12px;
+	letter-spacing: 1px;
+	line-height: 16px;
+	border-radius: 12.5px;
+	background-color: #1CC1CC;
+	text-transform: uppercase;
+	padding: 2px 10px;
+	margin-right: 10px;
+}
+.row.active-investment-container .detail-container .defaulted {
+	background-color: #E93D59;
+}
+.row.active-investment-container .detail-container .terms {
+	display: inline-block;
+	font-family: DIN-Bold;
+	font-size: 13px;
+	line-height: 16px;
+	text-transform: uppercase;
+}
+.row.active-investment-container .repayment-container {
+	padding: 15px 30px;
+	background-color: #082C30;
+}
+.row.active-investment-container .repayment-container .title {
+	color: #FFFFFF;
+	font-size: 13px;
+	line-height: 25px;
+	text-transform: uppercase;
+}
+.row.active-investment-container .repayment-container .date-container {
+	display: inline-block;
+	width: 85px;
+	opacity: 0.5;
+}
+.row.active-investment-container .repayment-container .date-container.active {
+	opacity: 1;
+}
+.row.active-investment-container .repayment-container .date-container .date-icon {
+	display: inline-block;
+}
+.row.active-investment-container .repayment-container .date-container .date-icon img {
+	width: 15px;
+}
+.row.active-investment-container .repayment-container .date-container .strikethrough {
+	position: relative;
+	display: inline-block;
+	opacity: 0.5;
+}
+.row.active-investment-container .repayment-container .date-container:last-child .strikethrough {
+	opacity: 0;
+}
+.row.active-investment-container .repayment-container .date-container .strikethrough:before {
+	content: " ";
+	position: absolute;
+	top: -4px;
+	left: 0;
+	border-bottom: 1px solid #FFFFFF;
+	width: 70px;
+}
+.row.active-investment-container .repayment-container .date-container .repayment-date {
+	color: #FFFFFF;
+	font-size: 13px;
+	line-height: 25px;
+}
+.row.active-investment-container .repayment-container .date-container .more {
+	color: #FFFFFF;
+	font-size: 13px;
+	line-height: 25px;
+	text-transform: uppercase;
+}
+@media only screen and (max-width: 480px) {
+	.row.active-investment-container .repayment-container .date-container {
+		width: 56px;
+	}
+	.row.active-investment-container .repayment-container .date-container .date-icon img {
+		width: 10px;
+	}
+	.row.active-investment-container .repayment-container .date-container .strikethrough:before {
+		top: -5px;
+		width: 46px;
+	}
+	.row.active-investment-container .repayment-container .date-container .repayment-date,
+	.row.active-investment-container .repayment-container .date-container .more {
+		font-size: 11px;
+	}
+}
