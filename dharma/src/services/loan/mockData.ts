@@ -10,28 +10,12 @@ export const loans: LoanEntity[] =
 		collateralSource: 'SNT',
 		collateralAmount: '15',
 		collateralCurrency: 'BTC',
-		collateralLockupPeriod: '1 Week',
-		collateralCustomLockupPeriod: '',
-		terms: 'Simple Interest',
+		collateralLockupPeriod: 'custom',
+		collateralCustomLockupPeriod: 6,
+		terms: 'simple',
+		installments: true,
 		active: true,
-		repaymentSchedules: [
-			{
-				id: 1,
-				date: 1514764800
-			},
-			{
-				id: 2,
-				date: 1517443200
-			},
-			{
-				id: 3,
-				date: 1519862400
-			},
-			{
-				id: 4,
-				date: 1522540800
-			}
-		]
+		createdOnDate: 1514764800
 	},
 	{
 		id: 'Iihwdko',
@@ -41,28 +25,12 @@ export const loans: LoanEntity[] =
 		collateralSource: 'ADA',
 		collateralAmount: '20',
 		collateralCurrency: 'ETH',
-		collateralLockupPeriod: '1 Day',
-		collateralCustomLockupPeriod: '',
-		terms: 'Compound Interest (Installments)',
+		collateralLockupPeriod: '1week',
+		collateralCustomLockupPeriod: 0,
+		terms: 'compound',
+		installments: false,
 		active: true,
-		repaymentSchedules: [
-			{
-				id: 1,
-				date: 1514764800
-			},
-			{
-				id: 2,
-				date: 1517443200
-			},
-			{
-				id: 3,
-				date: 1519862400
-			},
-			{
-				id: 4,
-				date: 1522540800
-			}
-		]
+		createdOnDate: 1517961600
 	},
 	{
 		id: 'OWJceb',
@@ -72,27 +40,11 @@ export const loans: LoanEntity[] =
 		collateralSource: 'REP',
 		collateralAmount: '100',
 		collateralCurrency: 'BTC',
-		collateralLockupPeriod: 'Custom',
-		collateralCustomLockupPeriod: '10',
-		terms: 'Simple Interest (Installments)',
+		collateralLockupPeriod: 'custom',
+		collateralCustomLockupPeriod: 10,
+		terms: 'simple',
+		installments: true,
 		active: true,
-		repaymentSchedules: [
-			{
-				id: 1,
-				date: 1514764800
-			},
-			{
-				id: 2,
-				date: 1517443200
-			},
-			{
-				id: 3,
-				date: 1519862400
-			},
-			{
-				id: 4,
-				date: 1522540800
-			}
-		]
+		createdOnDate: 1515974400
 	}
 ];

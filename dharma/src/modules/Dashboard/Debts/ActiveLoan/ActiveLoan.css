@@ -50,17 +50,17 @@
 }
 .row.active-loan-container .repayment-container .title {
 	color: #FFFFFF;
-	font-family: DIN-Bold;
 	font-size: 13px;
 	line-height: 25px;
 	text-transform: uppercase;
 }
 .row.active-loan-container .repayment-container .date-container {
 	display: inline-block;
-	width: 100px;
-}
-.row.active-loan-container .repayment-container .date-container.inactive {
+	width: 85px;
 	opacity: 0.5;
+}
+.row.active-loan-container .repayment-container .date-container.active {
+	opacity: 1;
 }
 .row.active-loan-container .repayment-container .date-container .date-icon {
 	display: inline-block;
@@ -82,19 +82,32 @@
 	top: -4px;
 	left: 0;
 	border-bottom: 1px solid #FFFFFF;
-	width: 84px;
+	width: 70px;
 }
 .row.active-loan-container .repayment-container .date-container .repayment-date {
 	color: #FFFFFF;
 	font-size: 13px;
 	line-height: 25px;
 }
+.row.active-loan-container .repayment-container .date-container .more {
+	color: #FFFFFF;
+	font-size: 13px;
+	line-height: 25px;
+	text-transform: uppercase;
+}
 @media only screen and (max-width: 480px) {
 	.row.active-loan-container .repayment-container .date-container {
-		width: 70px;
+		width: 56px;
+	}
+	.row.active-loan-container .repayment-container .date-container .date-icon img {
+		width: 10px;
 	}
 	.row.active-loan-container .repayment-container .date-container .strikethrough:before {
-		top: -4px;
-		width: 54px;
+		top: -5px;
+		width: 46px;
+	}
+	.row.active-loan-container .repayment-container .date-container .repayment-date,
+	.row.active-loan-container .repayment-container .date-container .more {
+		font-size: 11px;
 	}
 }
