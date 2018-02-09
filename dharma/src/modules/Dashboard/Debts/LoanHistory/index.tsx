@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { LoanEntity } from '../../../../models';
+import { formatDate } from '../../../../utils';
 import { Table } from 'reactstrap';
 import './LoanHistory.css';
 
@@ -8,16 +9,6 @@ interface Props {
 }
 
 class LoanHistory extends React.Component<Props, {}> {
-	constructor(props: Props) {
-		super(props);
-		this.formatDate = this.formatDate.bind(this);
-	}
-
-	formatDate(timestamp: number) {
-		const d = new Date(timestamp * 1000);
-		return d.toLocaleDateString();
-	}
-
 	render() {
 		return (
 			<div className="loan-history-container">
@@ -36,7 +27,7 @@ class LoanHistory extends React.Component<Props, {}> {
 							<tr key={loan.id}>
 								<td>{loan.amount} {loan.currency}</td>
 								<td>{loan.id}</td>
-								<td>{loan.paid ? 'Repaid ' + this.formatDate(loan.paidOnTimestamp) : '-'}</td>
+								<td>{loan.paid ? 'Repaid ' + formatDate(loan.paidOnTimestamp) : '-'}</td>
 								<td className="terms">{loan.terms} Interest{loan.installments ? ' (Installments)' : ''}</td>
 							</tr>
 						))

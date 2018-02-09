@@ -4,7 +4,6 @@ import { Header } from '../../../components';
 import { DebtsMetrics } from './DebtsMetrics';
 import { ActiveLoan } from './ActiveLoan';
 import { LoanHistory } from './LoanHistory';
-import './Debts.css';
 
 interface Props {
 	loans: LoanEntity[];

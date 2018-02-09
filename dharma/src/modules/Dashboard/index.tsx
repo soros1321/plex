@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { LoanEntity } from '../../models';
-import { loanAPI } from '../../services/loan';
+import { LoanEntity, InvestmentEntity } from '../../models';
+import { loanAPI, investmentAPI } from '../../services';
 import {
 	Nav,
 	NavItem,
@@ -9,12 +9,13 @@ import {
 	TabPane
 } from 'reactstrap';
 import { Debts } from './Debts';
+import { Investments } from './Investments';
 import './Dashboard.css';
 
 interface States {
 	activeTab: string;
 	loans: LoanEntity[];
-	numInvestments: number;
+	investments: InvestmentEntity[];
 }
 
 class Dashboard extends React.Component<{}, States> {
@@ -25,13 +26,16 @@ class Dashboard extends React.Component<{}, States> {
 		this.state = {
 			activeTab: '1',
 			loans: [],
-			numInvestments: 0
+			investments: []
 		};
 	}
 
 	componentDidMount() {
 		loanAPI.fetchLoans().then((loans) => {
 			this.setState({loans});
+		});
+		investmentAPI.fetchInvestments().then((investments) => {
+			this.setState({investments});
 		});
 	}
 
@@ -52,8 +56,8 @@ class Dashboard extends React.Component<{}, States> {
 			},
 			{
 				id: '2',
-				title: 'Your Investments (' + (this.state.numInvestments) + ')',
-				content: ''
+				title: 'Your Investments (' + (this.state.investments.length) + ')',
+				content: <Investments investments={this.state.investments} />
 			}
 		];
 		const tabNavs = tabs.map((tab) => (

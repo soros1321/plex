@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { LoanEntity } from '../../../../models';
+import { formatDate, formatTime } from '../../../../utils';
 import { Row, Col } from 'reactstrap';
 import './ActiveLoan.css';
 
@@ -13,17 +14,6 @@ interface RepaymentSchedule {
 }
 
 class ActiveLoan extends React.Component<Props, {}> {
-	constructor(props: Props) {
-		super(props);
-
-		this.formatDate = this.formatDate.bind(this);
-	}
-
-	formatDate(timestamp: number, type: string) {
-		const d = new Date(timestamp * 1000);
-		return (type === 'date') ? d.toLocaleDateString() : d.toLocaleTimeString();
-	}
-
 	render() {
 		const loan = this.props.loan;
 		const now = Math.round((new Date()).getTime() / 1000);
@@ -101,7 +91,7 @@ class ActiveLoan extends React.Component<Props, {}> {
 										<img src={now > paymentSchedule.timestamp ? pastIcon : futureIcon} />
 								</div>
 								<div className="strikethrough" />
-								<div className="repayment-date">{this.formatDate(paymentSchedule.timestamp, paymentSchedule.type)}</div>
+								<div className="repayment-date">{paymentSchedule.type === 'date' ? formatDate(paymentSchedule.timestamp) : formatTime(paymentSchedule.timestamp)}</div>
 							</div>
 						)
 					);
