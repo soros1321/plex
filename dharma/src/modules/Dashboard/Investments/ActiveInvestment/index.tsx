@@ -1,7 +1,28 @@
 import * as React from 'react';
 import { InvestmentEntity } from '../../../../models';
 import { formatDate, formatTime } from '../../../../utils';
-import { Row, Col } from 'reactstrap';
+import { Row } from 'reactstrap';
+import {
+	Wrapper,
+	ImageContainer,
+	Image,
+	DetailContainer,
+	HalfCol,
+	Amount,
+	Url,
+	CollectButton,
+	StatusActive,
+	StatusDefaulted,
+	Terms,
+	RepaymentScheduleContainer,
+	Title,
+	Schedule,
+	ScheduleIconContainer,
+	ScheduleIcon,
+	Strikethrough,
+	PaymentDate,
+	ShowMore
+} from './styledComponents';
 import './ActiveInvestment.css';
 
 interface Props {
@@ -16,6 +37,11 @@ interface RepaymentSchedule {
 class ActiveInvestment extends React.Component<Props, {}> {
 	constructor(props: Props) {
 		super(props);
+		this.handleCollectInvestment = this.handleCollectInvestment.bind(this);
+	}
+
+	handleCollectInvestment(investmentId: string) {
+		console.log('collect investment', investmentId);
 	}
 
 	render() {
@@ -79,24 +105,24 @@ class ActiveInvestment extends React.Component<Props, {}> {
 			if (maxDisplay < 5) {
 				if (maxDisplay === 4 && repaymentSchedules.length > 5) {
 					repaymentScheduleItems.push((
-							<div className={'date-container active'} key={paymentSchedule.timestamp}>
-								<div className="date-icon">
-										<img src={futureIcon} />
-								</div>
-								<div className="strikethrough" />
-								<div className="more">+ {repaymentSchedules.length - maxDisplay} more</div>
-							</div>
+							<Schedule key={paymentSchedule.timestamp}>
+								<ScheduleIconContainer>
+										<ScheduleIcon src={futureIcon} />
+								</ScheduleIconContainer>
+								<Strikethrough />
+								<ShowMore>+ {repaymentSchedules.length - maxDisplay} more</ShowMore>
+							</Schedule>
 						)
 					);
 				} else {
 					repaymentScheduleItems.push((
-							<div className={'date-container ' + (now > paymentSchedule.timestamp ? '' : 'active')} key={paymentSchedule.timestamp}>
-								<div className="date-icon">
-										<img src={now > paymentSchedule.timestamp ? pastIcon : futureIcon} />
-								</div>
-								<div className="strikethrough" />
-								<div className="repayment-date">{paymentSchedule.type === 'date' ? formatDate(paymentSchedule.timestamp) : formatTime(paymentSchedule.timestamp)}</div>
-							</div>
+							<Schedule key={paymentSchedule.timestamp}>
+								<ScheduleIconContainer>
+										<ScheduleIcon src={now > paymentSchedule.timestamp ? pastIcon : futureIcon} />
+								</ScheduleIconContainer>
+								<Strikethrough />
+								<PaymentDate>{paymentSchedule.type === 'date' ? formatDate(paymentSchedule.timestamp) : formatTime(paymentSchedule.timestamp)}</PaymentDate>
+							</Schedule>
 						)
 					);
 				}
@@ -105,21 +131,30 @@ class ActiveInvestment extends React.Component<Props, {}> {
 		});
 
 		return (
-			<Row className="active-investment-container">
-				<Col xs="4" md="1" className="image-container">
-					<div className="image" />
-				</Col>
-				<Col xs="8" md="5" className="detail-container">
-					<div className="amount">{investment.amountLended} {investment.currency}</div>
-					<div className="url"><a href={`dharma.io/${investment.id}`}>{`dharma.io/${investment.id}`}</a></div>
-					<div className={investment.defaulted ? 'defaulted' : 'active'}>{investment.defaulted ? 'Defaulted' : 'Active'}</div>
-					<div className="terms">{investment.terms} Interest{investment.installments ? ' (Installments)' : ''}</div>
-				</Col>
-				<Col xs="12" md="6" className="repayment-container">
-					<div className="title">Repayment Schedule</div>
+			<Wrapper>
+				<ImageContainer>
+					<Image />
+				</ImageContainer>
+				<DetailContainer>
+					<Row>
+						<HalfCol>
+							<Amount>{investment.amountLended} {investment.currency}</Amount>
+							<Url href={`dharma.io/${investment.id}`}>{`dharma.io/${investment.id}`}</Url>
+						</HalfCol>
+						<HalfCol>
+							{(investment.defaulted && !investment.collected) && (
+								<CollectButton className="button" onClick={() => this.handleCollectInvestment(investment.id)}>Collect Now</CollectButton>
+							)}
+						</HalfCol>
+					</Row>
+					{investment.defaulted ? <StatusDefaulted>Defaulted</StatusDefaulted> : <StatusActive>Active</StatusActive>}
+					<Terms>{investment.terms} Interest{investment.installments ? ' (Installments)' : ''}</Terms>
+				</DetailContainer>
+				<RepaymentScheduleContainer>
+					<Title>Repayment Schedule</Title>
 					{repaymentScheduleItems}
-				</Col>
-			</Row>
+				</RepaymentScheduleContainer>
+			</Wrapper>
 		);
 	}
 }
