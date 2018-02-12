@@ -1,21 +1,22 @@
 import * as React from 'react';
-import { authAPI } from '../../services';
+import { LogInAction } from '../../constants';
 
 interface LoginState {
   accessCode: string;
 }
 
-class Login extends React.PureComponent<{}, LoginState> {
-  constructor(props: {}) {
+interface LoginProps {
+  logInAction: (accessCode: string) => LogInAction;
+}
+
+class Login extends React.PureComponent<LoginProps, LoginState> {
+  constructor(props: LoginProps) {
     super(props);
     this.state = { accessCode: '' };
   }
 
   logIn = (event: React.FormEvent<HTMLFormElement>) => {
-    console.log(this.state.accessCode);
-    authAPI.logIn(this.state.accessCode).then((status) => {
-      console.log(`log in was: ${status}`);
-    });
+    this.props.logInAction(this.state.accessCode);
     event.preventDefault();
   }
 
