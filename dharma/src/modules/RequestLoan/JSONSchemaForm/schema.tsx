@@ -14,7 +14,7 @@ export const schema: JSONSchema4 = {
 		}
 	},
 	properties: {
-		request: {
+		loan: {
 			type: 'object',
 			title: 'How much do you want?',
 			properties: {
@@ -71,7 +71,7 @@ export const schema: JSONSchema4 = {
 					default: '1Week'
 				},
 				customPeriod: {
-					type: 'string'
+					type: 'number'
 				}
 			}
 		},
@@ -113,8 +113,8 @@ export const schema: JSONSchema4 = {
 };
 
 export const uiSchema = {
-	request: {
-		classNames: 'request-container',
+	loan: {
+		classNames: 'loan-container',
 		amount: {
 			'ui:autofocus': true,
 			'ui:placeholder': '0.00',

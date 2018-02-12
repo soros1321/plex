@@ -1,11 +1,11 @@
-.form-group.request-container,
+.form-group.loan-container,
 .form-group.collateral-container,
 .form-group.terms-container {
 	width: 600px;
 	background-color: #F5F5F5;
 	margin-bottom: 50px;
 }
-.form-group.request-container legend,
+.form-group.loan-container legend,
 .form-group.collateral-container legend,
 .form-group.terms-container legend {
 	color: #002326;
@@ -15,16 +15,16 @@
 	background-color: #FFFFFF;
 	padding-bottom: 10px;
 }
-.form-group.request-container .amount-container,
-.form-group.request-container .currency-container {
+.form-group.loan-container .amount-container,
+.form-group.loan-container .currency-container {
 	display: inline-block;
 	width: 80%;
 	padding: 10px 20px;
 }
-.form-group.request-container .currency-container {
+.form-group.loan-container .currency-container {
 	width: 20%;
 }
-.form-group.request-container .description-container {
+.form-group.loan-container .description-container {
 	padding: 0px 20px 10px;
 }
 .form-group.collateral-container {
@@ -96,26 +96,26 @@
 	padding: 10px 20px;
 }
 @media only screen and (max-width: 480px) {
-	.form-group.request-container,
+	.form-group.loan-container,
 	.form-group.collateral-container,
 	.form-group.terms-container {
 		width: 100%;
 		margin-bottom: 30px;
 	}
-	.form-group.request-container legend,
+	.form-group.loan-container legend,
 	.form-group.collateral-container legend,
 	.form-group.terms-container legend {
 		font-size: 15px;
 	}
-	.form-group.request-container .amount-container,
-	.form-group.request-container .currency-container {
+	.form-group.loan-container .amount-container,
+	.form-group.loan-container .currency-container {
 		width: 60%;
 		padding: 5px 10px;
 	}
-	.form-group.request-container .currency-container {
+	.form-group.loan-container .currency-container {
 		width: 40%;
 	}
-	.form-group.request-container .description-container {
+	.form-group.loan-container .description-container {
 		padding: 0px 10px 5px;
 	}
 	.form-group.collateral-container .collateralized-container {
