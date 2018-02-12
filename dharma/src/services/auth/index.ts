@@ -1,11 +1,34 @@
-const AUTH_TOKEN_KEY = 'auth_token';
+import { AUTH_TOKEN_KEY } from '../../constants';
 
-const logIn = (accessCode: string): Promise<boolean> => {
-  const authToken = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE1MTgzOTI5NjR9.IBWI7D12nSEVhbZ-SfwFSKVbpeG5krCaNL0GfMGy5kc';
-  localStorage.setItem(AUTH_TOKEN_KEY, authToken);
-  return Promise.resolve(true);
+const logIn = (accessCode: string): string => {
+  var authToken = '';
+  let request = new XMLHttpRequest();
+  request.open('GET', `http://localhost:3000/authenticate?access_token=${accessCode}`, false);
+  request.send(null);
+
+  if (request.status === 401) {
+    console.log(request.responseText);
+    return authToken;
+  }
+
+  if (request.status === 200) {
+    console.log(request.responseText);
+    authToken = JSON.parse(request.responseText).auth_token;
+  }
+
+  return authToken;
+};
+
+// TODO: update with API call
+const loggedIn = () => {
+  if (!localStorage.getItem(AUTH_TOKEN_KEY)) {
+    return false;
+  } else {
+    return true;
+  }
 };
 
 export const authAPI = {
   logIn,
+  loggedIn,
 };
