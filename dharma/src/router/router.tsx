@@ -8,7 +8,7 @@ import {
 	FillLoanEntered,
 	DefaultContent,
 	Dashboard,
-	TypeForm
+	JSONSchemaForm
 } from '../modules';
 import { ParentContainer } from '../layouts';
 
@@ -25,7 +25,7 @@ export const AppRouter: React.StatelessComponent<{}> = () => {
 				<Route path="/twitter" component={DefaultContent} />
 				<Route path="/dashboard" component={Dashboard} />
 				<Route path="/request" component={ParentContainer}>
-					<IndexRoute component={TypeForm} />
+					<IndexRoute component={JSONSchemaForm} />
 					<Route path="success" component={RequestLoanSuccess} />
 				</Route>
 				<Route path="/fill" component={ParentContainer}>
