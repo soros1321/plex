@@ -1,54 +1,18 @@
 import * as React from 'react';
 import { schema, uiSchema } from './schema';
-import Form from 'react-jsonschema-form';
-import { Header } from '../../../components';
-import { Button } from 'reactstrap';
+import { Header, JSONSchemaForm } from '../../../components';
 import { Wrapper } from './styledComponents';
-import './JSONSchemaForm.css';
+import './JSONSchema.css';
 
 interface FormResponse {
-	formData: {
-		loan: {
-			amount: number;
-			currency: string;
-			description?: string;
-		};
-		collateral: {
-			collateralized: boolean;
-			source?: string;
-			amount?: number;
-			currency?: string;
-			lockupPeriod?: string;
-			customPeriod?: number;
-		};
-		terms: {
-			principle: string;
-			interest: string;
-			repaymentDate: string;
-			repaymentTerms: string;
-		};
-	};
+	formData: {};
 }
 
-class JSONSchemaForm extends React.Component<{}, FormResponse> {
+class JSONSchema extends React.Component<{}, FormResponse> {
 	constructor(props: {}) {
 		super(props);
 		this.state = {
-			formData: {
-				loan: {
-					amount: 0,
-					currency: 'ETH'
-				},
-				collateral: {
-					collateralized: true
-				},
-				terms: {
-					principle: 'option1',
-					interest: 'option1',
-					repaymentDate: 'option1',
-					repaymentTerms: 'option1'
-				}
-			}
+			formData: {}
 		};
 		this.handleChange = this.handleChange.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
@@ -88,7 +52,7 @@ class JSONSchemaForm extends React.Component<{}, FormResponse> {
 		}
 	}
 
-	handleChange(response: FormResponse) {
+	handleChange(formData: {}) {
 		const collateralized = document.getElementById('root_collateral_collateralized') as HTMLInputElement;
 		const collateralSource = document.getElementById('root_collateral_source') as HTMLInputElement;
 		const collateralAmount = document.getElementById('root_collateral_amount') as HTMLInputElement;
@@ -118,24 +82,28 @@ class JSONSchemaForm extends React.Component<{}, FormResponse> {
 			customLockupPeriod.disabled = true;
 		}
 		this.setState({
-			formData: response.formData
+			formData: formData
 		});
 	}
 
-	handleSubmit(response: FormResponse) {
-		console.log('State data', this.state);
+	handleSubmit() {
+		console.log('Form submitted', this.state);
 	}
 
 	render() {
 		return (
 			<Wrapper>
 				<Header title={'Request a loan'} description={'Here\'s a quick description of what a debt order is and why you should request one.'} />
-				<Form schema={schema} uiSchema={uiSchema} onSubmit={this.handleSubmit} onChange={this.handleChange} formData={this.state.formData}>
-					<Button type="submit" className="button">Request Loan</Button>
-				</Form>
+				<JSONSchemaForm
+					schema={schema}
+					uiSchema={uiSchema}
+					formData={this.state.formData}
+					onHandleChange={this.handleChange}
+					onHandleSubmit={this.handleSubmit}
+				/>
 			</Wrapper>
 		);
 	}
 }
 
-export {JSONSchemaForm};
+export {JSONSchema};
