@@ -52,13 +52,23 @@ class JSONSchemaForm extends React.Component<{}, FormResponse> {
 		};
 		this.handleChange = this.handleChange.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
+		this.handleScroll = this.handleScroll.bind(this);
 	}
 
 	componentDidMount() {
+		window.addEventListener('scroll', this.handleScroll);
+	}
+
+	componentWillUnmount() {
+		window.removeEventListener('scroll', this.handleScroll);
+	}
+
+	handleScroll() {
 		const loan = document.getElementsByClassName('loan-container') as HTMLCollectionOf<HTMLElement>;
 		const collateral = document.getElementsByClassName('collateral-container') as HTMLCollectionOf<HTMLElement>;
 		const terms = document.getElementsByClassName('terms-container') as HTMLCollectionOf<HTMLElement>;
-		window.addEventListener('scroll', function() {
+
+		if (loan.length && collateral.length && terms.length) {
 			if (window.scrollY > 400) {
 				// Set focus on the loan container
 				loan[0].style.opacity = '0.2';
@@ -75,13 +85,7 @@ class JSONSchemaForm extends React.Component<{}, FormResponse> {
 				collateral[0].style.opacity = '0.2';
 				terms[0].style.opacity = '0.2';
 			}
-		});
-	}
-
-	componentWillUnmount() {
-		window.removeEventListener('scroll', function() {
-			console.log('event removed');
-		});
+		}
 	}
 
 	handleChange(response: FormResponse) {
