@@ -9,6 +9,7 @@ interface LoginProps {
   logInAction: (accessCode: string) => LogInAction;
 }
 
+// TODO: Handle asynchronous call to log in, failure to log in, etc. gracefully
 class Login extends React.PureComponent<LoginProps, LoginState> {
   constructor(props: LoginProps) {
     super(props);

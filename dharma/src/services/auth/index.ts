@@ -1,5 +1,6 @@
 import { AUTH_TOKEN_KEY } from '../../constants';
 
+// TODO: make request asynchronous
 const logIn = (accessCode: string): string => {
   var authToken = '';
   let request = new XMLHttpRequest();
