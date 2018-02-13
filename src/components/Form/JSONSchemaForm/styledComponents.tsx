@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 // styles-components
 export const GroupWrapper = styled.div`
-	margin: 0 0 40px 0;
+	margin-bottom: 50px;
 `;
 
 export const Title = styled.div`
@@ -10,6 +10,7 @@ export const Title = styled.div`
 	font-family: DIN;
 	font-size: 17px;
 	line-height: 25px;
+	margin-top: 50px;
 	margin-bottom: 5px;
 `;
 

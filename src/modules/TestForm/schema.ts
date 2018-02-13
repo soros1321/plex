@@ -30,7 +30,36 @@ export const schema: JSONSchema4 = {
 		},
 		checkboxField: {
 			type: 'boolean',
-			title: 'Checkbox'
+			title: 'This is a checkbox'
+		},
+		selectDropdown: {
+			type: 'string',
+			title: 'Select dropdown',
+			enum: [
+				'option1',
+				'option2',
+				'option3'
+			],
+			enumNames: [
+				'Option 1',
+				'Option 2',
+				'Option 3'
+			]
+		},
+		radioButton: {
+			type: 'string',
+			title: 'Radio Button',
+			enum: [
+				'option1',
+				'option2',
+				'option3'
+			],
+			enumNames: [
+				'Option 1',
+				'Option 2',
+				'Option 3'
+			],
+			default: 'option1'
 		}
 	}
 };
@@ -44,10 +73,15 @@ export const uiSchema = {
 		'ui:help': 'You can specify the help content inside uiSchema',
 	},
 	checkboxField: {
-		'ui:widget': 'CheckboxWidget',
+		'ui:widget': 'CustomCheckbox',
 		'ui:options': {
-			title: 'This is a checkbox',
 			label: false
 		}
+	},
+	selectDropdown: {
+		'ui:placeholder': 'Pick your selection here'
+	},
+	radioButton: {
+		'ui:widget': 'radio'
 	}
 };

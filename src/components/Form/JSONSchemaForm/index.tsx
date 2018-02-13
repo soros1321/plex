@@ -24,15 +24,22 @@ interface Props {
 
 const CustomCheckbox = function(props: any) {
 	return (
-		<CheckboxLabel>{props.options.title}
+		<CheckboxLabel>{props.schema.title}
 			<input type="checkbox" required={props.required} onClick={() => props.onChange(!props.value)}/>
 			<Checkmark />
 		</CheckboxLabel>
 	);
 };
 
+const CustomRadioButton = function(props: any) {
+	return (
+		<label>{JSON.stringify(props.schema)}</label>
+	);
+};
+
 const widgets = {
-	CheckboxWidget: CustomCheckbox
+	CustomCheckbox: CustomCheckbox,
+	CustomRadioButton: CustomRadioButton
 };
 
 class JSONSchemaForm extends React.Component<Props, {}> {
