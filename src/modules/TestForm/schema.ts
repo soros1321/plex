@@ -2,7 +2,7 @@ import { JSONSchema4 } from 'json-schema';
 
 export const schema: JSONSchema4 = {
 	type: 'object',
-	required: ['inputText'],
+	required: ['inputText', 'checkboxField'],
 	properties: {
 		inputText: {
 			type: 'string',
@@ -75,7 +75,8 @@ export const uiSchema = {
 	checkboxField: {
 		'ui:widget': 'CustomCheckbox',
 		'ui:options': {
-			label: false
+			label: false,
+			required: true
 		}
 	},
 	selectDropdown: {

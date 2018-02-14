@@ -139,7 +139,8 @@ export const uiSchema = {
 		classNames: 'collateral-container',
 		collateralized: {
 			'ui:help': 'A quick, layman\'s definition of what collateralized means and why it\'s a smart ideas goes here.',
-			classNames: 'collateralized-container'
+			classNames: 'collateralized-container',
+			'ui:widget': 'CustomCheckbox'
 		},
 		source: {
 			'ui:placeholder': 'Select your source of collateral',

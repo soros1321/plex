@@ -2,7 +2,6 @@ import * as React from 'react';
 import { schema, uiSchema } from './schema';
 import { Header, JSONSchemaForm } from '../../../components';
 import { Wrapper } from './styledComponents';
-import './JSONSchema.css';
 
 interface FormResponse {
 	formData: {};
@@ -16,40 +15,6 @@ class JSONSchema extends React.Component<{}, FormResponse> {
 		};
 		this.handleChange = this.handleChange.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
-		this.handleScroll = this.handleScroll.bind(this);
-	}
-
-	componentDidMount() {
-		window.addEventListener('scroll', this.handleScroll);
-	}
-
-	componentWillUnmount() {
-		window.removeEventListener('scroll', this.handleScroll);
-	}
-
-	handleScroll() {
-		const loan = document.getElementsByClassName('loan-container') as HTMLCollectionOf<HTMLElement>;
-		const collateral = document.getElementsByClassName('collateral-container') as HTMLCollectionOf<HTMLElement>;
-		const terms = document.getElementsByClassName('terms-container') as HTMLCollectionOf<HTMLElement>;
-
-		if (loan.length && collateral.length && terms.length) {
-			if (window.scrollY > 400) {
-				// Set focus on the loan container
-				loan[0].style.opacity = '0.2';
-				collateral[0].style.opacity = '0.2';
-				terms[0].style.opacity = '1';
-			} else if (window.scrollY > 200 && window.scrollY <= 400) {
-				// Set focus on the collateral container
-				loan[0].style.opacity = '0.2';
-				collateral[0].style.opacity = '1';
-				terms[0].style.opacity = '0.2';
-			} else {
-				// Set focus on the terms container
-				loan[0].style.opacity = '1';
-				collateral[0].style.opacity = '0.2';
-				terms[0].style.opacity = '0.2';
-			}
-		}
 	}
 
 	handleChange(formData: {}) {

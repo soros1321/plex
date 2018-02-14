@@ -1,13 +1,10 @@
 import * as React from 'react';
-import Form from 'react-jsonschema-form';
 import { Button } from 'reactstrap';
 import { JSONSchema4 } from 'json-schema';
+import { StyledForm } from './styledComponents';
 import { ObjectFieldTemplate } from './ObjectFieldTemplate';
 import { FieldTemplate } from './FieldTemplate';
-import {
-	CheckboxLabel,
-	Checkmark
-} from './styledComponents';
+import { CustomCheckbox } from './CustomCheckbox';
 
 interface FormResponse {
 	formData: {};
@@ -22,31 +19,48 @@ interface Props {
 	onHandleSubmit: () => void;
 }
 
-const CustomCheckbox = function(props: any) {
-	return (
-		<CheckboxLabel>{props.schema.title}
-			<input type="checkbox" required={props.required} onClick={() => props.onChange(!props.value)}/>
-			<Checkmark />
-		</CheckboxLabel>
-	);
-};
-
-const CustomRadioButton = function(props: any) {
-	return (
-		<label>{JSON.stringify(props.schema)}</label>
-	);
-};
-
 const widgets = {
-	CustomCheckbox: CustomCheckbox,
-	CustomRadioButton: CustomRadioButton
+	CustomCheckbox: CustomCheckbox
 };
+
+const paddingTop = 55;
 
 class JSONSchemaForm extends React.Component<Props, {}> {
 	constructor(props: Props) {
 		super(props);
 		this.handleChange = this.handleChange.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
+		this.handleScroll = this.handleScroll.bind(this);
+	}
+
+	componentDidMount() {
+		window.addEventListener('scroll', this.handleScroll);
+
+		const formGroup = document.getElementsByClassName('field-wrapper') as HTMLCollectionOf<HTMLElement>;
+		if (formGroup.length) {
+			for (let elm of formGroup as any) {
+				if (elm.offsetTop <= paddingTop) {
+					elm.classList.add('active');
+				}
+			}
+		}
+	}
+
+	componentWillUnmount() {
+		window.removeEventListener('scroll', this.handleScroll);
+	}
+
+	handleScroll() {
+		const formGroup = document.getElementsByClassName('field-wrapper') as HTMLCollectionOf<HTMLElement>;
+		if (formGroup.length) {
+			for (let elm of formGroup as any) {
+				if (window.scrollY + paddingTop >= elm.offsetTop && window.scrollY + paddingTop <= elm.offsetTop + elm.offsetHeight) {
+					elm.classList.add('active');
+				} else {
+					elm.classList.remove('active');
+				}
+			}
+		}
 	}
 
 	handleChange(response: FormResponse) {
@@ -60,7 +74,7 @@ class JSONSchemaForm extends React.Component<Props, {}> {
 	render() {
 		return (
 			<div>
-				<Form
+				<StyledForm
 					schema={this.props.schema}
 					uiSchema={this.props.uiSchema}
 					formData={this.props.formData}
@@ -72,7 +86,7 @@ class JSONSchemaForm extends React.Component<Props, {}> {
 					widgets={widgets}
 				>
 					<Button type="submit" className="button">{this.props.buttonText || 'Submit'}</Button>
-				</Form>
+				</StyledForm>
 			</div>
 		);
 	}

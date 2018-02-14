@@ -2,13 +2,14 @@ import * as React from 'react';
 import { FieldTemplateProps } from './typeDef';
 import {
 	Description,
+	FieldWrapper,
 	Error,
 	Help
 } from './styledComponents';
 
 function FieldTemplate(props: FieldTemplateProps) {
 	return (
-		<div className={props.classNames} key={props.id}>
+		<FieldWrapper className={props.classNames + ' field-wrapper'} key={props.id}>
 			{props.displayLabel && (<label htmlFor={props.id}>{props.label}{props.required ? '*' : null}</label>)}
 			{props.displayLabel && (<Description>{props.rawDescription}</Description>)}
 			{props.children}
@@ -16,7 +17,7 @@ function FieldTemplate(props: FieldTemplateProps) {
 				<Error>{error}</Error>
 			))}
 			<Help>{props.help}</Help>
-		</div>
+		</FieldWrapper>
 	);
 }
 export { FieldTemplate };
