@@ -74,10 +74,10 @@ export const uiSchema = {
 	},
 	group: {
 		someInput: {
-			classNames: 'group-field',
+			classNames: 'group-field'
 		},
 		anotherInput: {
-			classNames: 'group-field',
+			classNames: 'group-field'
 		}
 	},
 	checkboxField: {

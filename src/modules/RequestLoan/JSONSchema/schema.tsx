@@ -118,20 +118,20 @@ export const uiSchema = {
 		amount: {
 			'ui:autofocus': true,
 			'ui:placeholder': '0.00',
-			classNames: 'amount-container'
+			classNames: 'amount-container group-field'
 		},
 		currency: {
 			'ui:options': {
 				label: false
 			},
-			classNames: 'currency-container'
+			classNames: 'currency-container group-field'
 		},
 		description: {
 			'ui:options': {
 				label: false
 			},
 			'ui:placeholder': 'Description (optional, but helpful to lenders)',
-			classNames: 'description-container'
+			classNames: 'description-container group-field'
 		}
 
 	},
@@ -139,39 +139,39 @@ export const uiSchema = {
 		classNames: 'collateral-container',
 		collateralized: {
 			'ui:help': 'A quick, layman\'s definition of what collateralized means and why it\'s a smart ideas goes here.',
-			classNames: 'collateralized-container',
+			classNames: 'collateralized-container group-field',
 			'ui:widget': 'CustomCheckbox'
 		},
 		source: {
 			'ui:placeholder': 'Select your source of collateral',
-			classNames: 'source-container'
+			classNames: 'source-container group-field'
 		},
 		amount: {
 			'ui:options': {
 				label: false
 			},
 			'ui:placeholder': 'Amount of collateral',
-			classNames: 'amount-container'
+			classNames: 'amount-container group-field'
 		},
 		currency: {
 			'ui:options': {
 				label: false
 			},
-			classNames: 'currency-container'
+			classNames: 'currency-container group-field'
 		},
 		lockupPeriod: {
 			'ui:widget': 'radio',
 			'ui:options': {
 				inline: true
 			},
-			classNames: 'lockup-period-container'
+			classNames: 'lockup-period-container group-field'
 		},
 		customPeriod: {
 			'ui:options': {
 				label: false
 			},
 			'ui:placeholder': 'X Weeks',
-			classNames: 'custom-lockup-period-container',
+			classNames: 'custom-lockup-period-container group-field',
 			'ui:disabled': true
 		}
 	},
@@ -179,16 +179,16 @@ export const uiSchema = {
 		classNames: 'terms-container',
 		'ui:description': 'The most commonly chosen options are selected by default.',
 		principle: {
-			classNames: 'principle-container'
+			classNames: 'principle-container group-field'
 		},
 		interest: {
-			classNames: 'interest-container'
+			classNames: 'interest-container group-field'
 		},
 		repaymentDate: {
-			classNames: 'repayment-date-container'
+			classNames: 'repayment-date-container group-field'
 		},
 		repaymentTerms: {
-			classNames: 'repayment-terms-container'
+			classNames: 'repayment-terms-container group-field'
 		}
 	}
 };
