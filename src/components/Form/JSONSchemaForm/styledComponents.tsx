@@ -3,6 +3,11 @@ import Form from 'react-jsonschema-form';
 
 export const StyledForm = styled(Form)`
 `;
+/*
+ position: absolute;
+ top: 300px;
+ padding-bottom: 500px;
+ */
 
 // styles-components
 export const GroupWrapper = styled.div`
@@ -36,7 +41,7 @@ export const FieldWrapper = styled.div`
 	opacity: 0.3;
 
 	&.form-group {
-		margin-bottom: 80px;
+		margin-bottom: 120px;
 	}
 	&.form-group.group-field {
 		margin-bottom: auto;

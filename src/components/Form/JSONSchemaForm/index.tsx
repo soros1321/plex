@@ -24,7 +24,7 @@ const widgets = {
 	CustomCheckbox: CustomCheckbox
 };
 
-const paddingTop = 0;
+const paddingTop = 200;
 const fieldClassName = 'field-wrapper';
 const activeClassName = 'active';
 
@@ -77,7 +77,7 @@ function highlightNextSibling(el: any, cls: string) {
 						nextSibling.classList.add(activeClassName);
 						el.classList.remove(activeClassName);
 						// window.scrollTo(0, potentialSibling.offsetHeight + window.scrollY);
-						scroll.scrollTo(potentialSibling.offsetHeight + window.scrollY - paddingTop);
+						scroll.scrollTo(potentialSibling.offsetHeight + window.scrollY);
 						break;
 					}
 				}
@@ -128,6 +128,7 @@ function highlightElement(clickedElm: any) {
 		if (inputFieldParent) {
 			inputField.focus();
 			inputFieldParent.classList.add(activeClassName);
+			scroll.scrollTo(inputFieldParent.offsetTop - paddingTop);
 		}
 	}
 	parentElm.classList.add(activeClassName);
