@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Button } from 'reactstrap';
 import { JSONSchema4 } from 'json-schema';
-import { StyledForm } from './styledComponents';
+import { StyledForm, FieldWrapper } from './styledComponents';
 import { ObjectFieldTemplate } from './ObjectFieldTemplate';
 import { FieldTemplate } from './FieldTemplate';
 import { CustomCheckbox } from './CustomCheckbox';
@@ -64,6 +64,9 @@ function highlightNextSibling(el: any, cls: string) {
 				if (!siblingInputField) {
 					siblingInputField = sibling.querySelector('textarea');
 				}
+				if (!siblingInputField) {
+					siblingInputField = sibling.querySelector('button');
+				}
 				if (siblingInputField) {
 					potentialSibling = findAncestor(siblingInputField, cls);
 					if (potentialSibling) {
@@ -82,7 +85,7 @@ function highlightNextSibling(el: any, cls: string) {
 	if (nextSibling === el) {
 		parentElm = findAncestor(el, cls);
 		if (parentElm) {
-			el.classList.remove(activeClassName);
+			// el.classList.remove(activeClassName);
 			highlightNextSibling(parentElm, cls);
 		}
 	}
@@ -189,11 +192,13 @@ class JSONSchemaForm extends React.Component<Props, {}> {
 
 	handleKeypress(event: any) {
 		if (event.key === 'Enter') {
-			event.preventDefault();
-			if (event.path[0].nodeName === 'INPUT' || event.path[0].nodeName === 'SELECT' || event.path[0].nodeName === 'TEXTAREA') {
-				const parentElm = findAncestor(event.path[0], fieldClassName);
-				if (parentElm) {
-					highlightNextSibling(parentElm, fieldClassName);
+			if (event.path[0].nodeName === 'INPUT' || event.path[0].nodeName === 'SELECT' || event.path[0].nodeName === 'TEXTAREA' || event.path[0].nodeName === 'BUTTON') {
+				if (event.path[0].nodeName !== 'BUTTON') {
+					event.preventDefault();
+					const parentElm = findAncestor(event.path[0], fieldClassName);
+					if (parentElm) {
+						highlightNextSibling(parentElm, fieldClassName);
+					}
 				}
 			}
 		}
@@ -216,7 +221,9 @@ class JSONSchemaForm extends React.Component<Props, {}> {
 				showErrorList={false}
 				widgets={widgets}
 			>
-				<Button type="submit" className="button">{this.props.buttonText || 'Submit'}</Button>
+				<FieldWrapper className="field-wrapper">
+					<Button type="submit" className="button">{this.props.buttonText || 'Submit'}</Button>
+				</FieldWrapper>
 			</StyledForm>
 		);
 	}

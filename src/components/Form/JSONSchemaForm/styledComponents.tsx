@@ -36,7 +36,7 @@ export const InputContainerBorder = styled.div`
 `;
 
 export const FieldWrapper = styled.div`
-	opacity: 0.2;
+	opacity: 0.3;
 
 	&.form-group {
 		margin-bottom: 80px;
