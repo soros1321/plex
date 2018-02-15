@@ -38,6 +38,12 @@ export const InputContainerBorder = styled.div`
 export const FieldWrapper = styled.div`
 	opacity: 0.2;
 
+	&.form-group {
+		margin-bottom: 80px;
+	}
+	&.form-group.group-field {
+		margin-bottom: auto;
+	}
 	&.active {
 		opacity: 1;
 	}

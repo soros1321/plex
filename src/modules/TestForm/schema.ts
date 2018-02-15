@@ -15,7 +15,7 @@ export const schema: JSONSchema4 = {
 		group: {
 			title: 'This is the title of the grouped fields',
 			type: 'object',
-			description: 'This is the description.',
+			description: 'Make sure you add `group-field` classNames for each fields inside the uiSchema',
 			properties: {
 				someInput: {
 					type: 'string',
@@ -71,6 +71,14 @@ export const uiSchema = {
 	inputNumber: {
 		'ui:placeholder': 'This input only accepts number',
 		'ui:help': 'You can specify the help content inside uiSchema',
+	},
+	group: {
+		someInput: {
+			classNames: 'group-field',
+		},
+		anotherInput: {
+			classNames: 'group-field',
+		}
 	},
 	checkboxField: {
 		'ui:widget': 'CustomCheckbox',
