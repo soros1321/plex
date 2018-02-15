@@ -154,16 +154,21 @@ class JSONSchemaForm extends React.Component<Props, {}> {
 		window.addEventListener('keypress', this.handleKeypress);
 		window.addEventListener('click', this.handleClick);
 
-		const fieldWrappers = document.querySelectorAll('.' + fieldClassName);
-		let counter = 0;
-		// We want to highlight the root and the first element
-		for (let elm of fieldWrappers as any) {
-			// We don't want to remove root's active class
-			if (counter > 1) {
-				break;
+		// Always set the root element as active
+		const rootElm = document.querySelector('.' + fieldClassName);
+		if (rootElm) {
+			rootElm.classList.add(activeClassName);
+			// Then we want to highlight the first input child
+			let inputField: any = rootElm.querySelector('input');
+			if (!inputField) {
+				inputField = rootElm.querySelector('select');
 			}
-			elm.classList.add(activeClassName);
-			counter++;
+			if (!inputField) {
+				inputField = rootElm.querySelector('textarea');
+			}
+			if (inputField) {
+				highlightElement(inputField);
+			}
 		}
 	}
 

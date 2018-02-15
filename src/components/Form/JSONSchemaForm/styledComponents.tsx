@@ -44,7 +44,7 @@ export const FieldWrapper = styled.div`
 		margin-bottom: 120px;
 	}
 	&.form-group.group-field {
-		margin-bottom: auto;
+		margin-bottom: 20px;
 	}
 	&.active {
 		opacity: 1;
