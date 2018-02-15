@@ -5,6 +5,7 @@ import { StyledForm, FieldWrapper } from './styledComponents';
 import { ObjectFieldTemplate } from './ObjectFieldTemplate';
 import { FieldTemplate } from './FieldTemplate';
 import { CustomCheckbox } from './CustomCheckbox';
+import { animateScroll as scroll } from 'react-scroll';
 
 interface FormResponse {
 	formData: {};
@@ -23,7 +24,7 @@ const widgets = {
 	CustomCheckbox: CustomCheckbox
 };
 
-const paddingTop = 55;
+const paddingTop = 0;
 const fieldClassName = 'field-wrapper';
 const activeClassName = 'active';
 
@@ -75,6 +76,8 @@ function highlightNextSibling(el: any, cls: string) {
 						sibling.classList.add(activeClassName);
 						nextSibling.classList.add(activeClassName);
 						el.classList.remove(activeClassName);
+						// window.scrollTo(0, potentialSibling.offsetHeight + window.scrollY);
+						scroll.scrollTo(potentialSibling.offsetHeight + window.scrollY - paddingTop);
 						break;
 					}
 				}
@@ -151,13 +154,16 @@ class JSONSchemaForm extends React.Component<Props, {}> {
 		window.addEventListener('keypress', this.handleKeypress);
 		window.addEventListener('click', this.handleClick);
 
-		const formGroup = document.getElementsByClassName(fieldClassName) as HTMLCollectionOf<HTMLElement>;
-		if (formGroup.length) {
-			for (let elm of formGroup as any) {
-				if (elm.offsetTop <= paddingTop) {
-					elm.classList.add(activeClassName);
-				}
+		const fieldWrappers = document.querySelectorAll('.' + fieldClassName);
+		let counter = 0;
+		// We want to highlight the root and the first element
+		for (let elm of fieldWrappers as any) {
+			// We don't want to remove root's active class
+			if (counter > 1) {
+				break;
 			}
+			elm.classList.add(activeClassName);
+			counter++;
 		}
 	}
 
@@ -177,9 +183,9 @@ class JSONSchemaForm extends React.Component<Props, {}> {
 	handleScroll() {
 		return;
 		/*
-		const formGroup = document.getElementsByClassName('field-wrapper') as HTMLCollectionOf<HTMLElement>;
-		if (formGroup.length) {
-			for (let elm of formGroup as any) {
+		const fieldWrappers = document.getElementsByClassName('field-wrapper') as HTMLCollectionOf<HTMLElement>;
+		if (fieldWrappers.length) {
+			for (let elm of fieldWrappers as any) {
 				if (window.scrollY + paddingTop >= elm.offsetTop && window.scrollY + paddingTop <= elm.offsetTop + elm.offsetHeight) {
 					elm.classList.add('active');
 				} else {
