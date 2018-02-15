@@ -69,6 +69,9 @@ function highlightNextSibling(el: any, cls: string) {
 					siblingInputField = sibling.querySelector('button');
 				}
 				if (siblingInputField) {
+					if (siblingInputField.disabled) {
+						continue;
+					}
 					potentialSibling = findAncestor(siblingInputField, cls);
 					if (potentialSibling) {
 						siblingInputField.focus();
