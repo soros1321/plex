@@ -65,7 +65,8 @@ export const schema: JSONSchema4 = {
 
 export const uiSchema = {
 	inputText: {
-		'ui:placeholder': 'Specify the placeholder text in the uiSchema'
+		'ui:placeholder': 'Specify the placeholder text in the uiSchema',
+		'ui:autofocus': true
 	},
 	inputNumber: {
 		'ui:placeholder': 'This input only accepts number',

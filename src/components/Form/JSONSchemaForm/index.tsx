@@ -24,12 +24,17 @@ const widgets = {
 };
 
 const paddingTop = 55;
+const fieldClassName = 'field-wrapper';
+const activeClassName = 'active';
 
 function findAncestor(el: any, cls: string) {
 	if (el.parentElement) {
 		el = el.parentElement;
 		while (!el.classList.contains(cls)) {
 			el = el.parentElement;
+			if (!el) {
+				break;
+			}
 		}
 	}
 	return el;
@@ -64,9 +69,9 @@ function highlightNextSibling(el: any, cls: string) {
 					if (potentialSibling) {
 						siblingInputField.focus();
 						nextSibling = potentialSibling;
-						sibling.classList.add('active');
-						nextSibling.classList.add('active');
-						el.classList.remove('active');
+						sibling.classList.add(activeClassName);
+						nextSibling.classList.add(activeClassName);
+						el.classList.remove(activeClassName);
 						break;
 					}
 				}
@@ -77,10 +82,51 @@ function highlightNextSibling(el: any, cls: string) {
 	if (nextSibling === el) {
 		parentElm = findAncestor(el, cls);
 		if (parentElm) {
-			el.classList.remove('active');
+			el.classList.remove(activeClassName);
 			highlightNextSibling(parentElm, cls);
 		}
 	}
+}
+
+function highlightElement(clickedElm: any) {
+	let parentElm: any = clickedElm;
+	if (!parentElm.classList.contains(fieldClassName)) {
+		parentElm = findAncestor(clickedElm, fieldClassName);
+		if (!parentElm) {
+			return;
+		}
+	}
+	if (parentElm.classList.contains(activeClassName)) {
+		return;
+	}
+	// Removed all active elements
+	const activeElms = document.querySelectorAll('.' + fieldClassName + '.' + activeClassName);
+	let counter = 0;
+	for (let elm of activeElms as any) {
+		// We don't want to remove root's active class
+		if (counter === 0) {
+			counter++;
+			continue;
+		}
+		elm.classList.remove(activeClassName);
+	}
+	let inputField = parentElm.querySelector('input');
+	if (!inputField) {
+		inputField = parentElm.querySelector('select');
+	}
+	if (!inputField) {
+		inputField = parentElm.querySelector('textarea');
+	}
+	if (inputField) {
+		const inputFieldParent = findAncestor(inputField, fieldClassName);
+		if (inputFieldParent) {
+			inputField.focus();
+			inputFieldParent.classList.add(activeClassName);
+		}
+	}
+	parentElm.classList.add(activeClassName);
+
+	// Check if we need to highlight the grandparent as well (Especially for grouped fields)
 }
 
 class JSONSchemaForm extends React.Component<Props, {}> {
@@ -90,17 +136,19 @@ class JSONSchemaForm extends React.Component<Props, {}> {
 		this.handleSubmit = this.handleSubmit.bind(this);
 		this.handleScroll = this.handleScroll.bind(this);
 		this.handleKeypress = this.handleKeypress.bind(this);
+		this.handleClick = this.handleClick.bind(this);
 	}
 
 	componentDidMount() {
 		window.addEventListener('scroll', this.handleScroll);
 		window.addEventListener('keypress', this.handleKeypress);
+		window.addEventListener('click', this.handleClick);
 
-		const formGroup = document.getElementsByClassName('field-wrapper') as HTMLCollectionOf<HTMLElement>;
+		const formGroup = document.getElementsByClassName(fieldClassName) as HTMLCollectionOf<HTMLElement>;
 		if (formGroup.length) {
 			for (let elm of formGroup as any) {
 				if (elm.offsetTop <= paddingTop) {
-					elm.classList.add('active');
+					elm.classList.add(activeClassName);
 				}
 			}
 		}
@@ -109,6 +157,14 @@ class JSONSchemaForm extends React.Component<Props, {}> {
 	componentWillUnmount() {
 		window.removeEventListener('scroll', this.handleScroll);
 		window.removeEventListener('keypress', this.handleKeypress);
+	}
+
+	handleChange(response: FormResponse) {
+		this.props.onHandleChange(response.formData);
+	}
+
+	handleSubmit() {
+		this.props.onHandleSubmit();
 	}
 
 	handleScroll() {
@@ -130,22 +186,17 @@ class JSONSchemaForm extends React.Component<Props, {}> {
 	handleKeypress(event: any) {
 		if (event.key === 'Enter') {
 			event.preventDefault();
-			if (event.path[0].nodeName === 'INPUT') {
-				const parentElm = findAncestor(event.path[0], 'field-wrapper');
+			if (event.path[0].nodeName === 'INPUT' || event.path[0].nodeName === 'SELECT' || event.path[0].nodeName === 'TEXTAREA') {
+				const parentElm = findAncestor(event.path[0], fieldClassName);
 				if (parentElm) {
-					highlightNextSibling(parentElm, 'field-wrapper');
+					highlightNextSibling(parentElm, fieldClassName);
 				}
-				// window.scrollTo(0, window.scrollY + event.path[1].offsetHeight + 20);
 			}
 		}
 	}
 
-	handleChange(response: FormResponse) {
-		this.props.onHandleChange(response.formData);
-	}
-
-	handleSubmit() {
-		this.props.onHandleSubmit();
+	handleClick(event: any) {
+		highlightElement(event.path[0]);
 	}
 
 	render() {
