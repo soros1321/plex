@@ -126,7 +126,11 @@ function highlightElement(clickedElm: any) {
 	}
 	parentElm.classList.add(activeClassName);
 
-	// Check if we need to highlight the grandparent as well (Especially for grouped fields)
+	// We need to highlight the grandparent as well (Especially for grouped fields)
+	const grandParentElm = findAncestor(parentElm, fieldClassName);
+	if (grandParentElm) {
+		grandParentElm.classList.add(activeClassName);
+	}
 }
 
 class JSONSchemaForm extends React.Component<Props, {}> {
