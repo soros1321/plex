@@ -2,7 +2,6 @@ import { JSONSchema4 } from 'json-schema';
 
 export const schema: JSONSchema4 = {
 	type: 'object',
-	required: ['inputText', 'checkboxField'],
 	properties: {
 		inputText: {
 			type: 'string',
