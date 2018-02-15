@@ -76,8 +76,7 @@ function highlightNextSibling(el: any, cls: string) {
 						sibling.classList.add(activeClassName);
 						nextSibling.classList.add(activeClassName);
 						el.classList.remove(activeClassName);
-						// window.scrollTo(0, potentialSibling.offsetHeight + window.scrollY);
-						scroll.scrollTo(potentialSibling.offsetHeight + window.scrollY);
+						scroll.scrollTo(potentialSibling.offsetTop - paddingTop);
 						break;
 					}
 				}
