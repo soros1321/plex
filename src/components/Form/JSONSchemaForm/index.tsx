@@ -5,6 +5,7 @@ import { StyledForm, FieldWrapper } from './styledComponents';
 import { ObjectFieldTemplate } from './ObjectFieldTemplate';
 import { FieldTemplate } from './FieldTemplate';
 import { CustomCheckbox } from './CustomCheckbox';
+import { CustomBaseInput } from './CustomBaseInput';
 import { animateScroll as scroll } from 'react-scroll';
 
 interface FormResponse {
@@ -21,7 +22,8 @@ interface Props {
 }
 
 const widgets = {
-	CustomCheckbox: CustomCheckbox
+	CustomCheckbox: CustomCheckbox,
+	BaseInput: CustomBaseInput
 };
 
 const paddingTop = 200;

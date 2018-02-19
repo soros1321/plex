@@ -182,3 +182,20 @@ export const RadioLabel = styled.label`
 		background: white;
 	}
 `;
+
+export const PressEnter = Description.extend`
+	margin-top: 5px;
+	font-family: DIN-Bold;
+	opacity: 0;
+	padding: 5px;
+	color: #FFFFFF;
+	background-color: #1CC1CC;
+	width: fit-content;
+
+	&.active {
+		-webkit-transition: opacity 0.3s ease-in;
+		-moz-transition: opacity 0.3s ease-in;
+		-o-transition: opacity 0.3s ease-in;
+		opacity: 1;
+	}
+`;
