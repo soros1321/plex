@@ -17,15 +17,14 @@ class JSONSchema extends React.Component<{}, FormResponse> {
 		this.handleSubmit = this.handleSubmit.bind(this);
 	}
 
-	handleChange(formData: {}) {
-		const collateralized = document.getElementById('root_collateral_collateralized') as HTMLInputElement;
+	handleChange(formData: any) {
 		const collateralSource = document.getElementById('root_collateral_source') as HTMLInputElement;
 		const collateralAmount = document.getElementById('root_collateral_amount') as HTMLInputElement;
 		const collateralCurrency = document.getElementById('root_collateral_currency') as HTMLInputElement;
 		const lockupPeriod = document.querySelectorAll('.lockup-period-container input') as NodeListOf<HTMLInputElement>;
 		const customLockupPeriod = document.getElementById('root_collateral_customPeriod') as HTMLInputElement;
 
-		if (collateralized.checked) {
+		if (!formData.collateral.collateralized) {
 			collateralSource.disabled = false;
 			collateralAmount.disabled = false;
 			collateralCurrency.disabled = false;

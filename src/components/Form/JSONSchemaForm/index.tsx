@@ -205,21 +205,19 @@ class JSONSchemaForm extends React.Component<Props, {}> {
 	}
 
 	handleKeypress(event: any) {
-		if (event.key === 'Enter') {
-			if (event.path[0].nodeName === 'INPUT' || event.path[0].nodeName === 'SELECT' || event.path[0].nodeName === 'TEXTAREA' || event.path[0].nodeName === 'BUTTON') {
-				if (event.path[0].nodeName !== 'BUTTON') {
-					event.preventDefault();
-					const parentElm = findAncestor(event.path[0], fieldClassName);
-					if (parentElm) {
-						highlightNextSibling(parentElm, fieldClassName);
-					}
-				}
+		if (event! && event!.key! && event!.path! && event.key === 'Enter' && (event.path[0].nodeName === 'INPUT' || event.path[0].nodeName === 'SELECT' || event.path[0].nodeName === 'TEXTAREA')) {
+			event.preventDefault();
+			const parentElm = findAncestor(event.path[0], fieldClassName);
+			if (parentElm) {
+				highlightNextSibling(parentElm, fieldClassName);
 			}
 		}
 	}
 
 	handleClick(event: any) {
-		highlightElement(event.path[0]);
+		if (event! && event!.path!) {
+			highlightElement(event.path[0]);
+		}
 	}
 
 	render() {
