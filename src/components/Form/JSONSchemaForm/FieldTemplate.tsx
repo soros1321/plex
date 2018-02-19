@@ -14,7 +14,7 @@ function FieldTemplate(props: FieldTemplateProps) {
 			{props.displayLabel && (<Description>{props.rawDescription}</Description>)}
 			{props.children}
 			{props.rawErrors && props.rawErrors.map(error => (
-				<Error key={error}>{error}</Error>
+				<Error className="field-error-message" key={error}>{error}</Error>
 			))}
 			<Help>{props.help}</Help>
 		</FieldWrapper>

@@ -8,15 +8,15 @@ import { CustomCheckbox } from './CustomCheckbox';
 import { animateScroll as scroll } from 'react-scroll';
 
 interface FormResponse {
-	formData: {};
+	formData: any;
 }
 
 interface Props {
 	schema: JSONSchema4;
 	uiSchema?: {};
-	formData: {};
+	formData: any;
 	buttonText?: string;
-	onHandleChange: (formData: {}) => void;
+	onHandleChange: (formData: any) => void;
 	onHandleSubmit: () => void;
 }
 
@@ -147,6 +147,7 @@ class JSONSchemaForm extends React.Component<Props, {}> {
 		super(props);
 		this.handleChange = this.handleChange.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
+		this.handleError = this.handleError.bind(this);
 		this.handleScroll = this.handleScroll.bind(this);
 		this.handleKeypress = this.handleKeypress.bind(this);
 		this.handleClick = this.handleClick.bind(this);
@@ -188,6 +189,14 @@ class JSONSchemaForm extends React.Component<Props, {}> {
 		this.props.onHandleSubmit();
 	}
 
+	handleError(response: FormResponse) {
+		const fieldErrors = document.getElementsByClassName('field-error-message') as HTMLCollectionOf<HTMLElement>;
+		if (fieldErrors.length) {
+			const firstError = fieldErrors[0];
+			highlightElement(firstError);
+		}
+	}
+
 	handleScroll() {
 		return;
 		/*
@@ -207,6 +216,21 @@ class JSONSchemaForm extends React.Component<Props, {}> {
 	handleKeypress(event: any) {
 		if (event! && event!.key! && event!.path! && event.key === 'Enter' && (event.path[0].nodeName === 'INPUT' || event.path[0].nodeName === 'SELECT' || event.path[0].nodeName === 'TEXTAREA')) {
 			event.preventDefault();
+			let value: any = '';
+			switch (event.path[0].nodeName) {
+				case 'INPUT':
+				case 'TEXTAREA':
+					value = event.path[0].value;
+					break;
+				case 'SELECT':
+					value = event.path[0].options[event.path[0].selectedIndex].value;
+					break;
+				default:
+					break;
+			}
+			if (event.path[0].required && !value) {
+				return;
+			}
 			const parentElm = findAncestor(event.path[0], fieldClassName);
 			if (parentElm) {
 				highlightNextSibling(parentElm, fieldClassName);
@@ -228,6 +252,7 @@ class JSONSchemaForm extends React.Component<Props, {}> {
 				formData={this.props.formData}
 				onChange={this.handleChange}
 				onSubmit={this.handleSubmit}
+				onError={this.handleError}
 				ObjectFieldTemplate={ObjectFieldTemplate}
 				FieldTemplate={FieldTemplate}
 				showErrorList={false}

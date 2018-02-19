@@ -1,15 +1,15 @@
 {
   "contractName": "PermissionsLib",
   "abi": [],
-  "bytecode": "0x60606040523415600e57600080fd5b603580601b6000396000f3006060604052600080fd00a165627a7a7230582052bf41cfac3472e5809447b150fee17ddd85c0d7c93828dd87ab399eff375a5d0029",
-  "deployedBytecode": "0x6060604052600080fd00a165627a7a7230582052bf41cfac3472e5809447b150fee17ddd85c0d7c93828dd87ab399eff375a5d0029",
+  "bytecode": "0x60606040523415600e57600080fd5b603580601b6000396000f3006060604052600080fd00a165627a7a723058208800f5963073ed9fa9c6b78ab24c9ac7f744f9e37fc2b90eeb6c3c9a21cc7e0c0029",
+  "deployedBytecode": "0x6060604052600080fd00a165627a7a723058208800f5963073ed9fa9c6b78ab24c9ac7f744f9e37fc2b90eeb6c3c9a21cc7e0c0029",
   "sourceMap": "610:2090:10:-;;;;;;;;;;;;;;;;;",
   "deployedSourceMap": "610:2090:10:-;;;;;",
   "source": "/*\n\n  Copyright 2017 Dharma Labs Inc.\n\n  Licensed under the Apache License, Version 2.0 (the \"License\");\n  you may not use this file except in compliance with the License.\n  You may obtain a copy of the License at\n\n    http://www.apache.org/licenses/LICENSE-2.0\n\n  Unless required by applicable law or agreed to in writing, software\n  distributed under the License is distributed on an \"AS IS\" BASIS,\n  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n  See the License for the specific language governing permissions and\n  limitations under the License.\n\n*/\n\npragma solidity 0.4.18;\n\n\nlibrary PermissionsLib {\n    struct Permissions {\n        mapping (address => bool) authorized;\n        mapping (address => uint) agentToIndex; // ensures O(1) look-up\n        address[] authorizedAgents;\n    }\n\n    function authorize(Permissions storage self, address agent)\n        internal\n    {\n        require(isNotAuthorized(self, agent));\n\n        self.authorized[agent] = true;\n        self.authorizedAgents.push(agent);\n        self.agentToIndex[agent] = self.authorizedAgents.length - 1;\n    }\n\n    function revokeAuthorization(Permissions storage self, address agent)\n        internal\n    {\n        /* We only want to do work in the case where the agent whose\n        authorization is being revoked had authorization permissions in the\n        first place. */\n        require(isAuthorized(self, agent));\n\n        uint indexOfAgentToRevoke = self.agentToIndex[agent];\n        uint indexOfAgentToMove = self.authorizedAgents.length - 1;\n        address agentToMove = self.authorizedAgents[indexOfAgentToMove];\n\n        // Revoke the agent's authorization.\n        delete self.authorized[agent];\n\n        // Remove the agent from our collection of authorized agents.\n        self.authorizedAgents[indexOfAgentToRevoke] = agentToMove;\n\n        // Update our indices to reflect the above changes.\n        self.agentToIndex[agentToMove] = indexOfAgentToRevoke;\n        delete self.agentToIndex[agent];\n\n        // Clean up memory that's no longer being used.\n        delete self.authorizedAgents[indexOfAgentToMove];\n        self.authorizedAgents.length -= 1;\n    }\n\n    function isAuthorized(Permissions storage self, address agent)\n        internal\n        view\n        returns (bool)\n    {\n        return self.authorized[agent];\n    }\n\n    function isNotAuthorized(Permissions storage self, address agent)\n        internal\n        view\n        returns (bool)\n    {\n        return !isAuthorized(self, agent);\n    }\n\n    function getAuthorizedAgents(Permissions storage self)\n        internal\n        view\n        returns (address[])\n    {\n        return self.authorizedAgents;\n    }\n}\n",
-  "sourcePath": "/Users/nadavhollander/Documents/Dharma/Development/bazaar/contracts/libraries/PermissionsLib.sol",
+  "sourcePath": "/Users/johanmulyono/Work/bazaar/contracts/libraries/PermissionsLib.sol",
   "ast": {
     "attributes": {
-      "absolutePath": "/Users/nadavhollander/Documents/Dharma/Development/bazaar/contracts/libraries/PermissionsLib.sol",
+      "absolutePath": "/Users/johanmulyono/Work/bazaar/contracts/libraries/PermissionsLib.sol",
       "exportedSymbols": {
         "PermissionsLib": [
           2766
@@ -2411,12 +2411,12 @@
     "version": "0.4.18+commit.9cf6e910.Emscripten.clang"
   },
   "networks": {
-    "1519003090541": {
+    "1519023369037": {
       "events": {},
       "links": {},
-      "address": "0xe659bf7aa6485c22a18cfd965847b1fccbed66c1"
+      "address": "0x513dd0300d852411897a4c5890fc34dd32d12481"
     }
   },
   "schemaVersion": "1.0.1",
-  "updatedAt": "2018-02-19T01:59:49.749Z"
+  "updatedAt": "2018-02-19T06:56:42.771Z"
 }
