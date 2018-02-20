@@ -116,6 +116,11 @@ class RequestLoanForm extends React.Component<{}, States> {
 	}
 
 	render() {
+		const confirmationModalContent = (
+			<span>
+				You are requesting a loan of ${this.state.amount} ${this.state.currency} using your ${this.state.collateralSource} as collateral per the terms in the contract on the previous page. Are you sure you want to do this?
+			</span>
+		);
 		return (
 			<div className="main-wrapper">
 				<Header title={'Request a loan'} description={'Here\'s a quick description of what a debt order is and why you should request one.'} />
@@ -216,7 +221,7 @@ class RequestLoanForm extends React.Component<{}, States> {
 						</Col>
 					</Row>
 				</Form>
-				<ConfirmationModal modal={this.state.confirmationModal} title="Please confirm" content={`You are requesting a loan of ${this.state.amount} ${this.state.currency} using your ${this.state.collateralSource} as collateral per the terms in the contract on the previous page. Are you sure you want to do this?`} onToggle={this.confirmationModalToggle} onSubmit={this.successModalToggle} closeButtonText="&#8592; Modify Request" submitButtonText="Complete Request" />
+				<ConfirmationModal modal={this.state.confirmationModal} title="Please confirm" content={confirmationModalContent} onToggle={this.confirmationModalToggle} onSubmit={this.successModalToggle} closeButtonText="&#8592; Modify Request" submitButtonText="Complete Request" />
 			</div>
 		);
 	}

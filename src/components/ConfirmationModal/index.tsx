@@ -12,7 +12,7 @@ import {
 interface Props {
 	modal: boolean;
 	title: string;
-	content: string;
+	content: JSX.Element;
 	closeButtonText: string;
 	submitButtonText: string;
 	onToggle: () => void;

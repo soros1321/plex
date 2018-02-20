@@ -92,6 +92,11 @@ class FillLoanEntered extends React.Component<Props, States> {
 			</div>
 		));
 
+		const confirmationModalContent = (
+			<span>
+				You will fill this debt order ${this.props.requestId}. This operation will debit ${this.props.amount} ${this.props.currency} from your account.
+			</span>
+		);
 		return (
 			<div className="main-wrapper">
 				<Header title={'Fill a loan'} description={'Here are the details of loan request ' + this.props.requestId + '. If the terms look fair to you, fill the loan and Dharma will //insert statement.'} />
@@ -113,7 +118,7 @@ class FillLoanEntered extends React.Component<Props, States> {
 						<Button className="button width-95" onClick={this.confirmationModalToggle}>Fill Loan</Button>
 					</Col>
 				</Row>
-				<ConfirmationModal modal={this.state.confirmationModal} title="Please confirm" content={`You will fill this debt order ${this.props.requestId}. This operation will debit ${this.props.amount} ${this.props.currency} from your account.`} onToggle={this.confirmationModalToggle} onSubmit={this.successModalToggle} closeButtonText="Cancel" submitButtonText="Fill Order" />
+				<ConfirmationModal modal={this.state.confirmationModal} title="Please confirm" content={confirmationModalContent} onToggle={this.confirmationModalToggle} onSubmit={this.successModalToggle} closeButtonText="Cancel" submitButtonText="Fill Order" />
 				<SuccessModal modal={this.state.successModal} onToggle={this.successModalToggle} requestId={this.props.requestId} />
 			</div>
 		);

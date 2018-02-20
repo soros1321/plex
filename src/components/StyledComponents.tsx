@@ -28,3 +28,7 @@ export const StyledButton = styled(Button)`
 export const Wrapper30 = styled.div`
 	margin: 30px 0px;
 `;
+
+export const Bold = styled.span`
+	font-family: DIN-Bold;
+`;

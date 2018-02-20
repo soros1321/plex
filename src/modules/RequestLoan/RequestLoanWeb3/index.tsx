@@ -1,6 +1,14 @@
 import * as React from 'react';
 import { schema, uiSchema } from './schema';
-import { Header, JSONSchemaForm, MainWrapper, Code, StyledButton, Wrapper30 } from '../../../components';
+import {
+	Header,
+	JSONSchemaForm,
+	MainWrapper,
+	Code,
+	Wrapper30,
+	Bold,
+	ConfirmationModal
+} from '../../../components';
 import getWeb3 from '../../../utils/getWeb3';
 
 const promisify = require('tiny-promisify');
@@ -24,6 +32,7 @@ interface State {
 	accounts: string[];
 	formData: any;
 	debtOrder: string;
+	confirmationModal: boolean;
 }
 
 class RequestLoanWeb3 extends React.Component<{}, State> {
@@ -32,13 +41,15 @@ class RequestLoanWeb3 extends React.Component<{}, State> {
 		this.handleChange = this.handleChange.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
 		this.handleSignDebtOrder = this.handleSignDebtOrder.bind(this);
+		this.confirmationModalToggle = this.confirmationModalToggle.bind(this);
 
 		this.state = {
 			dharma: null,
 			web3: null,
 			accounts: [],
 			formData: {},
-			debtOrder: ''
+			debtOrder: '',
+			confirmationModal: false
 		};
 	}
 
@@ -107,6 +118,7 @@ class RequestLoanWeb3 extends React.Component<{}, State> {
 		const debtOrder = await dharma.adapters.simpleInterestLoan.toDebtOrder(simpleInterestLoan);
 
 		this.setState({ debtOrder: JSON.stringify(debtOrder) });
+		this.confirmationModalToggle();
 	}
 
 	async handleSignDebtOrder() {
@@ -122,10 +134,24 @@ class RequestLoanWeb3 extends React.Component<{}, State> {
 		const debtorSignature = await this.state.dharma.sign.asDebtor(debtOrder);
 		const signedDebtOrder = Object.assign({ debtorSignature }, debtOrder);
 
-		this.setState({ debtOrder: JSON.stringify(signedDebtOrder) });
+		this.setState({
+			debtOrder: JSON.stringify(signedDebtOrder),
+			confirmationModal: false
+		});
+	}
+
+	confirmationModalToggle() {
+		this.setState({
+			confirmationModal: !this.state.confirmationModal
+		});
 	}
 
 	render() {
+		const confirmationModalContent = (
+			<span>
+				You are requesting a loan of <Bold>{this.state.formData.principalAmount} {this.state.formData.principalTokenSymbol}</Bold> with interest rate of <Bold>{this.state.formData.interestRate}%</Bold> per the terms in the contract on the previous page. Are you sure you want to do this?
+			</span>
+		);
 		return (
 			<MainWrapper>
 				<Header title={'Request a loan'} description={'Here\'s a quick description of what a debt order is and why you should request one.'} />
@@ -140,9 +166,7 @@ class RequestLoanWeb3 extends React.Component<{}, State> {
 				<Wrapper30>
 					<Code>{this.state.debtOrder}</Code>
 				</Wrapper30>
-				<Wrapper30>
-					<StyledButton disabled={!this.state.debtOrder ? true : false} className="button" onClick={this.handleSignDebtOrder}>Sign Debt Order</StyledButton>
-				</Wrapper30>
+				<ConfirmationModal modal={this.state.confirmationModal} title="Please confirm" content={confirmationModalContent} onToggle={this.confirmationModalToggle} onSubmit={this.handleSignDebtOrder} closeButtonText="&#8592; Modify Request" submitButtonText="Complete Request" />
 			</MainWrapper>
 		);
 	}
