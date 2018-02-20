@@ -49,6 +49,7 @@ function highlightNextSibling(el: any, cls: string) {
 	let foundCurrentObj: boolean = false;
 	let nextSibling: any = el;
 	let potentialSibling: any = el;
+	let isButton: boolean = false;
 	for (let sibling of siblings) {
 		// First we find the current obj
 		if (el === sibling) {
@@ -60,6 +61,7 @@ function highlightNextSibling(el: any, cls: string) {
 			// The element with the same classname can be a potential next sibling
 			if (sibling.classList.contains(cls)) {
 				// If we found a match, want to make sure if it has an input field
+				isButton = false;
 				let siblingInputField = sibling.querySelector('input');
 				if (!siblingInputField) {
 					siblingInputField = sibling.querySelector('select');
@@ -69,6 +71,7 @@ function highlightNextSibling(el: any, cls: string) {
 				}
 				if (!siblingInputField) {
 					siblingInputField = sibling.querySelector('button');
+					isButton = true;
 				}
 				if (siblingInputField) {
 					if (siblingInputField.disabled) {
@@ -80,7 +83,9 @@ function highlightNextSibling(el: any, cls: string) {
 						nextSibling = potentialSibling;
 						sibling.classList.add(activeClassName);
 						nextSibling.classList.add(activeClassName);
-						el.classList.remove(activeClassName);
+						if (!isButton) {
+							el.classList.remove(activeClassName);
+						}
 						scroll.scrollTo(potentialSibling.offsetTop - paddingTop);
 						break;
 					}
@@ -90,6 +95,7 @@ function highlightNextSibling(el: any, cls: string) {
 	}
 	// If nextSibling is still the same as the original element, we probably need to move a level up
 	if (nextSibling === el) {
+		el.classList.remove(activeClassName);
 		parentElm = findAncestor(el, cls);
 		if (parentElm) {
 			// el.classList.remove(activeClassName);

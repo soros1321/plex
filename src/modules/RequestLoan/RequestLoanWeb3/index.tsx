@@ -4,11 +4,10 @@ import {
 	Header,
 	JSONSchemaForm,
 	MainWrapper,
-	Code,
-	Wrapper30,
 	Bold,
 	ConfirmationModal
 } from '../../../components';
+import { browserHistory } from 'react-router';
 import getWeb3 from '../../../utils/getWeb3';
 
 const promisify = require('tiny-promisify');
@@ -138,6 +137,7 @@ class RequestLoanWeb3 extends React.Component<{}, State> {
 			debtOrder: JSON.stringify(signedDebtOrder),
 			confirmationModal: false
 		});
+		browserHistory.push('/request/success');
 	}
 
 	confirmationModalToggle() {
@@ -163,9 +163,6 @@ class RequestLoanWeb3 extends React.Component<{}, State> {
 					onHandleChange={this.handleChange}
 					onHandleSubmit={this.handleSubmit}
 				/>
-				<Wrapper30>
-					<Code>{this.state.debtOrder}</Code>
-				</Wrapper30>
 				<ConfirmationModal modal={this.state.confirmationModal} title="Please confirm" content={confirmationModalContent} onToggle={this.confirmationModalToggle} onSubmit={this.handleSignDebtOrder} closeButtonText="&#8592; Modify Request" submitButtonText="Complete Request" />
 			</MainWrapper>
 		);
