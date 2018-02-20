@@ -57,6 +57,10 @@ class AppRouter extends React.Component<Props, {}> {
 		const networkId = await promisify(web3.version.getNetwork)();
 		const accounts = await promisify(web3.eth.getAccounts)();
 
+		if (!accounts.length) {
+			throw new Error('Cannot find any account on current Ethereum network.');
+		}
+
 		dispatch(setAccounts(accounts));
 
 		if (!(networkId in DebtKernel.networks &&
