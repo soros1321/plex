@@ -1,5 +1,5 @@
 import * as React from 'react';
-import * as Web3 from 'web3';
+// import * as Web3 from 'web3';
 import { schema, uiSchema } from './schema';
 import {
 	Header,
@@ -9,29 +9,15 @@ import {
 	ConfirmationModal
 } from '../../../components';
 import { browserHistory } from 'react-router';
-
-const promisify = require('tiny-promisify');
-const BigNumber = require('bignumber.js');
-
-// Import Dharma libraries
+import * as Web3 from 'web3';
 import Dharma from '@dharmaprotocol/dharma.js';
 
-// Import Currently Deployed Dharma contracts (should only be done in test context -- otherwise)
-const DebtRegistry = require('../../../artifacts/DebtRegistry.json');
-const DebtKernel = require('../../../artifacts/DebtKernel.json');
-const RepaymentRouter = require('../../../artifacts/RepaymentRouter.json');
-const TokenTransferProxy = require('../../../artifacts/TokenTransferProxy.json');
-const TokenRegistry = require('../../../artifacts/TokenRegistry.json');
-const DebtToken = require('../../../artifacts/DebtToken.json');
-const TermsContractRegistry = require('../../../artifacts/TermsContractRegistry.json');
+const BigNumber = require('bignumber.js');
 
 interface Props {
-	web3: any;
+	web3: Web3;
 	accounts: string[];
-	dharma: any;
-	handleWeb3Connected: (web3: any) => any;
-	handleSetAccounts: (accounts: string[]) => any;
-	handleDharmaInstantiated: (dharma: any) => any;
+	dharma: Dharma;
 }
 
 interface State {
@@ -53,48 +39,6 @@ class RequestLoanWeb3 extends React.Component<Props, State> {
 			debtOrder: '',
 			confirmationModal: false
 		};
-	}
-
-	async componentDidMount() {
-		let web3: any = null;
-		if (typeof (window as any).web3 !== 'undefined') {
-			web3 = await new Web3((window as any).web3.currentProvider);
-		} else {
-			web3 = await new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
-		}
-		this.props.handleWeb3Connected(web3);
-		if (web3.isConnected()) {
-			await this.instantiateDharma();
-		}
-	}
-
-	async instantiateDharma() {
-		const networkId = await promisify(this.props.web3.version.getNetwork)();
-		const accounts = await promisify(this.props.web3.eth.getAccounts)();
-		this.props.handleSetAccounts(accounts);
-
-		if (!(networkId in DebtKernel.networks &&
-			networkId in RepaymentRouter.networks &&
-			networkId in TokenTransferProxy.networks &&
-			networkId in TokenRegistry.networks &&
-			networkId in DebtToken.networks &&
-			networkId in TermsContractRegistry.networks &&
-			networkId in DebtRegistry.networks)) {
-			throw new Error('Cannot find Dharma smart contracts on current Ethereum network.');
-		}
-
-		const dharmaConfig = {
-			kernelAddress: DebtKernel.networks[networkId].address,
-			repaymentRouterAddress: RepaymentRouter.networks[networkId].address,
-			tokenTransferProxyAddress: TokenTransferProxy.networks[networkId].address,
-			tokenRegistryAddress: TokenRegistry.networks[networkId].address,
-			debtTokenAddress: DebtToken.networks[networkId].address,
-			termsContractRegistry: TermsContractRegistry.networks[networkId].address,
-			debtRegistryAddress: DebtRegistry.networks[networkId].address
-		};
-
-		const dharma = new Dharma(this.props.web3.currentProvider, dharmaConfig);
-		this.props.handleDharmaInstantiated(dharma);
 	}
 
 	handleChange(formData: any) {

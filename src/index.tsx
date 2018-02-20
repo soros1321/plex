@@ -17,7 +17,7 @@ let store = createStore(
 
 ReactDOM.render(
 	<Provider store={store}>
-		<AppRouter />
+		<AppRouter dispatch={store.dispatch} />
 	</Provider>,
 	document.getElementById('root') as HTMLElement
 );
