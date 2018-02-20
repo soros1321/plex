@@ -27,11 +27,12 @@ const TermsContractRegistry = require('../../../artifacts/TermsContractRegistry.
 
 interface Props {
 	web3: any;
+	dharma: any;
 	handleWeb3Connected: (web3: any) => any;
+	handleDharmaInstantiated: (dharma: any) => any;
 }
 
 interface State {
-	dharma: any;
 	accounts: string[];
 	formData: any;
 	debtOrder: string;
@@ -47,7 +48,6 @@ class RequestLoanWeb3 extends React.Component<Props, State> {
 		this.confirmationModalToggle = this.confirmationModalToggle.bind(this);
 
 		this.state = {
-			dharma: null,
 			accounts: [],
 			formData: {},
 			debtOrder: '',
@@ -93,7 +93,8 @@ class RequestLoanWeb3 extends React.Component<Props, State> {
 		};
 
 		const dharma = new Dharma(this.props.web3.currentProvider, dharmaConfig);
-		this.setState({ dharma, accounts });
+		this.props.handleDharmaInstantiated(dharma);
+		this.setState({ accounts });
 	}
 
 	handleChange(formData: any) {
@@ -102,7 +103,7 @@ class RequestLoanWeb3 extends React.Component<Props, State> {
 
 	async handleSubmit() {
 		const { principalAmount, principalTokenSymbol, interestRate, amortizationUnit, termLength } = this.state.formData;
-		const dharma = this.state.dharma;
+		const dharma = this.props.dharma;
 
 		const tokenRegistry = await dharma.contracts.loadTokenRegistry();
 		const principalToken = await tokenRegistry.getTokenAddress.callAsync(principalTokenSymbol);
@@ -131,7 +132,7 @@ class RequestLoanWeb3 extends React.Component<Props, State> {
 		debtOrder.debtor = this.state.accounts[0];
 
 		// Sign as debtor
-		const debtorSignature = await this.state.dharma.sign.asDebtor(debtOrder);
+		const debtorSignature = await this.props.dharma.sign.asDebtor(debtOrder);
 		const signedDebtOrder = Object.assign({ debtorSignature }, debtOrder);
 
 		this.setState({

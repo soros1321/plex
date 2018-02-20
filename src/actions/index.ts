@@ -6,3 +6,10 @@ export const web3Connected = (web3: any) => {
 		web3: web3
 	};
 };
+
+export const dharmaInstantiated = (dharma: any) => {
+	return {
+		type: actionsEnums.DHARMA_INSTANTIATED,
+		dharma: dharma
+	};
+};
