@@ -27,13 +27,14 @@ const TermsContractRegistry = require('../../../artifacts/TermsContractRegistry.
 
 interface Props {
 	web3: any;
+	accounts: string[];
 	dharma: any;
 	handleWeb3Connected: (web3: any) => any;
+	handleSetAccounts: (accounts: string[]) => any;
 	handleDharmaInstantiated: (dharma: any) => any;
 }
 
 interface State {
-	accounts: string[];
 	formData: any;
 	debtOrder: string;
 	confirmationModal: boolean;
@@ -48,7 +49,6 @@ class RequestLoanWeb3 extends React.Component<Props, State> {
 		this.confirmationModalToggle = this.confirmationModalToggle.bind(this);
 
 		this.state = {
-			accounts: [],
 			formData: {},
 			debtOrder: '',
 			confirmationModal: false
@@ -71,6 +71,7 @@ class RequestLoanWeb3 extends React.Component<Props, State> {
 	async instantiateDharma() {
 		const networkId = await promisify(this.props.web3.version.getNetwork)();
 		const accounts = await promisify(this.props.web3.eth.getAccounts)();
+		this.props.handleSetAccounts(accounts);
 
 		if (!(networkId in DebtKernel.networks &&
 			networkId in RepaymentRouter.networks &&
@@ -94,7 +95,6 @@ class RequestLoanWeb3 extends React.Component<Props, State> {
 
 		const dharma = new Dharma(this.props.web3.currentProvider, dharmaConfig);
 		this.props.handleDharmaInstantiated(dharma);
-		this.setState({ accounts });
 	}
 
 	handleChange(formData: any) {
@@ -129,7 +129,7 @@ class RequestLoanWeb3 extends React.Component<Props, State> {
 		const debtOrder = JSON.parse(this.state.debtOrder);
 
 		debtOrder.principalAmount = new BigNumber(debtOrder.principalAmount);
-		debtOrder.debtor = this.state.accounts[0];
+		debtOrder.debtor = this.props.accounts[0];
 
 		// Sign as debtor
 		const debtorSignature = await this.props.dharma.sign.asDebtor(debtOrder);

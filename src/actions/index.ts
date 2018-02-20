@@ -13,3 +13,10 @@ export const dharmaInstantiated = (dharma: any) => {
 		dharma: dharma
 	};
 };
+
+export const setAccounts = (accounts: string[]) => {
+	return {
+		type: actionsEnums.SET_ACCOUNTS,
+		accounts: accounts
+	};
+};
