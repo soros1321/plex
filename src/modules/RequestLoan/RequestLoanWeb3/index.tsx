@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as Web3 from 'web3';
 import { schema, uiSchema } from './schema';
 import {
 	Header,
@@ -8,7 +9,6 @@ import {
 	ConfirmationModal
 } from '../../../components';
 import { browserHistory } from 'react-router';
-import getWeb3 from '../../../utils/getWeb3';
 
 const promisify = require('tiny-promisify');
 const BigNumber = require('bignumber.js');
@@ -25,17 +25,21 @@ const TokenRegistry = require('../../../artifacts/TokenRegistry.json');
 const DebtToken = require('../../../artifacts/DebtToken.json');
 const TermsContractRegistry = require('../../../artifacts/TermsContractRegistry.json');
 
+interface Props {
+	web3: any;
+	handleWeb3Connected: (web3: any) => any;
+}
+
 interface State {
 	dharma: any;
-	web3: any;
 	accounts: string[];
 	formData: any;
 	debtOrder: string;
 	confirmationModal: boolean;
 }
 
-class RequestLoanWeb3 extends React.Component<{}, State> {
-	constructor(props: {}) {
+class RequestLoanWeb3 extends React.Component<Props, State> {
+	constructor(props: Props) {
 		super(props);
 		this.handleChange = this.handleChange.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
@@ -44,7 +48,6 @@ class RequestLoanWeb3 extends React.Component<{}, State> {
 
 		this.state = {
 			dharma: null,
-			web3: null,
 			accounts: [],
 			formData: {},
 			debtOrder: '',
@@ -52,24 +55,22 @@ class RequestLoanWeb3 extends React.Component<{}, State> {
 		};
 	}
 
-	componentWillMount() {
-		getWeb3
-			.then(results => {
-				this.setState({
-					web3: results.web3
-				});
-
-				// Instantiate contract once web3 provided.
-				this.instantiateDharma();
-			})
-			.catch((e) => {
-				console.log('Error instantiating Dharma contracts:' + e);
-			});
+	async componentDidMount() {
+		let web3: any = null;
+		if (typeof (window as any).web3 !== 'undefined') {
+			web3 = await new Web3((window as any).web3.currentProvider);
+		} else {
+			web3 = await new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
+		}
+		this.props.handleWeb3Connected(web3);
+		if (web3.isConnected()) {
+			await this.instantiateDharma();
+		}
 	}
 
 	async instantiateDharma() {
-		const networkId = await promisify(this.state!.web3!.version.getNetwork)();
-		const accounts = await promisify(this.state!.web3!.eth.getAccounts)();
+		const networkId = await promisify(this.props.web3.version.getNetwork)();
+		const accounts = await promisify(this.props.web3.eth.getAccounts)();
 
 		if (!(networkId in DebtKernel.networks &&
 			networkId in RepaymentRouter.networks &&
@@ -91,7 +92,7 @@ class RequestLoanWeb3 extends React.Component<{}, State> {
 			debtRegistryAddress: DebtRegistry.networks[networkId].address
 		};
 
-		const dharma = new Dharma(this.state!.web3!.currentProvider, dharmaConfig);
+		const dharma = new Dharma(this.props.web3.currentProvider, dharmaConfig);
 		this.setState({ dharma, accounts });
 	}
 

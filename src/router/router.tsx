@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Router, Route, IndexRoute, browserHistory } from 'react-router';
+import { RequestLoanContainer } from '../containers/RequestLoanContainer';
 import App from '../App';
 import {
 	Welcome,
@@ -8,7 +9,6 @@ import {
 	FillLoanEntered,
 	DefaultContent,
 	Dashboard,
-	RequestLoanWeb3,
 	TestForm
 } from '../modules';
 import { ParentContainer } from '../layouts';
@@ -26,7 +26,7 @@ export const AppRouter: React.StatelessComponent<{}> = () => {
 				<Route path="/twitter" component={DefaultContent} />
 				<Route path="/dashboard" component={Dashboard} />
 				<Route path="/request" component={ParentContainer}>
-					<IndexRoute component={RequestLoanWeb3} />
+					<IndexRoute component={RequestLoanContainer} />
 					<Route path="success" component={RequestLoanSuccess} />
 				</Route>
 				<Route path="/fill" component={ParentContainer}>

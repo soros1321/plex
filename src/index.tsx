@@ -5,8 +5,16 @@ import registerServiceWorker from './registerServiceWorker';
 import 'bootstrap/dist/css/bootstrap.css';
 import './assets/css/index.css';
 
+import { createStore } from 'redux';
+import { Provider } from 'react-redux';
+import { reducers } from './reducers';
+
+const store = createStore(reducers);
+
 ReactDOM.render(
-  <AppRouter />,
-  document.getElementById('root') as HTMLElement
+	<Provider store={store}>
+		<AppRouter />
+	</Provider>,
+	document.getElementById('root') as HTMLElement
 );
 registerServiceWorker();
