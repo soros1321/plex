@@ -8,6 +8,7 @@ import { Toggle } from '../../components/Toggle';
 import * as Web3 from 'web3';
 import Dharma from '@dharmaprotocol/dharma.js';
 import { BigNumber } from 'bignumber.js';
+import { TradingPermissionsContainer, TradingPermissionsTitle } from './styledComponents';
 
 interface Props {
   web3: Web3;
@@ -120,8 +121,10 @@ class TradingPermissions extends React.Component<Props, State> {
 
     return (
       <Row>
-        <div>{'Trading Permissions'}</div>
-        {tokenItems}
+        <TradingPermissionsContainer>
+          <TradingPermissionsTitle>{'Trading Permissions'}</TradingPermissionsTitle>
+          {tokenItems}
+        </TradingPermissionsContainer>
       </Row>
     );
   }
