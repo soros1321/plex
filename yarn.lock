@@ -75,6 +75,12 @@
   dependencies:
     "@types/react" "*"
 
+"@types/react-toggle@4.0.1":
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/@types/react-toggle/-/react-toggle-4.0.1.tgz#954bee09c059c2de6088c54c97d5759d7a3af4ff"
+  dependencies:
+    "@types/react" "*"
+
 "@types/react@*", "@types/react@^16.0.36":
   version "16.0.36"
   resolved "https://registry.yarnpkg.com/@types/react/-/react-16.0.36.tgz#ceb5639013bdb92a94147883052e69bb2c22c69b"
@@ -5395,6 +5401,12 @@ react-scroll@^1.7.6:
   resolved "https://registry.yarnpkg.com/react-scroll/-/react-scroll-1.7.6.tgz#826102e6a9de30142cd8450f190b0fed87171ff6"
   dependencies:
     prop-types "^15.5.8"
+
+react-toggle@4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/react-toggle/-/react-toggle-4.0.1.tgz#0e83e8c94d94232debfa21a938ff3d2b2106ec72"
+  dependencies:
+    classnames "^2.2.5"
 
 react-transition-group@^2.2.0:
   version "2.2.1"
