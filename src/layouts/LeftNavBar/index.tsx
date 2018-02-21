@@ -7,6 +7,7 @@ import {
 } from 'reactstrap';
 import { Link } from 'react-router';
 import './LeftNavBar.css';
+import { TradingPermissionsContainer } from '../../containers/TradingPermissionsContainer';
 
 class LeftNavBar extends React.Component {
 	render() {
@@ -37,6 +38,9 @@ class LeftNavBar extends React.Component {
 				<Nav>
 					<Row>
 						{linkItems}
+					</Row>
+					<Row>
+						<TradingPermissionsContainer />
 					</Row>
 				</Nav>
 			</div>
