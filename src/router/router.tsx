@@ -4,13 +4,13 @@ import { syncHistoryWithStore } from 'react-router-redux';
 import App from '../App';
 import {
 	Welcome,
-	RequestLoanSuccess,
 	FillLoanEmpty,
 	FillLoanEntered,
 	DefaultContent,
 	Dashboard,
 	TestForm,
-	RequestLoanWeb3Container
+	RequestLoanWeb3Container,
+	RequestLoanSuccessContainer
 } from '../modules';
 import { ParentContainer } from '../layouts';
 import * as Web3 from 'web3';
@@ -102,7 +102,7 @@ class AppRouter extends React.Component<Props, {}> {
 					<Route path="/dashboard" component={Dashboard} />
 					<Route path="/request" component={ParentContainer}>
 						<IndexRoute component={RequestLoanWeb3Container} />
-						<Route path="success" component={RequestLoanSuccess} />
+						<Route path="success/:termsContract" component={RequestLoanSuccessContainer} />
 					</Route>
 					<Route path="/fill" component={ParentContainer}>
 						<IndexRoute component={FillLoanEmpty} />

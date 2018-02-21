@@ -3,16 +3,13 @@ import { Header } from '../../../components';
 import { GetNotified } from './GetNotified';
 import { ShareRequestURL } from './ShareRequestURL';
 import { RequestLoanSummary } from './RequestLoanSummary';
+import { DebtOrderEntity } from '../../../models';
 
 interface Props {
+	params?: any;
+	debtOrder: DebtOrderEntity;
+	getDebtOrder: (termsContract: string) => void;
 	requestURL: string;
-	amount: string;
-	description: string;
-	principle: string;
-	interest: string;
-	repaymentDate: string;
-	repaymentTerms: string;
-	summaryJSON: string;
 }
 
 interface States {
@@ -29,6 +26,11 @@ class RequestLoanSuccess extends React.Component<Props, States> {
 		this.handleGetNotified = this.handleGetNotified.bind(this);
 		this.handleCopyClipboard = this.handleCopyClipboard.bind(this);
 		this.handleShareSocial = this.handleShareSocial.bind(this);
+	}
+
+	componentDidMount() {
+		const termsContract = this.props.params.termsContract;
+		this.props.getDebtOrder(termsContract);
 	}
 
 	handleEmailChange(email: string) {
@@ -48,19 +50,16 @@ class RequestLoanSuccess extends React.Component<Props, States> {
 	}
 
 	render() {
+		if (!this.props.debtOrder) {
+			return <h1>Loading ...</h1>;
+		}
 		return (
 			<div className="main-wrapper">
 				<Header title={'Next, share your loan request with lenders'} description={'Get lenders to fill your loan request by directing them to your request URL.'} />
 				<GetNotified email={this.state.email} onInputChange={this.handleEmailChange} onFormSubmit={this.handleGetNotified} />
 				<ShareRequestURL requestURL={this.props.requestURL} onCopyClipboard={this.handleCopyClipboard} onShareSocial={this.handleShareSocial} />
 				<RequestLoanSummary
-					amount={this.props.amount}
-					description={this.props.description}
-					principle={this.props.principle}
-					interest={this.props.interest}
-					repaymentDate={this.props.repaymentDate}
-					repaymentTerms={this.props.repaymentTerms}
-					summaryJSON={this.props.summaryJSON}
+					debtOrder={this.props.debtOrder}
 					onCopyClipboard={this.handleCopyClipboard}
 				/>
 			</div>

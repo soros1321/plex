@@ -7,16 +7,11 @@ import {
 	Input,
 	Button
 } from 'reactstrap';
+import { DebtOrderEntity } from '../../../../models';
 import './RequestLoanSummary.css';
 
 interface Props {
-	amount: string;
-	description: string;
-	principle: string;
-	interest: string;
-	repaymentDate: string;
-	repaymentTerms: string;
-	summaryJSON: string;
+	debtOrder: DebtOrderEntity;
 	onCopyClipboard: () => void;
 }
 
@@ -31,15 +26,16 @@ class RequestLoanSummary extends React.Component<Props, {}> {
 	}
 
 	render() {
+		const { debtOrder } = this.props;
 		const leftInfoItems = [
-			{title: 'AMOUNT', content: this.props.amount},
-			{title: 'PRINCIPLE', content: this.props.principle},
-			{title: 'REPAYMENT DATE', content: this.props.repaymentDate}
+			{title: 'AMOUNT', content: debtOrder.principalAmount + ' ' + debtOrder.principalTokenSymbol},
+			{title: 'PRINCIPLE', content: ''},
+			{title: 'REPAYMENT DATE', content: ''}
 		];
 		const rightInfoItems = [
-			{title: 'DESCRIPTION', content: this.props.description},
-			{title: 'INTEREST', content: this.props.interest},
-			{title: 'REPAYMENT TERMS', content: this.props.repaymentTerms}
+			{title: 'DESCRIPTION', content: ''},
+			{title: 'INTEREST', content: debtOrder.interestRate + '%'},
+			{title: 'REPAYMENT TERMS', content: debtOrder.termLength + ' ' + debtOrder.amortizationUnit}
 		];
 		const leftInfoItemRows = leftInfoItems.map((item) => (
 			<div className="info-item" key={item.title}>
@@ -47,8 +43,7 @@ class RequestLoanSummary extends React.Component<Props, {}> {
 					{item.title}
 				</div>
 				<div className="content">
-					// Some Content
-					{item.content}
+					{item.content || 'Some Content'}
 				</div>
 			</div>
 		));
@@ -58,8 +53,7 @@ class RequestLoanSummary extends React.Component<Props, {}> {
 					{item.title}
 				</div>
 				<div className="content">
-					// Some Content
-					{item.content}
+					{item.content || 'Some Content'}
 				</div>
 			</div>
 		));
@@ -78,7 +72,7 @@ class RequestLoanSummary extends React.Component<Props, {}> {
 					</Row>
 					<FormGroup className="summary-json-container">
 						<Label for="summary-json">JSON</Label>
-						<Input type="textarea" name="summary-json" value={this.props.summaryJSON} readOnly={true} />
+						<Input type="textarea" name="summary-json" value={JSON.stringify(debtOrder, undefined, 4)} readOnly={true} />
 						<Button className="button" onClick={this.handleCopyClipboard}>Copy</Button>
 					</FormGroup>
 				</Row>

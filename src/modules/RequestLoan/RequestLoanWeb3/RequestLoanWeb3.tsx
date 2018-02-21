@@ -7,7 +7,7 @@ import {
 	Bold,
 	ConfirmationModal
 } from '../../../components';
-// import { browserHistory } from 'react-router';
+import { browserHistory } from 'react-router';
 import * as Web3 from 'web3';
 import Dharma from '@dharmaprotocol/dharma.js';
 import { DebtOrderEntity } from '../../../models';
@@ -97,8 +97,7 @@ class RequestLoanWeb3 extends React.Component<Props, State> {
 		};
 
 		this.props.handleRequestDebtOrder(requestDebtOrder);
-		console.log('added');
-		// browserHistory.push('/request/success');
+		browserHistory.push(`/request/success/${requestDebtOrder.termsContract}`);
 	}
 
 	confirmationModalToggle() {
