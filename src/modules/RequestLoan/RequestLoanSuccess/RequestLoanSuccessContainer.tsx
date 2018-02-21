@@ -10,7 +10,7 @@ const mapStateToProps = (state: any) => {
 
 const mapDispatchToProps = (dispatch: any) => {
 	return {
-		getDebtOrder: (termsContract: string) => dispatch(getDebtOrder(termsContract))
+		getDebtOrder: (debtorSignature: string) => dispatch(getDebtOrder(debtorSignature))
 	};
 };
 

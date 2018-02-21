@@ -1,8 +1,8 @@
 import { actionsEnums } from '../../../common/actionsEnums';
 
-export const getDebtOrder = (termsContract: string) => {
+export const getDebtOrder = (debtorSignature: string) => {
 	return {
 		type: actionsEnums.GET_DEBT_ORDER,
-		payload: termsContract
+		payload: debtorSignature
 	};
 };

@@ -1,5 +1,5 @@
 export class DebtOrderEntity {
-	termsContract: string;
+	debtorSignature: string;
 	debtor: string;
 	principalAmount: number;
 	principalTokenSymbol: string;
@@ -8,7 +8,7 @@ export class DebtOrderEntity {
 	termLength: number;
 
 	public constructor () {
-		this.termsContract = '';
+		this.debtorSignature = '';
 		this.debtor = '';
 		this.principalAmount = 0;
 		this.principalTokenSymbol = '';

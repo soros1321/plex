@@ -87,7 +87,7 @@ class RequestLoanWeb3 extends React.Component<Props, State> {
 		const { principalAmount, principalTokenSymbol, interestRate, amortizationUnit, termLength } = this.state.formData;
 
 		const requestDebtOrder: DebtOrderEntity = {
-			termsContract: signedDebtOrder.termsContract,
+			debtorSignature: signedDebtOrder.debtorSignature.r,
 			debtor: signedDebtOrder.debtor,
 			principalAmount: principalAmount,
 			principalTokenSymbol: principalTokenSymbol,
@@ -97,7 +97,7 @@ class RequestLoanWeb3 extends React.Component<Props, State> {
 		};
 
 		this.props.handleRequestDebtOrder(requestDebtOrder);
-		browserHistory.push(`/request/success/${requestDebtOrder.termsContract}`);
+		browserHistory.push(`/request/success/${requestDebtOrder.debtorSignature}`);
 	}
 
 	confirmationModalToggle() {

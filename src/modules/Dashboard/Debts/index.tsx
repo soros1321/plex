@@ -1,18 +1,19 @@
 import * as React from 'react';
-import { LoanEntity } from '../../../models';
+import { DebtOrderEntity } from '../../../models';
 import { Header } from '../../../components';
 import { DebtsMetrics } from './DebtsMetrics';
-import { ActiveLoan } from './ActiveLoan';
-import { LoanHistory } from './LoanHistory';
+import { ActiveDebtOrder } from './ActiveDebtOrder';
+import { DebtOrderHistory } from './DebtOrderHistory';
 
 interface Props {
-	loans: LoanEntity[];
+	debtOrders: DebtOrderEntity[];
 }
 
 class Debts extends React.Component<Props, {}> {
 	render() {
-		const activeLoans: LoanEntity[] = [];
-		const pastLoans: LoanEntity[] = [];
+		const activeDebtOrders: DebtOrderEntity[] = this.props.debtOrders;
+		const pastDebtOrders: DebtOrderEntity[] = [];
+		/*
 		this.props.loans.forEach((loan) => {
 			if (loan.active) {
 				activeLoans.push(loan);
@@ -20,16 +21,17 @@ class Debts extends React.Component<Props, {}> {
 				pastLoans.push(loan);
 			}
 		});
+		*/
 
 		return (
 			<div className="main-wrapper">
 				<Header title="Your debts" />
-				<DebtsMetrics loans={this.props.loans} />
-				{ activeLoans.map((loan) => (
-						<ActiveLoan loan={loan} key={loan.id} />
+				<DebtsMetrics debtOrders={this.props.debtOrders} />
+				{ activeDebtOrders.map((debtOrder) => (
+						<ActiveDebtOrder debtOrder={debtOrder} key={debtOrder.debtorSignature} />
 					))
 				}
-				<LoanHistory loans={pastLoans} />
+				<DebtOrderHistory debtOrders={pastDebtOrders} />
 			</div>
 		);
 	}

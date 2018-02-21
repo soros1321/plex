@@ -1,19 +1,19 @@
 import * as React from 'react';
-import { LoanEntity } from '../../../../models';
-import { formatDate } from '../../../../utils';
+import { DebtOrderEntity } from '../../../../models';
+// import { formatDate } from '../../../../utils';
 import { Table } from 'reactstrap';
-import './LoanHistory.css';
+import './DebtOrderHistory.css';
 
 interface Props {
-	loans: LoanEntity[];
+	debtOrders: DebtOrderEntity[];
 }
 
-class LoanHistory extends React.Component<Props, {}> {
+class DebtOrderHistory extends React.Component<Props, {}> {
 	render() {
 		return (
-			<div className="loan-history-container">
+			<div className="debt-order-history-container">
 				<div className="title">Past debts and loan request</div>
-				<Table className="loan-history-table" hover={true}>
+				<Table className="debt-order-history-table" hover={true}>
 					<thead>
 						<tr>
 							<th>Amount</th>
@@ -23,14 +23,17 @@ class LoanHistory extends React.Component<Props, {}> {
 						</tr>
 					</thead>
 					<tbody>
-						{this.props.loans.map((loan) => (
+						{
+							/*
+							this.props.debtOrders.map((debt) => (
 							<tr key={loan.id}>
 								<td>{loan.amount} {loan.currency}</td>
 								<td>{loan.id}</td>
 								<td>{loan.paid ? 'Repaid ' + formatDate(loan.paidOnTimestamp) : '-'}</td>
 								<td className="terms">{loan.terms} Interest{loan.installments ? ' (Installments)' : ''}</td>
 							</tr>
-						))
+							))
+							*/
 						}
 					</tbody>
 				</Table>
@@ -39,4 +42,4 @@ class LoanHistory extends React.Component<Props, {}> {
 	}
 }
 
-export { LoanHistory };
+export { DebtOrderHistory };

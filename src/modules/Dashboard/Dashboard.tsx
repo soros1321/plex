@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { LoanEntity, InvestmentEntity } from '../../models';
-import { loanAPI, investmentAPI } from '../../services';
+import { DebtOrderEntity, InvestmentEntity } from '../../models';
+import { investmentAPI } from '../../services';
 import {
 	Nav,
 	NavItem,
@@ -12,28 +12,27 @@ import { Debts } from './Debts';
 import { Investments } from './Investments';
 import './Dashboard.css';
 
+interface Props {
+	debtOrders: DebtOrderEntity[];
+}
+
 interface States {
 	activeTab: string;
-	loans: LoanEntity[];
 	investments: InvestmentEntity[];
 }
 
-class Dashboard extends React.Component<{}, States> {
-	constructor(props: {}) {
+class Dashboard extends React.Component<Props, States> {
+	constructor(props: Props) {
 		super(props);
 
 		this.toggle = this.toggle.bind(this);
 		this.state = {
 			activeTab: '1',
-			loans: [],
 			investments: []
 		};
 	}
 
 	componentDidMount() {
-		loanAPI.fetchLoans().then((loans) => {
-			this.setState({loans});
-		});
 		investmentAPI.fetchInvestments().then((investments) => {
 			this.setState({investments});
 		});
@@ -51,8 +50,8 @@ class Dashboard extends React.Component<{}, States> {
 		const tabs = [
 			{
 				id: '1',
-				title: 'Your Debts (' + (this.state.loans.length) + ')',
-				content: <Debts loans={this.state.loans} />
+				title: 'Your Debts (' + (this.props.debtOrders.length) + ')',
+				content: <Debts debtOrders={this.props.debtOrders} />
 			},
 			{
 				id: '2',

@@ -8,7 +8,7 @@ import { DebtOrderEntity } from '../../../models';
 interface Props {
 	params?: any;
 	debtOrder: DebtOrderEntity;
-	getDebtOrder: (termsContract: string) => void;
+	getDebtOrder: (debtorSignature: string) => void;
 	requestURL: string;
 }
 
@@ -29,8 +29,8 @@ class RequestLoanSuccess extends React.Component<Props, States> {
 	}
 
 	componentDidMount() {
-		const termsContract = this.props.params.termsContract;
-		this.props.getDebtOrder(termsContract);
+		const debtorSignature = this.props.params.debtorSignature;
+		this.props.getDebtOrder(debtorSignature);
 	}
 
 	handleEmailChange(email: string) {
