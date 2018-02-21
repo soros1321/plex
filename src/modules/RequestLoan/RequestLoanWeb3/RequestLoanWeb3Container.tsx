@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { RequestLoanWeb3 } from '../modules/RequestLoan/RequestLoanWeb3';
+import { RequestLoanWeb3 } from './RequestLoanWeb3';
 
 const mapStateToProps = (state: any) => {
 	return {
@@ -9,6 +9,6 @@ const mapStateToProps = (state: any) => {
 	};
 };
 
-export const RequestLoanContainer = connect(
+export const RequestLoanWeb3Container = connect(
 	mapStateToProps,
 )(RequestLoanWeb3);

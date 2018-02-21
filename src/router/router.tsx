@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Router, Route, IndexRoute, browserHistory } from 'react-router';
-import { RequestLoanContainer } from '../containers/RequestLoanContainer';
+import { syncHistoryWithStore } from 'react-router-redux';
 import App from '../App';
 import {
 	Welcome,
@@ -9,10 +9,10 @@ import {
 	FillLoanEntered,
 	DefaultContent,
 	Dashboard,
-	TestForm
+	TestForm,
+	RequestLoanWeb3Container
 } from '../modules';
 import { ParentContainer } from '../layouts';
-
 import * as Web3 from 'web3';
 import { web3Connected, dharmaInstantiated, setAccounts } from '../actions';
 const promisify = require('tiny-promisify');
@@ -30,7 +30,7 @@ const DebtToken = require('../artifacts/DebtToken.json');
 const TermsContractRegistry = require('../artifacts/TermsContractRegistry.json');
 
 interface Props {
-	dispatch: any;
+	store: any;
 }
 
 class AppRouter extends React.Component<Props, {}> {
@@ -39,7 +39,7 @@ class AppRouter extends React.Component<Props, {}> {
 	}
 
 	async componentDidMount() {
-		const { dispatch } = this.props;
+		const { dispatch } = this.props.store;
 		let web3: any = null;
 		if (typeof (window as any).web3 !== 'undefined') {
 			web3 = await new Web3((window as any).web3.currentProvider);
@@ -53,7 +53,7 @@ class AppRouter extends React.Component<Props, {}> {
 	}
 
 	async instantiateDharma(web3: Web3) {
-		const { dispatch } = this.props;
+		const { dispatch } = this.props.store;
 		const networkId = await promisify(web3.version.getNetwork)();
 		const accounts = await promisify(web3.eth.getAccounts)();
 
@@ -88,8 +88,9 @@ class AppRouter extends React.Component<Props, {}> {
 	}
 
 	render() {
+		const history = syncHistoryWithStore(browserHistory, this.props.store);
 		return (
-			<Router history={browserHistory}>
+			<Router history={history}>
 				<Route path="/" component={App} >
 					<IndexRoute component={Welcome} />
 					<Route path="/bazaar" component={DefaultContent} />
@@ -100,7 +101,7 @@ class AppRouter extends React.Component<Props, {}> {
 					<Route path="/twitter" component={DefaultContent} />
 					<Route path="/dashboard" component={Dashboard} />
 					<Route path="/request" component={ParentContainer}>
-						<IndexRoute component={RequestLoanContainer} />
+						<IndexRoute component={RequestLoanWeb3Container} />
 						<Route path="success" component={RequestLoanSuccess} />
 					</Route>
 					<Route path="/fill" component={ParentContainer}>
