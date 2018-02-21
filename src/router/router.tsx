@@ -14,7 +14,7 @@ import {
 } from '../modules';
 import { ParentContainer } from '../layouts';
 import * as Web3 from 'web3';
-import { web3Connected, dharmaInstantiated, setAccounts } from '../actions';
+import { web3Connected, dharmaInstantiated, setAccounts } from './actions';
 const promisify = require('tiny-promisify');
 
 // Import Dharma libraries
