@@ -1238,8 +1238,13 @@
       "events": {},
       "links": {},
       "address": "0x05d58f7fad6833e0105d7e375cc9a6f91f1c0d2e"
+    },
+    "1519254851320": {
+      "events": {},
+      "links": {},
+      "address": "0xb660bc5748b71a05757af3306106c16865a7155d"
     }
   },
   "schemaVersion": "1.0.1",
-  "updatedAt": "2018-02-20T23:06:30.320Z"
+  "updatedAt": "2018-02-21T23:21:33.820Z"
 }
