@@ -1,5 +1,7 @@
 import { connect } from 'react-redux';
 import { RequestLoanWeb3 } from './RequestLoanWeb3';
+import { userRequestDebtOrder } from './actions';
+import { DebtOrderEntity } from '../../../models';
 
 const mapStateToProps = (state: any) => {
 	return {
@@ -9,6 +11,13 @@ const mapStateToProps = (state: any) => {
 	};
 };
 
+const mapDispatchToProps = (dispatch: any) => {
+	return {
+		handleRequestDebtOrder: (debtOrder: DebtOrderEntity) => dispatch(userRequestDebtOrder(debtOrder))
+	};
+};
+
 export const RequestLoanWeb3Container = connect(
 	mapStateToProps,
+	mapDispatchToProps
 )(RequestLoanWeb3);

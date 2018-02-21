@@ -1,5 +1,4 @@
 import * as React from 'react';
-// import * as Web3 from 'web3';
 import { schema, uiSchema } from './schema';
 import {
 	Header,
@@ -8,16 +7,17 @@ import {
 	Bold,
 	ConfirmationModal
 } from '../../../components';
-import { browserHistory } from 'react-router';
+// import { browserHistory } from 'react-router';
 import * as Web3 from 'web3';
 import Dharma from '@dharmaprotocol/dharma.js';
-
+import { DebtOrderEntity } from '../../../models';
 const BigNumber = require('bignumber.js');
 
 interface Props {
 	web3: Web3;
 	accounts: string[];
 	dharma: Dharma;
+	handleRequestDebtOrder: (debtOrder: DebtOrderEntity) => void;
 }
 
 interface State {
@@ -83,7 +83,22 @@ class RequestLoanWeb3 extends React.Component<Props, State> {
 			debtOrder: JSON.stringify(signedDebtOrder),
 			confirmationModal: false
 		});
-		browserHistory.push('/request/success');
+
+		const { principalAmount, principalTokenSymbol, interestRate, amortizationUnit, termLength } = this.state.formData;
+
+		const requestDebtOrder: DebtOrderEntity = {
+			termsContract: signedDebtOrder.termsContract,
+			debtor: signedDebtOrder.debtor,
+			principalAmount: principalAmount,
+			principalTokenSymbol: principalTokenSymbol,
+			interestRate: interestRate,
+			amortizationUnit: amortizationUnit,
+			termLength: termLength
+		};
+
+		this.props.handleRequestDebtOrder(requestDebtOrder);
+		console.log('added');
+		// browserHistory.push('/request/success');
 	}
 
 	confirmationModalToggle() {
