@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Header } from '../../../components';
+import { Header, ScrollToTopOnMount, MainWrapper } from '../../../components';
 import { GetNotified } from './GetNotified';
 import { ShareRequestURL } from './ShareRequestURL';
 import { RequestLoanSummary } from './RequestLoanSummary';
@@ -51,10 +51,11 @@ class RequestLoanSuccess extends React.Component<Props, States> {
 
 	render() {
 		if (!this.props.debtOrder) {
-			return <h1>Loading ...</h1>;
+			return null;
 		}
 		return (
-			<div className="main-wrapper">
+			<MainWrapper>
+				<ScrollToTopOnMount />
 				<Header title={'Next, share your loan request with lenders'} description={'Get lenders to fill your loan request by directing them to your request URL.'} />
 				<GetNotified email={this.state.email} onInputChange={this.handleEmailChange} onFormSubmit={this.handleGetNotified} />
 				<ShareRequestURL requestURL={this.props.requestURL} onCopyClipboard={this.handleCopyClipboard} onShareSocial={this.handleShareSocial} />
@@ -62,7 +63,7 @@ class RequestLoanSuccess extends React.Component<Props, States> {
 					debtOrder={this.props.debtOrder}
 					onCopyClipboard={this.handleCopyClipboard}
 				/>
-			</div>
+			</MainWrapper>
 		);
 	}
 }
