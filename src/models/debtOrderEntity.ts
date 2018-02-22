@@ -1,19 +1,27 @@
+import { BigNumber } from 'bignumber.js';
+
 export class DebtOrderEntity {
 	debtorSignature: string;
-	debtor: string;
-	principalAmount: number;
+	debtor: string | undefined;
+	principalAmount: BigNumber;
+	principalToken: string;
 	principalTokenSymbol: string;
-	interestRate: number;
+	interestRate: BigNumber;
 	amortizationUnit: string;
-	termLength: number;
+	termLength: BigNumber;
+	termsContract: string | undefined;
+	termsContractParameters: string | undefined;
 
 	public constructor () {
 		this.debtorSignature = '';
 		this.debtor = '';
-		this.principalAmount = 0;
+		this.principalAmount = new BigNumber(0);
+		this.principalToken = '';
 		this.principalTokenSymbol = '';
-		this.interestRate = 0;
+		this.interestRate = new BigNumber(0);
 		this.amortizationUnit = '';
-		this.termLength = 0;
+		this.termLength = new BigNumber(0);
+		this.termsContract = '';
+		this.termsContractParameters = '';
 	}
 }

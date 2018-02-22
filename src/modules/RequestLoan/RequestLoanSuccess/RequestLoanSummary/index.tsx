@@ -28,14 +28,14 @@ class RequestLoanSummary extends React.Component<Props, {}> {
 	render() {
 		const { debtOrder } = this.props;
 		const leftInfoItems = [
-			{title: 'AMOUNT', content: debtOrder.principalAmount + ' ' + debtOrder.principalTokenSymbol},
+			{title: 'AMOUNT', content: debtOrder.principalAmount.toNumber() + ' ' + debtOrder.principalTokenSymbol},
 			{title: 'PRINCIPLE', content: ''},
 			{title: 'REPAYMENT DATE', content: ''}
 		];
 		const rightInfoItems = [
 			{title: 'DESCRIPTION', content: ''},
-			{title: 'INTEREST', content: debtOrder.interestRate + '%'},
-			{title: 'REPAYMENT TERMS', content: debtOrder.termLength + ' ' + debtOrder.amortizationUnit}
+			{title: 'INTEREST', content: debtOrder.interestRate.toNumber() + '%'},
+			{title: 'REPAYMENT TERMS', content: debtOrder.termLength.toNumber() + ' ' + debtOrder.amortizationUnit}
 		];
 		const leftInfoItemRows = leftInfoItems.map((item) => (
 			<div className="info-item" key={item.title}>

@@ -84,20 +84,21 @@ class RequestLoanWeb3 extends React.Component<Props, State> {
 			confirmationModal: false
 		});
 
-		const { principalAmount, principalTokenSymbol, interestRate, amortizationUnit, termLength } = this.state.formData;
-
-		const requestDebtOrder: DebtOrderEntity = {
-			debtorSignature: signedDebtOrder.debtorSignature.r,
-			debtor: signedDebtOrder.debtor,
-			principalAmount: principalAmount,
-			principalTokenSymbol: principalTokenSymbol,
-			interestRate: interestRate,
-			amortizationUnit: amortizationUnit,
-			termLength: termLength
+		const generatedDebtOrder = await this.props.dharma.adapters.simpleInterestLoan.fromDebtOrder(debtOrder);
+		const storeDebtOrder: DebtOrderEntity = {
+			debtorSignature: debtorSignature.r,
+			debtor: generatedDebtOrder.debtor,
+			principalAmount: generatedDebtOrder.principalAmount,
+			principalToken: generatedDebtOrder.principalToken,
+			principalTokenSymbol: this.state.formData.principalTokenSymbol,
+			interestRate: generatedDebtOrder.interestRate,
+			amortizationUnit: generatedDebtOrder.amortizationUnit,
+			termLength: generatedDebtOrder.termLength,
+			termsContract: generatedDebtOrder.termsContract,
+			termsContractParameters: generatedDebtOrder.termsContractParameters
 		};
-
-		this.props.handleRequestDebtOrder(requestDebtOrder);
-		browserHistory.push(`/request/success/${requestDebtOrder.debtorSignature}`);
+		this.props.handleRequestDebtOrder(storeDebtOrder);
+		browserHistory.push(`/request/success/${storeDebtOrder.debtorSignature}`);
 	}
 
 	confirmationModalToggle() {
