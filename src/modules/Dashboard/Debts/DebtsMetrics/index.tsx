@@ -1,8 +1,13 @@
 import * as React from 'react';
 import { DebtOrderEntity } from '../../../../models';
-import { Row, Col } from 'reactstrap';
 import { BigNumber } from 'bignumber.js';
-import './DebtsMetrics.css';
+import {
+	Wrapper,
+	HalfCol,
+	Value,
+	Label,
+	Divider
+} from './styledComponents';
 
 interface Props {
 	debtOrders: DebtOrderEntity[];
@@ -30,16 +35,28 @@ class DebtsMetrics extends React.Component<Props, {}> {
 			}
 		});
 		return (
-			<Row className="dashboard-metrics">
-				<Col xs="6">
-					<div className="value">{totalREPRequested.toNumber()} REP, {totalMKRRequested.toNumber()} MKR, {totalZRXRequested.toNumber()} ZRX</div>
-					<div className="label">Total Requested</div>
-				</Col>
-				<Col xs="6">
-					<div className="value">{totalRepayed} REP, {totalRepayed} MKR, {totalRepayed} ZRX</div>
-					<div className="label">Total Repayed</div>
-				</Col>
-			</Row>
+			<Wrapper>
+				<HalfCol>
+					<Value>
+						{totalREPRequested.toNumber()} REP
+						<Divider>|</Divider>
+						{totalMKRRequested.toNumber()} MKR
+						<Divider>|</Divider>
+						{totalZRXRequested.toNumber()} ZRX
+					</Value>
+					<Label>Total Requested</Label>
+				</HalfCol>
+				<HalfCol>
+					<Value>
+						{totalRepayed} REP
+						<Divider>|</Divider>
+						{totalRepayed} MKR
+						<Divider>|</Divider>
+						{totalRepayed} ZRX
+					</Value>
+					<Label>Total Repayed</Label>
+				</HalfCol>
+			</Wrapper>
 		);
 	}
 }
