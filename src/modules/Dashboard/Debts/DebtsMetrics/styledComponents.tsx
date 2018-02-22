@@ -36,6 +36,7 @@ export const Value = styled.div`
 
 export const Label = Value.extend`
 	opacity: 0.5;
+	text-transform: uppercase;
 `;
 
 export const Divider = Value.extend`
