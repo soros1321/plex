@@ -3,14 +3,13 @@ import { DebtOrderEntity, InvestmentEntity } from '../../models';
 import { investmentAPI } from '../../services';
 import {
 	Nav,
-	NavItem,
 	NavLink,
 	TabContent,
 	TabPane
 } from 'reactstrap';
 import { Debts } from './Debts';
 import { Investments } from './Investments';
-import './Dashboard.css';
+import { StyledNavItem, TitleFirstWord, TitleRest } from './styledComponents';
 
 interface Props {
 	debtOrders: DebtOrderEntity[];
@@ -60,19 +59,19 @@ class Dashboard extends React.Component<Props, States> {
 			}
 		];
 		const tabNavs = tabs.map((tab) => (
-			<NavItem key={tab.id}>
+			<StyledNavItem key={tab.id}>
 				<NavLink
 					className={this.state.activeTab === tab.id ? 'active' : ''}
 					onClick={() => { this.toggle(tab.id); }}
 				>
-					<span className="title-first">
+					<TitleFirstWord>
 						{tab.title.indexOf(' ') >= 0 ? tab.title.substr(0, tab.title.indexOf(' ')) : tab.title}
-					</span>
-					<span className="title-rest">
+					</TitleFirstWord>
+					<TitleRest>
 						{tab.title.indexOf(' ') >= 0 ? tab.title.substr(tab.title.indexOf(' ')) : ''}
-					</span>
+					</TitleRest>
 				</NavLink>
-			</NavItem>
+			</StyledNavItem>
 		));
 		const tabContents = tabs.map((tab) => (
 			<TabPane tabId={tab.id} key={tab.id}>

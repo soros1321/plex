@@ -108,10 +108,10 @@ class ActiveDebtOrder extends React.Component<Props, {}> {
 					<div className="image" />
 				</Col>
 				<Col xs="8" md="5" className="detail-container">
-					<div className="amount">{debtOrder.principalAmount} {debtOrder.principalTokenSymbol}</div>
+					<div className="amount">{debtOrder.principalAmount.toNumber()} {debtOrder.principalTokenSymbol}</div>
 					<div className="url"><a href={`dharma.io/${debtOrder.debtorSignature}`}>{`dharma.io/${debtOrder.debtorSignature}`}</a></div>
 					<div className="active">Active</div>
-					<div className="terms">Interest Rate {debtOrder.interestRate}% - {debtOrder.termLength} {debtOrder.amortizationUnit}</div>
+					<div className="terms">Interest Rate {debtOrder.interestRate.toNumber()}% - {debtOrder.termLength.toNumber()} {debtOrder.amortizationUnit}</div>
 				</Col>
 				<Col xs="12" md="6" className="repayment-container">
 					<div className="title">Repayment Schedule</div>
