@@ -9,6 +9,7 @@ import * as Web3 from 'web3';
 import Dharma from '@dharmaprotocol/dharma.js';
 import { BigNumber } from 'bignumber.js';
 import { TradingPermissionsContainer, TradingPermissionsTitle } from './styledComponents';
+const promisify = require('tiny-promisify');
 
 interface Props {
   web3: Web3;
@@ -45,7 +46,8 @@ class TradingPermissions extends React.Component<Props, State> {
 
   async getTokenAllowance(tokenRegistry: any, tokenAddress: string) {
     // TODO: handle nil ownerAddress
-    const ownerAddress = this.props.web3.eth.accounts[0];
+    const accounts = await promisify(this.props.web3.eth.getAccounts)();
+    const ownerAddress = accounts[0];
     const tokenAllowance = await this.props.dharma.token.getProxyAllowanceAsync(tokenAddress, ownerAddress);
     return new BigNumber(tokenAllowance);
   }
