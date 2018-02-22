@@ -3,7 +3,7 @@ import { Button } from 'reactstrap';
 
 // styles-components
 export const MainWrapper = styled.div`
-	padding: 30px;
+	padding: 50px;
 `;
 
 // styles-components

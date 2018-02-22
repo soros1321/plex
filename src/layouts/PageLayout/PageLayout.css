@@ -7,7 +7,7 @@
 	flex: none !important;
 }
 .right-container .main-wrapper {
-	padding: 30px;
+	padding: 50px;
 }
 @media only screen and (max-width: 480px) {
 	.right-container {
