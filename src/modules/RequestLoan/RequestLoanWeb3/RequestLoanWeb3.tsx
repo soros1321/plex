@@ -47,7 +47,7 @@ class RequestLoanWeb3 extends React.Component<Props, State> {
 
 	async handleSubmit() {
 		const { principalAmount, principalTokenSymbol } = this.state.formData.loan;
-		const { interestRate, amortizationUnit, termLength } = this.state.formData;
+		const { interestRate, amortizationUnit, termLength } = this.state.formData.terms;
 		const dharma = this.props.dharma;
 
 		const tokenRegistry = await dharma.contracts.loadTokenRegistry();

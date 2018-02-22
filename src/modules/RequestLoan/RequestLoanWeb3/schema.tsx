@@ -2,11 +2,6 @@ import { JSONSchema4 } from 'json-schema';
 
 export const schema: JSONSchema4 = {
 	type: 'object',
-	required: [
-		'interestRate',
-		'amortizationUnit',
-		'termLength'
-	],
 	properties: {
 		loan: {
 			type: 'object',
@@ -39,34 +34,44 @@ export const schema: JSONSchema4 = {
 				}
 			}
 		},
-		interestRate: {
-			type: 'number',
-			title: 'Interest Rate',
-			description: 'Specify your desired interest rate'
-		},
-		amortizationUnit: {
-			type: 'string',
-			title: 'Installments Type',
-			enum: [
-				'hours',
-				'days',
-				'weeks',
-				'months',
-				'years'
+		terms: {
+			type: 'object',
+			title: 'What terms would you like?',
+			description: 'The most commonly chosen options are selected by default.',
+			required: [
+				'interestRate',
+				'amortizationUnit',
+				'termLength'
 			],
-			enumNames: [
-				'Hourly',
-				'Daily',
-				'Weekly',
-				'Monthly',
-				'Yearly'
-			],
-			description: 'Specify how often you would like repayments to be due'
-		},
-		termLength: {
-			type: 'number',
-			title: 'Term Length',
-			description: 'Enter the length of the entire debt agreement, in units of the chosen installments (e.g. a term length of 2 with an installment type of "monthly" would be equivalent to a 2 month long loan)'
+			properties: {
+				interestRate: {
+					type: 'number',
+					title: 'Interest Rate'
+				},
+				amortizationUnit: {
+					type: 'string',
+					title: 'Installments Type',
+					enum: [
+						'hours',
+						'days',
+						'weeks',
+						'months',
+						'years'
+					],
+					enumNames: [
+						'Hourly',
+						'Daily',
+						'Weekly',
+						'Monthly',
+						'Yearly'
+					]
+				},
+				termLength: {
+					type: 'number',
+					title: 'Term Length',
+					description: 'Enter the length of the entire debt agreement, in units of the chosen installments (e.g. a term length of 2 with an installment type of "monthly" would be equivalent to a 2 month long loan)'
+				}
+			}
 		}
 	}
 };
@@ -93,13 +98,18 @@ export const uiSchema = {
 			classNames: 'group-field'
 		}
 	},
-	interestRate: {
-		'ui:placeholder': '8.12%'
-	},
-	amortizationUnit: {
-		'ui:placeholder': 'select'
-	},
-	termLength: {
-		'ui:placeholder': '3'
+	terms: {
+		interestRate: {
+			'ui:placeholder': '8.12%',
+			classNames: 'group-field'
+		},
+		amortizationUnit: {
+			'ui:placeholder': 'select',
+			classNames: 'group-field'
+		},
+		termLength: {
+			'ui:placeholder': '3',
+			classNames: 'group-field'
+		}
 	}
 };
