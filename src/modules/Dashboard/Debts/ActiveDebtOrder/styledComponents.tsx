@@ -53,7 +53,7 @@ export const Amount = styled.div`
 	line-height: 25px;
 `;
 
-export const Url = styled.a`
+export const Url = styled.span`
 	color: #002326;
 	font-size: 15px;
 	line-height: 25px;

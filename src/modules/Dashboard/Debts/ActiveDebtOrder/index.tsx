@@ -20,6 +20,7 @@ import {
 	PaymentDate,
 	ShowMore
 } from './styledComponents';
+import { Link } from 'react-router';
 
 interface Props {
 	debtOrder: DebtOrderEntity;
@@ -129,7 +130,9 @@ class ActiveDebtOrder extends React.Component<Props, {}> {
 				</ImageContainer>
 				<DetailContainer>
 					<Amount>{debtOrder.principalAmount.toNumber()} {debtOrder.principalTokenSymbol}</Amount>
-					<Url href={`dharma.io/${debtOrder.debtorSignature.substring(0, 8)}`}>{`dharma.io/${debtOrder.debtorSignature.substring(0, 8)}`}</Url>
+					<Link to={`/request/success/${debtOrder.debtorSignature}`}>
+						<Url>{`dharma.io/${debtOrder.debtorSignature}`}</Url>
+					</Link>
 					{active ? <StatusActive>Active</StatusActive> : <StatusPending>Pending</StatusPending>}
 					<Terms>Simple Interest (Installments)</Terms>
 				</DetailContainer>
