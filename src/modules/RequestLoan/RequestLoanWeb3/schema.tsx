@@ -33,6 +33,9 @@ export const schema: JSONSchema4 = {
 						'Maker DAO (MKR)',
 						'0x Token (ZRX)'
 					]
+				},
+				description: {
+					type: 'string',
 				}
 			}
 		},
@@ -81,6 +84,13 @@ export const uiSchema = {
 				label: false
 			},
 			classNames: 'inline-field width25 no-label'
+		},
+		description: {
+			'ui:placeholder': 'Description (optional, but helpful to lenders)',
+			'ui:options': {
+				label: false
+			},
+			classNames: 'group-field'
 		}
 	},
 	interestRate: {

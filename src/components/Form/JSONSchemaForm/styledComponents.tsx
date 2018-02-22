@@ -220,11 +220,13 @@ export const PressEnter = Description.extend`
 	color: #FFFFFF;
 	background-color: #1CC1CC;
 	width: fit-content;
+	height: 0;
 
 	&.active {
 		-webkit-transition: opacity 0.3s ease-in;
 		-moz-transition: opacity 0.3s ease-in;
 		-o-transition: opacity 0.3s ease-in;
 		opacity: 1;
+		height: auto;
 	}
 `;
