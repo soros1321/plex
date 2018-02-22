@@ -3445,8 +3445,13 @@
       "events": {},
       "links": {},
       "address": "0x41559b6c4a3b2b3a8dee3fa42ee31db7a3913583"
+    },
+    "1519340795681": {
+      "events": {},
+      "links": {},
+      "address": "0xf22dd655fe94e37f21cd5acbe143a76a48f8150e"
     }
   },
   "schemaVersion": "1.0.1",
-  "updatedAt": "2018-02-21T23:21:33.797Z"
+  "updatedAt": "2018-02-22T23:10:39.327Z"
 }
