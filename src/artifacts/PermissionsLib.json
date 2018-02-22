@@ -1,15 +1,15 @@
 {
   "contractName": "PermissionsLib",
   "abi": [],
-  "bytecode": "0x60606040523415600e57600080fd5b603580601b6000396000f3006060604052600080fd00a165627a7a723058208800f5963073ed9fa9c6b78ab24c9ac7f744f9e37fc2b90eeb6c3c9a21cc7e0c0029",
-  "deployedBytecode": "0x6060604052600080fd00a165627a7a723058208800f5963073ed9fa9c6b78ab24c9ac7f744f9e37fc2b90eeb6c3c9a21cc7e0c0029",
+  "bytecode": "0x60606040523415600e57600080fd5b603580601b6000396000f3006060604052600080fd00a165627a7a72305820628ec176fc966709df58bf0856bcb39b966ea064205145f3a4388e163a1d93a90029",
+  "deployedBytecode": "0x6060604052600080fd00a165627a7a72305820628ec176fc966709df58bf0856bcb39b966ea064205145f3a4388e163a1d93a90029",
   "sourceMap": "610:2090:10:-;;;;;;;;;;;;;;;;;",
   "deployedSourceMap": "610:2090:10:-;;;;;",
   "source": "/*\n\n  Copyright 2017 Dharma Labs Inc.\n\n  Licensed under the Apache License, Version 2.0 (the \"License\");\n  you may not use this file except in compliance with the License.\n  You may obtain a copy of the License at\n\n    http://www.apache.org/licenses/LICENSE-2.0\n\n  Unless required by applicable law or agreed to in writing, software\n  distributed under the License is distributed on an \"AS IS\" BASIS,\n  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n  See the License for the specific language governing permissions and\n  limitations under the License.\n\n*/\n\npragma solidity 0.4.18;\n\n\nlibrary PermissionsLib {\n    struct Permissions {\n        mapping (address => bool) authorized;\n        mapping (address => uint) agentToIndex; // ensures O(1) look-up\n        address[] authorizedAgents;\n    }\n\n    function authorize(Permissions storage self, address agent)\n        internal\n    {\n        require(isNotAuthorized(self, agent));\n\n        self.authorized[agent] = true;\n        self.authorizedAgents.push(agent);\n        self.agentToIndex[agent] = self.authorizedAgents.length - 1;\n    }\n\n    function revokeAuthorization(Permissions storage self, address agent)\n        internal\n    {\n        /* We only want to do work in the case where the agent whose\n        authorization is being revoked had authorization permissions in the\n        first place. */\n        require(isAuthorized(self, agent));\n\n        uint indexOfAgentToRevoke = self.agentToIndex[agent];\n        uint indexOfAgentToMove = self.authorizedAgents.length - 1;\n        address agentToMove = self.authorizedAgents[indexOfAgentToMove];\n\n        // Revoke the agent's authorization.\n        delete self.authorized[agent];\n\n        // Remove the agent from our collection of authorized agents.\n        self.authorizedAgents[indexOfAgentToRevoke] = agentToMove;\n\n        // Update our indices to reflect the above changes.\n        self.agentToIndex[agentToMove] = indexOfAgentToRevoke;\n        delete self.agentToIndex[agent];\n\n        // Clean up memory that's no longer being used.\n        delete self.authorizedAgents[indexOfAgentToMove];\n        self.authorizedAgents.length -= 1;\n    }\n\n    function isAuthorized(Permissions storage self, address agent)\n        internal\n        view\n        returns (bool)\n    {\n        return self.authorized[agent];\n    }\n\n    function isNotAuthorized(Permissions storage self, address agent)\n        internal\n        view\n        returns (bool)\n    {\n        return !isAuthorized(self, agent);\n    }\n\n    function getAuthorizedAgents(Permissions storage self)\n        internal\n        view\n        returns (address[])\n    {\n        return self.authorizedAgents;\n    }\n}\n",
-  "sourcePath": "/Users/johanmulyono/Work/bazaar/contracts/libraries/PermissionsLib.sol",
+  "sourcePath": "/Users/chrismin/Documents/dev/dharma/bazaar/contracts/libraries/PermissionsLib.sol",
   "ast": {
     "attributes": {
-      "absolutePath": "/Users/johanmulyono/Work/bazaar/contracts/libraries/PermissionsLib.sol",
+      "absolutePath": "/Users/chrismin/Documents/dev/dharma/bazaar/contracts/libraries/PermissionsLib.sol",
       "exportedSymbols": {
         "PermissionsLib": [
           2766
@@ -2411,27 +2411,67 @@
     "version": "0.4.18+commit.9cf6e910.Emscripten.clang"
   },
   "networks": {
-    "1519023369037": {
+    "1519233847262": {
       "events": {},
       "links": {},
-      "address": "0x513dd0300d852411897a4c5890fc34dd32d12481"
+      "address": "0x25c9cf5bc73787641853125d870eaef5f74a9ba7"
     },
-    "1519081537659": {
+    "1519234459812": {
       "events": {},
       "links": {},
-      "address": "0xdea14f2a8868a140bb087fc47c9fdef819a89f91"
+      "address": "0x60b2dffa2f3f50c63aac98bece3e3ccab174d946"
     },
-    "1519092115748": {
+    "1519253782866": {
       "events": {},
       "links": {},
-      "address": "0x272ef849ea6f3fd42393d9fe24ba300e98b61493"
+      "address": "0x3ea5a7eac62bf5e4f4e05e2f33534bd3474dca63"
     },
-    "1519167888776": {
+    "1519258916551": {
       "events": {},
       "links": {},
-      "address": "0x6e2b9ffa1b64498e7daf37d6c99881b9cfacdbd8"
+      "address": "0xbb3274dc4359362e4849da73d9cd6ce2fe026ef3"
+    },
+    "1519261513969": {
+      "events": {},
+      "links": {},
+      "address": "0xbb3274dc4359362e4849da73d9cd6ce2fe026ef3"
+    },
+    "1519261565893": {
+      "events": {},
+      "links": {},
+      "address": "0xbb3274dc4359362e4849da73d9cd6ce2fe026ef3"
+    },
+    "1519261668951": {
+      "events": {},
+      "links": {},
+      "address": "0x2d304599b55f7a470985b308c3b34c3be9971461"
+    },
+    "1519261895824": {
+      "events": {},
+      "links": {},
+      "address": "0xb498415c2a97be05bcce7e4bbe502d37a1f7b378"
+    },
+    "1519261980449": {
+      "events": {},
+      "links": {},
+      "address": "0xbb3274dc4359362e4849da73d9cd6ce2fe026ef3"
+    },
+    "1519262762274": {
+      "events": {},
+      "links": {},
+      "address": "0xbb3274dc4359362e4849da73d9cd6ce2fe026ef3"
+    },
+    "1519263762611": {
+      "events": {},
+      "links": {},
+      "address": "0xbb3274dc4359362e4849da73d9cd6ce2fe026ef3"
+    },
+    "1519264023787": {
+      "events": {},
+      "links": {},
+      "address": "0xbb3274dc4359362e4849da73d9cd6ce2fe026ef3"
     }
   },
   "schemaVersion": "1.0.1",
-  "updatedAt": "2018-02-20T23:06:30.277Z"
+  "updatedAt": "2018-02-22T01:47:21.330Z"
 }
