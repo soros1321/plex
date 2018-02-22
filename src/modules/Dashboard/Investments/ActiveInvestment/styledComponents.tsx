@@ -129,7 +129,7 @@ export const Strikethrough = styled.div`
 		top: -4px;
 		left: 0;
 		border-bottom: 1px solid #FFFFFF;
-		width: 70px;
+		width: 65px;
 	}
 
 	@media only screen and (max-width: 480px) {
@@ -142,7 +142,7 @@ export const Strikethrough = styled.div`
 
 export const Schedule = styled.div`
 	display: inline-block;
-	width: 85px;
+	width: 80px;
 	opacity: 0.5;
 
 	&:last-child > ${Strikethrough} {

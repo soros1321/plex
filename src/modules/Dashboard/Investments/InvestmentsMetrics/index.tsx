@@ -1,7 +1,11 @@
 import * as React from 'react';
 import { InvestmentEntity } from '../../../../models';
-import { Row, Col } from 'reactstrap';
-import './InvestmentsMetrics.css';
+import {
+	Wrapper,
+	HalfCol,
+	Value,
+	Label
+} from './styledComponents';
 
 interface Props {
 	investments: InvestmentEntity[];
@@ -16,16 +20,16 @@ class InvestmentsMetrics extends React.Component<Props, {}> {
 			totalEarned += investment.amountPaid;
 		});
 		return (
-			<Row className="dashboard-metrics">
-				<Col xs="6">
-					<div className="value">{totalLended} ETH</div>
-					<div className="label">Total Lended</div>
-				</Col>
-				<Col xs="6">
-					<div className="value">{totalEarned} ETH</div>
-					<div className="label">Total Earned</div>
-				</Col>
-			</Row>
+			<Wrapper>
+				<HalfCol>
+					<Value>{totalLended} ETH</Value>
+					<Label>Total Lended</Label>
+				</HalfCol>
+				<HalfCol>
+					<Value>{totalEarned} ETH</Value>
+					<Label>Total Earned</Label>
+				</HalfCol>
+			</Wrapper>
 		);
 	}
 }
