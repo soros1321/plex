@@ -84,7 +84,7 @@ class TradingPermissions extends React.Component<Props, State> {
 
       // TODO: remove the sleep hack
       // await this.props.dharma.blockchain.awaitTransactionMinedAsync(transactionHash);
-      await new Promise(resolve => setTimeout(resolve, 3000));
+      await new Promise(resolve => setTimeout(resolve, 5000));
 
       const tokenRegistry = await this.props.dharma.contracts.loadTokenRegistry();
       selectedToken.tradingPermitted = this.isAllowanceUnlimited(
