@@ -70,7 +70,7 @@ export const Checkmark = styled.span`
 	width: 18px;
 	background-color: #eee;
 
-	:after {
+	&::after {
 		content: "";
 		position: absolute;
 		display: none;
@@ -99,7 +99,7 @@ export const CheckboxLabel = styled.label`
 		cursor: pointer;
 	}
 
-	:hover input ~ ${Checkmark} {
+	&:hover input ~ ${Checkmark} {
 		background-color: #ccc;
 	}
 
@@ -133,7 +133,7 @@ export const RadioCheckmark = styled.span`
 	background-color: #eee;
 	border-radius: 50%;
 
-	:after {
+	&::after {
 		content: "";
 		position: absolute;
 		display: none;
@@ -161,7 +161,7 @@ export const RadioLabel = styled.label`
 		opacity: 0;
 	}
 
-	:hover input ~ ${Checkmark} {
+	&:hover input ~ ${Checkmark} {
 		background-color: #ccc;
 	}
 

@@ -6,7 +6,6 @@ interface Props {
 	className?: string;
 }
 
-// styles-components
 export const Wrapper = styled(Row)`
 	margin: 20px 0px;
 	background-color: #FFFFFF;
@@ -47,17 +46,6 @@ export const DetailContainer = styled(UglyDetailContainer)`
 	padding: 15px !important;
 `;
 
-class HalfCol extends React.Component<Props, {}> {
-	render() {
-		return (
-			<Col className={this.props.className} xs="12" md="6">
-				{this.props.children}
-			</Col>
-		);
-	}
-}
-export { HalfCol };
-
 export const Amount = styled.div`
 	color: #002326;
 	font-family: DIN-Bold;
@@ -70,14 +58,6 @@ export const Url = styled.a`
 	font-size: 15px;
 	line-height: 25px;
 	display: block;
-`;
-
-export const CollectButton = styled.button`
-	background-color: #E93D59 !important;
-	border: 1px #E93D59 !important;
-	min-width: auto !important;
-	padding: 2px 15px !important;
-	float: right;
 `;
 
 export const StatusActive = styled.div`
@@ -93,7 +73,7 @@ export const StatusActive = styled.div`
 	margin-right: 10px;
 `;
 
-export const StatusDefaulted = StatusActive.extend`
+export const StatusPending = StatusActive.extend`
 	background-color: #E93D59;
 `;
 
@@ -105,10 +85,26 @@ export const Terms = styled.div`
 	text-transform: uppercase;
 `;
 
+class HalfCol extends React.Component<Props, {}> {
+	render() {
+		return (
+			<Col className={this.props.className} xs="12" md="6">
+				{this.props.children}
+			</Col>
+		);
+	}
+}
+export { HalfCol };
+
 export const RepaymentScheduleContainer = styled(HalfCol)`
 	padding: 15px 30px !important;
 	background-color: #082C30;
 	color: #FFFFFF;
+	display: none;
+
+	&.active {
+		display: block;
+	}
 `;
 
 export const Title = styled.div`

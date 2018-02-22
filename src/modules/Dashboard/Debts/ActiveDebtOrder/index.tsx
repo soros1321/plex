@@ -1,8 +1,25 @@
 import * as React from 'react';
 import { DebtOrderEntity } from '../../../../models';
 import { formatDate, formatTime } from '../../../../utils';
-import { Row, Col } from 'reactstrap';
-import './ActiveDebtOrder.css';
+import {
+	Wrapper,
+	ImageContainer,
+	Image,
+	DetailContainer,
+	Amount,
+	Url,
+	StatusActive,
+	StatusPending,
+	Terms,
+	RepaymentScheduleContainer,
+	Title,
+	Schedule,
+	ScheduleIconContainer,
+	ScheduleIcon,
+	Strikethrough,
+	PaymentDate,
+	ShowMore
+} from './styledComponents';
 
 interface Props {
 	debtOrder: DebtOrderEntity;
@@ -77,24 +94,24 @@ class ActiveDebtOrder extends React.Component<Props, {}> {
 			if (maxDisplay < 5) {
 				if (maxDisplay === 4 && repaymentSchedules.length > 5) {
 					repaymentScheduleItems.push((
-							<div className={'date-container active'} key={paymentSchedule.timestamp}>
-								<div className="date-icon">
-										<img src={futureIcon} />
-								</div>
-								<div className="strikethrough" />
-								<div className="more">+ {repaymentSchedules.length - maxDisplay} more</div>
-							</div>
+							<Schedule className="active" key={paymentSchedule.timestamp}>
+								<ScheduleIconContainer>
+										<ScheduleIcon src={futureIcon} />
+								</ScheduleIconContainer>
+								<Strikethrough />
+								<ShowMore>+ {repaymentSchedules.length - maxDisplay} more</ShowMore>
+							</Schedule>
 						)
 					);
 				} else {
 					repaymentScheduleItems.push((
-							<div className={'date-container ' + (now > paymentSchedule.timestamp ? '' : 'active')} key={paymentSchedule.timestamp}>
-								<div className="date-icon">
-										<img src={now > paymentSchedule.timestamp ? pastIcon : futureIcon} />
-								</div>
-								<div className="strikethrough" />
-								<div className="repayment-date">{paymentSchedule.type === 'date' ? formatDate(paymentSchedule.timestamp) : formatTime(paymentSchedule.timestamp)}</div>
-							</div>
+							<Schedule className={(now > paymentSchedule.timestamp ? '' : 'active')} key={paymentSchedule.timestamp}>
+								<ScheduleIconContainer>
+										<ScheduleIcon src={now > paymentSchedule.timestamp ? pastIcon : futureIcon} />
+								</ScheduleIconContainer>
+								<Strikethrough />
+								<PaymentDate>{paymentSchedule.type === 'date' ? formatDate(paymentSchedule.timestamp) : formatTime(paymentSchedule.timestamp)}</PaymentDate>
+							</Schedule>
 						)
 					);
 				}
@@ -102,22 +119,25 @@ class ActiveDebtOrder extends React.Component<Props, {}> {
 			maxDisplay++;
 		});
 
+		// TODO: need a way to figure out whether this debt order
+		// is active or pending, i.e has start date?
+		const active: boolean = false;
 		return (
-			<Row className="active-debt-order-container">
-				<Col xs="4" md="1" className="image-container">
-					<div className="image" />
-				</Col>
-				<Col xs="8" md="5" className="detail-container">
-					<div className="amount">{debtOrder.principalAmount.toNumber()} {debtOrder.principalTokenSymbol}</div>
-					<div className="url"><a href={`dharma.io/${debtOrder.debtorSignature}`}>{`dharma.io/${debtOrder.debtorSignature}`}</a></div>
-					<div className="active">Active</div>
-					<div className="terms">Interest Rate {debtOrder.interestRate.toNumber()}% - {debtOrder.termLength.toNumber()} {debtOrder.amortizationUnit}</div>
-				</Col>
-				<Col xs="12" md="6" className="repayment-container">
-					<div className="title">Repayment Schedule</div>
+			<Wrapper>
+				<ImageContainer>
+					<Image />
+				</ImageContainer>
+				<DetailContainer>
+					<Amount>{debtOrder.principalAmount.toNumber()} {debtOrder.principalTokenSymbol}</Amount>
+					<Url href={`dharma.io/${debtOrder.debtorSignature.substring(0, 8)}`}>{`dharma.io/${debtOrder.debtorSignature.substring(0, 8)}`}</Url>
+					{active ? <StatusActive>Active</StatusActive> : <StatusPending>Pending</StatusPending>}
+					<Terms>Simple Interest (Installments)</Terms>
+				</DetailContainer>
+				<RepaymentScheduleContainer className={active ? 'active' : ''}>
+					<Title>Repayment Schedule</Title>
 					{repaymentScheduleItems}
-				</Col>
-			</Row>
+				</RepaymentScheduleContainer>
+			</Wrapper>
 		);
 	}
 }
