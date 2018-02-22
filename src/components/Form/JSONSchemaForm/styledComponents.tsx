@@ -221,6 +221,9 @@ export const PressEnter = Description.extend`
 	background-color: #1CC1CC;
 	width: fit-content;
 	height: 0;
+	-webkit-transition: opacity 0.3s ease-out;
+	-moz-transition: opacity 0.3s ease-out;
+	-o-transition: opacity 0.3s ease-out;
 
 	&.active {
 		-webkit-transition: opacity 0.3s ease-in;

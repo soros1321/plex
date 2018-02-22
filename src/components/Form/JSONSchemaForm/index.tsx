@@ -32,6 +32,7 @@ const widgets = {
 const paddingTop = 200;
 const fieldClassName = 'field-wrapper';
 const activeClassName = 'active';
+const pressEnterClassName = 'press-enter';
 
 function findAncestor(el: any, cls: string) {
 	if (el.parentElement) {
@@ -57,6 +58,12 @@ function highlightNextSibling(el: any, cls: string) {
 		// First we find the current obj
 		if (el === sibling) {
 			foundCurrentObj = true;
+			let pressEnterDivs = el.getElementsByClassName(pressEnterClassName);
+			if (pressEnterDivs.length) {
+				if (pressEnterDivs[0].classList.contains(activeClassName)) {
+					pressEnterDivs[0].classList.remove(activeClassName);
+				}
+			}
 			continue;
 		}
 		if (foundCurrentObj) {
@@ -89,6 +96,16 @@ function highlightNextSibling(el: any, cls: string) {
 						if (!isButton) {
 							el.classList.remove(activeClassName);
 						}
+
+						if (siblingInputField.value && !isButton) {
+							let pressEnterDivs = potentialSibling.getElementsByClassName(pressEnterClassName);
+							if (pressEnterDivs.length) {
+								if (!pressEnterDivs[0].classList.contains(activeClassName)) {
+									pressEnterDivs[0].classList.add(activeClassName);
+								}
+							}
+						}
+
 						scroll.scrollTo(potentialSibling.offsetTop - paddingTop);
 						break;
 					}
@@ -129,6 +146,17 @@ function highlightElement(clickedElm: any) {
 		}
 		elm.classList.remove(activeClassName);
 	}
+
+	// Removed all active press enter elements
+	let pressEnterDivs = document.getElementsByClassName(pressEnterClassName);
+	if (pressEnterDivs.length) {
+		for (let pressEnterDiv of pressEnterDivs as any) {
+			if (pressEnterDiv.classList.contains(activeClassName)) {
+				pressEnterDiv.classList.remove(activeClassName);
+			}
+		}
+	}
+
 	let inputField = parentElm.querySelector('input');
 	if (!inputField) {
 		inputField = parentElm.querySelector('select');
@@ -142,6 +170,15 @@ function highlightElement(clickedElm: any) {
 			inputField.focus();
 			inputFieldParent.classList.add(activeClassName);
 			scroll.scrollTo(inputFieldParent.offsetTop - paddingTop);
+
+			if (inputField.value) {
+				pressEnterDivs = inputFieldParent.getElementsByClassName(pressEnterClassName);
+				if (pressEnterDivs.length) {
+					if (!pressEnterDivs[0].classList.contains(activeClassName)) {
+						pressEnterDivs[0].classList.add(activeClassName);
+					}
+				}
+			}
 		}
 	}
 	parentElm.classList.add(activeClassName);
