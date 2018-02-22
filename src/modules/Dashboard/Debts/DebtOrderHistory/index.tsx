@@ -1,8 +1,11 @@
 import * as React from 'react';
 import { DebtOrderEntity } from '../../../../models';
 // import { formatDate } from '../../../../utils';
-import { Table } from 'reactstrap';
-import './DebtOrderHistory.css';
+import {
+	Wrapper,
+	Title,
+	DebtOrderHistoryTable
+} from './styledComponents';
 
 interface Props {
 	debtOrders: DebtOrderEntity[];
@@ -11,9 +14,9 @@ interface Props {
 class DebtOrderHistory extends React.Component<Props, {}> {
 	render() {
 		return (
-			<div className="debt-order-history-container">
-				<div className="title">Past debts and loan request</div>
-				<Table className="debt-order-history-table" hover={true}>
+			<Wrapper>
+				<Title>Past debts and loan request</Title>
+				<DebtOrderHistoryTable hover={true}>
 					<thead>
 						<tr>
 							<th>Amount</th>
@@ -36,8 +39,8 @@ class DebtOrderHistory extends React.Component<Props, {}> {
 							*/
 						}
 					</tbody>
-				</Table>
-			</div>
+				</DebtOrderHistoryTable>
+			</Wrapper>
 		);
 	}
 }
