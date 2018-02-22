@@ -3,31 +3,38 @@ import { JSONSchema4 } from 'json-schema';
 export const schema: JSONSchema4 = {
 	type: 'object',
 	required: [
-		'principalAmount',
-		'principalTokenSymbol',
 		'interestRate',
 		'amortizationUnit',
 		'termLength'
 	],
 	properties: {
-		principalAmount: {
-			type: 'number',
-			title: 'Principal Amount',
-			description: 'Enter the amount of tokens you would like to borrow'
-		},
-		principalTokenSymbol: {
-			type: 'string',
-			title: 'Principal Token',
-			enum: [
-				'REP',
-				'MKR',
-				'ZRX'
+		loan: {
+			type: 'object',
+			title: 'How much do you want?',
+			required: [
+				'principalAmount',
+				'principalTokenSymbol'
 			],
-			enumNames: [
-				'Augur (REP)',
-				'Maker DAO (MKR)',
-				'0x Token (ZRX)'
-			]
+			properties: {
+				principalAmount: {
+					type: 'number',
+					title: 'Amount',
+				},
+				principalTokenSymbol: {
+					type: 'string',
+					title: 'Token',
+					enum: [
+						'REP',
+						'MKR',
+						'ZRX'
+					],
+					enumNames: [
+						'Augur (REP)',
+						'Maker DAO (MKR)',
+						'0x Token (ZRX)'
+					]
+				}
+			}
 		},
 		interestRate: {
 			type: 'number',
@@ -62,12 +69,19 @@ export const schema: JSONSchema4 = {
 };
 
 export const uiSchema = {
-	principalAmount: {
-		'ui:autofocus': true,
-		'ui:placeholder': '100.3'
-	},
-	principalTokenSymbol: {
-		'ui:placeholder': 'select'
+	loan: {
+		principalAmount: {
+			'ui:autofocus': true,
+			'ui:placeholder': '100.3',
+			classNames: 'inline-field width75'
+		},
+		principalTokenSymbol: {
+			'ui:placeholder': 'select',
+			'ui:options': {
+				label: false
+			},
+			classNames: 'inline-field width25 no-label'
+		}
 	},
 	interestRate: {
 		'ui:placeholder': '8.12%'

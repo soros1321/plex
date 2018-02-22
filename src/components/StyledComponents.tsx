@@ -4,6 +4,9 @@ import { Button } from 'reactstrap';
 // styles-components
 export const MainWrapper = styled.div`
 	padding: 50px;
+	@media only screen and (max-width: 480px) {
+		padding: 15px;
+	}
 `;
 
 // styles-components

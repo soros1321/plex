@@ -46,7 +46,8 @@ class RequestLoanWeb3 extends React.Component<Props, State> {
 	}
 
 	async handleSubmit() {
-		const { principalAmount, principalTokenSymbol, interestRate, amortizationUnit, termLength } = this.state.formData;
+		const { principalAmount, principalTokenSymbol } = this.state.formData.loan;
+		const { interestRate, amortizationUnit, termLength } = this.state.formData;
 		const dharma = this.props.dharma;
 
 		const tokenRegistry = await dharma.contracts.loadTokenRegistry();
@@ -59,7 +60,6 @@ class RequestLoanWeb3 extends React.Component<Props, State> {
 			amortizationUnit,
 			termLength: new BigNumber(termLength)
 		};
-
 		const debtOrder = await dharma.adapters.simpleInterestLoan.toDebtOrder(simpleInterestLoan);
 
 		this.setState({ debtOrder: JSON.stringify(debtOrder) });
@@ -90,7 +90,7 @@ class RequestLoanWeb3 extends React.Component<Props, State> {
 			debtor: generatedDebtOrder.debtor,
 			principalAmount: generatedDebtOrder.principalAmount,
 			principalToken: generatedDebtOrder.principalToken,
-			principalTokenSymbol: this.state.formData.principalTokenSymbol,
+			principalTokenSymbol: this.state.formData.loan.principalTokenSymbol,
 			interestRate: generatedDebtOrder.interestRate,
 			amortizationUnit: generatedDebtOrder.amortizationUnit,
 			termLength: generatedDebtOrder.termLength,
@@ -117,6 +117,7 @@ class RequestLoanWeb3 extends React.Component<Props, State> {
 			<MainWrapper>
 				<Header title={'Request a loan'} description={'Here\'s a quick description of what a debt order is and why you should request one.'} />
 				<JSONSchemaForm
+					className="small"
 					schema={schema}
 					uiSchema={uiSchema}
 					formData={this.state.formData}

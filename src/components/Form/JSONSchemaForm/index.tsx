@@ -13,6 +13,7 @@ interface FormResponse {
 }
 
 interface Props {
+	className?: string;
 	schema: JSONSchema4;
 	uiSchema?: {};
 	formData: any;
@@ -255,6 +256,7 @@ class JSONSchemaForm extends React.Component<Props, {}> {
 	render() {
 		return (
 			<StyledForm
+				className={this.props.className}
 				schema={this.props.schema}
 				uiSchema={this.props.uiSchema}
 				formData={this.props.formData}
