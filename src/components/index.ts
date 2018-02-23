@@ -4,3 +4,4 @@ export * from './SmallDescription';
 export * from './ConfirmationModal';
 export * from './StyledComponents';
 export * from './ScrollToTopOnMount';
+export * from './Error';

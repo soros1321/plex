@@ -14,7 +14,7 @@ import {
 } from '../modules';
 import { ParentContainer } from '../layouts';
 import * as Web3 from 'web3';
-import { web3Connected, dharmaInstantiated, setAccounts } from './actions';
+import { web3Connected, dharmaInstantiated, setAccounts, setError } from './actions';
 const promisify = require('tiny-promisify');
 
 // Import Dharma libraries
@@ -58,7 +58,7 @@ class AppRouter extends React.Component<Props, {}> {
 		const accounts = await promisify(web3.eth.getAccounts)();
 
 		if (!accounts.length) {
-			throw new Error('Cannot find any account on current Ethereum network.');
+			dispatch(setError('Unable to find active account on current Ethereum network'));
 		}
 
 		dispatch(setAccounts(accounts));
@@ -70,21 +70,21 @@ class AppRouter extends React.Component<Props, {}> {
 			networkId in DebtToken.networks &&
 			networkId in TermsContractRegistry.networks &&
 			networkId in DebtRegistry.networks)) {
-			throw new Error('Cannot find Dharma smart contracts on current Ethereum network.');
+			dispatch(setError('Unable to connect to the blockchain'));
+		} else {
+			const dharmaConfig = {
+				kernelAddress: DebtKernel.networks[networkId].address,
+				repaymentRouterAddress: RepaymentRouter.networks[networkId].address,
+				tokenTransferProxyAddress: TokenTransferProxy.networks[networkId].address,
+				tokenRegistryAddress: TokenRegistry.networks[networkId].address,
+				debtTokenAddress: DebtToken.networks[networkId].address,
+				termsContractRegistry: TermsContractRegistry.networks[networkId].address,
+				debtRegistryAddress: DebtRegistry.networks[networkId].address
+			};
+
+			const dharma = new Dharma(web3.currentProvider, dharmaConfig);
+			dispatch(dharmaInstantiated(dharma));
 		}
-
-		const dharmaConfig = {
-			kernelAddress: DebtKernel.networks[networkId].address,
-			repaymentRouterAddress: RepaymentRouter.networks[networkId].address,
-			tokenTransferProxyAddress: TokenTransferProxy.networks[networkId].address,
-			tokenRegistryAddress: TokenRegistry.networks[networkId].address,
-			debtTokenAddress: DebtToken.networks[networkId].address,
-			termsContractRegistry: TermsContractRegistry.networks[networkId].address,
-			debtRegistryAddress: DebtRegistry.networks[networkId].address
-		};
-
-		const dharma = new Dharma(web3.currentProvider, dharmaConfig);
-		dispatch(dharmaInstantiated(dharma));
 	}
 
 	render() {

@@ -20,3 +20,10 @@ export const setAccounts = (accounts: string[]) => {
 		accounts: accounts
 	};
 };
+
+export const setError = (errorMessage: string) => {
+	return {
+		type: actionsEnums.SET_GLOBAL_ERROR,
+		errorMessage: errorMessage
+	};
+};
