@@ -6,7 +6,7 @@ import {
 	Input,
 	Button
 } from 'reactstrap';
-import { Header } from '../../../components';
+import { Header, MainWrapper } from '../../../components';
 import { Link } from 'react-router';
 import './FillLoanEmpty.css';
 
@@ -43,7 +43,7 @@ class FillLoanEmpty extends React.Component<{}, States> {
 
 	render() {
 		return (
-			<div className="main-wrapper">
+			<MainWrapper>
 				<Header title={'Fill a loan'} description={'Here\'s a quick description of what a loan is and why you should fill one.'} />
 				<Form className="form-container fill-loan-form">
 					<FormGroup>
@@ -67,7 +67,7 @@ class FillLoanEmpty extends React.Component<{}, States> {
 						<Link to="/chat" >JOIN THE DHARMA CHAT</Link>
 					</div>
 				</div>
-			</div>
+			</MainWrapper>
 		);
 	}
 }

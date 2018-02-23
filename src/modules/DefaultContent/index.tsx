@@ -1,11 +1,12 @@
 import * as React from 'react';
+import { MainWrapper } from '../../components';
 
 class DefaultContent extends React.Component<{}, {}> {
 	render() {
 		return (
-			<div className="main-wrapper">
+			<MainWrapper>
 				<h1>Insert something here</h1>
-			</div>
+			</MainWrapper>
 		);
 	}
 }

@@ -8,7 +8,13 @@ import {
 	Input,
 	Button
 } from 'reactstrap';
-import { Header, Checkbox, SmallDescription, ConfirmationModal } from '../../../components';
+import {
+	Header,
+	Checkbox,
+	SmallDescription,
+	ConfirmationModal,
+	MainWrapper
+} from '../../../components';
 import { browserHistory } from 'react-router';
 import './RequestLoanForm.css';
 
@@ -122,7 +128,7 @@ class RequestLoanForm extends React.Component<{}, States> {
 			</span>
 		);
 		return (
-			<div className="main-wrapper">
+			<MainWrapper>
 				<Header title={'Request a loan'} description={'Here\'s a quick description of what a debt order is and why you should request one.'} />
 				<Form className="form-container">
 					<Row>
@@ -222,7 +228,7 @@ class RequestLoanForm extends React.Component<{}, States> {
 					</Row>
 				</Form>
 				<ConfirmationModal modal={this.state.confirmationModal} title="Please confirm" content={confirmationModalContent} onToggle={this.confirmationModalToggle} onSubmit={this.successModalToggle} closeButtonText="&#8592; Modify Request" submitButtonText="Complete Request" />
-			</div>
+			</MainWrapper>
 		);
 	}
 }

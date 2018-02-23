@@ -4,7 +4,7 @@ import {
 	Col,
 	Button
 } from 'reactstrap';
-import { Header, ConfirmationModal } from '../../../components';
+import { Header, ConfirmationModal, MainWrapper } from '../../../components';
 import { Link } from 'react-router';
 import { SuccessModal } from './SuccessModal';
 import { browserHistory } from 'react-router';
@@ -98,7 +98,7 @@ class FillLoanEntered extends React.Component<Props, States> {
 			</span>
 		);
 		return (
-			<div className="main-wrapper">
+			<MainWrapper>
 				<Header title={'Fill a loan'} description={'Here are the details of loan request ' + this.props.requestId + '. If the terms look fair to you, fill the loan and Dharma will //insert statement.'} />
 				<Row className="loan-info-container">
 					<Col xs="12" md="6">
@@ -120,7 +120,7 @@ class FillLoanEntered extends React.Component<Props, States> {
 				</Row>
 				<ConfirmationModal modal={this.state.confirmationModal} title="Please confirm" content={confirmationModalContent} onToggle={this.confirmationModalToggle} onSubmit={this.successModalToggle} closeButtonText="Cancel" submitButtonText="Fill Order" />
 				<SuccessModal modal={this.state.successModal} onToggle={this.successModalToggle} requestId={this.props.requestId} />
-			</div>
+			</MainWrapper>
 		);
 	}
 }

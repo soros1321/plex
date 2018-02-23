@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { DebtOrderEntity } from '../../../models';
-import { Header } from '../../../components';
+import { Header, MainWrapper } from '../../../components';
 import { DebtsMetrics } from './DebtsMetrics';
 import { ActiveDebtOrder } from './ActiveDebtOrder';
 import { DebtOrderHistory } from './DebtOrderHistory';
@@ -24,7 +24,7 @@ class Debts extends React.Component<Props, {}> {
 		*/
 
 		return (
-			<div className="main-wrapper">
+			<MainWrapper>
 				<Header title="Your debts" />
 				<DebtsMetrics debtOrders={this.props.debtOrders} />
 				{ activeDebtOrders.map((debtOrder) => (
@@ -32,7 +32,7 @@ class Debts extends React.Component<Props, {}> {
 					))
 				}
 				<DebtOrderHistory debtOrders={pastDebtOrders} />
-			</div>
+			</MainWrapper>
 		);
 	}
 }

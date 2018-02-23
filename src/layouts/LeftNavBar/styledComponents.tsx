@@ -9,7 +9,7 @@ interface Props {
 
 export const Wrapper = styled.div`
 	background-color: #082C30;
-	width: 213px;
+	width: inherit;
 	position: fixed;
 	top: 0px;
 	left: 0;
