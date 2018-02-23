@@ -56,7 +56,8 @@ export const StyledCol = styled(UglyCol)`
 
 export const StyledLink = styled(Link)`
 	text-transform: uppercase;
-	font-size: 15px;
+	letter-spacing: 1px;
+	font-size: 14px;
 	color: #FFFFFF;
 	font-weight: bold;
 	line-height: 25px;
@@ -66,7 +67,7 @@ export const StyledLink = styled(Link)`
 	&:hover,
 	&.active {
 		color: #FFFFFF;
-		background-color: #1E393C;
+		background-color: rgba(255,255, 255, 0.08);
 		border-left: 5px solid #F3764B;
 		opacity: 1;
 		padding: 20px 25px 20px 20px !important;
