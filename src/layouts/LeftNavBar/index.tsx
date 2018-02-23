@@ -1,12 +1,19 @@
 import * as React from 'react';
+import { IndexLink } from 'react-router';
 import {
 	Row,
-	Col,
 	Nav,
 	NavItem
 } from 'reactstrap';
-import { Link } from 'react-router';
-import './LeftNavBar.css';
+import {
+	Wrapper,
+	LogoContainer,
+	BrandLogo,
+	StyledCol,
+	StyledLink,
+	TitleFirst,
+	TitleRest
+} from './styledComponents';
 
 class LeftNavBar extends React.Component {
 	render() {
@@ -15,31 +22,36 @@ class LeftNavBar extends React.Component {
 			{url: '/request', display: 'REQUEST LOAN'},
 			{url: '/fill', display: 'FILL LOAN'}
 		];
-		const linkItems = links.map((link, index) =>
+		const linkItems = links.map((link) =>
 			(
-				<Col xs="4" md="12" key={link.display} className={index === 0 ? 'top-nav-item' : ''}>
+				<StyledCol key={link.display}>
 					<NavItem>
-						<Link to={link.url} className="nav-link" activeClassName="active">
-							<span className="title-first">
+						<StyledLink to={link.url} className="nav-link" activeClassName="active">
+							<TitleFirst>
 								{link.display.indexOf(' ') >= 0 ? link.display.substr(0, link.display.indexOf(' ')) : link.display}
-							</span>
-							<span className="title-rest">
+							</TitleFirst>
+							<TitleRest>
 								{link.display.indexOf(' ') >= 0 ? link.display.substr(link.display.indexOf(' ')) : ''}
-							</span>
-						</Link>
+							</TitleRest>
+						</StyledLink>
 					</NavItem>
-				</Col>
+				</StyledCol>
 			)
 		);
 
 		return (
-			<div className="left-nav-bar">
+			<Wrapper>
+				<LogoContainer>
+					<IndexLink to="/">
+						<BrandLogo src={require('../../assets/img/logo_icon_white.png')} />
+					</IndexLink>
+				</LogoContainer>
 				<Nav>
 					<Row>
 						{linkItems}
 					</Row>
 				</Nav>
-			</div>
+			</Wrapper>
 		);
 	}
 }
