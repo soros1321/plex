@@ -71,7 +71,7 @@ export const FieldWrapper = styled.div`
 			width: 24%;
 			margin-left: 1%;
 		}
-		&.no-label {
+		&.padding-top {
 			padding-top: 38px;
 		}
 	}
