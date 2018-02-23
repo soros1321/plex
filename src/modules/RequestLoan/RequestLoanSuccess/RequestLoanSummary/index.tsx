@@ -2,13 +2,20 @@ import * as React from 'react';
 import {
 	Row,
 	Col,
-	FormGroup,
-	Label,
-	Input,
-	Button
+	Label
 } from 'reactstrap';
 import { DebtOrderEntity } from '../../../../models';
-import './RequestLoanSummary.css';
+import {
+	Wrapper,
+	StyledLabel,
+	GrayContainer,
+	InfoItem,
+	Title,
+	Content,
+	SummaryJsonContainer,
+	SummaryJsonInput,
+	CopyButton
+} from './styledComponents';
 
 interface Props {
 	debtOrder: DebtOrderEntity;
@@ -27,41 +34,61 @@ class RequestLoanSummary extends React.Component<Props, {}> {
 
 	render() {
 		const { debtOrder } = this.props;
+		let installmentFrequency: string = '';
+		switch (debtOrder.amortizationUnit) {
+			case 'hours':
+				installmentFrequency = 'Hourly';
+				break;
+			case 'days':
+				installmentFrequency = 'Daily';
+				break;
+			case 'weeks':
+				installmentFrequency = 'Weekly';
+				break;
+			case 'months':
+				installmentFrequency = 'Monthly';
+				break;
+			case 'years':
+				installmentFrequency = 'Yearly';
+				break;
+			default:
+				break;
+		}
+
 		const leftInfoItems = [
-			{title: 'AMOUNT', content: debtOrder.principalAmount.toNumber() + ' ' + debtOrder.principalTokenSymbol},
-			{title: 'PRINCIPLE', content: ''},
-			{title: 'REPAYMENT DATE', content: ''}
+			{title: 'Principal', content: debtOrder.principalAmount.toNumber() + ' ' + debtOrder.principalTokenSymbol},
+			{title: 'Term Length', content: debtOrder.termLength.toNumber() + ' ' + debtOrder.amortizationUnit},
+			{title: 'Description', content: ''}
 		];
 		const rightInfoItems = [
-			{title: 'DESCRIPTION', content: ''},
-			{title: 'INTEREST', content: debtOrder.interestRate.toNumber() + '%'},
-			{title: 'REPAYMENT TERMS', content: debtOrder.termLength.toNumber() + ' ' + debtOrder.amortizationUnit}
+			{title: 'Interest Rate', content: debtOrder.interestRate.toNumber() + '%'},
+			{title: 'Installment Frequency', content: installmentFrequency},
 		];
 		const leftInfoItemRows = leftInfoItems.map((item) => (
-			<div className="info-item" key={item.title}>
-				<div className="title">
+			<InfoItem key={item.title}>
+				<Title>
 					{item.title}
-				</div>
-				<div className="content">
+				</Title>
+				<Content>
 					{item.content || 'Some Content'}
-				</div>
-			</div>
+				</Content>
+			</InfoItem>
 		));
 		const rightInfoItemRows = rightInfoItems.map((item) => (
-			<div className="info-item" key={item.title}>
-				<div className="title">
+			<InfoItem key={item.title}>
+				<Title>
 					{item.title}
-				</div>
-				<div className="content">
+				</Title>
+				<Content>
 					{item.content || 'Some Content'}
-				</div>
-			</div>
+				</Content>
+			</InfoItem>
 		));
 
 		return (
-			<div className="request-loan-summary-container">
-				<Label className="title">Loan request summary</Label>
-				<Row className="gray">
+			<Wrapper>
+				<StyledLabel>Loan request summary</StyledLabel>
+				<GrayContainer>
 					<Row>
 						<Col xs="12" md="6">
 							{leftInfoItemRows}
@@ -70,13 +97,13 @@ class RequestLoanSummary extends React.Component<Props, {}> {
 							{rightInfoItemRows}
 						</Col>
 					</Row>
-					<FormGroup className="summary-json-container">
-						<Label for="summary-json">JSON</Label>
-						<Input type="textarea" name="summary-json" value={JSON.stringify(debtOrder, undefined, 4)} readOnly={true} />
-						<Button className="button" onClick={this.handleCopyClipboard}>Copy</Button>
-					</FormGroup>
-				</Row>
-			</div>
+					<SummaryJsonContainer>
+						<Label>JSON</Label>
+						<SummaryJsonInput type="textarea" value={JSON.stringify(debtOrder)} readOnly={true} />
+						<CopyButton className="button" onClick={this.handleCopyClipboard}>Copy</CopyButton>
+					</SummaryJsonContainer>
+				</GrayContainer>
+			</Wrapper>
 		);
 	}
 }
