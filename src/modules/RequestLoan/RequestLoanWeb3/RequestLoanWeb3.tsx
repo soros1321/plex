@@ -23,6 +23,9 @@ interface Props {
 
 interface State {
 	formData: any;
+	principalAmount: number;
+	principalTokenSymbol: string;
+	interestRate: number;
 	debtOrder: string;
 	confirmationModal: boolean;
 }
@@ -37,13 +40,21 @@ class RequestLoanWeb3 extends React.Component<Props, State> {
 
 		this.state = {
 			formData: {},
+			principalAmount: 0,
+			principalTokenSymbol: '',
+			interestRate: 0,
 			debtOrder: '',
 			confirmationModal: false
 		};
 	}
 
 	handleChange(formData: any) {
-		this.setState({ formData });
+		this.setState({
+			formData: formData,
+			principalAmount: formData.loan.principalAmount || 0,
+			principalTokenSymbol: formData.loan.principalTokenSymbol || '',
+			interestRate: formData.terms.interestRate || 0
+		});
 	}
 
 	async handleSubmit() {
@@ -111,7 +122,7 @@ class RequestLoanWeb3 extends React.Component<Props, State> {
 	render() {
 		const confirmationModalContent = (
 			<span>
-				You are requesting a loan of <Bold>{this.state.formData.principalAmount} {this.state.formData.principalTokenSymbol}</Bold> with interest rate of <Bold>{this.state.formData.interestRate}%</Bold> per the terms in the contract on the previous page. Are you sure you want to do this?
+				You are requesting a loan of <Bold>{this.state.principalAmount} {this.state.principalTokenSymbol}</Bold> at a <Bold>{this.state.interestRate}%</Bold> interest rate per the terms in the contract on the previous page. Are you sure you want to do this?
 			</span>
 		);
 		return (
