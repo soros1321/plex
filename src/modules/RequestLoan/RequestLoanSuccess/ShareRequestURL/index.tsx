@@ -1,13 +1,21 @@
 import * as React from 'react';
 import {
-	Row,
-	Col,
-	FormGroup,
-	Label,
-	Input,
-	Button
+	Row
 } from 'reactstrap';
-import './ShareRequestURL.css';
+import {
+	Wrapper,
+	StyledLabel,
+	GrayRow,
+	ImageContainer,
+	DetailContainer,
+	ShareButtonsContainer,
+	ShareButton,
+	StyledFormGroup,
+	InputContainer,
+	RequestInput,
+	ButtonContainer,
+	CopyButton
+} from './styledComponents';
 
 interface Props {
 	requestURL: string;
@@ -37,32 +45,32 @@ class ShareRequestURL extends React.Component<Props, {}> {
 			{name: 'instagram', imgURL: require('../../../../assets/img/logo_instagram.png')}
 		];
 		const socialButtonsRow = socialButtons.map((social) => (
-			<div className="share-button" key={social.name} onClick={(e) => this.handleShareSocial(social.name, e)}>
+			<ShareButton key={social.name} onClick={(e) => this.handleShareSocial(social.name, e)}>
 				<img src={social.imgURL} />
-			</div>
+			</ShareButton>
 		));
 		return (
-			<div className="share-request-url-container">
-				<Label for="request-url">Share your request URL</Label>
-				<Row className="gray">
-					<Col xs="12" md="2" className="image-container" />
-					<Col xs="12" md="10">
-						<div className="share-buttons-container">
+			<Wrapper>
+				<StyledLabel>Share your request URL</StyledLabel>
+				<GrayRow>
+					<ImageContainer />
+					<DetailContainer>
+						<ShareButtonsContainer>
 							{socialButtonsRow}
-						</div>
-						<FormGroup>
+						</ShareButtonsContainer>
+						<StyledFormGroup>
 							<Row>
-								<Col xs="12" md="8">
-									<Input type="text" name="request-url" className="width-95" value={this.props.requestURL} readOnly={true} />
-								</Col>
-								<Col xs="12" md="4">
-									<Button className="button" type="submit" onClick={this.handleCopyClipboard}>Copy</Button>
-								</Col>
+								<InputContainer>
+									<RequestInput type="text" name="request-url" value={this.props.requestURL} readOnly={true} />
+								</InputContainer>
+								<ButtonContainer>
+									<CopyButton className="button" type="submit" onClick={this.handleCopyClipboard}>Copy</CopyButton>
+								</ButtonContainer>
 							</Row>
-						</FormGroup>
-					</Col>
-				</Row>
-			</div>
+						</StyledFormGroup>
+					</DetailContainer>
+				</GrayRow>
+			</Wrapper>
 		);
 	}
 }
