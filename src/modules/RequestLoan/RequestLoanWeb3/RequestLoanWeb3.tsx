@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { PaperLayout } from '../../../layouts';
+import { browserHistory } from 'react-router';
 import { schema, uiSchema } from './schema';
 import {
 	Header,
@@ -7,11 +9,10 @@ import {
 	Bold,
 	ConfirmationModal
 } from '../../../components';
-import { browserHistory } from 'react-router';
+import { DebtOrderEntity } from '../../../models';
 import * as Web3 from 'web3';
 import Dharma from '@dharmaprotocol/dharma.js';
-import { DebtOrderEntity } from '../../../models';
-const BigNumber = require('bignumber.js');
+import { BigNumber } from 'bignumber.js';
 
 interface Props {
 	web3: Web3;
@@ -114,19 +115,20 @@ class RequestLoanWeb3 extends React.Component<Props, State> {
 			</span>
 		);
 		return (
-			<MainWrapper>
-				<Header title={'Request a loan'} description={'Here\'s a quick description of what a debt order is and why you should request one.'} />
-				<JSONSchemaForm
-					className="small"
-					schema={schema}
-					uiSchema={uiSchema}
-					formData={this.state.formData}
-					buttonText="Generate Debt Order"
-					onHandleChange={this.handleChange}
-					onHandleSubmit={this.handleSubmit}
-				/>
+			<PaperLayout>
+				<MainWrapper>
+					<Header title={'Request a loan'} description={'Here\'s a quick description of what a debt order is and why you should request one.'} />
+					<JSONSchemaForm
+						schema={schema}
+						uiSchema={uiSchema}
+						formData={this.state.formData}
+						buttonText="Generate Debt Order"
+						onHandleChange={this.handleChange}
+						onHandleSubmit={this.handleSubmit}
+					/>
+				</MainWrapper>
 				<ConfirmationModal modal={this.state.confirmationModal} title="Please confirm" content={confirmationModalContent} onToggle={this.confirmationModalToggle} onSubmit={this.handleSignDebtOrder} closeButtonText="&#8592; Modify Request" submitButtonText="Complete Request" />
-			</MainWrapper>
+			</PaperLayout>
 		);
 	}
 }

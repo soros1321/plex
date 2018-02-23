@@ -2,18 +2,6 @@ import styled from 'styled-components';
 import Form from 'react-jsonschema-form';
 
 export const StyledForm = styled(Form)`
-	&.small {
-		width: 600px !important;
-	}
-	&.medium {
-		width: 800px !important;
-	}
-	@media only screen and (max-width: 480px) {
-		&.small,
-		&.medium {
-			width: 100% !important;
-		}
-	}
 `;
 /*
  position: absolute;
