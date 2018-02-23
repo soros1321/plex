@@ -4,6 +4,7 @@ import {
 	Col,
 	Button
 } from 'reactstrap';
+import { PaperLayout } from '../../../layouts';
 import { Header, ConfirmationModal, MainWrapper } from '../../../components';
 import { Link } from 'react-router';
 import { SuccessModal } from './SuccessModal';
@@ -98,29 +99,31 @@ class FillLoanEntered extends React.Component<Props, States> {
 			</span>
 		);
 		return (
-			<MainWrapper>
-				<Header title={'Fill a loan'} description={'Here are the details of loan request ' + this.props.requestId + '. If the terms look fair to you, fill the loan and Dharma will //insert statement.'} />
-				<Row className="loan-info-container">
-					<Col xs="12" md="6">
-						{leftInfoItemRows}
-					</Col>
-					<Col xs="12" md="6">
-						{rightInfoItemRows}
-					</Col>
-				</Row>
-				<Row className="button-container margin-top-30">
-					<Col xs="12" md="6">
-						<Link to="/fill">
-							<Button className="button secondary width-95">Decline</Button>
-						</Link>
-					</Col>
-					<Col xs="12" md="6" className="align-right">
-						<Button className="button width-95" onClick={this.confirmationModalToggle}>Fill Loan</Button>
-					</Col>
-				</Row>
-				<ConfirmationModal modal={this.state.confirmationModal} title="Please confirm" content={confirmationModalContent} onToggle={this.confirmationModalToggle} onSubmit={this.successModalToggle} closeButtonText="Cancel" submitButtonText="Fill Order" />
-				<SuccessModal modal={this.state.successModal} onToggle={this.successModalToggle} requestId={this.props.requestId} />
-			</MainWrapper>
+			<PaperLayout>
+				<MainWrapper>
+					<Header title={'Fill a loan'} description={'Here are the details of loan request ' + this.props.requestId + '. If the terms look fair to you, fill the loan and Dharma will //insert statement.'} />
+					<Row className="loan-info-container">
+						<Col xs="12" md="6">
+							{leftInfoItemRows}
+						</Col>
+						<Col xs="12" md="6">
+							{rightInfoItemRows}
+						</Col>
+					</Row>
+					<Row className="button-container margin-top-30">
+						<Col xs="12" md="6">
+							<Link to="/fill">
+								<Button className="button secondary width-95">Decline</Button>
+							</Link>
+						</Col>
+						<Col xs="12" md="6" className="align-right">
+							<Button className="button width-95" onClick={this.confirmationModalToggle}>Fill Loan</Button>
+						</Col>
+					</Row>
+					<ConfirmationModal modal={this.state.confirmationModal} title="Please confirm" content={confirmationModalContent} onToggle={this.confirmationModalToggle} onSubmit={this.successModalToggle} closeButtonText="Cancel" submitButtonText="Fill Order" />
+					<SuccessModal modal={this.state.successModal} onToggle={this.successModalToggle} requestId={this.props.requestId} />
+				</MainWrapper>
+			</PaperLayout>
 		);
 	}
 }

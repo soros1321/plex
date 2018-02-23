@@ -211,9 +211,6 @@ label.radio-container .checkmark:after {
 	margin-left: 0;
 	margin-right: 0;
 }
-.row.button-container {
-	width: 600px;
-}
 .row .width-95.button {
 	width: 95%;
 }

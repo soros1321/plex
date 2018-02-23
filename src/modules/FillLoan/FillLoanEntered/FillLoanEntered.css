@@ -1,7 +1,6 @@
 .row.loan-info-container {
 	padding: 20px;
 	background-color: #F5F5F5;
-	width: 600px;
 }
 .loan-info-container .info-item {
 	margin-bottom: 30px;
@@ -27,6 +26,5 @@
 	.row.loan-info-container {
 		padding: 15px;
 		background-color: #F5F5F5;
-		width: 100%;
 	}
 }
