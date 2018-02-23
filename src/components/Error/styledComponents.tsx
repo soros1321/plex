@@ -15,6 +15,7 @@ export const StyledAlert = styled(UncontrolledAlert)`
 	&.alert {
 		border: none;
 		border-radius: 0;
+		margin-bottom: 0px;
 	}
 	&.alert-danger {
 		color: #002326;
