@@ -3,10 +3,12 @@ import styled from 'styled-components';
 export const Background = styled.div`
 	background-color: #082C30;
 	padding: 50px 0;
+	height: 100%;
 
 	@media only screen and (max-width: 480px) {
 		padding: 0;
 		background-color: #FFFFFF;
+		height: auto;
 	}
 `;
 

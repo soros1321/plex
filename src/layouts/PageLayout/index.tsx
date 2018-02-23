@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { Row } from 'reactstrap';
 import TopNavBar from '../TopNavBar';
 import LeftNavBar from '../LeftNavBar';
 import {
 	Wrapper,
+	StyledRow,
 	LeftContainer,
 	RightContainer
 } from './styledComponents';
@@ -13,14 +13,14 @@ class PageLayout extends React.Component {
     return (
 			<Wrapper>
 				<TopNavBar />
-				<Row>
+				<StyledRow>
 					<LeftContainer>
 						<LeftNavBar />
 					</LeftContainer>
 					<RightContainer>
 						{this.props.children}
 					</RightContainer>
-				</Row>
+				</StyledRow>
 			</Wrapper>
     );
   }

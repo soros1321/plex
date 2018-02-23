@@ -1,11 +1,12 @@
 import * as React from 'react';
+import { Wrapper } from './styledComponents';
 
 class ParentContainer extends React.Component<{}, {}> {
 	render() {
 		return (
-			<div>
+			<Wrapper>
 				{this.props.children}
-			</div>
+			</Wrapper>
 		);
 	}
 }
