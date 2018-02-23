@@ -45,8 +45,12 @@ class TradingPermissions extends React.Component<Props, State> {
   }
 
   async getTokenAllowance(tokenRegistry: any, tokenAddress: string) {
-    // TODO: handle nil ownerAddress
     const accounts = await promisify(this.props.web3.eth.getAccounts)();
+    // TODO: handle account retrieval error more robustly
+    if (!accounts || !accounts[0]) {
+      return new BigNumber(-1);
+    }
+
     const ownerAddress = accounts[0];
     const tokenAllowance = await this.props.dharma.token.getProxyAllowanceAsync(tokenAddress, ownerAddress);
     return new BigNumber(tokenAllowance);
