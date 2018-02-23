@@ -3,6 +3,7 @@ import { Row } from 'reactstrap';
 import TopNavBar from '../TopNavBar';
 import LeftNavBar from '../LeftNavBar';
 import {
+	Wrapper,
 	LeftContainer,
 	RightContainer
 } from './styledComponents';
@@ -10,7 +11,7 @@ import {
 class PageLayout extends React.Component {
   render() {
     return (
-			<div>
+			<Wrapper>
 				<TopNavBar />
 				<Row>
 					<LeftContainer>
@@ -20,7 +21,7 @@ class PageLayout extends React.Component {
 						{this.props.children}
 					</RightContainer>
 				</Row>
-			</div>
+			</Wrapper>
     );
   }
 }

@@ -6,9 +6,15 @@
 	font-family: DIN-Bold;
 	src: url(../fonts/DINBold.otf);
 }
-
+html {
+	height: 100%;
+}
 body {
 	font-family: DIN;
+	height: 100%;
+}
+#root {
+	height: 100%;
 }
 h1 {
 	font-family: DIN-Bold;
