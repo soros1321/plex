@@ -2,12 +2,16 @@ import * as React from 'react';
 import {
 	Collapse,
 	Navbar,
-	NavbarToggler,
-	Nav,
-	NavItem
+	Nav
 } from 'reactstrap';
-import { Link, IndexLink } from 'react-router';
-import './TopNavBar.css';
+import { IndexLink } from 'react-router';
+import {
+	Wrapper,
+	BrandLogo,
+	StyledNavbarToggler,
+	StyledNavItem,
+	StyledLink
+} from './styledComponents';
 
 interface TopNavBarState {
 	isOpen: boolean;
@@ -36,25 +40,25 @@ class TopNavBar extends React.Component<{}, TopNavBarState> {
 		];
 		const linkItems = links.map((link) =>
 			(
-				<NavItem key={link.display}>
-					<Link to={link.url} className="nav-link" activeClassName="active">{link.display}</Link>
-				</NavItem>
+				<StyledNavItem key={link.display}>
+					<StyledLink to={link.url} activeClassName="active">{link.display}</StyledLink>
+				</StyledNavItem>
 			)
 		);
 		return (
-			<div className="top-nav-bar">
+			<Wrapper>
 				<Navbar color="faded" light={true} expand="md">
-					<IndexLink to="/" className="navbar-brand">
-						<img src={require('../../assets/img/logo_icon_white.png')} className="brand-logo"/>
+					<IndexLink to="/">
+						<BrandLogo src={require('../../assets/img/logo_icon_white.png')} />
 					</IndexLink>
-					<NavbarToggler onClick={this.toggle} />
+					<StyledNavbarToggler onClick={this.toggle} />
 					<Collapse isOpen={this.state.isOpen} navbar={true}>
 						<Nav className="ml-auto" navbar={true}>
 							{linkItems}
 						</Nav>
 					</Collapse>
 				</Navbar>
-			</div>
+			</Wrapper>
 		);
   }
 }
