@@ -16,16 +16,16 @@ export const Code = styled.code`
 `;
 
 export const StyledButton = styled(Button)`
-	color: #FFFFFF;
+	color: #FFFFFF !important;
 	font-family: DIN;
-	font-size: 15px;
-	line-height: 40px;
-	padding: 2px 45px;
-	background-color: #1CC1CC;
-	border: 1px solid #1CC1CC;
-	border-radius: 0;
+	font-size: 15px !important;
+	line-height: 40px !important;
+	padding: 2px 45px !important;
+	background-color: #1CC1CC !important;
+	border: 1px solid #1CC1CC !important;
+	border-radius: 0 !important;
 	text-transform: uppercase;
-	min-width: 200px;
+	min-width: 200px !important;
 `;
 
 export const Wrapper30 = styled.div`

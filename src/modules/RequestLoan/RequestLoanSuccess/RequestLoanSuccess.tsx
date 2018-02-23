@@ -1,8 +1,8 @@
 import * as React from 'react';
+import { PaperLayout } from '../../../layouts';
 import { Header, ScrollToTopOnMount, MainWrapper } from '../../../components';
 import { GetNotified } from './GetNotified';
 import { ShareRequestURL } from './ShareRequestURL';
-import { RequestLoanSummary } from './RequestLoanSummary';
 import { DebtOrderEntity } from '../../../models';
 
 interface Props {
@@ -50,20 +50,20 @@ class RequestLoanSuccess extends React.Component<Props, States> {
 	}
 
 	render() {
+		/*
 		if (!this.props.debtOrder) {
 			return null;
 		}
+		*/
 		return (
-			<MainWrapper>
-				<ScrollToTopOnMount />
-				<Header title={'Next, share your loan request with lenders'} description={'Get lenders to fill your loan request by directing them to your request URL.'} />
-				<GetNotified email={this.state.email} onInputChange={this.handleEmailChange} onFormSubmit={this.handleGetNotified} />
-				<ShareRequestURL requestURL={this.props.requestURL} onCopyClipboard={this.handleCopyClipboard} onShareSocial={this.handleShareSocial} />
-				<RequestLoanSummary
-					debtOrder={this.props.debtOrder}
-					onCopyClipboard={this.handleCopyClipboard}
-				/>
-			</MainWrapper>
+			<PaperLayout>
+				<MainWrapper>
+					<ScrollToTopOnMount />
+					<Header title={'Next, share your loan request with lenders'} description={'Get lenders to fill your loan request by directing them to your request URL.'} />
+					<GetNotified email={this.state.email} onInputChange={this.handleEmailChange} onFormSubmit={this.handleGetNotified} />
+					<ShareRequestURL requestURL={this.props.requestURL} onCopyClipboard={this.handleCopyClipboard} onShareSocial={this.handleShareSocial} />
+				</MainWrapper>
+			</PaperLayout>
 		);
 	}
 }
