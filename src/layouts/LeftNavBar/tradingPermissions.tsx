@@ -44,7 +44,7 @@ class TradingPermissions extends React.Component<Props, State> {
     }
   }
 
-  async getTokenAllowance(tokenRegistry: any, tokenAddress: string) {
+  async getTokenAllowance(tokenAddress: string) {
     const accounts = await promisify(this.props.web3.eth.getAccounts)();
     // TODO: handle account retrieval error more robustly
     if (!accounts || !accounts[0]) {
@@ -68,7 +68,7 @@ class TradingPermissions extends React.Component<Props, State> {
 
     for (let tokenName of tokenNames) {
       const address = await tokenRegistry.getTokenAddress.callAsync(tokenName);
-      const tradingPermitted = this.isAllowanceUnlimited(await this.getTokenAllowance(tokenRegistry, address));
+      const tradingPermitted = this.isAllowanceUnlimited(await this.getTokenAllowance(address));
       tokens[tokenName] = { address, tradingPermitted };
     }
 
@@ -90,9 +90,8 @@ class TradingPermissions extends React.Component<Props, State> {
       // await this.props.dharma.blockchain.awaitTransactionMinedAsync(transactionHash);
       await new Promise(resolve => setTimeout(resolve, 5000));
 
-      const tokenRegistry = await this.props.dharma.contracts.loadTokenRegistry();
       selectedToken.tradingPermitted = this.isAllowanceUnlimited(
-        await this.getTokenAllowance(tokenRegistry, selectedToken.address));
+        await this.getTokenAllowance(selectedToken.address));
 
       this.setState({ tokens });
     }
