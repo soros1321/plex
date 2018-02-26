@@ -58,7 +58,7 @@ class RequestLoanSummary extends React.Component<Props, {}> {
 		const leftInfoItems = [
 			{title: 'Principal', content: debtOrder.principalAmount.toNumber() + ' ' + debtOrder.principalTokenSymbol},
 			{title: 'Term Length', content: debtOrder.termLength.toNumber() + ' ' + debtOrder.amortizationUnit},
-			{title: 'Description', content: ''}
+			{title: 'Description', content: debtOrder.description}
 		];
 		const rightInfoItems = [
 			{title: 'Interest Rate', content: debtOrder.interestRate.toNumber() + '%'},

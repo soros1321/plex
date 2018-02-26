@@ -12,6 +12,7 @@ import {
 import { DebtOrderEntity } from '../../../models';
 import * as Web3 from 'web3';
 import Dharma from '@dharmaprotocol/dharma.js';
+import { DebtOrder } from '@dharmaprotocol/dharma.js/dist/types/src/types';
 import { BigNumber } from 'bignumber.js';
 
 interface Props {
@@ -19,6 +20,10 @@ interface Props {
 	accounts: string[];
 	dharma: Dharma;
 	handleRequestDebtOrder: (debtOrder: DebtOrderEntity) => void;
+}
+
+interface DebtOrderWithDescription extends DebtOrder {
+	description: string;
 }
 
 interface State {
@@ -58,7 +63,7 @@ class RequestLoanWeb3 extends React.Component<Props, State> {
 	}
 
 	async handleSubmit() {
-		const { principalAmount, principalTokenSymbol } = this.state.formData.loan;
+		const { principalAmount, principalTokenSymbol, description } = this.state.formData.loan;
 		const { interestRate, amortizationUnit, termLength } = this.state.formData.terms;
 		const dharma = this.props.dharma;
 
@@ -73,8 +78,12 @@ class RequestLoanWeb3 extends React.Component<Props, State> {
 			termLength: new BigNumber(termLength)
 		};
 		const debtOrder = await dharma.adapters.simpleInterestLoan.toDebtOrder(simpleInterestLoan);
+		const debtOrderWithDescription: DebtOrderWithDescription = {
+			...debtOrder,
+			description: description
+		};
 
-		this.setState({ debtOrder: JSON.stringify(debtOrder) });
+		this.setState({ debtOrder: JSON.stringify(debtOrderWithDescription) });
 		this.confirmationModalToggle();
 	}
 
@@ -107,7 +116,8 @@ class RequestLoanWeb3 extends React.Component<Props, State> {
 			amortizationUnit: generatedDebtOrder.amortizationUnit,
 			termLength: generatedDebtOrder.termLength,
 			termsContract: generatedDebtOrder.termsContract,
-			termsContractParameters: generatedDebtOrder.termsContractParameters
+			termsContractParameters: generatedDebtOrder.termsContractParameters,
+			description: debtOrder.description
 		};
 		this.props.handleRequestDebtOrder(storeDebtOrder);
 		browserHistory.push(`/request/success/${storeDebtOrder.debtorSignature}`);

@@ -11,6 +11,7 @@ export class DebtOrderEntity {
 	termLength: BigNumber;
 	termsContract: string | undefined;
 	termsContractParameters: string | undefined;
+	description: string | undefined;
 
 	public constructor () {
 		this.debtorSignature = '';
@@ -23,5 +24,6 @@ export class DebtOrderEntity {
 		this.termLength = new BigNumber(0);
 		this.termsContract = '';
 		this.termsContractParameters = '';
+		this.description = '';
 	}
 }
