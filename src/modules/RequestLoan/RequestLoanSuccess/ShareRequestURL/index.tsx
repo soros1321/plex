@@ -14,24 +14,36 @@ import {
 	InputContainer,
 	RequestInput,
 	ButtonContainer,
-	CopyButton
+	CopyButton,
+	CopiedMessage
 } from './styledComponents';
 
 interface Props {
 	requestURL: string;
-	onCopyClipboard: () => void;
 	onShareSocial: (socialMediaName: string) => void;
 }
 
-class ShareRequestURL extends React.Component<Props, {}> {
+interface State {
+	copied: boolean;
+}
+
+class ShareRequestURL extends React.Component<Props, State> {
+	private requestInput: HTMLInputElement | null;
+
 	constructor (props: Props) {
 		super(props);
+		this.state = {
+			copied: false
+		};
 		this.handleCopyClipboard = this.handleCopyClipboard.bind(this);
 		this.handleShareSocial = this.handleShareSocial.bind(this);
 	}
 
 	handleCopyClipboard() {
-		this.props.onCopyClipboard();
+		this.requestInput!.select();
+		document.execCommand('copy');
+		this.requestInput!.focus();
+		this.setState({ copied: true });
 	}
 
 	handleShareSocial(socialMediaName: string, e: React.MouseEvent<HTMLDivElement>) {
@@ -61,7 +73,13 @@ class ShareRequestURL extends React.Component<Props, {}> {
 						<StyledFormGroup>
 							<Row>
 								<InputContainer>
-									<RequestInput type="text" name="request-url" value={this.props.requestURL} readOnly={true} />
+									<RequestInput
+										type="text"
+										value={this.props.requestURL}
+										readOnly={true}
+										innerRef={(input: HTMLInputElement) => { this.requestInput = input; }}
+									/>
+									<CopiedMessage>{this.state.copied ? 'Copied!' : ''}</CopiedMessage>
 								</InputContainer>
 								<ButtonContainer>
 									<CopyButton className="button" type="submit" onClick={this.handleCopyClipboard}>Copy</CopyButton>

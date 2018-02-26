@@ -25,7 +25,6 @@ class RequestLoanSuccess extends React.Component<Props, States> {
 		};
 		this.handleEmailChange = this.handleEmailChange.bind(this);
 		this.handleGetNotified = this.handleGetNotified.bind(this);
-		this.handleCopyClipboard = this.handleCopyClipboard.bind(this);
 		this.handleShareSocial = this.handleShareSocial.bind(this);
 	}
 
@@ -42,10 +41,6 @@ class RequestLoanSuccess extends React.Component<Props, States> {
 		console.log('Get Notified', this.state);
 	}
 
-	handleCopyClipboard() {
-		console.log('Copy to clipboard');
-	}
-
 	handleShareSocial(socialMediaName: string) {
 		console.log('Share social', socialMediaName);
 	}
@@ -60,7 +55,7 @@ class RequestLoanSuccess extends React.Component<Props, States> {
 				<MainWrapper>
 					<ScrollToTopOnMount />
 					<Header title={'Next, share your loan request with lenders'} description={'Get lenders to fill your loan request by directing them to your request URL.'} />
-					<ShareRequestURL requestURL={this.props.requestURL} onCopyClipboard={this.handleCopyClipboard} onShareSocial={this.handleShareSocial} />
+					<ShareRequestURL requestURL={'dharma.io/' + this.props.debtOrder.debtorSignature} onShareSocial={this.handleShareSocial} />
 					<RequestLoanSummary debtOrder={this.props.debtOrder} />
 				</MainWrapper>
 			</PaperLayout>

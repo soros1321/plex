@@ -1,6 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { Label, Row, Col, FormGroup, Input } from 'reactstrap';
+import { Label, Row, Col, FormGroup } from 'reactstrap';
 import { StyledButton } from '../../../../components';
 
 interface Props {
@@ -88,7 +88,7 @@ class UglyInputContainer extends React.Component<Props, {}> {
 export const InputContainer = styled(UglyInputContainer)`
 `;
 
-export const RequestInput = styled(Input)`
+export const RequestInput = styled.input`
 	height: 46px !important;
 	font-size: 17px !important;
 	width: 95% !important;
@@ -115,4 +115,13 @@ export const ButtonContainer = styled(UglyButtonContainer)`
 export const CopyButton = StyledButton.extend`
 	min-width: auto !important;
 	width: 100% !important;
+`;
+
+export const CopiedMessage = styled.div`
+	font-family: DIN-Bold;
+	font-size: 15px;
+
+	@media only screen and (max-width: 480px) {
+		margin-bottom: 5px;
+	}
 `;
