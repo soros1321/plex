@@ -47,7 +47,7 @@ function findAncestor(el: any, cls: string) {
 	return el;
 }
 
-function highlightNextSibling(el: any, cls: string) {
+function highlightNextSibling(el: any) {
 	let parentElm = el.parentNode; // immediate parent
 	const siblings = parentElm.childNodes;
 	let foundCurrentObj: boolean = false;
@@ -69,7 +69,7 @@ function highlightNextSibling(el: any, cls: string) {
 		if (foundCurrentObj) {
 			// Once we found the current obj in the siblings list
 			// The element with the same classname can be a potential next sibling
-			if (sibling.classList.contains(cls)) {
+			if (sibling.classList.contains(fieldClassName)) {
 				// If we found a match, want to make sure if it has an input field
 				isButton = false;
 				let siblingInputField = sibling.querySelector('input');
@@ -87,7 +87,7 @@ function highlightNextSibling(el: any, cls: string) {
 					if (siblingInputField.disabled) {
 						continue;
 					}
-					potentialSibling = findAncestor(siblingInputField, cls);
+					potentialSibling = findAncestor(siblingInputField, fieldClassName);
 					if (potentialSibling) {
 						siblingInputField.focus();
 						nextSibling = potentialSibling;
@@ -97,12 +97,16 @@ function highlightNextSibling(el: any, cls: string) {
 							el.classList.remove(activeClassName);
 						}
 
-						if (siblingInputField.value && !isButton) {
+						if (!siblingInputField.required || siblingInputField.value && !isButton) {
 							let pressEnterDivs = potentialSibling.getElementsByClassName(pressEnterClassName);
 							if (pressEnterDivs.length) {
 								if (!pressEnterDivs[0].classList.contains(activeClassName)) {
 									pressEnterDivs[0].classList.add(activeClassName);
 								}
+							}
+							// Check if this is the last element, we probably want to highlight the group
+							if (isLastElement(potentialSibling)) {
+								highlightGrandParentPressEnter(potentialSibling, siblingInputField.value, siblingInputField.required);
 							}
 						}
 
@@ -116,10 +120,10 @@ function highlightNextSibling(el: any, cls: string) {
 	// If nextSibling is still the same as the original element, we probably need to move a level up
 	if (nextSibling === el) {
 		el.classList.remove(activeClassName);
-		parentElm = findAncestor(el, cls);
+		parentElm = findAncestor(el, fieldClassName);
 		if (parentElm) {
 			// el.classList.remove(activeClassName);
-			highlightNextSibling(parentElm, cls);
+			highlightNextSibling(parentElm);
 		}
 	}
 }
@@ -171,12 +175,16 @@ function highlightElement(clickedElm: any) {
 			inputFieldParent.classList.add(activeClassName);
 			scroll.scrollTo(inputFieldParent.offsetTop - paddingTop);
 
-			if (inputField.value) {
+			if (!inputField.required || inputField.value) {
 				pressEnterDivs = inputFieldParent.getElementsByClassName(pressEnterClassName);
 				if (pressEnterDivs.length) {
 					if (!pressEnterDivs[0].classList.contains(activeClassName)) {
 						pressEnterDivs[0].classList.add(activeClassName);
 					}
+				}
+				// Check if this is the last element, we probably want to highlight the group
+				if (isLastElement(inputFieldParent)) {
+					highlightGrandParentPressEnter(inputFieldParent, inputField.value, inputField.required);
 				}
 			}
 		}
@@ -199,12 +207,12 @@ function isLastElement(el: any) {
 	}
 }
 
-function highlightGrandParentPressEnter(elm: any, value: any) {
+function highlightGrandParentPressEnter(elm: any, value: any, required: boolean) {
 	let grandParentElm = findAncestor(elm, fieldClassName);
 	if (grandParentElm) {
 		let pressEnterDivs = grandParentElm.getElementsByClassName(pressEnterClassName);
 		// Display the last pressEnterDivs elm
-		if (value && pressEnterDivs.length) {
+		if (!required || (value && pressEnterDivs.length)) {
 			pressEnterDivs[pressEnterDivs.length - 1].classList.add(activeClassName);
 		} else {
 			pressEnterDivs[pressEnterDivs.length - 1].classList.remove(activeClassName);
@@ -307,7 +315,7 @@ class JSONSchemaForm extends React.Component<Props, {}> {
 			}
 			const parentElm = findAncestor(event.path[0], fieldClassName);
 			if (parentElm) {
-				highlightNextSibling(parentElm, fieldClassName);
+				highlightNextSibling(parentElm);
 			}
 		}
 	}
@@ -328,7 +336,7 @@ class JSONSchemaForm extends React.Component<Props, {}> {
 			}
 			const parentElm = findAncestor(event.srcElement, fieldClassName);
 			if (parentElm && isLastElement(parentElm)) {
-				highlightGrandParentPressEnter(parentElm, value);
+				highlightGrandParentPressEnter(parentElm, value, event.srcElement.required);
 			}
 		}
 	}
