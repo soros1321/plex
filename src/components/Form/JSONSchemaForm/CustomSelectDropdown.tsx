@@ -16,7 +16,10 @@ export const CustomSelectDropdown = (props: any) => {
 					<option value={opt.value} key={opt.value}>{opt.label}</option>
 				))}
 			</select>
-			<PressEnter className={'press-enter ' + (props.value ? 'active' : '')}>OK, Press ENTER</PressEnter>
+			{ (props.options.pressEnter || typeof props.options.pressEnter === 'undefined') && (
+					<PressEnter className={'press-enter ' + (props.value ? 'active' : '')}>OK, Press ENTER</PressEnter>
+				)
+			}
 		</div>
 	);
 };

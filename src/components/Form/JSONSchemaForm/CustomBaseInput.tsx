@@ -14,7 +14,10 @@ export const CustomBaseInput = (props: any) => {
 				readOnly={props.readonly}
 				onChange={(event) => props.onChange(event.target.value)}
 			/>
-			<PressEnter className={'press-enter ' + (props.value ? 'active' : '')}>OK, Press ENTER</PressEnter>
+			{ (props.options.pressEnter || typeof props.options.pressEnter === 'undefined') && (
+					<PressEnter className={'press-enter ' + (props.value ? 'active' : '')}>OK, Press ENTER</PressEnter>
+				)
+			}
 		</div>
 	);
 };

@@ -4,7 +4,8 @@ import {
 	GroupWrapper,
 	Title,
 	Description,
-	InputContainerBorder
+	InputContainerBorder,
+	PressEnter
 } from './styledComponents';
 
 function ObjectFieldTemplate(props: ObjectFieldTemplateProps) {
@@ -21,6 +22,7 @@ function ObjectFieldTemplate(props: ObjectFieldTemplateProps) {
 					{props.properties.map(prop => prop.content)}
 				</div>)
 			}
+			<PressEnter className="press-enter">OK, Press ENTER</PressEnter>
 		</GroupWrapper>
 	);
 }

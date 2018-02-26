@@ -190,6 +190,28 @@ function highlightElement(clickedElm: any) {
 	}
 }
 
+function isLastElement(el: any) {
+	const siblings = el.parentNode.childNodes;
+	if (el === siblings[siblings.length - 1]) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+function highlightGrandParentPressEnter(elm: any, value: any) {
+	let grandParentElm = findAncestor(elm, fieldClassName);
+	if (grandParentElm) {
+		let pressEnterDivs = grandParentElm.getElementsByClassName(pressEnterClassName);
+		// Display the last pressEnterDivs elm
+		if (value && pressEnterDivs.length) {
+			pressEnterDivs[pressEnterDivs.length - 1].classList.add(activeClassName);
+		} else {
+			pressEnterDivs[pressEnterDivs.length - 1].classList.remove(activeClassName);
+		}
+	}
+}
+
 class JSONSchemaForm extends React.Component<Props, {}> {
 	constructor(props: Props) {
 		super(props);
@@ -197,13 +219,15 @@ class JSONSchemaForm extends React.Component<Props, {}> {
 		this.handleSubmit = this.handleSubmit.bind(this);
 		this.handleError = this.handleError.bind(this);
 		this.handleScroll = this.handleScroll.bind(this);
-		this.handleKeypress = this.handleKeypress.bind(this);
+		this.handleKeyPress = this.handleKeyPress.bind(this);
+		this.handleKeyUp = this.handleKeyUp.bind(this);
 		this.handleClick = this.handleClick.bind(this);
 	}
 
 	componentDidMount() {
 		window.addEventListener('scroll', this.handleScroll);
-		window.addEventListener('keypress', this.handleKeypress);
+		window.addEventListener('keypress', this.handleKeyPress);
+		window.addEventListener('keyup', this.handleKeyUp);
 		window.addEventListener('click', this.handleClick);
 
 		// Always set the root element as active
@@ -226,7 +250,9 @@ class JSONSchemaForm extends React.Component<Props, {}> {
 
 	componentWillUnmount() {
 		window.removeEventListener('scroll', this.handleScroll);
-		window.removeEventListener('keypress', this.handleKeypress);
+		window.removeEventListener('keypress', this.handleKeyPress);
+		window.removeEventListener('keyup', this.handleKeyUp);
+		window.removeEventListener('click', this.handleClick);
 	}
 
 	handleChange(response: FormResponse) {
@@ -261,7 +287,7 @@ class JSONSchemaForm extends React.Component<Props, {}> {
 		*/
 	}
 
-	handleKeypress(event: any) {
+	handleKeyPress(event: any) {
 		if (event! && event!.key! && event!.path! && event.key === 'Enter' && (event.path[0].nodeName === 'INPUT' || event.path[0].nodeName === 'SELECT' || event.path[0].nodeName === 'TEXTAREA')) {
 			event.preventDefault();
 			let value: any = '';
@@ -286,6 +312,27 @@ class JSONSchemaForm extends React.Component<Props, {}> {
 		}
 	}
 
+	handleKeyUp(event: any) {
+		if (event! && event!.key! && event!.path! && event.key !== 'Enter' && (event.srcElement.nodeName === 'INPUT' || event.srcElement.nodeName === 'SELECT' || event.srcElement.nodeName === 'TEXTAREA')) {
+			let value: any = '';
+			switch (event.srcElement.nodeName) {
+				case 'INPUT':
+				case 'TEXTAREA':
+					value = event.srcElement.value;
+					break;
+				case 'SELECT':
+					value = event.srcElement.options[event.srcElement.selectedIndex].value;
+					break;
+				default:
+					break;
+			}
+			const parentElm = findAncestor(event.srcElement, fieldClassName);
+			if (parentElm && isLastElement(parentElm)) {
+				highlightGrandParentPressEnter(parentElm, value);
+			}
+		}
+	}
+
 	handleClick(event: any) {
 		if (event! && event!.path!) {
 			highlightElement(event.path[0]);
@@ -295,6 +342,7 @@ class JSONSchemaForm extends React.Component<Props, {}> {
 	render() {
 		return (
 			<StyledForm
+				autocomplete="off"
 				className={this.props.className}
 				schema={this.props.schema}
 				uiSchema={this.props.uiSchema}

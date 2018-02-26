@@ -113,19 +113,24 @@ export const uiSchema = {
 		principalAmount: {
 			'ui:autofocus': true,
 			'ui:placeholder': '100.3',
-			classNames: 'inline-field width75'
+			classNames: 'inline-field width75',
+			'ui:options': {
+				pressEnter: false
+			}
 		},
 		principalTokenSymbol: {
 			'ui:placeholder': 'select',
 			'ui:options': {
-				label: false
+				label: false,
+				pressEnter: false
 			},
 			classNames: 'inline-field width25 padding-top'
 		},
 		description: {
 			'ui:placeholder': 'Description (optional, but helpful to lenders)',
 			'ui:options': {
-				label: false
+				label: false,
+				pressEnter: false
 			},
 			classNames: 'group-field'
 		}
@@ -133,23 +138,31 @@ export const uiSchema = {
 	collateral: {
 		collateralized: {
 			'ui:disabled': true,
-			classNames: 'group-field'
+			classNames: 'group-field',
+			'ui:options': {
+				pressEnter: false
+			}
 		},
 		collateralSource: {
 			'ui:placeholder': 'Select your source of collateral',
-			classNames: 'group-field'
+			classNames: 'group-field',
+			'ui:options': {
+				pressEnter: false
+			}
 		},
 		collateralAmount: {
 			'ui:placeholder': 'Amount of collateral',
 			'ui:options': {
-				label: false
+				label: false,
+				pressEnter: false
 			},
 			classNames: 'inline-field width75'
 		},
 		collateralTokenSymbol: {
 			'ui:placeholder': 'select',
 			'ui:options': {
-				label: false
+				label: false,
+				pressEnter: false
 			},
 			classNames: 'inline-field width25'
 		}
@@ -157,15 +170,24 @@ export const uiSchema = {
 	terms: {
 		interestRate: {
 			'ui:placeholder': '8.12%',
-			classNames: 'group-field'
+			classNames: 'group-field',
+			'ui:options': {
+				pressEnter: false
+			}
 		},
 		amortizationUnit: {
 			'ui:placeholder': 'select',
-			classNames: 'group-field'
+			classNames: 'group-field',
+			'ui:options': {
+				pressEnter: false
+			}
 		},
 		termLength: {
 			'ui:placeholder': '3',
-			classNames: 'group-field'
+			classNames: 'group-field',
+			'ui:options': {
+				pressEnter: false
+			}
 		}
 	}
 };
