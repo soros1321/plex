@@ -13,23 +13,35 @@ import {
 	Title,
 	Content,
 	SummaryJsonContainer,
-	SummaryJsonInput,
-	CopyButton
+	StyledTextarea,
+	CopyButton,
+	CopiedMessage
 } from './styledComponents';
 
 interface Props {
 	debtOrder: DebtOrderEntity;
-	onCopyClipboard: () => void;
 }
 
-class RequestLoanSummary extends React.Component<Props, {}> {
+interface State {
+	copied: boolean;
+}
+
+class RequestLoanSummary extends React.Component<Props, State> {
+	private summaryTextarea: HTMLTextAreaElement | null;
+
 	constructor (props: Props) {
 		super(props);
+		this.state = {
+			copied: false
+		};
 		this.handleCopyClipboard = this.handleCopyClipboard.bind(this);
 	}
 
 	handleCopyClipboard() {
-		this.props.onCopyClipboard();
+		this.summaryTextarea!.select();
+		document.execCommand('copy');
+		this.summaryTextarea!.focus();
+		this.setState({ copied: true });
 	}
 
 	render() {
@@ -99,8 +111,13 @@ class RequestLoanSummary extends React.Component<Props, {}> {
 					</Row>
 					<SummaryJsonContainer>
 						<Label>JSON</Label>
-						<SummaryJsonInput type="textarea" value={JSON.stringify(debtOrder)} readOnly={true} />
-						<CopyButton className="button" onClick={this.handleCopyClipboard}>Copy</CopyButton>
+						<StyledTextarea
+							value={JSON.stringify(debtOrder)}
+							readOnly={true}
+							innerRef={(textarea: HTMLTextAreaElement) => { this.summaryTextarea = textarea; }}
+						/>
+						<CopiedMessage>{this.state.copied ? 'Copied!' : ''}</CopiedMessage>
+						<CopyButton onClick={this.handleCopyClipboard}>Copy</CopyButton>
 					</SummaryJsonContainer>
 				</GrayContainer>
 			</Wrapper>

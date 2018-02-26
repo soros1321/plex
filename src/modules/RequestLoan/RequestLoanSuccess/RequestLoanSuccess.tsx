@@ -61,10 +61,7 @@ class RequestLoanSuccess extends React.Component<Props, States> {
 					<ScrollToTopOnMount />
 					<Header title={'Next, share your loan request with lenders'} description={'Get lenders to fill your loan request by directing them to your request URL.'} />
 					<ShareRequestURL requestURL={this.props.requestURL} onCopyClipboard={this.handleCopyClipboard} onShareSocial={this.handleShareSocial} />
-					<RequestLoanSummary
-						debtOrder={this.props.debtOrder}
-						onCopyClipboard={this.handleCopyClipboard}
-					/>
+					<RequestLoanSummary debtOrder={this.props.debtOrder} />
 				</MainWrapper>
 			</PaperLayout>
 		);

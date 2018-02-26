@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Label, FormGroup, Input } from 'reactstrap';
+import { Label, FormGroup } from 'reactstrap';
 import { StyledButton } from '../../../../components';
 
 export const Wrapper = styled.div`
@@ -52,7 +52,7 @@ export const SummaryJsonContainer = styled(FormGroup)`
 	position: relative;
 `;
 
-export const SummaryJsonInput = styled(Input)`
+export const StyledTextarea = styled.textarea`
 	width: 100%;
 	min-height: 150px;
 `;
@@ -60,8 +60,10 @@ export const SummaryJsonInput = styled(Input)`
 export const CopyButton = StyledButton.extend`
 	position: absolute;
 	right: 0;
-	bottom: 0;
+	bottom: 6px;
 	min-width: auto !important;
+	border-color: #002326 !important;
+	background-color: #002326 !important;
 
 	@media only screen and (max-width: 480px) {
 		margin-top: 20px;
@@ -69,5 +71,16 @@ export const CopyButton = StyledButton.extend`
 		right: auto;
 		bottom: auto;
 		width: 100% !important;
+	}
+`;
+
+export const CopiedMessage = styled.div`
+	position: absolute;
+	font-family: DIN-Bold;
+	font-size: 15px;
+
+	@media only screen and (max-width: 480px) {
+		position: relative;
+		margin-bottom: 5px;
 	}
 `;
