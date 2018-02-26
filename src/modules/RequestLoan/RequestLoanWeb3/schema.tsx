@@ -113,7 +113,7 @@ export const uiSchema = {
 		principalAmount: {
 			'ui:autofocus': true,
 			'ui:placeholder': '100.3',
-			classNames: 'inline-field width75',
+			classNames: 'inline-field width65',
 			'ui:options': {
 				pressEnter: false
 			}
@@ -124,7 +124,7 @@ export const uiSchema = {
 				label: false,
 				pressEnter: false
 			},
-			classNames: 'inline-field width25 padding-top'
+			classNames: 'inline-field width35 padding-top'
 		},
 		description: {
 			'ui:placeholder': 'Description (optional, but helpful to lenders)',
@@ -156,7 +156,7 @@ export const uiSchema = {
 				label: false,
 				pressEnter: false
 			},
-			classNames: 'inline-field width75'
+			classNames: 'inline-field width65'
 		},
 		collateralTokenSymbol: {
 			'ui:placeholder': 'select',
@@ -164,7 +164,7 @@ export const uiSchema = {
 				label: false,
 				pressEnter: false
 			},
-			classNames: 'inline-field width25'
+			classNames: 'inline-field width35'
 		}
 	},
 	terms: {

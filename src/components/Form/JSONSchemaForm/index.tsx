@@ -334,9 +334,13 @@ class JSONSchemaForm extends React.Component<Props, {}> {
 				default:
 					break;
 			}
-			const parentElm = findAncestor(event.srcElement, fieldClassName);
-			if (parentElm && isLastElement(parentElm)) {
-				highlightGrandParentPressEnter(parentElm, value, event.srcElement.required);
+			if (event.key === 'Tab') {
+				highlightElement(event.path[0]);
+			} else {
+				const parentElm = findAncestor(event.srcElement, fieldClassName);
+				if (parentElm && isLastElement(parentElm)) {
+					highlightGrandParentPressEnter(parentElm, value, event.srcElement.required);
+				}
 			}
 		}
 	}

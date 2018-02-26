@@ -55,6 +55,14 @@ export const FieldWrapper = styled.div`
 			width: 74%;
 			margin-right: 1%;
 		}
+		&.width65 {
+			width: 64%;
+			margin-right: 1%;
+		}
+		&.width35 {
+			width: 34%;
+			margin-left: 1%;
+		}
 		&.width25 {
 			width: 24%;
 			margin-left: 1%;
