@@ -21,6 +21,7 @@ interface Props {
 	buttonText?: string;
 	onHandleChange: (formData: any) => void;
 	onHandleSubmit: () => void;
+	validate?: (formData: any, errors: any) => any;
 }
 
 const widgets = {
@@ -35,7 +36,7 @@ const activeClassName = 'active';
 const pressEnterClassName = 'press-enter';
 
 function findAncestor(el: any, cls: string) {
-	if (el.parentElement) {
+	if (el && el.parentElement) {
 		el = el.parentElement;
 		while (!el.classList.contains(cls)) {
 			el = el.parentElement;
@@ -397,6 +398,7 @@ class JSONSchemaForm extends React.Component<Props, {}> {
 				FieldTemplate={FieldTemplate}
 				showErrorList={false}
 				widgets={widgets}
+				validate={this.props.validate}
 			>
 				<FieldWrapper className="field-wrapper button-container">
 					<Button type="submit" className="button">{this.props.buttonText || 'Submit'}</Button>
