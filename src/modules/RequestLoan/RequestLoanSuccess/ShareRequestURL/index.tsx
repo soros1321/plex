@@ -93,7 +93,7 @@ class ShareRequestURL extends React.Component<Props, State> {
 						<StyledFormGroup>
 							<Row>
 								<InputContainer>
-									<Link to={'/fill/loan/' + this.props.debtorSignature}>
+									<Link to={`/fill/loan/${this.props.debtorSignature}`}>
 										<RequestInput
 											type="text"
 											value={this.props.shortUrl}

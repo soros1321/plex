@@ -125,10 +125,16 @@ class RequestLoanWeb3 extends React.Component<Props, State> {
 
 			const bitly = BitlyClient(process.env.REACT_APP_BITLY_ACCESS_TOKEN);
 
-			const result = await bitly.shorten(process.env.REACT_APP_NGROK_HOSTNAME + '/fill/loan/' + debtorSignature.r);
-			let shortUrl: string = '';
+			let result = await bitly.shorten(process.env.REACT_APP_NGROK_HOSTNAME + '/request/success/' + debtorSignature.r);
+			let requestSuccessShortUrl: string = '';
 			if (result.status_code === 200) {
-				shortUrl = result.data.url;
+				requestSuccessShortUrl = result.data.url;
+			}
+
+			result = await bitly.shorten(process.env.REACT_APP_NGROK_HOSTNAME + '/fill/loan/' + debtorSignature.r);
+			let fillLoanShortUrl: string = '';
+			if (result.status_code === 200) {
+				fillLoanShortUrl = result.data.url;
 			}
 
 			const generatedDebtOrder = await this.props.dharma.adapters.simpleInterestLoan.fromDebtOrder(debtOrder);
@@ -145,7 +151,8 @@ class RequestLoanWeb3 extends React.Component<Props, State> {
 				termsContractParameters: generatedDebtOrder.termsContractParameters,
 				description: debtOrder.description,
 				issuanceHash: debtOrder.issuanceHash,
-				shortUrl: shortUrl
+				requestSuccessShortUrl: requestSuccessShortUrl,
+				fillLoanShortUrl: fillLoanShortUrl
 			};
 			this.props.handleRequestDebtOrder(storeDebtOrder);
 			browserHistory.push(`/request/success/${storeDebtOrder.debtorSignature}`);
