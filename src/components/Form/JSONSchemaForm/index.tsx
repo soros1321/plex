@@ -398,7 +398,7 @@ class JSONSchemaForm extends React.Component<Props, {}> {
 				showErrorList={false}
 				widgets={widgets}
 			>
-				<FieldWrapper className="field-wrapper">
+				<FieldWrapper className="field-wrapper button-container">
 					<Button type="submit" className="button">{this.props.buttonText || 'Submit'}</Button>
 				</FieldWrapper>
 			</StyledForm>

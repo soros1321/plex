@@ -43,6 +43,12 @@ export const FieldWrapper = styled.div`
 	&.form-group {
 		margin-bottom: 120px;
 	}
+	&.form-group:last-child {
+		margin-bottom: 0px;
+		> ${GroupWrapper} {
+			margin-bottom: 0px;
+		}
+	}
 	&.form-group.group-field {
 		margin-bottom: 20px;
 	}
@@ -73,6 +79,9 @@ export const FieldWrapper = styled.div`
 	}
 	&.active {
 		opacity: 1;
+	}
+	&.button-container {
+		margin-top: -100px;
 	}
 `;
 
