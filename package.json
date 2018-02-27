@@ -15,6 +15,7 @@
     "babel-polyfill": "^6.26.0",
     "bignumber.js": "^5.0.0",
     "bootstrap": "^4.0.0",
+    "identicon.js": "^2.3.1",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-jsonschema-form": "^1.0.1",

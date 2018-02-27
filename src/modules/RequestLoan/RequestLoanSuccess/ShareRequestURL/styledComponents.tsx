@@ -28,7 +28,7 @@ export const GrayRow = styled(Row)`
 class UglyImageContainer extends React.Component<Props, {}> {
 	render() {
 		return (
-			<Col xs="12" md="2" className={this.props.className}>
+			<Col xs="5" md="3" className={this.props.className}>
 				{this.props.children}
 			</Col>
 		);
@@ -36,14 +36,18 @@ class UglyImageContainer extends React.Component<Props, {}> {
 }
 
 export const ImageContainer = styled(UglyImageContainer)`
-	min-height: 100px !important;
-	background-color: rgba(45,58,59,0.28);
+	min-width: 120px;
+`;
+
+export const IdenticonImage = styled.img`
+	width: 100px;
+	height: 100px;
 `;
 
 class UglyDetailContainer extends React.Component<Props, {}> {
 	render() {
 		return (
-			<Col xs="12" md="10" className={this.props.className}>
+			<Col xs="7" md="9" className={this.props.className}>
 				{this.props.children}
 			</Col>
 		);

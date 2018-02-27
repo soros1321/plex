@@ -23,8 +23,9 @@ interface Props {
 	handleRequestDebtOrder: (debtOrder: DebtOrderEntity) => void;
 }
 
-interface DebtOrderWithDescription extends DebtOrder {
+interface DebtOrderWithDescriptionIssuanceHash extends DebtOrder {
 	description: string;
+	issuanceHash: string;
 }
 
 interface State {
@@ -84,12 +85,14 @@ class RequestLoanWeb3 extends React.Component<Props, State> {
 				termLength: new BigNumber(termLength)
 			};
 			const debtOrder = await dharma.adapters.simpleInterestLoan.toDebtOrder(simpleInterestLoan);
-			const debtOrderWithDescription: DebtOrderWithDescription = {
+			const issuanceHash = await dharma.order.getIssuanceHash(debtOrder);
+			const debtOrderWithDescriptionIssuanceHash: DebtOrderWithDescriptionIssuanceHash = {
 				...debtOrder,
-				description: description
+				description: description,
+				issuanceHash: issuanceHash
 			};
 
-			this.setState({ debtOrder: JSON.stringify(debtOrderWithDescription) });
+			this.setState({ debtOrder: JSON.stringify(debtOrderWithDescriptionIssuanceHash) });
 			this.confirmationModalToggle();
 		} catch (e) {
 			this.setState({ errorMessage: 'Unable to generate Debt Order' });
@@ -131,7 +134,8 @@ class RequestLoanWeb3 extends React.Component<Props, State> {
 				termLength: generatedDebtOrder.termLength,
 				termsContract: generatedDebtOrder.termsContract,
 				termsContractParameters: generatedDebtOrder.termsContractParameters,
-				description: debtOrder.description
+				description: debtOrder.description,
+				issuanceHash: debtOrder.issuanceHash
 			};
 			this.props.handleRequestDebtOrder(storeDebtOrder);
 			browserHistory.push(`/request/success/${storeDebtOrder.debtorSignature}`);
