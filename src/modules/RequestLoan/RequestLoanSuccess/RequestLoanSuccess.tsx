@@ -50,11 +50,12 @@ class RequestLoanSuccess extends React.Component<Props, States> {
 			return null;
 		}
 		// <GetNotified email={this.state.email} onInputChange={this.handleEmailChange} onFormSubmit={this.handleGetNotified} />
+		const descriptionContent = <span>Get lenders to fill your loan request by directing them to your request URL.</span>;
 		return (
 			<PaperLayout>
 				<MainWrapper>
 					<ScrollToTopOnMount />
-					<Header title={'Next, share your loan request with lenders'} description={'Get lenders to fill your loan request by directing them to your request URL.'} />
+					<Header title={'Next, share your loan request with lenders'} description={descriptionContent} />
 					<ShareRequestURL issuanceHash={this.props.debtOrder.issuanceHash} debtorSignature={this.props.debtOrder.debtorSignature} onShareSocial={this.handleShareSocial} />
 					<RequestLoanSummary debtOrder={this.props.debtOrder} />
 				</MainWrapper>

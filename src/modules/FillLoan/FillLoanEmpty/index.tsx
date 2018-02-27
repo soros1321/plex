@@ -49,10 +49,11 @@ class FillLoanEmpty extends React.Component<{}, States> {
 	}
 
 	render() {
+		const descriptionContent = <span>Here's a quick description of what a loan is and why you should fill one.</span>;
 		return (
 			<PaperLayout>
 				<MainWrapper>
-					<Header title={'Fill a loan'} description={'Here\'s a quick description of what a loan is and why you should fill one.'} />
+					<Header title={'Fill a loan'} description={descriptionContent} />
 					<Form>
 						<FormGroup>
 							<StyledLabel>Paste the requester's loan request ID here</StyledLabel>

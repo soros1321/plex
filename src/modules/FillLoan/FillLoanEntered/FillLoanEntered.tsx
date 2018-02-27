@@ -102,13 +102,18 @@ class FillLoanEntered extends React.Component<Props, States> {
 
 		const confirmationModalContent = (
 			<span>
-				You will fill this debt order <Bold>${this.props.params.debtorSignature}</Bold>. This operation will debit <Bold>${debtOrder.principalAmount} ${debtOrder.principalTokenSymbol}</Bold> from your account.
+				You will fill this debt order <Bold>{this.props.params.debtorSignature}</Bold>. This operation will debit <Bold>{debtOrder.principalAmount.toNumber()} {debtOrder.principalTokenSymbol}</Bold> from your account.
+			</span>
+		);
+		const descriptionContent = (
+			<span>
+				Here are the details of loan request <Bold>{this.props.params.debtorSignature}</Bold>. If the terms look fair to you, fill the loan and Dharma will //insert statement.
 			</span>
 		);
 		return (
 			<PaperLayout>
 				<MainWrapper>
-					<Header title={'Fill a loan'} description={'Here are the details of loan request ' + this.props.params.debtorSignature + '. If the terms look fair to you, fill the loan and Dharma will //insert statement.'} />
+					<Header title={'Fill a loan'} description={descriptionContent} />
 					<LoanInfoContainer>
 						<HalfCol>
 							{leftInfoItemRows}

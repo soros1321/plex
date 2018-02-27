@@ -55,9 +55,10 @@ class JSONSchema extends React.Component<{}, FormResponse> {
 	}
 
 	render() {
+		const descriptionContent = <span>Here's a quick description of what a debt order is and why you should request one.</span>;
 		return (
 			<Wrapper>
-				<Header title={'Request a loan'} description={'Here\'s a quick description of what a debt order is and why you should request one.'} />
+				<Header title={'Request a loan'} description={descriptionContent} />
 				<JSONSchemaForm
 					schema={schema}
 					uiSchema={uiSchema}

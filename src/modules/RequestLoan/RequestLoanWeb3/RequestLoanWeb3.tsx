@@ -167,11 +167,12 @@ class RequestLoanWeb3 extends React.Component<Props, State> {
 				You are requesting a loan of <Bold>{this.state.principalAmount} {this.state.principalTokenSymbol}</Bold> at a <Bold>{this.state.interestRate}%</Bold> interest rate per the terms in the contract on the previous page. Are you sure you want to do this?
 			</span>
 		);
+		const descriptionContent = <span>Here's a quick description of what a debt order is and why you should request one.</span>;
 		return (
 			<PaperLayout>
 				<ErrorComponent errorMessage={this.state.errorMessage} />
 				<MainWrapper>
-					<Header title={'Request a loan'} description={'Here\'s a quick description of what a debt order is and why you should request one.'} />
+					<Header title={'Request a loan'} description={descriptionContent} />
 					<JSONSchemaForm
 						schema={schema}
 						uiSchema={uiSchema}

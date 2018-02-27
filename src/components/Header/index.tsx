@@ -1,9 +1,9 @@
 import * as React from 'react';
-import './Header.css';
+import { Description } from './styledComponents';
 
 interface HeaderProps {
 	title: string;
-	description?: string;
+	description?: JSX.Element;
 }
 
 class Header extends React.Component<HeaderProps, {}> {
@@ -11,10 +11,7 @@ class Header extends React.Component<HeaderProps, {}> {
 		return (
 			<div>
 				<h1>{this.props.title}</h1>
-				{ this.props.description !== '' && (
-					<div className="description">{this.props.description}</div>
-					)
-				}
+				<Description>{this.props.description}</Description>
 			</div>
 		);
 	}

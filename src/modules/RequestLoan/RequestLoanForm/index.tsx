@@ -127,9 +127,10 @@ class RequestLoanForm extends React.Component<{}, States> {
 				You are requesting a loan of ${this.state.amount} ${this.state.currency} using your ${this.state.collateralSource} as collateral per the terms in the contract on the previous page. Are you sure you want to do this?
 			</span>
 		);
+		const descriptionContent = <span>Here's a quick description of what a debt order is and why you should request one.</span>;
 		return (
 			<MainWrapper>
-				<Header title={'Request a loan'} description={'Here\'s a quick description of what a debt order is and why you should request one.'} />
+				<Header title={'Request a loan'} description={descriptionContent} />
 				<Form className="form-container">
 					<Row>
 						<Col xs="12" md="6" className="left-form">

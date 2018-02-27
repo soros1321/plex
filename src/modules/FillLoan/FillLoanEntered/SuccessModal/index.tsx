@@ -6,6 +6,7 @@ import {
 	ModalBody,
 	ModalFooter
 } from 'reactstrap';
+import { Bold } from '../../../../components';
 
 interface Props {
 	modal: boolean;
@@ -29,7 +30,7 @@ class SuccessModal extends React.Component<Props, {}> {
 				<Modal isOpen={this.props.modal} toggle={this.handleToggle} keyboard={false} backdrop={'static'}>
 					<ModalHeader toggle={this.handleToggle}>Filled</ModalHeader>
 					<ModalBody>
-						You filled debt order {this.props.requestId}. You will find this order at the top of your dashboard.
+						You filled debt order <Bold>{this.props.requestId}</Bold>. You will find this order at the top of your dashboard.
 					</ModalBody>
 					<ModalFooter className="center">
 						<Button className="button" onClick={this.handleToggle}>Done</Button>
