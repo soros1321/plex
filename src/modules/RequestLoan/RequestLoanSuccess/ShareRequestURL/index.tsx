@@ -24,6 +24,7 @@ const Identicon = require('identicon.js');
 interface Props {
 	issuanceHash: string | undefined;
 	debtorSignature: string;
+	shortUrl: string;
 	onShareSocial: (socialMediaName: string) => void;
 }
 
@@ -95,7 +96,7 @@ class ShareRequestURL extends React.Component<Props, State> {
 									<Link to={'/fill/loan/' + this.props.debtorSignature}>
 										<RequestInput
 											type="text"
-											value={this.props.debtorSignature}
+											value={this.props.shortUrl}
 											readOnly={true}
 											innerRef={(input: HTMLInputElement) => { this.requestInput = input; }}
 										/>

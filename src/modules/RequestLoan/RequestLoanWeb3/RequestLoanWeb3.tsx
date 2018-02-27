@@ -15,6 +15,7 @@ import Dharma from '@dharmaprotocol/dharma.js';
 import { DebtOrder } from '@dharmaprotocol/dharma.js/dist/types/src/types';
 import { BigNumber } from 'bignumber.js';
 import { Error as ErrorComponent } from '../../../components/Error/Error';
+const BitlyClient = require('bitly');
 
 interface Props {
 	web3: Web3;
@@ -122,6 +123,14 @@ class RequestLoanWeb3 extends React.Component<Props, State> {
 				confirmationModal: false
 			});
 
+			const bitly = BitlyClient(process.env.REACT_APP_BITLY_ACCESS_TOKEN);
+
+			const result = await bitly.shorten(process.env.REACT_APP_NGROK_HOSTNAME + '/fill/loan/' + debtorSignature.r);
+			let shortUrl: string = '';
+			if (result.status_code === 200) {
+				shortUrl = result.data.url;
+			}
+
 			const generatedDebtOrder = await this.props.dharma.adapters.simpleInterestLoan.fromDebtOrder(debtOrder);
 			const storeDebtOrder: DebtOrderEntity = {
 				debtorSignature: debtorSignature.r,
@@ -135,7 +144,8 @@ class RequestLoanWeb3 extends React.Component<Props, State> {
 				termsContract: generatedDebtOrder.termsContract,
 				termsContractParameters: generatedDebtOrder.termsContractParameters,
 				description: debtOrder.description,
-				issuanceHash: debtOrder.issuanceHash
+				issuanceHash: debtOrder.issuanceHash,
+				shortUrl: shortUrl
 			};
 			this.props.handleRequestDebtOrder(storeDebtOrder);
 			browserHistory.push(`/request/success/${storeDebtOrder.debtorSignature}`);

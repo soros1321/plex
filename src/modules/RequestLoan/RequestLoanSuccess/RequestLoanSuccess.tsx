@@ -10,7 +10,6 @@ interface Props {
 	params?: any;
 	debtOrder: DebtOrderEntity;
 	getDebtOrder: (debtorSignature: string) => void;
-	requestURL: string;
 }
 
 interface States {
@@ -56,7 +55,12 @@ class RequestLoanSuccess extends React.Component<Props, States> {
 				<MainWrapper>
 					<ScrollToTopOnMount />
 					<Header title={'Next, share your loan request with lenders'} description={descriptionContent} />
-					<ShareRequestURL issuanceHash={this.props.debtOrder.issuanceHash} debtorSignature={this.props.debtOrder.debtorSignature} onShareSocial={this.handleShareSocial} />
+					<ShareRequestURL
+						issuanceHash={this.props.debtOrder.issuanceHash}
+						debtorSignature={this.props.debtOrder.debtorSignature}
+						shortUrl={this.props.debtOrder.shortUrl}
+						onShareSocial={this.handleShareSocial}
+					/>
 					<RequestLoanSummary debtOrder={this.props.debtOrder} />
 				</MainWrapper>
 			</PaperLayout>

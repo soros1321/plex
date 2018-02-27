@@ -14,6 +14,7 @@
     "NonFungibleToken": "https://github.com/dharmaprotocol/NonFungibleToken",
     "babel-polyfill": "^6.26.0",
     "bignumber.js": "^5.0.0",
+    "bitly": "^5.0.12",
     "bootstrap": "^4.0.0",
     "identicon.js": "^2.3.1",
     "react": "^16.2.0",
