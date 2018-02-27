@@ -1,4 +1,7 @@
 import * as React from 'react';
+import { Link, browserHistory } from 'react-router';
+import { DebtOrderEntity } from '../../../models';
+import { amortizationUnitToFrequency } from '../../../utils';
 import { PaperLayout } from '../../../layouts';
 import {
 	Header,
@@ -6,9 +9,7 @@ import {
 	MainWrapper,
 	Bold
 } from '../../../components';
-import { Link } from 'react-router';
 import { SuccessModal } from './SuccessModal';
-import { browserHistory } from 'react-router';
 import {
 	LoanInfoContainer,
 	HalfCol,
@@ -21,16 +22,9 @@ import {
 } from './styledComponents';
 
 interface Props {
-	requestId: string;
-	amount: string;
-	currency: string;
-	description: string;
-	counterparty: string;
-	underwriter: string;
-	principle: string;
-	interest: string;
-	repaymentDate: string;
-	repaymentTerms: string;
+	params?: any;
+	debtOrder: DebtOrderEntity;
+	getDebtOrder: (debtorSignature: string) => void;
 }
 
 interface States {
@@ -50,6 +44,11 @@ class FillLoanEntered extends React.Component<Props, States> {
 		this.successModalToggle = this.successModalToggle.bind(this);
 	}
 
+	componentDidMount() {
+		const debtorSignature = this.props.params.debtorSignature;
+		this.props.getDebtOrder(debtorSignature);
+	}
+
 	confirmationModalToggle() {
 		this.setState({
 			confirmationModal: !this.state.confirmationModal
@@ -67,14 +66,18 @@ class FillLoanEntered extends React.Component<Props, States> {
 	}
 
 	render() {
+		if (!this.props.debtOrder) {
+			return null;
+		}
+		const { debtOrder } = this.props;
 		const leftInfoItems = [
-			{title: 'Principal', content: this.props.amount},
-			{title: 'Term Length', content: this.props.counterparty},
-			{title: 'Description', content: this.props.principle}
+			{title: 'Principal', content: debtOrder.principalAmount.toNumber() + ' ' + debtOrder.principalTokenSymbol},
+			{title: 'Term Length', content: debtOrder.termLength.toNumber() + ' ' + debtOrder.amortizationUnit},
+			{title: 'Description', content: debtOrder.description}
 		];
 		const rightInfoItems = [
-			{title: 'Interest Rate', content: this.props.description},
-			{title: 'Installment Frequency', content: this.props.underwriter}
+			{title: 'Interest Rate', content: debtOrder.interestRate.toNumber() + '%'},
+			{title: 'Installment Frequency', content: amortizationUnitToFrequency(debtOrder.amortizationUnit)}
 		];
 		const leftInfoItemRows = leftInfoItems.map((item) => (
 			<InfoItem key={item.title}>
@@ -99,13 +102,13 @@ class FillLoanEntered extends React.Component<Props, States> {
 
 		const confirmationModalContent = (
 			<span>
-				You will fill this debt order <Bold>${this.props.requestId}</Bold>. This operation will debit ${this.props.amount} ${this.props.currency} from your account.
+				You will fill this debt order <Bold>${this.props.params.debtorSignature}</Bold>. This operation will debit <Bold>${debtOrder.principalAmount} ${debtOrder.principalTokenSymbol}</Bold> from your account.
 			</span>
 		);
 		return (
 			<PaperLayout>
 				<MainWrapper>
-					<Header title={'Fill a loan'} description={'Here are the details of loan request ' + this.props.requestId + '. If the terms look fair to you, fill the loan and Dharma will //insert statement.'} />
+					<Header title={'Fill a loan'} description={'Here are the details of loan request ' + this.props.params.debtorSignature + '. If the terms look fair to you, fill the loan and Dharma will //insert statement.'} />
 					<LoanInfoContainer>
 						<HalfCol>
 							{leftInfoItemRows}
@@ -121,7 +124,7 @@ class FillLoanEntered extends React.Component<Props, States> {
 						<FillLoanButton onClick={this.confirmationModalToggle}>Fill Loan</FillLoanButton>
 					</ButtonContainer>
 					<ConfirmationModal modal={this.state.confirmationModal} title="Please confirm" content={confirmationModalContent} onToggle={this.confirmationModalToggle} onSubmit={this.successModalToggle} closeButtonText="Cancel" submitButtonText="Fill Order" />
-					<SuccessModal modal={this.state.successModal} onToggle={this.successModalToggle} requestId={this.props.requestId} />
+					<SuccessModal modal={this.state.successModal} onToggle={this.successModalToggle} requestId={this.props.params.debtorSignature} />
 				</MainWrapper>
 			</PaperLayout>
 		);

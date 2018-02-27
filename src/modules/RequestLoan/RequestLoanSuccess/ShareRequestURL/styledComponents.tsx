@@ -93,8 +93,10 @@ export const InputContainer = styled(UglyInputContainer)`
 `;
 
 export const RequestInput = styled.input`
+	cursor: pointer;
 	height: 46px !important;
 	font-size: 17px !important;
+	font-family: DIN-Bold;
 	width: 95% !important;
 
 	@media only screen and (max-width: 480px) {
@@ -119,6 +121,7 @@ export const ButtonContainer = styled(UglyButtonContainer)`
 export const CopyButton = StyledButton.extend`
 	min-width: auto !important;
 	width: 100% !important;
+	padding: 2px 10px !important;
 `;
 
 export const CopiedMessage = styled.div`

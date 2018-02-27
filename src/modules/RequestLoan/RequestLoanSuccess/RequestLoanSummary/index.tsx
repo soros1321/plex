@@ -5,6 +5,7 @@ import {
 	Label
 } from 'reactstrap';
 import { DebtOrderEntity } from '../../../../models';
+import { amortizationUnitToFrequency } from '../../../../utils';
 import {
 	Wrapper,
 	StyledLabel,
@@ -46,27 +47,6 @@ class RequestLoanSummary extends React.Component<Props, State> {
 
 	render() {
 		const { debtOrder } = this.props;
-		let installmentFrequency: string = '';
-		switch (debtOrder.amortizationUnit) {
-			case 'hours':
-				installmentFrequency = 'Hourly';
-				break;
-			case 'days':
-				installmentFrequency = 'Daily';
-				break;
-			case 'weeks':
-				installmentFrequency = 'Weekly';
-				break;
-			case 'months':
-				installmentFrequency = 'Monthly';
-				break;
-			case 'years':
-				installmentFrequency = 'Yearly';
-				break;
-			default:
-				break;
-		}
-
 		const leftInfoItems = [
 			{title: 'Principal', content: debtOrder.principalAmount.toNumber() + ' ' + debtOrder.principalTokenSymbol},
 			{title: 'Term Length', content: debtOrder.termLength.toNumber() + ' ' + debtOrder.amortizationUnit},
@@ -74,7 +54,7 @@ class RequestLoanSummary extends React.Component<Props, State> {
 		];
 		const rightInfoItems = [
 			{title: 'Interest Rate', content: debtOrder.interestRate.toNumber() + '%'},
-			{title: 'Installment Frequency', content: installmentFrequency},
+			{title: 'Installment Frequency', content: amortizationUnitToFrequency(debtOrder.amortizationUnit)},
 		];
 		const leftInfoItemRows = leftInfoItems.map((item) => (
 			<InfoItem key={item.title}>

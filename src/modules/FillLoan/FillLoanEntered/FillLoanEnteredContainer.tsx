@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { RequestLoanSuccess } from './RequestLoanSuccess';
+import { FillLoanEntered } from './FillLoanEntered';
 import { getDebtOrder } from './actions';
 
 const mapStateToProps = (state: any) => {
@@ -14,7 +14,7 @@ const mapDispatchToProps = (dispatch: any) => {
 	};
 };
 
-export const RequestLoanSuccessContainer = connect(
+export const FillLoanEnteredContainer = connect(
 	mapStateToProps,
 	mapDispatchToProps
-)(RequestLoanSuccess);
+)(FillLoanEntered);
