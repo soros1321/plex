@@ -13,7 +13,7 @@ export const CustomSelectDropdown = (props: any) => {
 				value={props.value}
 				onChange={(selected: any) => props.onChange(selected.value)}
 				clearable={false}
-				style={{ borderRadius : 0, height: 38 }}
+				style={{ borderRadius: 0, height: 38, borderColor: '#000000' }}
 			/>
 			{ (props.options.pressEnter || typeof props.options.pressEnter === 'undefined') && (
 					<PressEnter className={'press-enter ' + (props.value ? 'active' : '')}>OK, Press ENTER</PressEnter>

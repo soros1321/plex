@@ -49,11 +49,16 @@ function findAncestor(el: any, cls: string) {
 
 function highlightNextSibling(el: any) {
 	let parentElm = el.parentNode; // immediate parent
-	const siblings = parentElm.childNodes;
+	let siblings = parentElm.childNodes;
 	let foundCurrentObj: boolean = false;
 	let nextSibling: any = el;
 	let potentialSibling: any = el;
 	let isButton: boolean = false;
+	let siblingInputField: HTMLInputElement | null = null;
+
+	const activeElms = document.querySelectorAll('.' + fieldClassName + '.' + activeClassName);
+	const rootElm = activeElms[0];
+
 	for (let sibling of siblings) {
 		// First we find the current obj
 		if (el === sibling) {
@@ -72,7 +77,7 @@ function highlightNextSibling(el: any) {
 			if (sibling.classList.contains(fieldClassName)) {
 				// If we found a match, want to make sure if it has an input field
 				isButton = false;
-				let siblingInputField = sibling.querySelector('input');
+				siblingInputField = sibling.querySelector('input');
 				if (!siblingInputField) {
 					siblingInputField = sibling.querySelector('select');
 				}
@@ -125,6 +130,16 @@ function highlightNextSibling(el: any) {
 			// el.classList.remove(activeClassName);
 			highlightNextSibling(parentElm);
 		}
+	} else {
+		const grandParentElm = findAncestor(findAncestor(siblingInputField, fieldClassName), fieldClassName);
+		if (grandParentElm && grandParentElm !== rootElm) {
+			siblings = grandParentElm.querySelectorAll('.' + fieldClassName);
+			for (let sibling of siblings as any) {
+				if (!sibling.classList.contains(activeClassName)) {
+					sibling.classList.add(activeClassName);
+				}
+			}
+		}
 	}
 }
 
@@ -139,8 +154,10 @@ function highlightElement(clickedElm: any) {
 	if (parentElm.classList.contains(activeClassName)) {
 		return;
 	}
+
 	// Removed all active elements
 	const activeElms = document.querySelectorAll('.' + fieldClassName + '.' + activeClassName);
+	const rootElm = activeElms[0];
 	let counter = 0;
 	for (let elm of activeElms as any) {
 		// We don't want to remove root's active class
@@ -150,6 +167,8 @@ function highlightElement(clickedElm: any) {
 		}
 		elm.classList.remove(activeClassName);
 	}
+
+	parentElm.classList.add(activeClassName);
 
 	// Removed all active press enter elements
 	let pressEnterDivs = document.getElementsByClassName(pressEnterClassName);
@@ -169,6 +188,10 @@ function highlightElement(clickedElm: any) {
 		inputField = parentElm.querySelector('textarea');
 	}
 	if (inputField) {
+		// If the field is disabled, do nothing
+		if (inputField.disabled) {
+			return;
+		}
 		const inputFieldParent = findAncestor(inputField, fieldClassName);
 		if (inputFieldParent) {
 			inputField.focus();
@@ -189,12 +212,20 @@ function highlightElement(clickedElm: any) {
 			}
 		}
 	}
-	parentElm.classList.add(activeClassName);
 
 	// We need to highlight the grandparent as well (Especially for grouped fields)
-	const grandParentElm = findAncestor(parentElm, fieldClassName);
-	if (grandParentElm) {
+	const grandParentElm = findAncestor(findAncestor(inputField, fieldClassName), fieldClassName);
+	if (grandParentElm && grandParentElm !== rootElm) {
 		grandParentElm.classList.add(activeClassName);
+
+		// If this is actually a grouped field, it should have siblings
+		// and we want to highlight the sibligs as well
+		const siblings = grandParentElm.querySelectorAll('.' + fieldClassName);
+		for (let sibling of siblings as any) {
+			if (!sibling.classList.contains(activeClassName)) {
+				sibling.classList.add(activeClassName);
+			}
+		}
 	}
 }
 
