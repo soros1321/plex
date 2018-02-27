@@ -1,15 +1,24 @@
 import * as React from 'react';
-import {
-	Row,
-	Col,
-	Button
-} from 'reactstrap';
 import { PaperLayout } from '../../../layouts';
-import { Header, ConfirmationModal, MainWrapper } from '../../../components';
+import {
+	Header,
+	ConfirmationModal,
+	MainWrapper,
+	Bold
+} from '../../../components';
 import { Link } from 'react-router';
 import { SuccessModal } from './SuccessModal';
 import { browserHistory } from 'react-router';
-import './FillLoanEntered.css';
+import {
+	LoanInfoContainer,
+	HalfCol,
+	InfoItem,
+	Title,
+	Content,
+	ButtonContainer,
+	DeclineButton,
+	FillLoanButton
+} from './styledComponents';
 
 interface Props {
 	requestId: string;
@@ -59,67 +68,58 @@ class FillLoanEntered extends React.Component<Props, States> {
 
 	render() {
 		const leftInfoItems = [
-			{title: 'AMOUNT', content: this.props.amount},
-			{title: 'COUNTERPARTY', content: this.props.counterparty},
-			{title: 'PRINCIPLE', content: this.props.principle},
-			{title: 'REPAYMENT DATE', content: this.props.repaymentDate}
+			{title: 'Principal', content: this.props.amount},
+			{title: 'Term Length', content: this.props.counterparty},
+			{title: 'Description', content: this.props.principle}
 		];
 		const rightInfoItems = [
-			{title: 'DESCRIPTION', content: this.props.description},
-			{title: 'UNDERWRITER', content: this.props.underwriter},
-			{title: 'INTEREST', content: this.props.interest},
-			{title: 'REPAYMENT TERMS', content: this.props.repaymentTerms}
+			{title: 'Interest Rate', content: this.props.description},
+			{title: 'Installment Frequency', content: this.props.underwriter}
 		];
 		const leftInfoItemRows = leftInfoItems.map((item) => (
-			<div className="info-item" key={item.title}>
-				<div className="title">
+			<InfoItem key={item.title}>
+				<Title>
 					{item.title}
-				</div>
-				<div className="content">
-					// Some Content
+				</Title>
+				<Content>
 					{item.content}
-				</div>
-			</div>
+				</Content>
+			</InfoItem>
 		));
 		const rightInfoItemRows = rightInfoItems.map((item) => (
-			<div className="info-item" key={item.title}>
-				<div className="title">
+			<InfoItem key={item.title}>
+				<Title>
 					{item.title}
-				</div>
-				<div className="content">
-					// Some Content
+				</Title>
+				<Content>
 					{item.content}
-				</div>
-			</div>
+				</Content>
+			</InfoItem>
 		));
 
 		const confirmationModalContent = (
 			<span>
-				You will fill this debt order ${this.props.requestId}. This operation will debit ${this.props.amount} ${this.props.currency} from your account.
+				You will fill this debt order <Bold>${this.props.requestId}</Bold>. This operation will debit ${this.props.amount} ${this.props.currency} from your account.
 			</span>
 		);
 		return (
 			<PaperLayout>
 				<MainWrapper>
 					<Header title={'Fill a loan'} description={'Here are the details of loan request ' + this.props.requestId + '. If the terms look fair to you, fill the loan and Dharma will //insert statement.'} />
-					<Row className="loan-info-container">
-						<Col xs="12" md="6">
+					<LoanInfoContainer>
+						<HalfCol>
 							{leftInfoItemRows}
-						</Col>
-						<Col xs="12" md="6">
+						</HalfCol>
+						<HalfCol>
 							{rightInfoItemRows}
-						</Col>
-					</Row>
-					<Row className="button-container margin-top-30">
-						<Col xs="12" md="6">
-							<Link to="/fill">
-								<Button className="button secondary width-95">Decline</Button>
-							</Link>
-						</Col>
-						<Col xs="12" md="6" className="align-right">
-							<Button className="button width-95" onClick={this.confirmationModalToggle}>Fill Loan</Button>
-						</Col>
-					</Row>
+						</HalfCol>
+					</LoanInfoContainer>
+					<ButtonContainer>
+						<Link to="/fill">
+							<DeclineButton>Decline</DeclineButton>
+						</Link>
+						<FillLoanButton onClick={this.confirmationModalToggle}>Fill Loan</FillLoanButton>
+					</ButtonContainer>
 					<ConfirmationModal modal={this.state.confirmationModal} title="Please confirm" content={confirmationModalContent} onToggle={this.confirmationModalToggle} onSubmit={this.successModalToggle} closeButtonText="Cancel" submitButtonText="Fill Order" />
 					<SuccessModal modal={this.state.successModal} onToggle={this.successModalToggle} requestId={this.props.requestId} />
 				</MainWrapper>
