@@ -47,6 +47,7 @@ export const Content = Title.extend`
 	margin-top: 5px;
 	opacity: 1;
 	font-size: 18px;
+	text-transform: none;
 `;
 
 export const ButtonContainer = styled.div`
