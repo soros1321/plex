@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Link, browserHistory } from 'react-router';
-import { amortizationUnitToFrequency } from '../../../utils';
+import { amortizationUnitToFrequency, shortenString } from '../../../utils';
 import { PaperLayout } from '../../../layouts';
 import {
 	Header,
@@ -94,7 +94,7 @@ class FillLoanEntered extends React.Component<Props, States> {
 
 		const confirmationModalContent = (
 			<span>
-				You will fill this debt order <Bold>{debtOrder.debtorSignature}</Bold>. This operation will debit <Bold>{debtOrder.principalAmount} {debtOrder.principalTokenSymbol}</Bold> from your account.
+				You will fill this debt order <Bold>{shortenString(debtOrder.debtorSignature)}</Bold>. This operation will debit <Bold>{debtOrder.principalAmount} {debtOrder.principalTokenSymbol}</Bold> from your account.
 			</span>
 		);
 		const descriptionContent = (
@@ -131,7 +131,7 @@ class FillLoanEntered extends React.Component<Props, States> {
 						<FillLoanButton onClick={this.confirmationModalToggle}>Fill Loan</FillLoanButton>
 					</ButtonContainer>
 					<ConfirmationModal modal={this.state.confirmationModal} title="Please confirm" content={confirmationModalContent} onToggle={this.confirmationModalToggle} onSubmit={this.successModalToggle} closeButtonText="Cancel" submitButtonText="Fill Order" />
-					<SuccessModal modal={this.state.successModal} onToggle={this.successModalToggle} requestId={debtOrder.debtorSignature} />
+					<SuccessModal modal={this.state.successModal} onToggle={this.successModalToggle} debtorSignature={debtOrder.debtorSignature} />
 				</MainWrapper>
 			</PaperLayout>
 		);

@@ -7,7 +7,7 @@ export const Description = styled.div`
 	font-size: 17px;
 	line-height: 25px;
 	margin-bottom: 30px;
-	overflow-x: auto;
+	word-wrap: break-word;
 
 	@media only screen and (max-width: 480px) {
 		width: 100%;
