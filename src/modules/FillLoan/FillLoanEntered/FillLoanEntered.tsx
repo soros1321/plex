@@ -20,14 +20,24 @@ import {
 	DeclineButton,
 	FillLoanButton
 } from './styledComponents';
+import Dharma from '@dharmaprotocol/dharma.js';
+import { BigNumber } from 'bignumber.js';
 
 interface Props {
 	location?: any;
+	dharma: Dharma;
 }
 
 interface States {
 	confirmationModal: boolean;
 	successModal: boolean;
+	principalAmount: number | undefined;
+	principalTokenSymbol: string;
+	termLength: number | undefined;
+	amortizationUnit: string;
+	interestRate: number | undefined;
+	debtorSignature: string;
+	description: string;
 }
 
 class FillLoanEntered extends React.Component<Props, States> {
@@ -36,10 +46,47 @@ class FillLoanEntered extends React.Component<Props, States> {
 
 		this.state = {
 			confirmationModal: false,
-			successModal: false
+			successModal: false,
+			principalAmount: undefined,
+			principalTokenSymbol: '',
+			termLength: undefined,
+			amortizationUnit: '',
+			interestRate: undefined,
+			debtorSignature: '',
+			description: ''
 		};
 		this.confirmationModalToggle = this.confirmationModalToggle.bind(this);
 		this.successModalToggle = this.successModalToggle.bind(this);
+	}
+
+	async componentWillReceiveProps(nextProps: Props) {
+		try {
+			if (nextProps.dharma && nextProps.location.query) {
+				const debtOrder = nextProps.location.query;
+				debtOrder.principalAmount = new BigNumber(debtOrder.principalAmount);
+				if (debtOrder.termsContract && debtOrder.termsContractParameters) {
+					const fromDebtOrder = await nextProps.dharma.adapters.simpleInterestLoan.fromDebtOrder(debtOrder);
+					this.setState({
+						principalAmount: fromDebtOrder.principalAmount.toNumber(),
+						principalTokenSymbol: debtOrder.principalTokenSymbol,
+						termLength: fromDebtOrder.termLength.toNumber(),
+						amortizationUnit: fromDebtOrder.amortizationUnit,
+						interestRate: fromDebtOrder.interestRate.toNumber(),
+						debtorSignature: debtOrder.debtorSignature,
+						description: debtOrder.description
+					});
+				} else {
+					this.setState({
+						principalAmount: debtOrder.principalAmount.toNumber(),
+						principalTokenSymbol: debtOrder.principalTokenSymbol,
+						debtorSignature: debtOrder.debtorSignature,
+						description: debtOrder.description
+					});
+				}
+			}
+		} catch (e) {
+			console.log(e);
+		}
 	}
 
 	confirmationModalToggle() {
@@ -59,17 +106,13 @@ class FillLoanEntered extends React.Component<Props, States> {
 	}
 
 	render() {
-		if (!this.props.location.query) {
-			return null;
-		}
-		const debtOrder = this.props.location.query;
 		const leftInfoItems = [
-			{title: 'Principal', content: debtOrder.principalAmount + ' ' + debtOrder.principalTokenSymbol},
-			{title: 'Term Length', content: debtOrder.termLength + ' ' + debtOrder.amortizationUnit}
+			{title: 'Principal', content: this.state.principalAmount + ' ' + this.state.principalTokenSymbol},
+			{title: 'Term Length', content: (this.state.termLength && this.state.amortizationUnit ? this.state.termLength + ' ' + this.state.amortizationUnit : '-')}
 		];
 		const rightInfoItems = [
-			{title: 'Interest Rate', content: debtOrder.interestRate + '%'},
-			{title: 'Installment Frequency', content: amortizationUnitToFrequency(debtOrder.amortizationUnit)}
+			{title: 'Interest Rate', content: (this.state.interestRate ? this.state.interestRate + '%' : '-')},
+			{title: 'Installment Frequency', content: (this.state.amortizationUnit ? amortizationUnitToFrequency(this.state.amortizationUnit) : '-')}
 		];
 		const leftInfoItemRows = leftInfoItems.map((item) => (
 			<InfoItem key={item.title}>
@@ -94,12 +137,12 @@ class FillLoanEntered extends React.Component<Props, States> {
 
 		const confirmationModalContent = (
 			<span>
-				You will fill this debt order <Bold>{shortenString(debtOrder.debtorSignature)}</Bold>. This operation will debit <Bold>{debtOrder.principalAmount} {debtOrder.principalTokenSymbol}</Bold> from your account.
+				You will fill this debt order <Bold>{shortenString(this.state.debtorSignature)}</Bold>. This operation will debit <Bold>{this.state.principalAmount} {this.state.principalTokenSymbol}</Bold> from your account.
 			</span>
 		);
 		const descriptionContent = (
 			<span>
-				Here are the details of loan request <Bold>{debtOrder.debtorSignature}</Bold>. If the terms look fair to you, fill the loan and Dharma will //insert statement.
+				Here are the details of loan request <Bold>{this.state.debtorSignature}</Bold>. If the terms look fair to you, fill the loan and Dharma will //insert statement.
 			</span>
 		);
 		return (
@@ -119,7 +162,7 @@ class FillLoanEntered extends React.Component<Props, States> {
 									Description
 								</Title>
 								<Content>
-									{debtOrder.description}
+									{this.state.description}
 								</Content>
 							</InfoItem>
 						</Col>
@@ -131,7 +174,7 @@ class FillLoanEntered extends React.Component<Props, States> {
 						<FillLoanButton onClick={this.confirmationModalToggle}>Fill Loan</FillLoanButton>
 					</ButtonContainer>
 					<ConfirmationModal modal={this.state.confirmationModal} title="Please confirm" content={confirmationModalContent} onToggle={this.confirmationModalToggle} onSubmit={this.successModalToggle} closeButtonText="Cancel" submitButtonText="Fill Order" />
-					<SuccessModal modal={this.state.successModal} onToggle={this.successModalToggle} debtorSignature={debtOrder.debtorSignature} />
+					<SuccessModal modal={this.state.successModal} onToggle={this.successModalToggle} debtorSignature={this.state.debtorSignature} />
 				</MainWrapper>
 			</PaperLayout>
 		);

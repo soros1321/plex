@@ -113,7 +113,6 @@ class RequestLoanWeb3 extends React.Component<Props, State> {
 			}
 
 			const debtOrder = JSON.parse(this.state.debtOrder);
-
 			debtOrder.principalAmount = new BigNumber(debtOrder.principalAmount);
 			debtOrder.debtor = this.props.accounts[0];
 
@@ -126,35 +125,27 @@ class RequestLoanWeb3 extends React.Component<Props, State> {
 				confirmationModal: false
 			});
 
-			const bitly = BitlyClient(process.env.REACT_APP_BITLY_ACCESS_TOKEN);
-
-			let result = await bitly.shorten(process.env.REACT_APP_NGROK_HOSTNAME + '/request/success/' + debtorSignature.r);
-			let requestSuccessShortUrl: string = '';
-			if (result.status_code === 200) {
-				requestSuccessShortUrl = result.data.url;
-			}
-
-			const generatedDebtOrder = await this.props.dharma.adapters.simpleInterestLoan.fromDebtOrder(debtOrder);
-
 			const urlParams = {
+				principalAmount: debtOrder.principalAmount.toNumber(),
+				principalToken: debtOrder.principalToken,
+				termsContract: debtOrder.termsContract,
+				termsContractParameters: debtOrder.termsContractParameters,
 				debtorSignature: debtorSignature.r,
-				debtor: generatedDebtOrder.debtor,
-				principalAmount: generatedDebtOrder.principalAmount.toNumber(),
-				principalTokenSymbol: this.state.formData.loan.principalTokenSymbol,
-				interestRate: generatedDebtOrder.interestRate.toNumber(),
-				amortizationUnit: generatedDebtOrder.amortizationUnit,
-				termLength: generatedDebtOrder.termLength.toNumber(),
-				description: debtOrder.description
+				description: debtOrder.description,
+				principalTokenSymbol: this.state.formData.loan.principalTokenSymbol
 			};
-			result = await bitly.shorten(process.env.REACT_APP_NGROK_HOSTNAME + '/fill/loan?' + encodeUrlParams(urlParams));
+
+			const bitly = BitlyClient(process.env.REACT_APP_BITLY_ACCESS_TOKEN);
+			const result = await bitly.shorten(process.env.REACT_APP_NGROK_HOSTNAME + '/fill/loan?' + encodeUrlParams(urlParams));
 			let fillLoanShortUrl: string = '';
 			if (result.status_code === 200) {
 				fillLoanShortUrl = result.data.url;
 			}
 
+			const generatedDebtOrder = await this.props.dharma.adapters.simpleInterestLoan.fromDebtOrder(debtOrder);
 			const storeDebtOrder: DebtOrderEntity = {
 				debtorSignature: debtorSignature.r,
-				debtor: generatedDebtOrder.debtor,
+				debtor: debtOrder.debtor,
 				principalAmount: generatedDebtOrder.principalAmount,
 				principalToken: generatedDebtOrder.principalToken,
 				principalTokenSymbol: this.state.formData.loan.principalTokenSymbol,
@@ -165,7 +156,6 @@ class RequestLoanWeb3 extends React.Component<Props, State> {
 				termsContractParameters: generatedDebtOrder.termsContractParameters,
 				description: debtOrder.description,
 				issuanceHash: debtOrder.issuanceHash,
-				requestSuccessShortUrl: requestSuccessShortUrl,
 				fillLoanShortUrl: fillLoanShortUrl
 			};
 			this.props.handleRequestDebtOrder(storeDebtOrder);

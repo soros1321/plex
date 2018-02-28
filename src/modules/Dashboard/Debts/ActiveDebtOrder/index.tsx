@@ -131,7 +131,7 @@ class ActiveDebtOrder extends React.Component<Props, {}> {
 				<DetailContainer>
 					<Amount>{debtOrder.principalAmount.toNumber()} {debtOrder.principalTokenSymbol}</Amount>
 					<Link to={`/request/success/${debtOrder.debtorSignature}`}>
-						<Url>{debtOrder.requestSuccessShortUrl}</Url>
+						<Url>{debtOrder.debtorSignature}</Url>
 					</Link>
 					{active ? <StatusActive>Active</StatusActive> : <StatusPending>Pending</StatusPending>}
 					<Terms>Simple Interest (Installments)</Terms>

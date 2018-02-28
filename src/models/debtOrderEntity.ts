@@ -13,7 +13,6 @@ export class DebtOrderEntity {
 	termsContractParameters: string | undefined;
 	description: string | undefined;
 	issuanceHash: string | undefined;
-	requestSuccessShortUrl: string;
 	fillLoanShortUrl: string;
 
 	public constructor () {
@@ -29,7 +28,6 @@ export class DebtOrderEntity {
 		this.termsContractParameters = '';
 		this.description = '';
 		this.issuanceHash = '';
-		this.requestSuccessShortUrl = '';
 		this.fillLoanShortUrl = '';
 	}
 }

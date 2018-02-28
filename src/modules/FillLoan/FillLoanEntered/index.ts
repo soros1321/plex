@@ -1,1 +1,2 @@
-export * from './FillLoanEntered';
+import { FillLoanEnteredContainer } from './FillLoanEnteredContainer';
+export { FillLoanEnteredContainer };
