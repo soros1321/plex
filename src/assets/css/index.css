@@ -200,6 +200,10 @@ label.radio-container .checkmark:after {
 	color: #002326;
 	font-family: DIN-Bold;
 }
+.form-control:focus{
+	box-shadow: none;
+	border: 1px solid #000000;
+}
 .margin-top-10 {
 	margin-top: 10px;
 }
