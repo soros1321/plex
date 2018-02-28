@@ -2,6 +2,7 @@ import * as React from 'react';
 import { PressEnter } from './styledComponents';
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
+import './select.css';
 
 export const CustomSelectDropdown = (props: any) => {
 	let selectOptions: any[] = [];
