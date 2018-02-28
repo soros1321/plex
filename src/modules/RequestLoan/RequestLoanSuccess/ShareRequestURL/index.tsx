@@ -22,7 +22,6 @@ const Identicon = require('identicon.js');
 
 interface Props {
 	issuanceHash: string | undefined;
-	debtorSignature: string;
 	shortUrl: string;
 	onShareSocial: (socialMediaName: string) => void;
 }
