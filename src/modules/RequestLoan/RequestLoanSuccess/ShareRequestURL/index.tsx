@@ -18,7 +18,6 @@ import {
 	CopyButton,
 	CopiedMessage
 } from './styledComponents';
-import { Link } from 'react-router';
 const Identicon = require('identicon.js');
 
 interface Props {
@@ -93,14 +92,14 @@ class ShareRequestURL extends React.Component<Props, State> {
 						<StyledFormGroup>
 							<Row>
 								<InputContainer>
-									<Link to={`/fill/loan/${this.props.debtorSignature}`}>
+									<a href={this.props.shortUrl}>
 										<RequestInput
 											type="text"
 											value={this.props.shortUrl}
 											readOnly={true}
 											innerRef={(input: HTMLInputElement) => { this.requestInput = input; }}
 										/>
-									</Link>
+									</a>
 									<CopiedMessage>{this.state.copied ? 'Copied!' : ''}</CopiedMessage>
 								</InputContainer>
 								<ButtonContainer>

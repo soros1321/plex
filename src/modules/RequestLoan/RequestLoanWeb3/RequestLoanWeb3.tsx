@@ -15,6 +15,7 @@ import Dharma from '@dharmaprotocol/dharma.js';
 import { DebtOrder } from '@dharmaprotocol/dharma.js/dist/types/src/types';
 import { BigNumber } from 'bignumber.js';
 import { Error as ErrorComponent } from '../../../components/Error/Error';
+import { encodeUrlParams } from '../../../utils';
 const BitlyClient = require('bitly');
 
 interface Props {
@@ -97,6 +98,7 @@ class RequestLoanWeb3 extends React.Component<Props, State> {
 			this.confirmationModalToggle();
 		} catch (e) {
 			this.setState({ errorMessage: 'Unable to generate Debt Order' });
+			window.scrollTo(0, 0);
 			return;
 		}
 	}
@@ -106,6 +108,7 @@ class RequestLoanWeb3 extends React.Component<Props, State> {
 			this.setState({ errorMessage: '' });
 			if (!this.state.debtOrder) {
 				this.setState({ errorMessage: 'No Debt Order has been generated yet' });
+				window.scrollTo(0, 0);
 				return;
 			}
 
@@ -131,13 +134,24 @@ class RequestLoanWeb3 extends React.Component<Props, State> {
 				requestSuccessShortUrl = result.data.url;
 			}
 
-			result = await bitly.shorten(process.env.REACT_APP_NGROK_HOSTNAME + '/fill/loan/' + debtorSignature.r);
+			const generatedDebtOrder = await this.props.dharma.adapters.simpleInterestLoan.fromDebtOrder(debtOrder);
+
+			const urlParams = {
+				debtorSignature: debtorSignature.r,
+				debtor: generatedDebtOrder.debtor,
+				principalAmount: generatedDebtOrder.principalAmount.toNumber(),
+				principalTokenSymbol: this.state.formData.loan.principalTokenSymbol,
+				interestRate: generatedDebtOrder.interestRate.toNumber(),
+				amortizationUnit: generatedDebtOrder.amortizationUnit,
+				termLength: generatedDebtOrder.termLength.toNumber(),
+				description: debtOrder.description
+			};
+			result = await bitly.shorten(process.env.REACT_APP_NGROK_HOSTNAME + '/fill/loan?' + encodeUrlParams(urlParams));
 			let fillLoanShortUrl: string = '';
 			if (result.status_code === 200) {
 				fillLoanShortUrl = result.data.url;
 			}
 
-			const generatedDebtOrder = await this.props.dharma.adapters.simpleInterestLoan.fromDebtOrder(debtOrder);
 			const storeDebtOrder: DebtOrderEntity = {
 				debtorSignature: debtorSignature.r,
 				debtor: generatedDebtOrder.debtor,
@@ -158,9 +172,10 @@ class RequestLoanWeb3 extends React.Component<Props, State> {
 			browserHistory.push(`/request/success/${storeDebtOrder.debtorSignature}`);
 		} catch (e) {
 			this.setState({
-				errorMessage: 'Unable to sign debt order',
+				errorMessage: 'Unable to sign Debt Order',
 				confirmationModal: false
 			});
+			window.scrollTo(0, 0);
 			return;
 		}
 	}

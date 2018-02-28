@@ -128,6 +128,10 @@ function highlightNextSibling(el: any) {
 		el.classList.remove(activeClassName);
 		parentElm = findAncestor(el, fieldClassName);
 		if (parentElm) {
+			const activeChildren = parentElm.querySelectorAll('.' + fieldClassName + '.' + activeClassName);
+			for (let activeChild of activeChildren as any) {
+				activeChild.classList.remove(activeClassName);
+			}
 			// el.classList.remove(activeClassName);
 			highlightNextSibling(parentElm);
 		}

@@ -10,7 +10,7 @@ import {
 	RequestLoanWeb3Container,
 	RequestLoanSuccessContainer,
 	DashboardContainer,
-	FillLoanEnteredContainer
+	FillLoanEntered
 } from '../modules';
 import { ParentContainer } from '../layouts';
 import * as Web3 from 'web3';
@@ -106,7 +106,7 @@ class AppRouter extends React.Component<Props, {}> {
 					</Route>
 					<Route path="/fill" component={ParentContainer}>
 						<IndexRoute component={FillLoanEmpty} />
-						<Route path="loan/:debtorSignature" component={FillLoanEnteredContainer} />
+						<Route path="loan" component={FillLoanEntered} />
 					</Route>
 					<Route path="/test" component={TestForm} />
 				</Route>
