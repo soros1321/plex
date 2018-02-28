@@ -5,22 +5,30 @@ import { Header, ScrollToTopOnMount, MainWrapper } from '../../../components';
 import { ShareRequestURL } from './ShareRequestURL';
 import { RequestLoanSummary } from './RequestLoanSummary';
 import { DebtOrderEntity } from '../../../models';
+import Dharma from '@dharmaprotocol/dharma.js';
 
 interface Props {
 	params?: any;
 	debtOrder: DebtOrderEntity;
 	getDebtOrder: (debtorSignature: string) => void;
+	dharma: Dharma;
 }
 
 interface States {
 	email: string;
+	termLength: number | undefined;
+	interestRate: number | undefined;
+	amortizationUnit: string;
 }
 
 class RequestLoanSuccess extends React.Component<Props, States> {
 	constructor(props: Props) {
 		super(props);
 		this.state = {
-			email: ''
+			email: '',
+			termLength: undefined,
+			interestRate: undefined,
+			amortizationUnit: ''
 		};
 		this.handleEmailChange = this.handleEmailChange.bind(this);
 		this.handleGetNotified = this.handleGetNotified.bind(this);
@@ -30,6 +38,26 @@ class RequestLoanSuccess extends React.Component<Props, States> {
 	componentDidMount() {
 		const debtorSignature = this.props.params.debtorSignature;
 		this.props.getDebtOrder(debtorSignature);
+	}
+
+	async componentWillReceiveProps(nextProps: Props) {
+		if (nextProps.dharma && nextProps.debtOrder) {
+			const { debtOrder , dharma } = nextProps;
+			const dharmaDebtOrder = {
+				principalAmount: debtOrder.principalAmount,
+				principalToken: debtOrder.principalToken,
+				termsContract: debtOrder.termsContract,
+				termsContractParameters: debtOrder.termsContractParameters
+			};
+			if (dharmaDebtOrder.termsContract && dharmaDebtOrder.termsContractParameters) {
+				const fromDebtOrder = await dharma.adapters.simpleInterestLoan.fromDebtOrder(dharmaDebtOrder);
+				this.setState({
+					termLength: fromDebtOrder.termLength.toNumber(),
+					amortizationUnit: fromDebtOrder.amortizationUnit,
+					interestRate: fromDebtOrder.interestRate.toNumber()
+				});
+			}
+		}
 	}
 
 	handleEmailChange(email: string) {
@@ -61,7 +89,12 @@ class RequestLoanSuccess extends React.Component<Props, States> {
 						shortUrl={this.props.debtOrder.fillLoanShortUrl}
 						onShareSocial={this.handleShareSocial}
 					/>
-					<RequestLoanSummary debtOrder={this.props.debtOrder} />
+					<RequestLoanSummary
+						debtOrder={this.props.debtOrder}
+						termLength={this.state.termLength}
+						interestRate={this.state.interestRate}
+						amortizationUnit={this.state.amortizationUnit}
+					/>
 				</MainWrapper>
 			</PaperLayout>
 		);

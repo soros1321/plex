@@ -21,6 +21,9 @@ import {
 
 interface Props {
 	debtOrder: DebtOrderEntity;
+	termLength: number | undefined;
+	interestRate: number | undefined;
+	amortizationUnit: string;
 }
 
 interface State {
@@ -46,14 +49,14 @@ class RequestLoanSummary extends React.Component<Props, State> {
 	}
 
 	render() {
-		const { debtOrder } = this.props;
+		const { debtOrder, termLength, interestRate, amortizationUnit } = this.props;
 		const leftInfoItems = [
 			{title: 'Principal', content: debtOrder.principalAmount.toNumber() + ' ' + debtOrder.principalTokenSymbol},
-			{title: 'Term Length', content: debtOrder.termLength.toNumber() + ' ' + debtOrder.amortizationUnit}
+			{title: 'Term Length', content: (termLength && amortizationUnit ? termLength + ' ' + amortizationUnit : '-')}
 		];
 		const rightInfoItems = [
-			{title: 'Interest Rate', content: debtOrder.interestRate.toNumber() + '%'},
-			{title: 'Installment Frequency', content: amortizationUnitToFrequency(debtOrder.amortizationUnit)}
+			{title: 'Interest Rate', content: (interestRate ? interestRate + '%' : '-')},
+			{title: 'Installment Frequency', content: (amortizationUnit ? amortizationUnitToFrequency(amortizationUnit) : '-')}
 		];
 		const leftInfoItemRows = leftInfoItems.map((item) => (
 			<InfoItem key={item.title}>
