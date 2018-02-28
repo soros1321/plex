@@ -49,12 +49,11 @@ class RequestLoanSummary extends React.Component<Props, State> {
 		const { debtOrder } = this.props;
 		const leftInfoItems = [
 			{title: 'Principal', content: debtOrder.principalAmount.toNumber() + ' ' + debtOrder.principalTokenSymbol},
-			{title: 'Term Length', content: debtOrder.termLength.toNumber() + ' ' + debtOrder.amortizationUnit},
-			{title: 'Description', content: debtOrder.description}
+			{title: 'Term Length', content: debtOrder.termLength.toNumber() + ' ' + debtOrder.amortizationUnit}
 		];
 		const rightInfoItems = [
 			{title: 'Interest Rate', content: debtOrder.interestRate.toNumber() + '%'},
-			{title: 'Installment Frequency', content: amortizationUnitToFrequency(debtOrder.amortizationUnit)},
+			{title: 'Installment Frequency', content: amortizationUnitToFrequency(debtOrder.amortizationUnit)}
 		];
 		const leftInfoItemRows = leftInfoItems.map((item) => (
 			<InfoItem key={item.title}>
@@ -87,6 +86,16 @@ class RequestLoanSummary extends React.Component<Props, State> {
 						</Col>
 						<Col xs="12" md="6">
 							{rightInfoItemRows}
+						</Col>
+						<Col xs="12">
+							<InfoItem>
+								<Title>
+									Description
+								</Title>
+								<Content>
+									{debtOrder.description}
+								</Content>
+							</InfoItem>
 						</Col>
 					</Row>
 					<SummaryJsonContainer>

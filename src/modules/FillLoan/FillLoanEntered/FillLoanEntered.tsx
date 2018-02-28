@@ -9,6 +9,7 @@ import {
 	Bold
 } from '../../../components';
 import { SuccessModal } from './SuccessModal';
+import { Col } from 'reactstrap';
 import {
 	LoanInfoContainer,
 	HalfCol,
@@ -64,8 +65,7 @@ class FillLoanEntered extends React.Component<Props, States> {
 		const debtOrder = this.props.location.query;
 		const leftInfoItems = [
 			{title: 'Principal', content: debtOrder.principalAmount + ' ' + debtOrder.principalTokenSymbol},
-			{title: 'Term Length', content: debtOrder.termLength + ' ' + debtOrder.amortizationUnit},
-			{title: 'Description', content: debtOrder.description}
+			{title: 'Term Length', content: debtOrder.termLength + ' ' + debtOrder.amortizationUnit}
 		];
 		const rightInfoItems = [
 			{title: 'Interest Rate', content: debtOrder.interestRate + '%'},
@@ -113,6 +113,16 @@ class FillLoanEntered extends React.Component<Props, States> {
 						<HalfCol>
 							{rightInfoItemRows}
 						</HalfCol>
+						<Col xs="12">
+							<InfoItem>
+								<Title>
+									Description
+								</Title>
+								<Content>
+									{debtOrder.description}
+								</Content>
+							</InfoItem>
+						</Col>
 					</LoanInfoContainer>
 					<ButtonContainer>
 						<Link to="/fill">
