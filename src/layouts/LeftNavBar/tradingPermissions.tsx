@@ -1,138 +1,139 @@
 import * as React from 'react';
 import {
-  Row,
-  Col,
-  NavItem
+	Row,
+	Col,
+	NavItem
 } from 'reactstrap';
 import { Toggle } from '../../components/Toggle';
 import * as Web3 from 'web3';
 import Dharma from '@dharmaprotocol/dharma.js';
 import { BigNumber } from 'bignumber.js';
 import { TradingPermissionsContainer, TradingPermissionsTitle } from './styledComponents';
+import { TokenEntity } from '../../models';
 const promisify = require('tiny-promisify');
 
 interface Props {
-  web3: Web3;
-  dharma: Dharma;
+	web3: Web3;
+	dharma: Dharma;
+	tokens: TokenEntity[];
+	handleSetAllTokensTradingPermission: (tokens: TokenEntity[]) => void;
+	handleToggleTokenTradingPermission: (tokenSymbol: string, permission: boolean) => void;
 }
 
-interface State {
-  tokens: {
-    [key: string]: Token,
-  };
-}
+class TradingPermissions extends React.Component<Props, {}> {
+	constructor(props: Props) {
+		super(props);
+		this.getTokenAllowance = this.getTokenAllowance.bind(this);
+		this.updateProxyAllowanceAsync = this.updateProxyAllowanceAsync.bind(this);
+		this.getTokenData(this.props.dharma);
+	}
 
-interface Token {
-  address: string;
-  tradingPermitted: boolean;
-}
+	componentWillReceiveProps(nextProps: Props) {
+		if (!this.props.dharma && nextProps.dharma) {
+			this.getTokenData(nextProps.dharma);
+		}
+	}
 
-class TradingPermissions extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    this.getTokenAllowance = this.getTokenAllowance.bind(this);
-    this.updateProxyAllowanceAsync = this.updateProxyAllowanceAsync.bind(this);
-    this.state = {
-      tokens: {}
-    };
-    this.getTokenData(this.props.dharma);
-  }
+	async getTokenAllowance(tokenAddress: string) {
+		const accounts = await promisify(this.props.web3.eth.getAccounts)();
+		// TODO: handle account retrieval error more robustly
+		if (!accounts || !accounts[0]) {
+			return new BigNumber(-1);
+		}
 
-  componentWillReceiveProps(nextProps: Props) {
-    if (!this.props.dharma && nextProps.dharma) {
-      this.getTokenData(nextProps.dharma);
-    }
-  }
+		const ownerAddress = accounts[0];
+		const tokenAllowance = await this.props.dharma.token.getProxyAllowanceAsync(tokenAddress, ownerAddress);
+		return new BigNumber(tokenAllowance);
+	}
 
-  async getTokenAllowance(tokenAddress: string) {
-    const accounts = await promisify(this.props.web3.eth.getAccounts)();
-    // TODO: handle account retrieval error more robustly
-    if (!accounts || !accounts[0]) {
-      return new BigNumber(-1);
-    }
+	async getTokenData(dharma: Dharma) {
+		if (!dharma) {
+			return;
+		}
 
-    const ownerAddress = accounts[0];
-    const tokenAllowance = await this.props.dharma.token.getProxyAllowanceAsync(tokenAddress, ownerAddress);
-    return new BigNumber(tokenAllowance);
-  }
+		const tokenRegistry = await dharma.contracts.loadTokenRegistry();
+		// TODO: get token tickers from dharma.js
+		const tokenNames = ['REP', 'MKR', 'ZRX'];
+		var tokens = {};
 
-  async getTokenData(dharma: Dharma) {
-    if (!dharma) {
-      return;
-    }
+		let allTokens: TokenEntity[] = [];
 
-    const tokenRegistry = await dharma.contracts.loadTokenRegistry();
-    // TODO: get token tickers from dharma.js
-    const tokenNames = ['ZRX', 'REP'];
-    var tokens = {};
+		for (let tokenName of tokenNames) {
+			const address = await tokenRegistry.getTokenAddress.callAsync(tokenName);
+			const tradingPermitted = this.isAllowanceUnlimited(await this.getTokenAllowance(address));
+			tokens[tokenName] = { address, tradingPermitted };
+			allTokens.push({
+				address,
+				tokenSymbol: tokenName,
+				tradingPermitted
+			});
+		}
 
-    for (let tokenName of tokenNames) {
-      const address = await tokenRegistry.getTokenAddress.callAsync(tokenName);
-      const tradingPermitted = this.isAllowanceUnlimited(await this.getTokenAllowance(address));
-      tokens[tokenName] = { address, tradingPermitted };
-    }
+		this.props.handleSetAllTokensTradingPermission(allTokens);
+	}
 
-    this.setState({ tokens });
-  }
+	async updateProxyAllowanceAsync(tradingPermitted: boolean, tokenSymbol: string) {
+		const { tokens, dharma } = this.props;
+		let selectedToken: TokenEntity | undefined = undefined;
+		for (let token of tokens) {
+			if (token.tokenSymbol === tokenSymbol) {
+				selectedToken = token;
+				break;
+			}
+		}
+		if (selectedToken) {
+			if (tradingPermitted) {
+				await dharma.token.setProxyAllowanceAsync(selectedToken.address, new BigNumber(0));
+			} else {
+				await dharma.token.setUnlimitedProxyAllowanceAsync(selectedToken.address);
+			}
 
-  async updateProxyAllowanceAsync(tradingPermitted: boolean, tokenName: string) {
-    const tokens = { ...this.state.tokens };
-    let selectedToken = tokens[tokenName];
+			// TODO: remove the sleep hack
+			// await this.props.dharma.blockchain.awaitTransactionMinedAsync(transactionHash);
+			await new Promise(resolve => setTimeout(resolve, 5000));
 
-    if (selectedToken) {
-      if (tradingPermitted) {
-        await this.props.dharma.token.setProxyAllowanceAsync(selectedToken.address, new BigNumber(0));
-      } else {
-        await this.props.dharma.token.setUnlimitedProxyAllowanceAsync(selectedToken.address);
-      }
+			selectedToken.tradingPermitted = this.isAllowanceUnlimited(
+				await this.getTokenAllowance(selectedToken.address));
 
-      // TODO: remove the sleep hack
-      // await this.props.dharma.blockchain.awaitTransactionMinedAsync(transactionHash);
-      await new Promise(resolve => setTimeout(resolve, 5000));
+			this.props.handleToggleTokenTradingPermission(tokenSymbol, !tradingPermitted);
+		}
+	}
 
-      selectedToken.tradingPermitted = this.isAllowanceUnlimited(
-        await this.getTokenAllowance(selectedToken.address));
+	isAllowanceUnlimited(tokenAllowance: BigNumber) {
+		return tokenAllowance.equals((new BigNumber(2)).pow(256).minus(new BigNumber(1)));
+	}
 
-      this.setState({ tokens });
-    }
-  }
+	render() {
+		if (!this.props.tokens || !this.props.tokens.length) {
+			return null;
+		}
+		const { tokens } = this.props;
+		let tokenItems: JSX.Element[] = [];
 
-  isAllowanceUnlimited(tokenAllowance: BigNumber) {
-    return tokenAllowance.equals((new BigNumber(2)).pow(256).minus(new BigNumber(1)));
-  }
+		for (let token of tokens) {
+			tokenItems.push(
+				<Col xs="4" md="12" key={token.tokenSymbol}>
+					<NavItem>
+						<Toggle
+							name={token.tokenSymbol}
+							label={token.tokenSymbol}
+							checked={token.tradingPermitted}
+							onChange={() => this.updateProxyAllowanceAsync(token.tradingPermitted, token.tokenSymbol)}
+						/>
+					</NavItem>
+				</Col>
+			);
+		}
 
-  render() {
-    const tokens = this.state.tokens;
-    const tokenItems = [];
-
-    for (let tokenName in tokens) {
-      if (tokens.hasOwnProperty(tokenName)) {
-        const token = tokens[tokenName];
-
-        tokenItems.push(
-          <Col xs="4" md="12" key={tokenName}>
-            <NavItem>
-              <Toggle
-                name={tokenName}
-                label={tokenName}
-                checked={token.tradingPermitted}
-                onChange={() => this.updateProxyAllowanceAsync(token.tradingPermitted, tokenName)}
-              />
-            </NavItem>
-          </Col>
-        );
-      }
-    }
-
-    return (
-      <Row>
-        <TradingPermissionsContainer>
-          <TradingPermissionsTitle>{'Trading Permissions'}</TradingPermissionsTitle>
-          {tokenItems}
-        </TradingPermissionsContainer>
-      </Row>
-    );
-  }
+		return (
+			<Row>
+				<TradingPermissionsContainer>
+					<TradingPermissionsTitle>{'Trading Permissions'}</TradingPermissionsTitle>
+					{tokenItems}
+				</TradingPermissionsContainer>
+			</Row>
+		);
+	}
 }
 
 export { TradingPermissions };

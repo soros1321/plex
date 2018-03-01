@@ -3,6 +3,7 @@ import { web3Reducer } from './web3Reducer';
 import { dharmaReducer } from './dharmaReducer';
 import { errorReducer } from './errorReducer';
 import { debtOrderReducer } from './debtOrderReducer';
+import { tokenReducer } from './tokenReducer';
 import { routerReducer } from 'react-router-redux';
 
 export const reducers = combineReducers({
@@ -10,5 +11,6 @@ export const reducers = combineReducers({
 	dharmaReducer,
 	debtOrderReducer,
 	errorReducer,
+	tokenReducer,
 	routing: routerReducer
 });
