@@ -14,7 +14,7 @@ import {
 	TitleFirst,
 	TitleRest
 } from './styledComponents';
-import { TradingPermissionsContainer } from '../../containers/TradingPermissionsContainer';
+import { TradingPermissionsContainer } from './TradingPermissionsContainer';
 
 class LeftNavBar extends React.Component {
 	render() {

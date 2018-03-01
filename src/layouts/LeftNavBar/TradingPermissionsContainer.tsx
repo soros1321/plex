@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { TradingPermissions } from '../layouts/LeftNavBar/tradingPermissions';
+import { TradingPermissions } from './tradingPermissions';
 
 const mapStateToProps = (state: any) => {
   return {

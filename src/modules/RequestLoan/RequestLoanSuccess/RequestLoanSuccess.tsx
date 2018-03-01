@@ -33,6 +33,7 @@ class RequestLoanSuccess extends React.Component<Props, States> {
 		this.handleEmailChange = this.handleEmailChange.bind(this);
 		this.handleGetNotified = this.handleGetNotified.bind(this);
 		this.handleShareSocial = this.handleShareSocial.bind(this);
+		this.getDebtOrderDetail(this.props.dharma, this.props.debtOrder);
 	}
 
 	componentDidMount() {
@@ -40,23 +41,29 @@ class RequestLoanSuccess extends React.Component<Props, States> {
 		this.props.getDebtOrder(debtorSignature);
 	}
 
-	async componentWillReceiveProps(nextProps: Props) {
+	componentWillReceiveProps(nextProps: Props) {
 		if (nextProps.dharma && nextProps.debtOrder) {
-			const { debtOrder , dharma } = nextProps;
-			const dharmaDebtOrder = {
-				principalAmount: debtOrder.principalAmount,
-				principalToken: debtOrder.principalToken,
-				termsContract: debtOrder.termsContract,
-				termsContractParameters: debtOrder.termsContractParameters
-			};
-			if (dharmaDebtOrder.termsContract && dharmaDebtOrder.termsContractParameters) {
-				const fromDebtOrder = await dharma.adapters.simpleInterestLoan.fromDebtOrder(dharmaDebtOrder);
-				this.setState({
-					termLength: fromDebtOrder.termLength.toNumber(),
-					amortizationUnit: fromDebtOrder.amortizationUnit,
-					interestRate: fromDebtOrder.interestRate.toNumber()
-				});
-			}
+			this.getDebtOrderDetail(nextProps.dharma, nextProps.debtOrder);
+		}
+	}
+
+	async getDebtOrderDetail(dharma: Dharma, debtOrder: DebtOrderEntity) {
+		if (!dharma || !debtOrder) {
+			return;
+		}
+		const dharmaDebtOrder = {
+			principalAmount: debtOrder.principalAmount,
+			principalToken: debtOrder.principalToken,
+			termsContract: debtOrder.termsContract,
+			termsContractParameters: debtOrder.termsContractParameters
+		};
+		if (dharmaDebtOrder.termsContract && dharmaDebtOrder.termsContractParameters) {
+			const fromDebtOrder = await dharma.adapters.simpleInterestLoan.fromDebtOrder(dharmaDebtOrder);
+			this.setState({
+				termLength: fromDebtOrder.termLength.toNumber(),
+				amortizationUnit: fromDebtOrder.amortizationUnit,
+				interestRate: fromDebtOrder.interestRate.toNumber()
+			});
 		}
 	}
 
