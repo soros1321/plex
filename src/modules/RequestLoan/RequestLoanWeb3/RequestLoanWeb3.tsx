@@ -131,6 +131,7 @@ class RequestLoanWeb3 extends React.Component<Props, State> {
 				termsContract: debtOrder.termsContract,
 				termsContractParameters: debtOrder.termsContractParameters,
 				debtorSignature: JSON.stringify(debtorSignature),
+				debtor: debtOrder.debtor,
 				description: debtOrder.description,
 				principalTokenSymbol: this.state.formData.loan.principalTokenSymbol
 			};
