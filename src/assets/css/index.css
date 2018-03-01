@@ -139,7 +139,12 @@ label.radio-container .checkmark:after {
 	box-shadow: none;
 	border: 1px solid #000000;
 }
+.btn-secondary:focus,
+.btn-secondary.focus,
+.btn:focus,
+.btn.focus,
 button:focus {
+	box-shadow: none;
 	outline: none;
 }
 .margin-top-10 {
