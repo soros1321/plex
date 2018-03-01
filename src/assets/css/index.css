@@ -6,9 +6,15 @@
 	font-family: DIN-Bold;
 	src: url(../fonts/DINBold.otf);
 }
-
+html {
+	height: 100%;
+}
 body {
 	font-family: DIN;
+	height: 100%;
+}
+#root {
+	height: 100%;
 }
 h1 {
 	font-family: DIN-Bold;
@@ -194,6 +200,10 @@ label.radio-container .checkmark:after {
 	color: #002326;
 	font-family: DIN-Bold;
 }
+.form-control:focus{
+	box-shadow: none;
+	border: 1px solid #000000;
+}
 .margin-top-10 {
 	margin-top: 10px;
 }
@@ -204,9 +214,6 @@ label.radio-container .checkmark:after {
 	width: 100%;
 	margin-left: 0;
 	margin-right: 0;
-}
-.row.button-container {
-	width: 600px;
 }
 .row .width-95.button {
 	width: 95%;
@@ -262,6 +269,13 @@ label.radio-container .checkmark:after {
 	background-color: #F5F5F5;
 	border-bottom: 4px solid #F3764B;
 	padding: 15px 40px 11px;
+}
+.modal .modal-dialog {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%) !important;
+	margin: 0;
 }
 @media only screen and (max-width: 480px) {
 	h1 {

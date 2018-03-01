@@ -2,15 +2,6 @@ import * as React from 'react';
 import { PressEnter } from './styledComponents';
 
 export const CustomBaseInput = (props: any) => {
-	/*
-	const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
-		if (event.key === 'Enter') {
-			if (!props.value) {
-				event.preventDefault();
-			}
-		}
-	};
-	*/
 	return (
 		<div>
 			<input
@@ -19,9 +10,14 @@ export const CustomBaseInput = (props: any) => {
 				id={props.id}
 				placeholder={props.placeholder}
 				required={props.required}
+				disabled={props.disabled}
+				readOnly={props.readonly}
 				onChange={(event) => props.onChange(event.target.value)}
 			/>
-			<PressEnter className={props.value ? 'active' : ''}>OK, Press ENTER</PressEnter>
+			{ (props.options.pressEnter || typeof props.options.pressEnter === 'undefined') && (
+					<PressEnter className={'press-enter ' + (props.value ? 'active' : '')}>OK, Press ENTER</PressEnter>
+				)
+			}
 		</div>
 	);
 };

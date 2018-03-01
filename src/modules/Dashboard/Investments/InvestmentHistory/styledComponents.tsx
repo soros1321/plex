@@ -8,7 +8,7 @@ interface Props {
 
 // styles-components
 export const Wrapper = styled.div`
-	margin-top: 30px;
+	margin-top: 80px;
 `;
 
 export const Title = styled.div`

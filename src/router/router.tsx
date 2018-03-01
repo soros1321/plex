@@ -1,20 +1,20 @@
 import * as React from 'react';
 import { Router, Route, IndexRoute, browserHistory } from 'react-router';
-import { RequestLoanContainer } from '../containers/RequestLoanContainer';
+import { syncHistoryWithStore } from 'react-router-redux';
 import App from '../App';
 import {
 	Welcome,
-	RequestLoanSuccess,
 	FillLoanEmpty,
-	FillLoanEntered,
 	DefaultContent,
-	Dashboard,
-	TestForm
+	TestForm,
+	RequestLoanWeb3Container,
+	RequestLoanSuccessContainer,
+	DashboardContainer,
+	FillLoanEnteredContainer
 } from '../modules';
 import { ParentContainer } from '../layouts';
-
 import * as Web3 from 'web3';
-import { web3Connected, dharmaInstantiated, setAccounts } from '../actions';
+import { web3Connected, dharmaInstantiated, setAccounts, setError } from './actions';
 const promisify = require('tiny-promisify');
 
 // Import Dharma libraries
@@ -30,7 +30,7 @@ const DebtToken = require('../artifacts/DebtToken.json');
 const TermsContractRegistry = require('../artifacts/TermsContractRegistry.json');
 
 interface Props {
-	dispatch: any;
+	store: any;
 }
 
 class AppRouter extends React.Component<Props, {}> {
@@ -39,7 +39,7 @@ class AppRouter extends React.Component<Props, {}> {
 	}
 
 	async componentDidMount() {
-		const { dispatch } = this.props;
+		const { dispatch } = this.props.store;
 		let web3: any = null;
 		if (typeof (window as any).web3 !== 'undefined') {
 			web3 = await new Web3((window as any).web3.currentProvider);
@@ -53,12 +53,12 @@ class AppRouter extends React.Component<Props, {}> {
 	}
 
 	async instantiateDharma(web3: Web3) {
-		const { dispatch } = this.props;
+		const { dispatch } = this.props.store;
 		const networkId = await promisify(web3.version.getNetwork)();
 		const accounts = await promisify(web3.eth.getAccounts)();
 
 		if (!accounts.length) {
-			throw new Error('Cannot find any account on current Ethereum network.');
+			dispatch(setError('Unable to find active account on current Ethereum network'));
 		}
 
 		dispatch(setAccounts(accounts));
@@ -70,26 +70,27 @@ class AppRouter extends React.Component<Props, {}> {
 			networkId in DebtToken.networks &&
 			networkId in TermsContractRegistry.networks &&
 			networkId in DebtRegistry.networks)) {
-			throw new Error('Cannot find Dharma smart contracts on current Ethereum network.');
+			dispatch(setError('Unable to connect to the blockchain'));
+		} else {
+			const dharmaConfig = {
+				kernelAddress: DebtKernel.networks[networkId].address,
+				repaymentRouterAddress: RepaymentRouter.networks[networkId].address,
+				tokenTransferProxyAddress: TokenTransferProxy.networks[networkId].address,
+				tokenRegistryAddress: TokenRegistry.networks[networkId].address,
+				debtTokenAddress: DebtToken.networks[networkId].address,
+				termsContractRegistry: TermsContractRegistry.networks[networkId].address,
+				debtRegistryAddress: DebtRegistry.networks[networkId].address
+			};
+
+			const dharma = new Dharma(web3.currentProvider, dharmaConfig);
+			dispatch(dharmaInstantiated(dharma));
 		}
-
-		const dharmaConfig = {
-			kernelAddress: DebtKernel.networks[networkId].address,
-			repaymentRouterAddress: RepaymentRouter.networks[networkId].address,
-			tokenTransferProxyAddress: TokenTransferProxy.networks[networkId].address,
-			tokenRegistryAddress: TokenRegistry.networks[networkId].address,
-			debtTokenAddress: DebtToken.networks[networkId].address,
-			termsContractRegistry: TermsContractRegistry.networks[networkId].address,
-			debtRegistryAddress: DebtRegistry.networks[networkId].address
-		};
-
-		const dharma = new Dharma(web3.currentProvider, dharmaConfig);
-		dispatch(dharmaInstantiated(dharma));
 	}
 
 	render() {
+		const history = syncHistoryWithStore(browserHistory, this.props.store);
 		return (
-			<Router history={browserHistory}>
+			<Router history={history}>
 				<Route path="/" component={App} >
 					<IndexRoute component={Welcome} />
 					<Route path="/bazaar" component={DefaultContent} />
@@ -98,14 +99,14 @@ class AppRouter extends React.Component<Props, {}> {
 					<Route path="/github" component={DefaultContent} />
 					<Route path="/chat" component={DefaultContent} />
 					<Route path="/twitter" component={DefaultContent} />
-					<Route path="/dashboard" component={Dashboard} />
+					<Route path="/dashboard" component={DashboardContainer} />
 					<Route path="/request" component={ParentContainer}>
-						<IndexRoute component={RequestLoanContainer} />
-						<Route path="success" component={RequestLoanSuccess} />
+						<IndexRoute component={RequestLoanWeb3Container} />
+						<Route path="success/:debtorSignature" component={RequestLoanSuccessContainer} />
 					</Route>
 					<Route path="/fill" component={ParentContainer}>
 						<IndexRoute component={FillLoanEmpty} />
-						<Route path="entered" component={FillLoanEntered} />
+						<Route path="loan" component={FillLoanEnteredContainer} />
 					</Route>
 					<Route path="/test" component={TestForm} />
 				</Route>

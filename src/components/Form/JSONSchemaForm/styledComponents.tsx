@@ -43,11 +43,45 @@ export const FieldWrapper = styled.div`
 	&.form-group {
 		margin-bottom: 120px;
 	}
+	&.form-group:last-child {
+		margin-bottom: 0px;
+		> ${GroupWrapper} {
+			margin-bottom: 0px;
+		}
+	}
 	&.form-group.group-field {
 		margin-bottom: 20px;
 	}
+	&.form-group.inline-field {
+		display: inline-block;
+		vertical-align: top;
+		margin-bottom: 5px;
+
+		&.width75 {
+			width: 74%;
+			margin-right: 1%;
+		}
+		&.width65 {
+			width: 64%;
+			margin-right: 1%;
+		}
+		&.width35 {
+			width: 34%;
+			margin-left: 1%;
+		}
+		&.width25 {
+			width: 24%;
+			margin-left: 1%;
+		}
+		&.padding-top {
+			padding-top: 38px;
+		}
+	}
 	&.active {
 		opacity: 1;
+	}
+	&.button-container {
+		margin-top: -100px;
 	}
 `;
 
@@ -70,7 +104,7 @@ export const Checkmark = styled.span`
 	width: 18px;
 	background-color: #eee;
 
-	:after {
+	&::after {
 		content: "";
 		position: absolute;
 		display: none;
@@ -99,7 +133,7 @@ export const CheckboxLabel = styled.label`
 		cursor: pointer;
 	}
 
-	:hover input ~ ${Checkmark} {
+	&:hover input ~ ${Checkmark} {
 		background-color: #ccc;
 	}
 
@@ -133,7 +167,7 @@ export const RadioCheckmark = styled.span`
 	background-color: #eee;
 	border-radius: 50%;
 
-	:after {
+	&::after {
 		content: "";
 		position: absolute;
 		display: none;
@@ -161,7 +195,7 @@ export const RadioLabel = styled.label`
 		opacity: 0;
 	}
 
-	:hover input ~ ${Checkmark} {
+	&:hover input ~ ${Checkmark} {
 		background-color: #ccc;
 	}
 
@@ -191,11 +225,16 @@ export const PressEnter = Description.extend`
 	color: #FFFFFF;
 	background-color: #1CC1CC;
 	width: fit-content;
+	height: 0;
+	-webkit-transition: opacity 0.3s ease-out;
+	-moz-transition: opacity 0.3s ease-out;
+	-o-transition: opacity 0.3s ease-out;
 
 	&.active {
 		-webkit-transition: opacity 0.3s ease-in;
 		-moz-transition: opacity 0.3s ease-in;
 		-o-transition: opacity 0.3s ease-in;
 		opacity: 1;
+		height: auto;
 	}
 `;

@@ -1,23 +1,27 @@
 import * as React from 'react';
-import { Row, Col } from 'reactstrap';
 import TopNavBar from '../TopNavBar';
 import LeftNavBar from '../LeftNavBar';
-import './PageLayout.css';
+import {
+	Wrapper,
+	StyledRow,
+	LeftContainer,
+	RightContainer
+} from './styledComponents';
 
 class PageLayout extends React.Component {
   render() {
     return (
-			<div>
+			<Wrapper>
 				<TopNavBar />
-				<Row>
-					<Col xs="12">
+				<StyledRow>
+					<LeftContainer>
 						<LeftNavBar />
-					</Col>
-					<Col xs="12" className="right-container">
+					</LeftContainer>
+					<RightContainer>
 						{this.props.children}
-					</Col>
-				</Row>
-			</div>
+					</RightContainer>
+				</StyledRow>
+			</Wrapper>
     );
   }
 }

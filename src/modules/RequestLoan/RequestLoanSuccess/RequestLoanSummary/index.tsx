@@ -2,72 +2,87 @@ import * as React from 'react';
 import {
 	Row,
 	Col,
-	FormGroup,
-	Label,
-	Input,
-	Button
+	Label
 } from 'reactstrap';
-import './RequestLoanSummary.css';
+import { DebtOrderEntity } from '../../../../models';
+import { amortizationUnitToFrequency } from '../../../../utils';
+import {
+	Wrapper,
+	StyledLabel,
+	GrayContainer,
+	InfoItem,
+	Title,
+	Content,
+	SummaryJsonContainer,
+	StyledTextarea,
+	CopyButton,
+	CopiedMessage
+} from './styledComponents';
 
 interface Props {
-	amount: string;
-	description: string;
-	principle: string;
-	interest: string;
-	repaymentDate: string;
-	repaymentTerms: string;
-	summaryJSON: string;
-	onCopyClipboard: () => void;
+	debtOrder: DebtOrderEntity;
+	termLength: number | undefined;
+	interestRate: number | undefined;
+	amortizationUnit: string;
 }
 
-class RequestLoanSummary extends React.Component<Props, {}> {
+interface State {
+	copied: boolean;
+}
+
+class RequestLoanSummary extends React.Component<Props, State> {
+	private summaryTextarea: HTMLTextAreaElement | null;
+
 	constructor (props: Props) {
 		super(props);
+		this.state = {
+			copied: false
+		};
 		this.handleCopyClipboard = this.handleCopyClipboard.bind(this);
 	}
 
 	handleCopyClipboard() {
-		this.props.onCopyClipboard();
+		this.summaryTextarea!.select();
+		document.execCommand('copy');
+		this.summaryTextarea!.focus();
+		this.setState({ copied: true });
 	}
 
 	render() {
+		const { debtOrder, termLength, interestRate, amortizationUnit } = this.props;
 		const leftInfoItems = [
-			{title: 'AMOUNT', content: this.props.amount},
-			{title: 'PRINCIPLE', content: this.props.principle},
-			{title: 'REPAYMENT DATE', content: this.props.repaymentDate}
+			{title: 'Principal', content: debtOrder.principalAmount.toNumber() + ' ' + debtOrder.principalTokenSymbol},
+			{title: 'Term Length', content: (termLength && amortizationUnit ? termLength + ' ' + amortizationUnit : '-')}
 		];
 		const rightInfoItems = [
-			{title: 'DESCRIPTION', content: this.props.description},
-			{title: 'INTEREST', content: this.props.interest},
-			{title: 'REPAYMENT TERMS', content: this.props.repaymentTerms}
+			{title: 'Interest Rate', content: (interestRate ? interestRate + '%' : '-')},
+			{title: 'Installment Frequency', content: (amortizationUnit ? amortizationUnitToFrequency(amortizationUnit) : '-')}
 		];
 		const leftInfoItemRows = leftInfoItems.map((item) => (
-			<div className="info-item" key={item.title}>
-				<div className="title">
+			<InfoItem key={item.title}>
+				<Title>
 					{item.title}
-				</div>
-				<div className="content">
-					// Some Content
-					{item.content}
-				</div>
-			</div>
+				</Title>
+				<Content>
+					{item.content || 'Some Content'}
+				</Content>
+			</InfoItem>
 		));
 		const rightInfoItemRows = rightInfoItems.map((item) => (
-			<div className="info-item" key={item.title}>
-				<div className="title">
+			<InfoItem key={item.title}>
+				<Title>
 					{item.title}
-				</div>
-				<div className="content">
-					// Some Content
-					{item.content}
-				</div>
-			</div>
+				</Title>
+				<Content>
+					{item.content || 'Some Content'}
+				</Content>
+			</InfoItem>
 		));
 
 		return (
-			<div className="request-loan-summary-container">
-				<Label className="title">Loan request summary</Label>
-				<Row className="gray">
+			<Wrapper>
+				<StyledLabel>Loan request summary</StyledLabel>
+				<GrayContainer>
 					<Row>
 						<Col xs="12" md="6">
 							{leftInfoItemRows}
@@ -75,14 +90,29 @@ class RequestLoanSummary extends React.Component<Props, {}> {
 						<Col xs="12" md="6">
 							{rightInfoItemRows}
 						</Col>
+						<Col xs="12">
+							<InfoItem>
+								<Title>
+									Description
+								</Title>
+								<Content>
+									{debtOrder.description}
+								</Content>
+							</InfoItem>
+						</Col>
 					</Row>
-					<FormGroup className="summary-json-container">
-						<Label for="summary-json">JSON</Label>
-						<Input type="textarea" name="summary-json" value={this.props.summaryJSON} readOnly={true} />
-						<Button className="button" onClick={this.handleCopyClipboard}>Copy</Button>
-					</FormGroup>
-				</Row>
-			</div>
+					<SummaryJsonContainer>
+						<Label>JSON</Label>
+						<StyledTextarea
+							value={JSON.stringify(debtOrder)}
+							readOnly={true}
+							innerRef={(textarea: HTMLTextAreaElement) => { this.summaryTextarea = textarea; }}
+						/>
+						<CopiedMessage>{this.state.copied ? 'Copied!' : ''}</CopiedMessage>
+						<CopyButton onClick={this.handleCopyClipboard}>Copy</CopyButton>
+					</SummaryJsonContainer>
+				</GrayContainer>
+			</Wrapper>
 		);
 	}
 }

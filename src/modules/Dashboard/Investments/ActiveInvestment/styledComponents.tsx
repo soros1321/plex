@@ -69,6 +69,7 @@ export const Url = styled.a`
 	color: #002326;
 	font-size: 15px;
 	line-height: 25px;
+	display: block;
 `;
 
 export const CollectButton = styled.button`
@@ -117,13 +118,39 @@ export const Title = styled.div`
 	text-transform: uppercase;
 `;
 
-export const Schedule = styled.div`
+export const Strikethrough = styled.div`
+	position: relative;
 	display: inline-block;
-	width: 85px;
 	opacity: 0.5;
 
-	&:last-child > div:nth-child(2) {
+	&::before {
+		content: " ";
+		position: absolute;
+		top: -4px;
+		left: 0;
+		border-bottom: 1px solid #FFFFFF;
+		width: 65px;
+	}
+
+	@media only screen and (max-width: 480px) {
+		&::before {
+			top: -5px;
+			width: 46px;
+		}
+	}
+`;
+
+export const Schedule = styled.div`
+	display: inline-block;
+	width: 80px;
+	opacity: 0.5;
+
+	&:last-child > ${Strikethrough} {
 		opacity: 0;
+	}
+
+	&.active {
+		opacity: 1;
 	}
 
 	@media only screen and (max-width: 480px) {
@@ -143,29 +170,6 @@ export const ScheduleIcon = styled.img`
 	@media only screen and (max-width: 480px) {
 		width: 10px;
 	}
-`;
-
-export const Strikethrough = styled.div`
-	position: relative;
-	display: inline-block;
-	opacity: 0.5;
-
-	&:before {
-		content: " ";
-		position: absolute;
-		top: -4px;
-		left: 0;
-		border-bottom: 1px solid #FFFFFF;
-		width: 70px;
-	}
-
-	@media only screen and (max-width: 480px) {
-		&:before {
-			top: -5px;
-			width: 46px;
-		}
-	}
-
 `;
 
 export const PaymentDate = styled.div`

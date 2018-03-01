@@ -1,29 +1,52 @@
 import * as React from 'react';
 import {
-	Row,
-	Col,
-	FormGroup,
-	Label,
-	Input,
-	Button
+	Row
 } from 'reactstrap';
-import './ShareRequestURL.css';
+import {
+	Wrapper,
+	StyledLabel,
+	GrayRow,
+	ImageContainer,
+	IdenticonImage,
+	DetailContainer,
+	ShareButtonsContainer,
+	ShareButton,
+	StyledFormGroup,
+	InputContainer,
+	RequestInput,
+	ButtonContainer,
+	CopyButton,
+	CopiedMessage
+} from './styledComponents';
+const Identicon = require('identicon.js');
 
 interface Props {
-	requestURL: string;
-	onCopyClipboard: () => void;
+	issuanceHash: string | undefined;
+	shortUrl: string;
 	onShareSocial: (socialMediaName: string) => void;
 }
 
-class ShareRequestURL extends React.Component<Props, {}> {
+interface State {
+	copied: boolean;
+}
+
+class ShareRequestURL extends React.Component<Props, State> {
+	private requestInput: HTMLInputElement | null;
+
 	constructor (props: Props) {
 		super(props);
+		this.state = {
+			copied: false
+		};
 		this.handleCopyClipboard = this.handleCopyClipboard.bind(this);
 		this.handleShareSocial = this.handleShareSocial.bind(this);
 	}
 
 	handleCopyClipboard() {
-		this.props.onCopyClipboard();
+		this.requestInput!.select();
+		document.execCommand('copy');
+		this.requestInput!.focus();
+		this.setState({ copied: true });
 	}
 
 	handleShareSocial(socialMediaName: string, e: React.MouseEvent<HTMLDivElement>) {
@@ -37,32 +60,55 @@ class ShareRequestURL extends React.Component<Props, {}> {
 			{name: 'instagram', imgURL: require('../../../../assets/img/logo_instagram.png')}
 		];
 		const socialButtonsRow = socialButtons.map((social) => (
-			<div className="share-button" key={social.name} onClick={(e) => this.handleShareSocial(social.name, e)}>
+			<ShareButton key={social.name} onClick={(e) => this.handleShareSocial(social.name, e)}>
 				<img src={social.imgURL} />
-			</div>
+			</ShareButton>
 		));
+		let identiconData: string = '';
+		if (this.props.issuanceHash) {
+			const identiconOptions = {
+				foreground: [28, 193, 204, 255],
+				background: [255, 255, 255, 255],
+				margin: 0.1,
+				size: 100,
+				format: 'svg'
+			};
+			identiconData = new Identicon(this.props.issuanceHash, identiconOptions).toString();
+		}
 		return (
-			<div className="share-request-url-container">
-				<Label for="request-url">Share your request URL</Label>
-				<Row className="gray">
-					<Col xs="12" md="2" className="image-container" />
-					<Col xs="12" md="10">
-						<div className="share-buttons-container">
+			<Wrapper>
+				<StyledLabel>Share your request URL</StyledLabel>
+				<GrayRow>
+					<ImageContainer>
+					{identiconData && (
+						<IdenticonImage src={'data:image/svg+xml;base64,' + identiconData} />
+					)}
+					</ImageContainer>
+					<DetailContainer>
+						<ShareButtonsContainer>
 							{socialButtonsRow}
-						</div>
-						<FormGroup>
+						</ShareButtonsContainer>
+						<StyledFormGroup>
 							<Row>
-								<Col xs="12" md="8">
-									<Input type="text" name="request-url" className="width-95" value={this.props.requestURL} readOnly={true} />
-								</Col>
-								<Col xs="12" md="4">
-									<Button className="button" type="submit" onClick={this.handleCopyClipboard}>Copy</Button>
-								</Col>
+								<InputContainer>
+									<a href={this.props.shortUrl}>
+										<RequestInput
+											type="text"
+											value={this.props.shortUrl}
+											readOnly={true}
+											innerRef={(input: HTMLInputElement) => { this.requestInput = input; }}
+										/>
+									</a>
+									<CopiedMessage>{this.state.copied ? 'Copied!' : ''}</CopiedMessage>
+								</InputContainer>
+								<ButtonContainer>
+									<CopyButton className="button" type="submit" onClick={this.handleCopyClipboard}>Copy</CopyButton>
+								</ButtonContainer>
 							</Row>
-						</FormGroup>
-					</Col>
-				</Row>
-			</div>
+						</StyledFormGroup>
+					</DetailContainer>
+				</GrayRow>
+			</Wrapper>
 		);
 	}
 }

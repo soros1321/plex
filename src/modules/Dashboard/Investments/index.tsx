@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { InvestmentEntity } from '../../../models';
-import { Header } from '../../../components';
+import { Header, MainWrapper } from '../../../components';
 import { InvestmentsMetrics } from './InvestmentsMetrics';
 import { ActiveInvestment } from './ActiveInvestment';
 import { InvestmentHistory } from './InvestmentHistory';
@@ -22,7 +22,7 @@ class Investments extends React.Component<Props, {}> {
 		});
 
 		return (
-			<div className="main-wrapper">
+			<MainWrapper>
 				<Header title="Your investments" />
 				<InvestmentsMetrics investments={this.props.investments} />
 				{ activeInvestments.map((investment) => (
@@ -30,7 +30,7 @@ class Investments extends React.Component<Props, {}> {
 					))
 				}
 				<InvestmentHistory investments={pastInvestments} />
-			</div>
+			</MainWrapper>
 		);
 	}
 }

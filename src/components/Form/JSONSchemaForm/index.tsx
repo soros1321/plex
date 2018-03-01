@@ -6,6 +6,7 @@ import { ObjectFieldTemplate } from './ObjectFieldTemplate';
 import { FieldTemplate } from './FieldTemplate';
 import { CustomCheckbox } from './CustomCheckbox';
 import { CustomBaseInput } from './CustomBaseInput';
+import { CustomSelectDropdown } from './CustomSelectDropdown';
 import { animateScroll as scroll } from 'react-scroll';
 
 interface FormResponse {
@@ -13,25 +14,29 @@ interface FormResponse {
 }
 
 interface Props {
+	className?: string;
 	schema: JSONSchema4;
 	uiSchema?: {};
 	formData: any;
 	buttonText?: string;
 	onHandleChange: (formData: any) => void;
 	onHandleSubmit: () => void;
+	validate?: (formData: any, errors: any) => any;
 }
 
 const widgets = {
 	CustomCheckbox: CustomCheckbox,
-	BaseInput: CustomBaseInput
+	BaseInput: CustomBaseInput,
+	SelectWidget: CustomSelectDropdown
 };
 
 const paddingTop = 200;
 const fieldClassName = 'field-wrapper';
 const activeClassName = 'active';
+const pressEnterClassName = 'press-enter';
 
 function findAncestor(el: any, cls: string) {
-	if (el.parentElement) {
+	if (el && el.parentElement) {
 		el = el.parentElement;
 		while (!el.classList.contains(cls)) {
 			el = el.parentElement;
@@ -43,26 +48,37 @@ function findAncestor(el: any, cls: string) {
 	return el;
 }
 
-function highlightNextSibling(el: any, cls: string) {
+function highlightNextSibling(el: any) {
 	let parentElm = el.parentNode; // immediate parent
-	const siblings = parentElm.childNodes;
+	let siblings = parentElm.childNodes;
 	let foundCurrentObj: boolean = false;
 	let nextSibling: any = el;
 	let potentialSibling: any = el;
 	let isButton: boolean = false;
+	let siblingInputField: HTMLInputElement | null = null;
+
+	const activeElms = document.querySelectorAll('.' + fieldClassName + '.' + activeClassName);
+	const rootElm = activeElms[0];
+
 	for (let sibling of siblings) {
 		// First we find the current obj
 		if (el === sibling) {
 			foundCurrentObj = true;
+			let pressEnterDivs = el.getElementsByClassName(pressEnterClassName);
+			if (pressEnterDivs.length) {
+				if (pressEnterDivs[0].classList.contains(activeClassName)) {
+					pressEnterDivs[0].classList.remove(activeClassName);
+				}
+			}
 			continue;
 		}
 		if (foundCurrentObj) {
 			// Once we found the current obj in the siblings list
 			// The element with the same classname can be a potential next sibling
-			if (sibling.classList.contains(cls)) {
+			if (sibling.classList.contains(fieldClassName)) {
 				// If we found a match, want to make sure if it has an input field
 				isButton = false;
-				let siblingInputField = sibling.querySelector('input');
+				siblingInputField = sibling.querySelector('input');
 				if (!siblingInputField) {
 					siblingInputField = sibling.querySelector('select');
 				}
@@ -77,7 +93,7 @@ function highlightNextSibling(el: any, cls: string) {
 					if (siblingInputField.disabled) {
 						continue;
 					}
-					potentialSibling = findAncestor(siblingInputField, cls);
+					potentialSibling = findAncestor(siblingInputField, fieldClassName);
 					if (potentialSibling) {
 						siblingInputField.focus();
 						nextSibling = potentialSibling;
@@ -86,6 +102,20 @@ function highlightNextSibling(el: any, cls: string) {
 						if (!isButton) {
 							el.classList.remove(activeClassName);
 						}
+
+						if (!siblingInputField.required || siblingInputField.value && !isButton) {
+							let pressEnterDivs = potentialSibling.getElementsByClassName(pressEnterClassName);
+							if (pressEnterDivs.length) {
+								if (!pressEnterDivs[0].classList.contains(activeClassName)) {
+									pressEnterDivs[0].classList.add(activeClassName);
+								}
+							}
+							// Check if this is the last element, we probably want to highlight the group
+							if (isLastElement(potentialSibling)) {
+								highlightGrandParentPressEnter(potentialSibling, siblingInputField.value, siblingInputField.required);
+							}
+						}
+
 						scroll.scrollTo(potentialSibling.offsetTop - paddingTop);
 						break;
 					}
@@ -96,10 +126,24 @@ function highlightNextSibling(el: any, cls: string) {
 	// If nextSibling is still the same as the original element, we probably need to move a level up
 	if (nextSibling === el) {
 		el.classList.remove(activeClassName);
-		parentElm = findAncestor(el, cls);
+		parentElm = findAncestor(el, fieldClassName);
 		if (parentElm) {
+			const activeChildren = parentElm.querySelectorAll('.' + fieldClassName + '.' + activeClassName);
+			for (let activeChild of activeChildren as any) {
+				activeChild.classList.remove(activeClassName);
+			}
 			// el.classList.remove(activeClassName);
-			highlightNextSibling(parentElm, cls);
+			highlightNextSibling(parentElm);
+		}
+	} else {
+		const grandParentElm = findAncestor(findAncestor(siblingInputField, fieldClassName), fieldClassName);
+		if (grandParentElm && grandParentElm !== rootElm) {
+			siblings = grandParentElm.querySelectorAll('.' + fieldClassName);
+			for (let sibling of siblings as any) {
+				if (!sibling.classList.contains(activeClassName)) {
+					sibling.classList.add(activeClassName);
+				}
+			}
 		}
 	}
 }
@@ -115,8 +159,10 @@ function highlightElement(clickedElm: any) {
 	if (parentElm.classList.contains(activeClassName)) {
 		return;
 	}
+
 	// Removed all active elements
 	const activeElms = document.querySelectorAll('.' + fieldClassName + '.' + activeClassName);
+	const rootElm = activeElms[0];
 	let counter = 0;
 	for (let elm of activeElms as any) {
 		// We don't want to remove root's active class
@@ -126,6 +172,19 @@ function highlightElement(clickedElm: any) {
 		}
 		elm.classList.remove(activeClassName);
 	}
+
+	parentElm.classList.add(activeClassName);
+
+	// Removed all active press enter elements
+	let pressEnterDivs = document.getElementsByClassName(pressEnterClassName);
+	if (pressEnterDivs.length) {
+		for (let pressEnterDiv of pressEnterDivs as any) {
+			if (pressEnterDiv.classList.contains(activeClassName)) {
+				pressEnterDiv.classList.remove(activeClassName);
+			}
+		}
+	}
+
 	let inputField = parentElm.querySelector('input');
 	if (!inputField) {
 		inputField = parentElm.querySelector('select');
@@ -134,19 +193,66 @@ function highlightElement(clickedElm: any) {
 		inputField = parentElm.querySelector('textarea');
 	}
 	if (inputField) {
+		// If the field is disabled, do nothing
+		if (inputField.disabled) {
+			return;
+		}
 		const inputFieldParent = findAncestor(inputField, fieldClassName);
 		if (inputFieldParent) {
 			inputField.focus();
 			inputFieldParent.classList.add(activeClassName);
 			scroll.scrollTo(inputFieldParent.offsetTop - paddingTop);
+
+			if (!inputField.required || inputField.value) {
+				pressEnterDivs = inputFieldParent.getElementsByClassName(pressEnterClassName);
+				if (pressEnterDivs.length) {
+					if (!pressEnterDivs[0].classList.contains(activeClassName)) {
+						pressEnterDivs[0].classList.add(activeClassName);
+					}
+				}
+				// Check if this is the last element, we probably want to highlight the group
+				if (isLastElement(inputFieldParent)) {
+					highlightGrandParentPressEnter(inputFieldParent, inputField.value, inputField.required);
+				}
+			}
 		}
 	}
-	parentElm.classList.add(activeClassName);
 
 	// We need to highlight the grandparent as well (Especially for grouped fields)
-	const grandParentElm = findAncestor(parentElm, fieldClassName);
-	if (grandParentElm) {
+	const grandParentElm = findAncestor(findAncestor(inputField, fieldClassName), fieldClassName);
+	if (grandParentElm && grandParentElm !== rootElm) {
 		grandParentElm.classList.add(activeClassName);
+
+		// If this is actually a grouped field, it should have siblings
+		// and we want to highlight the sibligs as well
+		const siblings = grandParentElm.querySelectorAll('.' + fieldClassName);
+		for (let sibling of siblings as any) {
+			if (!sibling.classList.contains(activeClassName)) {
+				sibling.classList.add(activeClassName);
+			}
+		}
+	}
+}
+
+function isLastElement(el: any) {
+	const siblings = el.parentNode.childNodes;
+	if (el === siblings[siblings.length - 1]) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+function highlightGrandParentPressEnter(elm: any, value: any, required: boolean) {
+	let grandParentElm = findAncestor(elm, fieldClassName);
+	if (grandParentElm) {
+		let pressEnterDivs = grandParentElm.getElementsByClassName(pressEnterClassName);
+		// Display the last pressEnterDivs elm
+		if (!required || (value && pressEnterDivs.length)) {
+			pressEnterDivs[pressEnterDivs.length - 1].classList.add(activeClassName);
+		} else {
+			pressEnterDivs[pressEnterDivs.length - 1].classList.remove(activeClassName);
+		}
 	}
 }
 
@@ -157,13 +263,15 @@ class JSONSchemaForm extends React.Component<Props, {}> {
 		this.handleSubmit = this.handleSubmit.bind(this);
 		this.handleError = this.handleError.bind(this);
 		this.handleScroll = this.handleScroll.bind(this);
-		this.handleKeypress = this.handleKeypress.bind(this);
+		this.handleKeyPress = this.handleKeyPress.bind(this);
+		this.handleKeyUp = this.handleKeyUp.bind(this);
 		this.handleClick = this.handleClick.bind(this);
 	}
 
 	componentDidMount() {
 		window.addEventListener('scroll', this.handleScroll);
-		window.addEventListener('keypress', this.handleKeypress);
+		window.addEventListener('keypress', this.handleKeyPress);
+		window.addEventListener('keyup', this.handleKeyUp);
 		window.addEventListener('click', this.handleClick);
 
 		// Always set the root element as active
@@ -186,7 +294,9 @@ class JSONSchemaForm extends React.Component<Props, {}> {
 
 	componentWillUnmount() {
 		window.removeEventListener('scroll', this.handleScroll);
-		window.removeEventListener('keypress', this.handleKeypress);
+		window.removeEventListener('keypress', this.handleKeyPress);
+		window.removeEventListener('keyup', this.handleKeyUp);
+		window.removeEventListener('click', this.handleClick);
 	}
 
 	handleChange(response: FormResponse) {
@@ -221,7 +331,7 @@ class JSONSchemaForm extends React.Component<Props, {}> {
 		*/
 	}
 
-	handleKeypress(event: any) {
+	handleKeyPress(event: any) {
 		if (event! && event!.key! && event!.path! && event.key === 'Enter' && (event.path[0].nodeName === 'INPUT' || event.path[0].nodeName === 'SELECT' || event.path[0].nodeName === 'TEXTAREA')) {
 			event.preventDefault();
 			let value: any = '';
@@ -241,7 +351,32 @@ class JSONSchemaForm extends React.Component<Props, {}> {
 			}
 			const parentElm = findAncestor(event.path[0], fieldClassName);
 			if (parentElm) {
-				highlightNextSibling(parentElm, fieldClassName);
+				highlightNextSibling(parentElm);
+			}
+		}
+	}
+
+	handleKeyUp(event: any) {
+		if (event! && event!.key! && event!.path! && event.key !== 'Enter' && (event.srcElement.nodeName === 'INPUT' || event.srcElement.nodeName === 'SELECT' || event.srcElement.nodeName === 'TEXTAREA')) {
+			let value: any = '';
+			switch (event.srcElement.nodeName) {
+				case 'INPUT':
+				case 'TEXTAREA':
+					value = event.srcElement.value;
+					break;
+				case 'SELECT':
+					value = event.srcElement.options[event.srcElement.selectedIndex].value;
+					break;
+				default:
+					break;
+			}
+			if (event.key === 'Tab') {
+				highlightElement(event.path[0]);
+			} else {
+				const parentElm = findAncestor(event.srcElement, fieldClassName);
+				if (parentElm && isLastElement(parentElm)) {
+					highlightGrandParentPressEnter(parentElm, value, event.srcElement.required);
+				}
 			}
 		}
 	}
@@ -255,6 +390,8 @@ class JSONSchemaForm extends React.Component<Props, {}> {
 	render() {
 		return (
 			<StyledForm
+				autocomplete="off"
+				className={this.props.className}
 				schema={this.props.schema}
 				uiSchema={this.props.uiSchema}
 				formData={this.props.formData}
@@ -265,8 +402,9 @@ class JSONSchemaForm extends React.Component<Props, {}> {
 				FieldTemplate={FieldTemplate}
 				showErrorList={false}
 				widgets={widgets}
+				validate={this.props.validate}
 			>
-				<FieldWrapper className="field-wrapper">
+				<FieldWrapper className="field-wrapper button-container">
 					<Button type="submit" className="button">{this.props.buttonText || 'Submit'}</Button>
 				</FieldWrapper>
 			</StyledForm>
