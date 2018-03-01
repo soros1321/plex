@@ -109,6 +109,7 @@ class AppRouter extends React.Component<Props, {}> {
 						<Route path="loan" component={FillLoanEnteredContainer} />
 					</Route>
 					<Route path="/test" component={TestForm} />
+					<Route path="/terms" component={DefaultContent} />
 				</Route>
 			</Router>
 		);

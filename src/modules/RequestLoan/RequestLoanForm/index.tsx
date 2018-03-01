@@ -149,7 +149,7 @@ class RequestLoanForm extends React.Component<{}, States> {
 									</Row>
 								</FormGroup>
 								<div className="margin-top-30">
-									<Checkbox name="collateralized" prepend="request" label="Collateralized" onChange={this.handleCollateralizedChange} checked={this.state.collateralized} />
+									<Checkbox name="collateralized" prepend="request" label={<span>Collateralized</span>} onChange={this.handleCollateralizedChange} checked={this.state.collateralized} />
 								</div>
 								<SmallDescription description={'A quick, layman\'s definition of what collateralized means and why it\'s a smart idea goes here.'} />
 								<FormGroup className="margin-top-30">

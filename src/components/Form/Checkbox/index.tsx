@@ -1,13 +1,13 @@
 import * as React from 'react';
 import {
 	FormGroup,
-	Label,
 	Input
 } from 'reactstrap';
+import { CheckboxLabel, Checkmark } from './styledComponents';
 
 interface Props {
 	name: string;
-	label: string;
+	label: JSX.Element;
 	prepend?: string;
 	checked: boolean;
 	onChange: (checked: boolean) => void;
@@ -27,11 +27,11 @@ class Checkbox extends React.Component<Props, {}> {
 		return (
 			<div>
 				<FormGroup check={true}>
-					<Label className="checkbox-container" check={true}>
+					<CheckboxLabel check={true}>
 						{this.props.label}
 						<Input type="checkbox" name={this.props.name} id={this.props.prepend ? this.props.prepend + '-' + this.props.name : this.props.name}  checked={this.props.checked} onChange={this.handleChange} />{' '}
-						<span className="checkmark" />
-					</Label>
+						<Checkmark />
+					</CheckboxLabel>
 				</FormGroup>
 			</div>
 		);

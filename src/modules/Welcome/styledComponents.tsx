@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { StyledButton } from '../../components';
+import { StyledButton, Checkbox } from '../../components';
 
 export const BannerContainer = styled.div`
 	background: rgba(37,72,101,1);
@@ -40,6 +40,7 @@ export const Description = styled.div`
 `;
 
 export const ButtonContainer = styled.div`
+	margin-top: 30px;
 `;
 
 export const SkipButton = styled(StyledButton)`
@@ -57,11 +58,11 @@ export const SkipButton = styled(StyledButton)`
 `;
 
 export const NextButton = styled(StyledButton)`
-	width: 49%;
-	margin-left: 1%;
-
 	@media only screen and (max-width: 480px) {
 		width: 100%;
 		margin-bottom: 10px;
 	}
+`;
+
+export const agreeCheckbox = styled(Checkbox)`
 `;
