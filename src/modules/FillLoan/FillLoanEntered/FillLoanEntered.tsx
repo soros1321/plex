@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Link, browserHistory } from 'react-router';
+import { Link } from 'react-router';
 import { amortizationUnitToFrequency, shortenString } from '../../../utils';
 import { PaperLayout } from '../../../layouts';
 import {
@@ -24,6 +24,8 @@ import * as Web3 from 'web3';
 import Dharma from '@dharmaprotocol/dharma.js';
 import { DebtOrder } from '@dharmaprotocol/dharma.js/dist/types/src/types';
 import { BigNumber } from 'bignumber.js';
+import { TokenEntity } from '../../../models';
+import { Error as ErrorComponent } from '../../../components/Error/Error';
 
 interface DebtOrderWithDescription extends DebtOrder {
 	description?: string;
@@ -34,6 +36,7 @@ interface Props {
 	web3: Web3;
 	accounts: string[];
 	dharma: Dharma;
+	tokens: TokenEntity[];
 }
 
 interface States {
@@ -44,6 +47,7 @@ interface States {
 	termLength: BigNumber | undefined;
 	amortizationUnit: string;
 	principalTokenSymbol: string;
+	errorMessage: string;
 }
 
 class FillLoanEntered extends React.Component<Props, States> {
@@ -57,11 +61,13 @@ class FillLoanEntered extends React.Component<Props, States> {
 			interestRate: undefined,
 			termLength: undefined,
 			amortizationUnit: '',
-			principalTokenSymbol: ''
+			principalTokenSymbol: '',
+			errorMessage: ''
 		};
 		this.confirmationModalToggle = this.confirmationModalToggle.bind(this);
 		this.successModalToggle = this.successModalToggle.bind(this);
 		this.handleFillOrder = this.handleFillOrder.bind(this);
+		this.validateFillOrder = this.validateFillOrder.bind(this);
 		this.getDebtOrderDetail(this.props.dharma, this.props.location.query);
 	}
 
@@ -109,41 +115,45 @@ class FillLoanEntered extends React.Component<Props, States> {
 		});
 	}
 
+	validateFillOrder() {
+		const { debtOrderWithDescription } = this.state;
+		const { tokens } = this.props;
+
+		this.setState({
+			errorMessage: ''
+		});
+		if (debtOrderWithDescription.principalToken && tokens.length) {
+			for (let token of tokens) {
+				if (debtOrderWithDescription.principalToken === token.address && !token.tradingPermitted) {
+					this.setState({
+						errorMessage: token.tokenSymbol + ' is currently disabled for trading'
+					});
+					return;
+				}
+			}
+		}
+
+		this.confirmationModalToggle();
+	}
+
 	async handleFillOrder() {
 		try {
+			this.setState({ errorMessage: '' });
 			const { dharma, accounts } = this.props;
 			const { debtOrderWithDescription } = this.state;
 
 			debtOrderWithDescription.creditor = accounts[0];
 			const response = await dharma.order.fillAsync(debtOrderWithDescription);
+
 			console.log(response);
-			/*
-			const { dharma } = this.props;
-			const simpleInterestLoan = {
-				principalAmount: new BigNumber(this.state.principalAmount),
-				principalToken: this.state.principalToken,
-				interestRate: new BigNumber(this.state.interestRate),
-				amortizationUnit: this.state.amortizationUnit,
-				termLength: new BigNumber(this.state.termLength)
-			};
-			const debtOrder = await dharma.adapters.simpleInterestLoan.toDebtOrder(simpleInterestLoan);
-			debtOrder.debtor = this.props.accounts[0];
-			// debtOrder.debtorSignature = this.state.debtorSignature;
-
-			// Sign as creditor
-			debtOrder.creditor = this.props.accounts[0];
-
-			const creditorSignature = await this.props.dharma.sign.asCreditor(debtOrder);
-			const signedDebtOrder = Object.assign({ creditorSignature }, debtOrder);
-			console.log(signedDebtOrder);
-			const response = await dharma.order.fillAsync(signedDebtOrder);
-
-			// Sign as debtor
-			// const signedDebtOrder = Object.assign({ this.state.debtorSignature }, debtOrder);
-			console.log(response);
-			*/
+			this.successModalToggle();
 		} catch (e) {
+			this.setState({
+				errorMessage: 'Unable to fill this Debt Order',
+				confirmationModal: false
+			});
 			console.log(e);
+			return;
 		}
 	}
 
@@ -152,9 +162,6 @@ class FillLoanEntered extends React.Component<Props, States> {
 			confirmationModal: false,
 			successModal: !this.state.successModal
 		});
-		if (this.state.successModal) {
-			browserHistory.push('/dashboard');
-		}
 	}
 
 	render() {
@@ -204,6 +211,7 @@ class FillLoanEntered extends React.Component<Props, States> {
 		);
 		return (
 			<PaperLayout>
+				<ErrorComponent errorMessage={this.state.errorMessage} />
 				<MainWrapper>
 					<Header title={'Fill a loan'} description={descriptionContent} />
 					<LoanInfoContainer>
@@ -228,7 +236,7 @@ class FillLoanEntered extends React.Component<Props, States> {
 						<Link to="/fill">
 							<DeclineButton>Decline</DeclineButton>
 						</Link>
-						<FillLoanButton onClick={this.confirmationModalToggle}>Fill Loan</FillLoanButton>
+						<FillLoanButton onClick={this.validateFillOrder}>Fill Loan</FillLoanButton>
 					</ButtonContainer>
 					<ConfirmationModal modal={this.state.confirmationModal} title="Please confirm" content={confirmationModalContent} onToggle={this.confirmationModalToggle} onSubmit={this.handleFillOrder} closeButtonText="Cancel" submitButtonText="Fill Order" />
 					<SuccessModal modal={this.state.successModal} onToggle={this.successModalToggle} debtorSignature={debtOrder.debtorSignature ? debtOrder.debtorSignature.r : ''} />
