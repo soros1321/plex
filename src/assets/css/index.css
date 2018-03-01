@@ -204,6 +204,9 @@ label.radio-container .checkmark:after {
 	box-shadow: none;
 	border: 1px solid #000000;
 }
+button:focus {
+	outline: none;
+}
 .margin-top-10 {
 	margin-top: 10px;
 }
