@@ -7,9 +7,10 @@ import {
 	Header,
 	Description,
 	ButtonContainer,
-	NextButton
+	NextButton,
+	StyledLink
 } from './styledComponents';
-import { Link, browserHistory } from 'react-router';
+import { browserHistory } from 'react-router';
 
 interface State {
 	agreeToTermsOfUse: boolean;
@@ -45,7 +46,7 @@ class Welcome extends React.Component<{}, State> {
 	render() {
 		const checkboxLabel = (
 			<span>
-				I have read and agree to the <Link to="/terms">Terms of Use</Link>.
+				I have read and agree to the <StyledLink to="/terms">Terms of Use</StyledLink>.
 			</span>
 		);
 		return (

@@ -1,5 +1,6 @@
 import styled from 'styled-components';
-import { StyledButton, Checkbox } from '../../components';
+import { StyledButton } from '../../components';
+import { Link } from 'react-router';
 
 export const BannerContainer = styled.div`
 	background: rgba(37,72,101,1);
@@ -64,5 +65,9 @@ export const NextButton = styled(StyledButton)`
 	}
 `;
 
-export const agreeCheckbox = styled(Checkbox)`
+export const StyledLink = styled(Link)`
+	color: #002326;
+	font-family: DIN-Bold;
+	font-size: 17px;
+	line-height: 25px;
 `;
