@@ -1219,62 +1219,47 @@
     "version": "0.4.18+commit.9cf6e910.Emscripten.clang"
   },
   "networks": {
-    "1519023369037": {
+    "70": {
       "events": {},
       "links": {},
-      "address": "0xd5b7a6cb2966cc0e15d4609d8459bac6e9553f90"
+      "address": "0xb341b08f3bde064d6226ecd442234d44e2ae94ac"
     },
-    "1519081537659": {
+    "1519003090541": {
       "events": {},
       "links": {},
-      "address": "0x78913faa39f4f17761c98fdd688f5e976fd73832"
+      "address": "0x3f197c19d32d9da6f33aae2e5b8a831d956f24f2"
     },
-    "1519092115748": {
+    "1519344944765": {
       "events": {},
       "links": {},
-      "address": "0x0cfd8ebe4c1dc457a44186dbde8711235ece6f13"
+      "address": "0x1b5a8ce0559a8fecd952a44698e36f660b740bbc"
     },
-    "1519167888776": {
+    "1519622387937": {
       "events": {},
       "links": {},
-      "address": "0x05d58f7fad6833e0105d7e375cc9a6f91f1c0d2e"
+      "address": "0x44cd819e40f995a3979742cbd7e28cdfe689061a"
     },
-    "1519254851320": {
+    "1519623928552": {
       "events": {},
       "links": {},
-      "address": "0xb660bc5748b71a05757af3306106c16865a7155d"
+      "address": "0x13c55356cbd9e768613f895bcf4bbb7dd45d8776"
     },
-    "1519340795681": {
+    "1519713667674": {
       "events": {},
       "links": {},
-      "address": "0xccd0ecd77bd88708d6a9db04c0c5109b94b1fa7b"
+      "address": "0x6a42f0d4c18b4015a8ae488a59cf16522f96a7c6"
     },
-    "1519599697517": {
+    "1519797921707": {
       "events": {},
       "links": {},
-      "address": "0x0812640f40127c704a00755602076bdb01e097a7"
+      "address": "0x160fa363a18e61425f78d3f45e944bb2fa9197f7"
     },
-    "1519686484987": {
+    "1519949077089": {
       "events": {},
       "links": {},
-      "address": "0x5e3c1a818bb102258d4cc44ea759c4f4b9facf93"
-    },
-    "1519773174855": {
-      "events": {},
-      "links": {},
-      "address": "0x62325c8a8f584377f805e31812d53799a8952ae4"
-    },
-    "1519829062158": {
-      "events": {},
-      "links": {},
-      "address": "0x3b1c2b75ec38cd0ca52b33db2a43d9400d306399"
-    },
-    "1519859181147": {
-      "events": {},
-      "links": {},
-      "address": "0x3b1c2b75ec38cd0ca52b33db2a43d9400d306399"
+      "address": "0x8089d7af33cb20b997983cca153ede1ea648f103"
     }
   },
   "schemaVersion": "1.0.1",
-  "updatedAt": "2018-03-01T00:15:48.940Z"
+  "updatedAt": "2018-03-02T00:05:55.490Z"
 }
