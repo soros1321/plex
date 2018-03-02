@@ -51,10 +51,8 @@ class LeftNavBar extends React.Component {
 					<Row>
 						{linkItems}
 					</Row>
-					<Row>
-						<TradingPermissionsContainer />
-					</Row>
 				</Nav>
+				<TradingPermissionsContainer className="left" />
 			</Wrapper>
 		);
 	}

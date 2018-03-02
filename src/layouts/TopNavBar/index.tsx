@@ -12,6 +12,7 @@ import {
 	StyledNavItem,
 	StyledLink
 } from './styledComponents';
+import { TradingPermissionsContainer } from '../../components';
 
 interface TopNavBarState {
 	isOpen: boolean;
@@ -56,6 +57,7 @@ class TopNavBar extends React.Component<{}, TopNavBarState> {
 						<Nav className="ml-auto" navbar={true}>
 							{linkItems}
 						</Nav>
+						<TradingPermissionsContainer />
 					</Collapse>
 				</Navbar>
 			</Wrapper>

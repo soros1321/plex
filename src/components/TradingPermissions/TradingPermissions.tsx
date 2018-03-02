@@ -1,9 +1,4 @@
 import * as React from 'react';
-import {
-	Row,
-	Col,
-	NavItem
-} from 'reactstrap';
 import { Toggle } from '../Toggle';
 import * as Web3 from 'web3';
 import Dharma from '@dharmaprotocol/dharma.js';
@@ -23,6 +18,7 @@ interface Props {
 	tokens: TokenEntity[];
 	handleSetAllTokensTradingPermission: (tokens: TokenEntity[]) => void;
 	handleToggleTokenTradingPermission: (tokenSymbol: string, permission: boolean) => void;
+	className?: string;
 }
 
 class TradingPermissions extends React.Component<Props, {}> {
@@ -135,26 +131,20 @@ class TradingPermissions extends React.Component<Props, {}> {
 				</div>
 			);
 			tokenItems.push(
-				<Col xs="4" md="12" key={token.tokenSymbol}>
-					<NavItem>
-						<Toggle
-							name={token.tokenSymbol}
-							label={tokenLabel}
-							checked={token.tradingPermitted}
-							onChange={() => this.updateProxyAllowanceAsync(token.tradingPermitted, token.tokenSymbol)}
-						/>
-					</NavItem>
-				</Col>
+				<Toggle
+					name={token.tokenSymbol}
+					label={tokenLabel}
+					checked={token.tradingPermitted}
+					onChange={() => this.updateProxyAllowanceAsync(token.tradingPermitted, token.tokenSymbol)}
+				/>
 			);
 		}
 
 		return (
-			<Row>
-				<TradingPermissionsContainer>
-					<TradingPermissionsTitle>{'Trading Permissions'}</TradingPermissionsTitle>
-					{tokenItems}
-				</TradingPermissionsContainer>
-			</Row>
+			<TradingPermissionsContainer className={this.props.className}>
+				<TradingPermissionsTitle>{'Trading Permissions'}</TradingPermissionsTitle>
+				{tokenItems}
+			</TradingPermissionsContainer>
 		);
 	}
 }
