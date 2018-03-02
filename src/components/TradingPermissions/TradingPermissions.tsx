@@ -136,6 +136,7 @@ class TradingPermissions extends React.Component<Props, {}> {
 					label={tokenLabel}
 					checked={token.tradingPermitted}
 					onChange={() => this.updateProxyAllowanceAsync(token.tradingPermitted, token.tokenSymbol)}
+					key={token.tokenSymbol}
 				/>
 			);
 		}
