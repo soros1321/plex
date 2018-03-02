@@ -6,8 +6,8 @@ export const encodeUrlParams = (params: any) => {
 };
 
 export const shortenString = (text: string) => {
-	if (text && text.length > 6) {
-		return text.substring(0, 1) + '...' + text.substring(text.length - 5);
+	if (text && text.length > 10) {
+		return text.substring(0, 5) + '...' + text.substring(text.length - 5);
 	} else {
 		return text;
 	}
