@@ -7,7 +7,8 @@ import {
 	TradingPermissionsContainer,
 	TradingPermissionsTitle,
 	TokenSymbol,
-	TokenBalance
+	TokenBalance,
+	FaucetButton
 } from './styledComponents';
 import { TokenEntity } from '../../models';
 const promisify = require('tiny-promisify');
@@ -26,6 +27,7 @@ class TradingPermissions extends React.Component<Props, {}> {
 		super(props);
 		this.getTokenAllowance = this.getTokenAllowance.bind(this);
 		this.updateProxyAllowanceAsync = this.updateProxyAllowanceAsync.bind(this);
+		this.handleFaucet = this.handleFaucet.bind(this);
 		this.getTokenData(this.props.dharma);
 	}
 
@@ -73,7 +75,8 @@ class TradingPermissions extends React.Component<Props, {}> {
 		for (let tokenSymbol of tokenSymbols) {
 			const address = await tokenRegistry.getTokenAddress.callAsync(tokenSymbol);
 			const tradingPermitted = this.isAllowanceUnlimited(await this.getTokenAllowance(address));
-			const balance = await this.getTokenBalance(address);
+			let balance = await this.getTokenBalance(address);
+			// balance = tokenSymbol !== 'REP' ? new BigNumber(0) : balance;
 			allTokens.push({
 				address,
 				tokenSymbol: tokenSymbol,
@@ -116,6 +119,10 @@ class TradingPermissions extends React.Component<Props, {}> {
 		return tokenAllowance.equals((new BigNumber(2)).pow(256).minus(new BigNumber(1)));
 	}
 
+	handleFaucet(tokenAddress: string) {
+		console.log(tokenAddress);
+	}
+
 	render() {
 		if (!this.props.tokens || !this.props.tokens.length) {
 			return null;
@@ -127,7 +134,10 @@ class TradingPermissions extends React.Component<Props, {}> {
 			const tokenLabel = (
 				<div>
 					<TokenSymbol>{token.tokenSymbol}</TokenSymbol>
-					<TokenBalance>({web3.fromWei(token.balance.toString(), 'ether')})</TokenBalance>
+					{token.balance.gt(0)
+						? <TokenBalance>({web3.fromWei(token.balance.toString(), 'ether')})</TokenBalance>
+						: <FaucetButton onClick={(e) => this.handleFaucet(token.address)}>Faucet</FaucetButton>
+					}
 				</div>
 			);
 			tokenItems.push(

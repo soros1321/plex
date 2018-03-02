@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 
 export const ToggleLabel = styled.label`
-  display: flex;
-  align-items: center;
+  display: inline-block;
+	vertical-align: middle;
   padding: 5px 0px;
   opacity: 1;
 
@@ -19,5 +19,5 @@ export const ToggleName = styled.div`
   font-weight: bold;
   line-height: 25px;
   margin-left: 10px;
-  opacity: 0.5;
+  opacity: 1;
 `;

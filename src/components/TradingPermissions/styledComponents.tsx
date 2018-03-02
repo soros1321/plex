@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { StyledButton } from '../StyledComponents';
 
 export const TradingPermissionsContainer = styled.div`
 	width: inherit;
@@ -28,8 +29,19 @@ export const TradingPermissionsTitle = styled.div`
 export const TokenSymbol = styled.div`
 	display: inline-block;
 	width: 32px;
+	opacity: 0.5;
 `;
 
 export const TokenBalance = styled.div`
 	display: inline-block;
+	opacity: 0.5;
+`;
+
+export const FaucetButton = StyledButton.extend`
+	margin-left: 5px;
+	display: inline-block;
+	font-size: 10px !important;
+	padding: 10px 15px !important;
+	min-width: auto !important;
+	line-height: 4px !important;
 `;

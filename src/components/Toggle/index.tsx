@@ -34,15 +34,15 @@ class Toggle extends React.Component<Props, State> {
   render() {
     return (
       <div>
+				<ReactToggle
+					checked={this.props.checked}
+					disabled={this.state.disabled}
+					icons={false}
+					id={this.props.prepend ? this.props.prepend + '-' + this.props.name : this.props.name}
+					name={this.props.name}
+					onChange={this.handleChange}
+				/>
         <ToggleLabel>
-          <ReactToggle
-            checked={this.props.checked}
-            disabled={this.state.disabled}
-            icons={false}
-            id={this.props.prepend ? this.props.prepend + '-' + this.props.name : this.props.name}
-            name={this.props.name}
-            onChange={this.handleChange}
-          />
           <ToggleName>{this.props.label}</ToggleName>
         </ToggleLabel>
       </div>
