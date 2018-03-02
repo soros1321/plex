@@ -25,7 +25,6 @@ import Dharma from '@dharmaprotocol/dharma.js';
 import { DebtOrder } from '@dharmaprotocol/dharma.js/dist/types/src/types';
 import { BigNumber } from 'bignumber.js';
 import { TokenEntity } from '../../../models';
-import { Error as ErrorComponent } from '../../../components/Error/Error';
 
 interface DebtOrderWithDescription extends DebtOrder {
 	description?: string;
@@ -37,6 +36,7 @@ interface Props {
 	accounts: string[];
 	dharma: Dharma;
 	tokens: TokenEntity[];
+	handleSetError: (errorMessage: string) => void;
 }
 
 interface States {
@@ -47,7 +47,6 @@ interface States {
 	termLength: BigNumber | undefined;
 	amortizationUnit: string;
 	principalTokenSymbol: string;
-	errorMessage: string;
 }
 
 class FillLoanEntered extends React.Component<Props, States> {
@@ -61,8 +60,7 @@ class FillLoanEntered extends React.Component<Props, States> {
 			interestRate: undefined,
 			termLength: undefined,
 			amortizationUnit: '',
-			principalTokenSymbol: '',
-			errorMessage: ''
+			principalTokenSymbol: ''
 		};
 		this.confirmationModalToggle = this.confirmationModalToggle.bind(this);
 		this.successModalToggle = this.successModalToggle.bind(this);
@@ -119,15 +117,11 @@ class FillLoanEntered extends React.Component<Props, States> {
 		const { debtOrderWithDescription } = this.state;
 		const { tokens } = this.props;
 
-		this.setState({
-			errorMessage: ''
-		});
+		this.props.handleSetError('');
 		if (debtOrderWithDescription.principalToken && tokens.length) {
 			for (let token of tokens) {
 				if (debtOrderWithDescription.principalToken === token.address && !token.tradingPermitted) {
-					this.setState({
-						errorMessage: token.tokenSymbol + ' is currently disabled for trading'
-					});
+					this.props.handleSetError(token.tokenSymbol + ' is currently disabled for trading');
 					return;
 				}
 			}
@@ -138,7 +132,7 @@ class FillLoanEntered extends React.Component<Props, States> {
 
 	async handleFillOrder() {
 		try {
-			this.setState({ errorMessage: '' });
+			this.props.handleSetError('');
 			const { dharma, accounts } = this.props;
 			const { debtOrderWithDescription } = this.state;
 
@@ -148,8 +142,8 @@ class FillLoanEntered extends React.Component<Props, States> {
 			console.log(response);
 			this.successModalToggle();
 		} catch (e) {
+			this.props.handleSetError('Unable to fill this Debt Order');
 			this.setState({
-				errorMessage: 'Unable to fill this Debt Order',
 				confirmationModal: false
 			});
 			console.log(e);
@@ -211,7 +205,6 @@ class FillLoanEntered extends React.Component<Props, States> {
 		);
 		return (
 			<PaperLayout>
-				<ErrorComponent errorMessage={this.state.errorMessage} />
 				<MainWrapper>
 					<Header title={'Fill a loan'} description={descriptionContent} />
 					<LoanInfoContainer>

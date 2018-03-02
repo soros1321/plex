@@ -1,5 +1,6 @@
 import { connect } from 'react-redux';
 import { FillLoanEntered } from './FillLoanEntered';
+import { setError } from '../../../common/actions';
 
 const mapStateToProps = (state: any) => {
 	return {
@@ -12,6 +13,7 @@ const mapStateToProps = (state: any) => {
 
 const mapDispatchToProps = (dispatch: any) => {
 	return {
+		handleSetError: (errorMessage: string) => dispatch(setError(errorMessage))
 	};
 };
 

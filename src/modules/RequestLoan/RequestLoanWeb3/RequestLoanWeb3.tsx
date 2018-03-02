@@ -14,7 +14,6 @@ import * as Web3 from 'web3';
 import Dharma from '@dharmaprotocol/dharma.js';
 import { DebtOrder } from '@dharmaprotocol/dharma.js/dist/types/src/types';
 import { BigNumber } from 'bignumber.js';
-import { Error as ErrorComponent } from '../../../components/Error/Error';
 import { encodeUrlParams } from '../../../utils';
 const BitlyClient = require('bitly');
 
@@ -23,6 +22,7 @@ interface Props {
 	accounts: string[];
 	dharma: Dharma;
 	handleRequestDebtOrder: (debtOrder: DebtOrderEntity) => void;
+	handleSetError: (errorMessage: string) => void;
 }
 
 interface DebtOrderWithDescriptionIssuanceHash extends DebtOrder {
@@ -37,7 +37,6 @@ interface State {
 	interestRate: number;
 	debtOrder: string;
 	confirmationModal: boolean;
-	errorMessage: string;
 }
 
 class RequestLoanWeb3 extends React.Component<Props, State> {
@@ -55,8 +54,7 @@ class RequestLoanWeb3 extends React.Component<Props, State> {
 			principalTokenSymbol: '',
 			interestRate: 0,
 			debtOrder: '',
-			confirmationModal: false,
-			errorMessage: ''
+			confirmationModal: false
 		};
 	}
 
@@ -71,7 +69,7 @@ class RequestLoanWeb3 extends React.Component<Props, State> {
 
 	async handleSubmit() {
 		try {
-			this.setState({ errorMessage: '' });
+			this.props.handleSetError('');
 			const { principalAmount, principalTokenSymbol, description } = this.state.formData.loan;
 			const { interestRate, amortizationUnit, termLength } = this.state.formData.terms;
 			const dharma = this.props.dharma;
@@ -97,7 +95,7 @@ class RequestLoanWeb3 extends React.Component<Props, State> {
 			this.setState({ debtOrder: JSON.stringify(debtOrderWithDescriptionIssuanceHash) });
 			this.confirmationModalToggle();
 		} catch (e) {
-			this.setState({ errorMessage: 'Unable to generate Debt Order' });
+			this.props.handleSetError('Unable to generate Debt Order');
 			window.scrollTo(0, 0);
 			return;
 		}
@@ -105,9 +103,9 @@ class RequestLoanWeb3 extends React.Component<Props, State> {
 
 	async handleSignDebtOrder() {
 		try {
-			this.setState({ errorMessage: '' });
+			this.props.handleSetError('');
 			if (!this.state.debtOrder) {
-				this.setState({ errorMessage: 'No Debt Order has been generated yet' });
+				this.props.handleSetError('No Debt Order has been generated yet');
 				window.scrollTo(0, 0);
 				return;
 			}
@@ -159,8 +157,8 @@ class RequestLoanWeb3 extends React.Component<Props, State> {
 			this.props.handleRequestDebtOrder(storeDebtOrder);
 			browserHistory.push(`/request/success/${storeDebtOrder.debtorSignature}`);
 		} catch (e) {
+			this.props.handleSetError('Unable to sign Debt Order');
 			this.setState({
-				errorMessage: 'Unable to sign Debt Order',
 				confirmationModal: false
 			});
 			window.scrollTo(0, 0);
@@ -190,7 +188,6 @@ class RequestLoanWeb3 extends React.Component<Props, State> {
 		const descriptionContent = <span>Here's a quick description of what a debt order is and why you should request one.</span>;
 		return (
 			<PaperLayout>
-				<ErrorComponent errorMessage={this.state.errorMessage} />
 				<MainWrapper>
 					<Header title={'Request a loan'} description={descriptionContent} />
 					<JSONSchemaForm

@@ -3,7 +3,7 @@ import { Router, Route, IndexRoute, browserHistory } from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux';
 import App from '../App';
 import {
-	Welcome,
+	WelcomeContainer,
 	FillLoanEmpty,
 	DefaultContent,
 	TestForm,
@@ -14,7 +14,7 @@ import {
 } from '../modules';
 import { ParentContainer } from '../layouts';
 import * as Web3 from 'web3';
-import { web3Connected, dharmaInstantiated, setAccounts, setError } from './actions';
+import { web3Connected, dharmaInstantiated, setAccounts, setError } from '../common/actions';
 const promisify = require('tiny-promisify');
 
 // Import Dharma libraries
@@ -92,7 +92,7 @@ class AppRouter extends React.Component<Props, {}> {
 		return (
 			<Router history={history}>
 				<Route path="/" component={App} >
-					<IndexRoute component={Welcome} />
+					<IndexRoute component={WelcomeContainer} />
 					<Route path="/bazaar" component={DefaultContent} />
 					<Route path="/whitepaper" component={DefaultContent} />
 					<Route path="/blog" component={DefaultContent} />

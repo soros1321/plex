@@ -1,4 +1,4 @@
-import { actionsEnums } from '../common/actionsEnums';
+import { actionsEnums } from './actionsEnums';
 
 export const web3Connected = (web3: any) => {
 	return {
@@ -23,7 +23,7 @@ export const setAccounts = (accounts: string[]) => {
 
 export const setError = (errorMessage: string) => {
 	return {
-		type: actionsEnums.SET_GLOBAL_ERROR,
+		type: actionsEnums.SET_ERROR,
 		errorMessage: errorMessage
 	};
 };

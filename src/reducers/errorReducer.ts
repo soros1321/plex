@@ -8,7 +8,7 @@ class ErrorReducerState {
 	}
 }
 
-const handleSetGlobalError = (state: ErrorReducerState, action: any) => {
+const handleSetError = (state: ErrorReducerState, action: any) => {
 	return {
 		...state,
 		errorMessage: action.errorMessage
@@ -17,8 +17,8 @@ const handleSetGlobalError = (state: ErrorReducerState, action: any) => {
 
 export const errorReducer = (state: ErrorReducerState = new ErrorReducerState(), action: any) => {
 	switch (action.type) {
-		case actionsEnums.SET_GLOBAL_ERROR:
-			return handleSetGlobalError(state, action);
+		case actionsEnums.SET_ERROR:
+			return handleSetError(state, action);
 		default:
 			return state;
 	}

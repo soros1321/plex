@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { PaperLayout } from '../../layouts';
 import { MainWrapper, Checkbox } from '../../components';
-import { Error as ErrorComponent } from '../../components/Error/Error';
 import {
 	BannerContainer,
 	Header,
@@ -12,17 +11,19 @@ import {
 } from './styledComponents';
 import { browserHistory } from 'react-router';
 
-interface State {
-	agreeToTermsOfUse: boolean;
-	errorMessage: string;
+interface Props {
+	handleSetError: (errorMessage: string) => void;
 }
 
-class Welcome extends React.Component<{}, State> {
-	constructor(props: {}) {
+interface State {
+	agreeToTermsOfUse: boolean;
+}
+
+class Welcome extends React.Component<Props, State> {
+	constructor(props: Props) {
 		super(props);
 		this.state = {
-			agreeToTermsOfUse: false,
-			errorMessage: ''
+			agreeToTermsOfUse: false
 		};
 		this.handleAgreeChange = this.handleAgreeChange.bind(this);
 		this.checkAgree = this.checkAgree.bind(this);
@@ -35,9 +36,9 @@ class Welcome extends React.Component<{}, State> {
 	}
 
 	checkAgree() {
-		this.setState({ errorMessage: '' });
+		this.props.handleSetError('');
 		if (!this.state.agreeToTermsOfUse) {
-			this.setState({ errorMessage: 'You have to agree to the terms of use to continue' });
+			this.props.handleSetError('You have to agree to the terms of use to continue');
 			return;
 		}
 		browserHistory.push('/request');
@@ -51,7 +52,6 @@ class Welcome extends React.Component<{}, State> {
 		);
 		return (
 			<PaperLayout>
-				<ErrorComponent errorMessage={this.state.errorMessage} />
 				<BannerContainer />
 				<MainWrapper>
 					<Header>Welcome to Dharma Bazaar</Header>
