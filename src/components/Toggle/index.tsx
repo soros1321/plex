@@ -6,7 +6,7 @@ import './toggle.css';
 interface Props {
   disabled?: boolean;
   name: string;
-  label: string;
+  label: JSX.Element;
   prepend?: string;
   checked: boolean;
   onChange: (checked: boolean) => void;

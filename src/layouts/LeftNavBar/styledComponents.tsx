@@ -117,3 +117,12 @@ export const TradingPermissionsTitle = styled.div`
   padding: 10px 25px;
   text-transform: uppercase;
 `;
+
+export const TokenSymbol = styled.div`
+	display: inline-block;
+	width: 32px;
+`;
+
+export const TokenBalance = styled.div`
+	display: inline-block;
+`;

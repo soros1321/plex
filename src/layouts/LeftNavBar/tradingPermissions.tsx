@@ -8,7 +8,12 @@ import { Toggle } from '../../components/Toggle';
 import * as Web3 from 'web3';
 import Dharma from '@dharmaprotocol/dharma.js';
 import { BigNumber } from 'bignumber.js';
-import { TradingPermissionsContainer, TradingPermissionsTitle } from './styledComponents';
+import {
+	TradingPermissionsContainer,
+	TradingPermissionsTitle,
+	TokenSymbol,
+	TokenBalance
+} from './styledComponents';
 import { TokenEntity } from '../../models';
 const promisify = require('tiny-promisify');
 
@@ -46,6 +51,18 @@ class TradingPermissions extends React.Component<Props, {}> {
 		return new BigNumber(tokenAllowance);
 	}
 
+	async getTokenBalance(tokenAddress: string) {
+		const accounts = await promisify(this.props.web3.eth.getAccounts)();
+		// TODO: handle account retrieval error more robustly
+		if (!accounts || !accounts[0]) {
+			return new BigNumber(-1);
+		}
+
+		const ownerAddress = accounts[0];
+		const tokenBalance = await this.props.dharma.token.getBalanceAsync(tokenAddress, ownerAddress);
+		return new BigNumber(tokenBalance);
+	}
+
 	async getTokenData(dharma: Dharma) {
 		if (!dharma) {
 			return;
@@ -53,19 +70,19 @@ class TradingPermissions extends React.Component<Props, {}> {
 
 		const tokenRegistry = await dharma.contracts.loadTokenRegistry();
 		// TODO: get token tickers from dharma.js
-		const tokenNames = ['REP', 'MKR', 'ZRX'];
-		var tokens = {};
+		const tokenSymbols = ['REP', 'MKR', 'ZRX'];
 
 		let allTokens: TokenEntity[] = [];
 
-		for (let tokenName of tokenNames) {
-			const address = await tokenRegistry.getTokenAddress.callAsync(tokenName);
+		for (let tokenSymbol of tokenSymbols) {
+			const address = await tokenRegistry.getTokenAddress.callAsync(tokenSymbol);
 			const tradingPermitted = this.isAllowanceUnlimited(await this.getTokenAllowance(address));
-			tokens[tokenName] = { address, tradingPermitted };
+			const balance = await this.getTokenBalance(address);
 			allTokens.push({
 				address,
-				tokenSymbol: tokenName,
-				tradingPermitted
+				tokenSymbol: tokenSymbol,
+				tradingPermitted,
+				balance
 			});
 		}
 
@@ -107,16 +124,22 @@ class TradingPermissions extends React.Component<Props, {}> {
 		if (!this.props.tokens || !this.props.tokens.length) {
 			return null;
 		}
-		const { tokens } = this.props;
+		const { web3, tokens } = this.props;
 		let tokenItems: JSX.Element[] = [];
 
 		for (let token of tokens) {
+			const tokenLabel = (
+				<div>
+					<TokenSymbol>{token.tokenSymbol}</TokenSymbol>
+					<TokenBalance>({web3.fromWei(token.balance.toString(), 'ether')})</TokenBalance>
+				</div>
+			);
 			tokenItems.push(
 				<Col xs="4" md="12" key={token.tokenSymbol}>
 					<NavItem>
 						<Toggle
 							name={token.tokenSymbol}
-							label={token.tokenSymbol}
+							label={tokenLabel}
 							checked={token.tradingPermitted}
 							onChange={() => this.updateProxyAllowanceAsync(token.tradingPermitted, token.tokenSymbol)}
 						/>
