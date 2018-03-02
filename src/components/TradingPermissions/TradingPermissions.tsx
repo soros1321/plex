@@ -4,7 +4,7 @@ import {
 	Col,
 	NavItem
 } from 'reactstrap';
-import { Toggle } from '../../components/Toggle';
+import { Toggle } from '../Toggle';
 import * as Web3 from 'web3';
 import Dharma from '@dharmaprotocol/dharma.js';
 import { BigNumber } from 'bignumber.js';

@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { TradingPermissions } from './tradingPermissions';
+import { TradingPermissions } from './TradingPermissions';
 import { TokenEntity } from '../../models';
 import { setAllTokensTradingPermission, toggleTokenTradingPermission } from './actions';
 
