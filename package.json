@@ -41,6 +41,7 @@
   "scripts": {
     "contracts:compile": "truffle compile",
     "contracts:migrate": "truffle migrate && cp build/contracts/* src/artifacts/",
+    "chain": "ganache-cli -m 'pink proof foil skull tide narrow audit card rotate forget liar favorite'",
     "start": "react-scripts-ts start --history-api-fallback",
     "build": "react-scripts-ts build",
     "test:watch": "jest --watch --runInBand",

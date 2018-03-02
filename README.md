@@ -2,6 +2,22 @@
 
 Codename for MVP Order Generation / Filling / Dashboard DApp
 
+## Setup
+Install dependencies:
+```
+yarn
+```
+
+Run local test chain:
+```
+yarn chain
+```
+
+Compile & migrate contracts:
+```
+yarn contracts:compile && yarn contracts:migrate
+```
+
 ## How to set up `ngrok` environment locally
 1. To begin development you first need to install the app dependencies `yarn install`.
 2. Run `yarn ngrok:start` to start ngrok.
