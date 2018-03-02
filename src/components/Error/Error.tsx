@@ -20,7 +20,7 @@ class Error extends React.Component<Props, State> {
 	}
 
 	componentWillReceiveProps(nextProps: Props) {
-		if (nextProps.errorMessage) {
+		if (this.props.errorMessage !== nextProps.errorMessage && nextProps.errorMessage) {
 			this.setState({ visible: true });
 		}
 	}
