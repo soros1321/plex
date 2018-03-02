@@ -76,7 +76,7 @@ export const StyledLink = styled(Link)`
 	@media only screen and (max-width: 480px) {
 		text-align: center;
 		font-size: 13px;
-		padding: 15px 0 !important;
+		padding: 13px 0 !important;
 		line-height: 20px;
 
 		&:hover {
@@ -89,7 +89,7 @@ export const StyledLink = styled(Link)`
 			background-color: #002326;
 			border-bottom: 5px solid #F3764B;
 			margin-left: 0px;
-			padding: 15px 0 10px !important;
+			padding: 13px 0 8px !important;
 		}
 	}
 `;

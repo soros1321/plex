@@ -53,7 +53,7 @@ export const StyledNavItem = styled(NavItem)`
 	}
 
 	@media only screen and (max-width: 480px) {
-		padding: 5px 0px;
+		padding: 2px 0px;
 
 		&:first-child,
 		&:nth-child(2) {
@@ -71,5 +71,9 @@ export const StyledLink = styled(Link)`
 	&.active {
 		text-decoration: none;
 		color: #F3764B;
+	}
+
+	@media only screen and (max-width: 480px) {
+		font-size: 13px;
 	}
 `;

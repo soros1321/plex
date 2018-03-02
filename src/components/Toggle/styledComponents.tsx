@@ -3,11 +3,11 @@ import styled from 'styled-components';
 export const ToggleLabel = styled.label`
   display: flex;
   align-items: center;
-  padding: 5px 25px;
+  padding: 5px 0px;
   opacity: 1;
 
 	@media only screen and (max-width: 480px) {
-		padding: 5px 0px;
+		padding: 2px 0px;
 	}
 `;
 

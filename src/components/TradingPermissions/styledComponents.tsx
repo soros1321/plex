@@ -1,12 +1,14 @@
 import styled from 'styled-components';
 
 export const TradingPermissionsContainer = styled.div`
-	width: 100%;
+	width: inherit;
 	&.left {
 		position: fixed;
 		bottom: 10px;
+		padding-left: 25px;
 	}
 	@media only screen and (max-width: 480px) {
+		width: 100%;
 		&.left {
 			display: none;
 		}
@@ -19,12 +21,8 @@ export const TradingPermissionsTitle = styled.div`
   font-weight: bold;
   line-height: 25px;
   opacity: 0.5;
-  padding: 5px 25px;
+  padding: 5px 0px;
   text-transform: uppercase;
-
-	@media only screen and (max-width: 480px) {
-		padding: 5px 0px;
-	}
 `;
 
 export const TokenSymbol = styled.div`
