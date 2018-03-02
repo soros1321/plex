@@ -96,7 +96,6 @@ class RequestLoanWeb3 extends React.Component<Props, State> {
 			this.confirmationModalToggle();
 		} catch (e) {
 			this.props.handleSetError('Unable to generate Debt Order');
-			window.scrollTo(0, 0);
 			return;
 		}
 	}
@@ -106,7 +105,6 @@ class RequestLoanWeb3 extends React.Component<Props, State> {
 			this.props.handleSetError('');
 			if (!this.state.debtOrder) {
 				this.props.handleSetError('No Debt Order has been generated yet');
-				window.scrollTo(0, 0);
 				return;
 			}
 
@@ -161,7 +159,6 @@ class RequestLoanWeb3 extends React.Component<Props, State> {
 			this.setState({
 				confirmationModal: false
 			});
-			window.scrollTo(0, 0);
 			return;
 		}
 	}

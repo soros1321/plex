@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 export const Background = styled.div`
 	background-color: #DCDCDC;
-	padding: 50px 0;
+	padding: 55px 0;
 	height: 100%;
 
 	@media only screen and (max-width: 480px) {
