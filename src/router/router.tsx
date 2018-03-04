@@ -7,7 +7,7 @@ import {
 	FillLoanEmpty,
 	DefaultContent,
 	TestForm,
-	RequestLoanWeb3Container,
+	RequestLoanFormContainer,
 	RequestLoanSuccessContainer,
 	DashboardContainer,
 	FillLoanEnteredContainer
@@ -101,7 +101,7 @@ class AppRouter extends React.Component<Props, {}> {
 					<Route path="/twitter" component={DefaultContent} />
 					<Route path="/dashboard" component={DashboardContainer} />
 					<Route path="/request" component={ParentContainer}>
-						<IndexRoute component={RequestLoanWeb3Container} />
+						<IndexRoute component={RequestLoanFormContainer} />
 						<Route path="success/:debtorSignature" component={RequestLoanSuccessContainer} />
 					</Route>
 					<Route path="/fill" component={ParentContainer}>

@@ -39,7 +39,7 @@ interface State {
 	confirmationModal: boolean;
 }
 
-class RequestLoanWeb3 extends React.Component<Props, State> {
+class RequestLoanForm extends React.Component<Props, State> {
 	constructor(props: Props) {
 		super(props);
 		this.handleChange = this.handleChange.bind(this);
@@ -203,4 +203,4 @@ class RequestLoanWeb3 extends React.Component<Props, State> {
 	}
 }
 
-export {RequestLoanWeb3};
+export {RequestLoanForm};

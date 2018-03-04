@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { RequestLoanWeb3 } from './RequestLoanWeb3';
+import { RequestLoanForm } from './RequestLoanForm';
 import { userRequestDebtOrder } from './actions';
 import { DebtOrderEntity } from '../../../models';
 import { setError } from '../../../common/actions';
@@ -19,7 +19,7 @@ const mapDispatchToProps = (dispatch: any) => {
 	};
 };
 
-export const RequestLoanWeb3Container = connect(
+export const RequestLoanFormContainer = connect(
 	mapStateToProps,
 	mapDispatchToProps
-)(RequestLoanWeb3);
+)(RequestLoanForm);
