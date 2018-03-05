@@ -5,7 +5,9 @@ import {
 	Wrapper,
 	StyledRow,
 	LeftContainer,
-	RightContainer
+	RightContainer,
+	Footer,
+	FooterLink
 } from './styledComponents';
 
 class PageLayout extends React.Component {
@@ -19,6 +21,10 @@ class PageLayout extends React.Component {
 					</LeftContainer>
 					<RightContainer>
 						{this.props.children}
+						<Footer>
+							<FooterLink to="/terms">Terms of Use</FooterLink>
+							<FooterLink to="/privacy">Privacy Policy</FooterLink>
+						</Footer>
 					</RightContainer>
 				</StyledRow>
 			</Wrapper>

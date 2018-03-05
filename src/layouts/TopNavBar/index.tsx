@@ -37,7 +37,9 @@ class TopNavBar extends React.Component<{}, TopNavBarState> {
 			{url: '/blog', display: 'BLOG'},
 			{url: '/github', display: 'GITHUB'},
 			{url: '/chat', display: 'CHAT'},
-			{url: '/twitter', display: 'TWITTER'}
+			{url: '/twitter', display: 'TWITTER'},
+			{url: '/terms', display: 'TERMS OF USE'},
+			{url: '/privacy', display: 'PRIVACY POLICY'}
 		];
 		const linkItems = links.map((link) =>
 			(

@@ -35,3 +35,27 @@ export const Wrapper30 = styled.div`
 export const Bold = styled.span`
 	font-family: DIN-Bold;
 `;
+
+export const A = styled.a`
+	font-family: DIN-Bold;
+	color: #002326;
+	text-decoration: none;
+
+	&:hover {
+		font-family: DIN-Bold;
+		color: #002326;
+		text-decoration: none;
+	}
+`;
+
+export const P = styled.p`
+	margin: 20px 0;
+`;
+
+export const Ol = styled.ol`
+	padding-left: 0px;
+`;
+
+export const Li = styled.li`
+	margin: 20px 0;
+`;
