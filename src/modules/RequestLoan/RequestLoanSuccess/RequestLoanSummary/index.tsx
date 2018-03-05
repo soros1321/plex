@@ -64,7 +64,7 @@ class RequestLoanSummary extends React.Component<Props, State> {
 					{item.title}
 				</Title>
 				<Content>
-					{item.content || 'Some Content'}
+					{item.content}
 				</Content>
 			</InfoItem>
 		));
@@ -74,7 +74,7 @@ class RequestLoanSummary extends React.Component<Props, State> {
 					{item.title}
 				</Title>
 				<Content>
-					{item.content || 'Some Content'}
+					{item.content}
 				</Content>
 			</InfoItem>
 		));

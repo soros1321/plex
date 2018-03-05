@@ -1,15 +1,17 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { Row, Col } from 'reactstrap';
+import { Col } from 'reactstrap';
+import { StyledLink } from '../../../../components';
 
 interface Props {
 	className?: string;
 }
 
-export const Wrapper = styled(Row)`
+export const Wrapper = styled.div`
 	margin: 20px 0px;
 	background-color: #FFFFFF;
 	box-shadow: 0 12px 24px 0 rgba(0,0,0,0.12);
+	cursor: pointer;
 `;
 
 class UglyImageContainer extends React.Component<Props, {}> {
@@ -56,11 +58,10 @@ export const Amount = styled.div`
 	line-height: 25px;
 `;
 
-export const Url = styled.span`
+export const Url = styled.div`
 	color: #002326;
 	font-size: 15px;
 	line-height: 25px;
-	display: block;
 `;
 
 export const StatusActive = styled.div`
@@ -86,6 +87,10 @@ export const Terms = styled.div`
 	font-size: 13px;
 	line-height: 16px;
 	text-transform: uppercase;
+
+	@media only screen and (max-width: 480px) {
+		font-size: 11px;
+	}
 `;
 
 class HalfCol extends React.Component<Props, {}> {
@@ -182,4 +187,38 @@ export const PaymentDate = styled.div`
 
 export const ShowMore = PaymentDate.extend`
 	text-transform: uppercase;
+`;
+
+export const Drawer = styled.div`
+	padding: 20px;
+	background-color: #F5F5F5;
+`;
+
+export const InfoItem = styled.div`
+`;
+
+export const InfoItemTitle = styled.div`
+	text-transform: uppercase;
+	font-family: DIN-Bold;
+	opacity: 0.5;
+	color: #002326;
+	font-size: 13px;
+	font-weight: bold;
+	line-height: 20px;
+`;
+
+export const InfoItemContent = styled.div`
+	margin-top: 5px;
+	font-family: DIN-Bold;
+	opacity: 1;
+	color: #002326;
+	font-size: 13px;
+	line-height: 20px;
+`;
+
+export const DetailLink = StyledLink.extend`
+	font-family: DIN;
+	&:hover {
+		font-family: DIN;
+	}
 `;

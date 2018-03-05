@@ -2,7 +2,7 @@ import * as React from 'react';
 import { DebtOrderEntity } from '../../../models';
 import { Header, MainWrapper } from '../../../components';
 import { DebtsMetrics } from './DebtsMetrics';
-import { ActiveDebtOrder } from './ActiveDebtOrder';
+import { ActiveDebtOrderContainer } from './ActiveDebtOrder/ActiveDebtOrderContainer';
 import { DebtOrderHistory } from './DebtOrderHistory';
 
 interface Props {
@@ -28,7 +28,7 @@ class Debts extends React.Component<Props, {}> {
 				<Header title="Your debts" />
 				<DebtsMetrics debtOrders={this.props.debtOrders} />
 				{ activeDebtOrders.map((debtOrder) => (
-						<ActiveDebtOrder debtOrder={debtOrder} key={debtOrder.identifier} />
+						<ActiveDebtOrderContainer debtOrder={debtOrder} key={debtOrder.identifier} />
 					))
 				}
 				<DebtOrderHistory debtOrders={pastDebtOrders} />

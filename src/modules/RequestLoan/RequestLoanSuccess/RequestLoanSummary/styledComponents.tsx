@@ -43,7 +43,7 @@ export const Content = styled.div`
 	font-family: DIN-Bold;
 	opacity: 1;
 	color: #002326;
-	font-size: 17x;
+	font-size: 17px;
 	line-height: 25px;
 `;
 

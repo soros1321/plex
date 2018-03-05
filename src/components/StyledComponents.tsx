@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { Button } from 'reactstrap';
+import { Link } from 'react-router';
 
 // styles-components
 export const MainWrapper = styled.div`
@@ -58,4 +59,16 @@ export const Ol = styled.ol`
 
 export const Li = styled.li`
 	margin: 20px 0;
+`;
+
+export const StyledLink = styled(Link)`
+	font-family: DIN-Bold;
+	color: #002326;
+	text-decoration: none;
+
+	&:hover {
+		font-family: DIN-Bold;
+		color: #002326;
+		text-decoration: none;
+	}
 `;
