@@ -7,6 +7,7 @@ import { FieldTemplate } from './FieldTemplate';
 import { CustomCheckbox } from './CustomCheckbox';
 import { CustomBaseInput } from './CustomBaseInput';
 import { CustomSelectDropdown } from './CustomSelectDropdown';
+import { CustomTextarea } from './CustomTextarea';
 import { animateScroll as scroll } from 'react-scroll';
 
 interface FormResponse {
@@ -27,7 +28,8 @@ interface Props {
 const widgets = {
 	CustomCheckbox: CustomCheckbox,
 	BaseInput: CustomBaseInput,
-	SelectWidget: CustomSelectDropdown
+	SelectWidget: CustomSelectDropdown,
+	TextareaWidget: CustomTextarea
 };
 
 const paddingTop = 200;

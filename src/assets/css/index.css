@@ -32,7 +32,8 @@ label {
 	text-transform: uppercase;
 }
 input.form-control,
-select.form-control {
+select.form-control,
+textarea.form-control {
 	border: 1px solid #362C2A;
 	border-radius: 0;
 	-webkit-appearance: none;
@@ -41,6 +42,26 @@ select.form-control {
 }
 select.form-control {
 	background: url(../img/arrow_down.png) calc(100% - 10px) / 10px no-repeat #FFFFFF;
+}
+input.form-control::-webkit-input-placeholder,
+select.form-control::-webkit-input-placeholder,
+textarea.form-control::-webkit-input-placeholder {
+	color: #CCCCCC;
+}
+input.form-control::-moz-placeholder,
+select.form-control::-moz-placeholder,
+textarea.form-control::-moz-placeholder {
+	color: #CCCCCC;
+}
+input.form-control:-ms-input-placeholder,
+select.form-control:-ms-input-placeholder,
+textarea.form-control:-ms-input-placeholder {
+	color: #CCCCCC;
+}
+input.form-control:-moz-placeholder,
+select.form-control:-moz-placeholder,
+textarea.form-control:-moz-placeholder {
+	color: #CCCCCC;
 }
 input.width-95 {
 	width: 95%;
