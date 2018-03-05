@@ -168,6 +168,7 @@ class TradingPermissions extends React.Component<Props, State> {
 						name={token.tokenSymbol}
 						label={tokenLabel}
 						checked={token.tradingPermitted}
+						disabled={token.balance.gt(0) ? false : true}
 						onChange={() => this.updateProxyAllowanceAsync(token.tradingPermitted, token.tokenSymbol)}
 						key={token.tokenSymbol}
 					/>
@@ -178,6 +179,7 @@ class TradingPermissions extends React.Component<Props, State> {
 						name={token.tokenSymbol}
 						label={tokenLabel}
 						checked={token.tradingPermitted}
+						disabled={token.balance.gt(0) ? false : true}
 						onChange={() => this.updateProxyAllowanceAsync(token.tradingPermitted, token.tokenSymbol)}
 						key={token.tokenSymbol}
 					/>
