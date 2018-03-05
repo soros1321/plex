@@ -18,7 +18,7 @@ import {
 	CopyButton,
 	CopiedMessage
 } from './styledComponents';
-const Identicon = require('identicon.js');
+import { getIdenticonImgSrc } from '../../../../utils';
 
 interface Props {
 	issuanceHash: string | undefined;
@@ -64,24 +64,14 @@ class ShareRequestURL extends React.Component<Props, State> {
 				<img src={social.imgURL} />
 			</ShareButton>
 		));
-		let identiconData: string = '';
-		if (this.props.issuanceHash) {
-			const identiconOptions = {
-				foreground: [28, 193, 204, 255],
-				background: [255, 255, 255, 255],
-				margin: 0.1,
-				size: 100,
-				format: 'svg'
-			};
-			identiconData = new Identicon(this.props.issuanceHash, identiconOptions).toString();
-		}
+		const identiconImgSrc = getIdenticonImgSrc(this.props.issuanceHash, 100, 0.1);
 		return (
 			<Wrapper>
 				<StyledLabel>Share your request URL</StyledLabel>
 				<GrayRow>
 					<ImageContainer>
-					{identiconData && (
-						<IdenticonImage src={'data:image/svg+xml;base64,' + identiconData} />
+					{identiconImgSrc && (
+						<IdenticonImage src={identiconImgSrc} />
 					)}
 					</ImageContainer>
 					<DetailContainer>

@@ -1,10 +1,15 @@
 import * as React from 'react';
 import { DebtOrderEntity } from '../../../../models';
-import { formatDate, formatTime } from '../../../../utils';
+import {
+	formatDate,
+	formatTime,
+	getIdenticonImgSrc,
+	shortenString
+} from '../../../../utils';
 import {
 	Wrapper,
 	ImageContainer,
-	Image,
+	IdenticonImage,
 	DetailContainer,
 	Amount,
 	Url,
@@ -123,15 +128,19 @@ class ActiveDebtOrder extends React.Component<Props, {}> {
 		// TODO: need a way to figure out whether this debt order
 		// is active or pending, i.e has start date?
 		const active: boolean = false;
+
+		const identiconImgSrc = getIdenticonImgSrc(debtOrder.issuanceHash, 60, 0.1);
 		return (
 			<Wrapper>
 				<ImageContainer>
-					<Image />
+					{identiconImgSrc && (
+						<IdenticonImage src={identiconImgSrc} />
+					)}
 				</ImageContainer>
 				<DetailContainer>
 					<Amount>{debtOrder.principalAmount.toNumber()} {debtOrder.principalTokenSymbol}</Amount>
 					<Link to={`/request/success/${debtOrder.identifier}`}>
-						<Url>{debtOrder.identifier}</Url>
+						<Url>{shortenString(debtOrder.identifier)}</Url>
 					</Link>
 					{active ? <StatusActive>Active</StatusActive> : <StatusPending>Pending</StatusPending>}
 					<Terms>Simple Interest (Installments)</Terms>
