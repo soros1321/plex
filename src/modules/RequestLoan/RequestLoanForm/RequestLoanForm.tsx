@@ -141,7 +141,8 @@ class RequestLoanForm extends React.Component<Props, State> {
 
 			const generatedDebtOrder = await this.props.dharma.adapters.simpleInterestLoan.fromDebtOrder(debtOrder);
 			const storeDebtOrder: DebtOrderEntity = {
-				debtorSignature: debtorSignature.r,
+				identifier: debtorSignature.r,
+				debtorSignature: JSON.stringify(debtorSignature),
 				debtor: debtOrder.debtor,
 				principalAmount: generatedDebtOrder.principalAmount,
 				principalToken: generatedDebtOrder.principalToken,
@@ -153,7 +154,7 @@ class RequestLoanForm extends React.Component<Props, State> {
 				fillLoanShortUrl: fillLoanShortUrl
 			};
 			this.props.handleRequestDebtOrder(storeDebtOrder);
-			browserHistory.push(`/request/success/${storeDebtOrder.debtorSignature}`);
+			browserHistory.push(`/request/success/${storeDebtOrder.identifier}`);
 		} catch (e) {
 			this.props.handleSetError('Unable to sign Debt Order');
 			this.setState({

@@ -1,51 +1,50 @@
 import * as React from 'react';
-import {
-	Form,
-	FormGroup,
-	Input,
-	Button
-} from 'reactstrap';
-import { Header, MainWrapper } from '../../../components';
-import { Link } from 'react-router';
+import { Header, MainWrapper, JSONSchemaForm } from '../../../components';
+import { schema, uiSchema } from './schema';
 import { PaperLayout } from '../../../layouts';
 import {
-	StyledLabel,
-	InputBorder,
-	ButtonContainer,
 	Instructions,
 	Title,
 	StyledLink
 } from './styledComponents';
+import { encodeUrlParams } from '../../../utils';
+import { browserHistory } from 'react-router';
 
-interface States {
-	requestId: string;
+interface State {
+	formData: any;
 }
 
-class FillLoanEmpty extends React.Component<{}, States> {
+class FillLoanEmpty extends React.Component<{}, State> {
 	constructor(props: {}) {
 		super(props);
 		this.state = {
-			requestId: ''
+			formData: {}
 		};
-		this.handleInputChange = this.handleInputChange.bind(this);
+		this.handleChange = this.handleChange.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
 	}
 
-	handleInputChange(e: React.FormEvent<HTMLInputElement>) {
-		const target = e.currentTarget;
-		const value: string = target.value;
-		switch (target.name) {
-			case 'request-id':
-				this.setState({requestId: value});
-				break;
-			default:
-				break;
-		}
+	handleChange(formData: any) {
+		this.setState({ formData });
 	}
 
-	handleSubmit(e: React.FormEvent<HTMLInputElement>) {
-		e.preventDefault();
-		console.log(this.state);
+	handleSubmit() {
+		let loanRequest = this.state.formData.loan.loanRequest;
+		if (!loanRequest) {
+			return;
+		}
+		loanRequest = JSON.parse(loanRequest);
+		const urlParams = {
+			principalAmount: loanRequest.principalAmount,
+			principalToken: loanRequest.principalToken,
+			termsContract: loanRequest.termsContract,
+			termsContractParameters: loanRequest.termsContractParameters,
+			debtorSignature: loanRequest.debtorSignature,
+			debtor: loanRequest.debtor,
+			description: loanRequest.description,
+			principalTokenSymbol: loanRequest.principalTokenSymbol
+		};
+		browserHistory.push(`/fill/loan?${encodeUrlParams(urlParams)}`);
 	}
 
 	render() {
@@ -54,19 +53,14 @@ class FillLoanEmpty extends React.Component<{}, States> {
 			<PaperLayout>
 				<MainWrapper>
 					<Header title={'Fill a loan'} description={descriptionContent} />
-					<Form>
-						<FormGroup>
-							<StyledLabel>Paste the requester's loan request ID here</StyledLabel>
-							<InputBorder>
-								<Input type="text" name="request-id" placeholder="Request ID" value={this.state.requestId} onChange={this.handleInputChange} />
-							</InputBorder>
-							<ButtonContainer>
-								<Link to="/fill/entered">
-									<Button className="button">Next &#8594;</Button>
-								</Link>
-							</ButtonContainer>
-						</FormGroup>
-					</Form>
+					<JSONSchemaForm
+						schema={schema}
+						uiSchema={uiSchema}
+						formData={this.state.formData}
+						buttonText="Next &#8594;"
+						onHandleChange={this.handleChange}
+						onHandleSubmit={this.handleSubmit}
+					/>
 					<Instructions>
 						<Title>Just getting started?</Title>
 						<StyledLink to="#" >FILLING DEBT ORDERS (VIDEO)</StyledLink>

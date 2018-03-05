@@ -66,6 +66,9 @@ class FillLoanEntered extends React.Component<Props, States> {
 		this.successModalToggle = this.successModalToggle.bind(this);
 		this.handleFillOrder = this.handleFillOrder.bind(this);
 		this.validateFillOrder = this.validateFillOrder.bind(this);
+	}
+
+	async componentDidMount() {
 		this.getDebtOrderDetail(this.props.dharma, this.props.location.query);
 	}
 

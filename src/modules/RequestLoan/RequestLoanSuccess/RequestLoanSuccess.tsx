@@ -10,7 +10,7 @@ import Dharma from '@dharmaprotocol/dharma.js';
 interface Props {
 	params?: any;
 	debtOrder: DebtOrderEntity;
-	getDebtOrder: (debtorSignature: string) => void;
+	getDebtOrder: (identifier: string) => void;
 	dharma: Dharma;
 }
 
@@ -37,8 +37,8 @@ class RequestLoanSuccess extends React.Component<Props, States> {
 	}
 
 	componentDidMount() {
-		const debtorSignature = this.props.params.debtorSignature;
-		this.props.getDebtOrder(debtorSignature);
+		const identifier = this.props.params.identifier;
+		this.props.getDebtOrder(identifier);
 	}
 
 	componentWillReceiveProps(nextProps: Props) {

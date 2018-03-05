@@ -22,7 +22,7 @@ const handleRequestDebtOrder = (state: DebtOrderReducerState, payload: DebtOrder
 };
 
 const handleGetDebtOrder = (state: DebtOrderReducerState, payload: string) => {
-	const debtOrder = state.debtOrders.find(_debtOrder => _debtOrder.debtorSignature === payload);
+	const debtOrder = state.debtOrders.find(_debtOrder => _debtOrder.identifier === payload);
 	return {
 		...state,
 		singleDebtOrder: debtOrder

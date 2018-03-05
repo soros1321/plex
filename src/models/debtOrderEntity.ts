@@ -1,6 +1,7 @@
 import { BigNumber } from 'bignumber.js';
 
 export class DebtOrderEntity {
+	identifier: string;
 	debtorSignature: string;
 	debtor: string | undefined;
 	principalAmount: BigNumber;
@@ -13,6 +14,7 @@ export class DebtOrderEntity {
 	fillLoanShortUrl: string;
 
 	public constructor () {
+		this.identifier = '';
 		this.debtorSignature = '';
 		this.debtor = '';
 		this.principalAmount = new BigNumber(0);
