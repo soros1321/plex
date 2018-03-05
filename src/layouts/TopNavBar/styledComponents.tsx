@@ -66,11 +66,13 @@ export const StyledLink = styled(Link)`
 	font-size: 15px;
 	color: #FFFFFF;
 	transition: color 0.3s ease-in-out;
+	opacity: 0.5;
 
 	&:hover,
 	&.active {
 		text-decoration: none;
 		color: #F3764B;
+		opacity: 1;
 	}
 
 	@media only screen and (max-width: 480px) {

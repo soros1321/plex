@@ -45,3 +45,11 @@ export const FaucetButton = StyledButton.extend`
 	min-width: auto !important;
 	line-height: 4px !important;
 `;
+
+export const ShowMoreButton = TradingPermissionsTitle.extend`
+	cursor: pointer;
+`;
+
+export const Arrow = styled.img`
+	width: 10px;
+`;

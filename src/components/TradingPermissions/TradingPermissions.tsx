@@ -8,10 +8,15 @@ import {
 	TradingPermissionsTitle,
 	TokenSymbol,
 	TokenBalance,
-	FaucetButton
+	FaucetButton,
+	ShowMoreButton,
+	Arrow
 } from './styledComponents';
 import { TokenEntity } from '../../models';
 const promisify = require('tiny-promisify');
+import { Collapse } from 'reactstrap';
+const arrowDown = require('../../assets/img/arrow_down_white.png');
+const arrowUp = require('../../assets/img/arrow_up_white.png');
 
 interface Props {
 	web3: Web3;
@@ -22,12 +27,23 @@ interface Props {
 	className?: string;
 }
 
-class TradingPermissions extends React.Component<Props, {}> {
+interface State {
+	collapse: boolean;
+}
+
+class TradingPermissions extends React.Component<Props, State> {
 	constructor(props: Props) {
 		super(props);
+		this.state = {
+			collapse: false
+		};
 		this.getTokenAllowance = this.getTokenAllowance.bind(this);
 		this.updateProxyAllowanceAsync = this.updateProxyAllowanceAsync.bind(this);
 		this.handleFaucet = this.handleFaucet.bind(this);
+		this.showMore = this.showMore.bind(this);
+	}
+
+	async componentDidMount() {
 		this.getTokenData(this.props.dharma);
 	}
 
@@ -123,13 +139,19 @@ class TradingPermissions extends React.Component<Props, {}> {
 		console.log(tokenAddress);
 	}
 
+	showMore() {
+		this.setState({ collapse: !this.state.collapse });
+	}
+
 	render() {
 		if (!this.props.tokens || !this.props.tokens.length) {
 			return null;
 		}
 		const { web3, tokens } = this.props;
 		let tokenItems: JSX.Element[] = [];
+		let tokenItemsMore: JSX.Element[] = [];
 
+		let count: number = 0;
 		for (let token of tokens) {
 			const tokenLabel = (
 				<div>
@@ -140,21 +162,40 @@ class TradingPermissions extends React.Component<Props, {}> {
 					}
 				</div>
 			);
-			tokenItems.push(
-				<Toggle
-					name={token.tokenSymbol}
-					label={tokenLabel}
-					checked={token.tradingPermitted}
-					onChange={() => this.updateProxyAllowanceAsync(token.tradingPermitted, token.tokenSymbol)}
-					key={token.tokenSymbol}
-				/>
-			);
+			if (count < 2) {
+				tokenItems.push(
+					<Toggle
+						name={token.tokenSymbol}
+						label={tokenLabel}
+						checked={token.tradingPermitted}
+						onChange={() => this.updateProxyAllowanceAsync(token.tradingPermitted, token.tokenSymbol)}
+						key={token.tokenSymbol}
+					/>
+				);
+			} else {
+				tokenItemsMore.push(
+					<Toggle
+						name={token.tokenSymbol}
+						label={tokenLabel}
+						checked={token.tradingPermitted}
+						onChange={() => this.updateProxyAllowanceAsync(token.tradingPermitted, token.tokenSymbol)}
+						key={token.tokenSymbol}
+					/>
+				);
+			}
+			count++;
 		}
 
 		return (
 			<TradingPermissionsContainer className={this.props.className}>
 				<TradingPermissionsTitle>{'Trading Permissions'}</TradingPermissionsTitle>
 				{tokenItems}
+				<Collapse isOpen={this.state.collapse}>
+					{tokenItemsMore}
+				</Collapse>
+				<ShowMoreButton onClick={this.showMore}>
+					More <Arrow src={this.state.collapse ? arrowUp : arrowDown} />
+				</ShowMoreButton>
 			</TradingPermissionsContainer>
 		);
 	}
