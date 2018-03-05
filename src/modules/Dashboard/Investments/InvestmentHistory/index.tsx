@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { InvestmentEntity } from '../../../../models';
-import { formatDate } from '../../../../utils';
+import { formatDate, shortenString } from '../../../../utils';
 import {
 	Wrapper,
 	Title,
@@ -47,7 +47,7 @@ class InvestmentHistory extends React.Component<Props, {}> {
 						{this.props.investments.map((investment) => (
 							<tr key={investment.id}>
 								<TableCell>{investment.amountLended} {investment.currency}</TableCell>
-								<TableCell>{investment.id}</TableCell>
+								<TableCell>{shortenString(investment.id)}</TableCell>
 								<TableCell>{this.determineStatus(investment)}</TableCell>
 								<TermsCell className="terms">{investment.terms} Interest{investment.installments ? ' (Installments)' : ''}</TermsCell>
 							</tr>

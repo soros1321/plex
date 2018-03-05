@@ -50,8 +50,10 @@ export const TableHeaderCell = styled.th`
 
 export const TableCell = styled.td`
 	border: 0 !important;
+	font-size: 11px !important;
 `;
 export const TermsCell = TableCell.extend`
 	font-family: DIN-Bold;
 	text-transform: uppercase;
+	font-size: 8px !important;
 `;

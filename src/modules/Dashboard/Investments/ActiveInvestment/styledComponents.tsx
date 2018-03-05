@@ -27,10 +27,14 @@ export const ImageContainer = styled(UglyImageContainer)`
 	padding: 15px 0 15px 15px !important;
 `;
 
-export const Image = styled.div`
+export const IdenticonImage = styled.img`
+	width: 60px;
 	height: 60px;
-	width: inherit;
-	background-color: #082C30;
+
+	@media only screen and (max-width: 480px) {
+		width: 100px;
+		height: 100px;
+	}
 `;
 
 class UglyDetailContainer extends React.Component<Props, {}> {

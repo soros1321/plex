@@ -3,7 +3,7 @@ import { InvestmentEntity } from '../../models';
 export const investments: InvestmentEntity[] =
 [
 	{
-		id: 'P3Up8X',
+		id: '0xBEjTPZdrWjn6ocmcUWBX',
 		loanId: 'asdfGH',
 		amountLended: 10,
 		currency: 'ETH',
@@ -26,7 +26,7 @@ export const investments: InvestmentEntity[] =
 		collectedOnTimestamp: 0
 	},
 	{
-		id: 'ensKq1',
+		id: '0xWYX495SIfi3QRb7KKkJA',
 		loanId: 'Iihwdko',
 		amountLended: 3,
 		currency: 'ETH',
@@ -49,7 +49,7 @@ export const investments: InvestmentEntity[] =
 		collectedOnTimestamp: 0
 	},
 	{
-		id: '1dP4Zw',
+		id: '0xCrlkdyeSFVZwry8EjUE3',
 		loanId: 'OWJceb',
 		amountLended: 5,
 		currency: 'ETH',
@@ -72,7 +72,7 @@ export const investments: InvestmentEntity[] =
 		collectedOnTimestamp: 0
 	},
 	{
-		id: '0eCAbw',
+		id: '0xZSRf9O0VLnYOoRCYVMDd',
 		loanId: 'owek9n',
 		amountLended: 10,
 		currency: 'ETH',
@@ -95,7 +95,7 @@ export const investments: InvestmentEntity[] =
 		collectedOnTimestamp: 1514851200
 	},
 	{
-		id: 'ONsbfc',
+		id: '0xK6QHU6BRgzVbiu9OAehD',
 		loanId: 'kqjYlk',
 		amountLended: 3,
 		currency: 'ETH',

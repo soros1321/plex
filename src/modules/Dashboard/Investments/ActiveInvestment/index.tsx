@@ -1,11 +1,16 @@
 import * as React from 'react';
 import { InvestmentEntity } from '../../../../models';
-import { formatDate, formatTime } from '../../../../utils';
+import {
+	formatDate,
+	formatTime,
+	getIdenticonImgSrc,
+	shortenString
+} from '../../../../utils';
 import { Row } from 'reactstrap';
 import {
 	Wrapper,
 	ImageContainer,
-	Image,
+	IdenticonImage,
 	DetailContainer,
 	HalfCol,
 	Amount,
@@ -129,16 +134,19 @@ class ActiveInvestment extends React.Component<Props, {}> {
 			maxDisplay++;
 		});
 
+		const identiconImgSrc = getIdenticonImgSrc(investment.id, 60, 0.1);
 		return (
 			<Wrapper>
 				<ImageContainer>
-					<Image />
+					{identiconImgSrc && (
+						<IdenticonImage src={identiconImgSrc} />
+					)}
 				</ImageContainer>
 				<DetailContainer>
 					<Row>
 						<HalfCol>
 							<Amount>{investment.amountLended} {investment.currency}</Amount>
-							<Url href={`dharma.io/${investment.id}`}>{`dharma.io/${investment.id}`}</Url>
+							<Url href="#">{shortenString(investment.id)}</Url>
 						</HalfCol>
 						<HalfCol>
 							{(investment.defaulted && !investment.collected) && (
