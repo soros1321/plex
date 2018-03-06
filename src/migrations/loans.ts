@@ -1,6 +1,9 @@
 const Web3 = require('web3');
 const Dharma = require('@dharmaprotocol/dharma.js');
 const promisify = require('tiny-promisify');
+const BigNumber = require('bignumber.js');
+const ABIDecoder = require('abi-decoder');
+const compact = require('lodash.compact');
 
 // Import Currently Deployed Dharma contracts (should only be done in test context -- otherwise)
 const DebtRegistry = require('../../../src/artifacts/DebtRegistry.json');
@@ -15,6 +18,7 @@ const TermsContractRegistry = require('../../../src/artifacts/TermsContractRegis
 const sampleDebtOrders = require('../../../src/migrations/sampleDebtOrders.json');
 
 let	web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
+let defaultAccount = '';
 
 if (web3.isConnected()) {
 	instantiateDharma();
@@ -28,6 +32,7 @@ async function instantiateDharma() {
 		if (!accounts.length) {
 			throw new Error('ETH account not available');
 		}
+		defaultAccount = accounts[0];
 
 		if (!(networkId in DebtKernel.networks &&
 			networkId in RepaymentRouter.networks &&
@@ -50,13 +55,13 @@ async function instantiateDharma() {
 		};
 
 		const dharma = new Dharma.default(web3.currentProvider, dharmaConfig);
-		generateDebtOrder(dharma);
+		fillDebtOrders(dharma);
 	} catch (e) {
 		throw new Error(e);
 	}
 }
 
-async function generateDebtOrder(dharma: any) {
+async function fillDebtOrders(dharma: any) {
 	try {
 		if (!web3 || !dharma) {
 			throw new Error('Unable to connect to blockchain');
@@ -64,7 +69,39 @@ async function generateDebtOrder(dharma: any) {
 		if (!sampleDebtOrders) {
 			throw new Error('Unable to find sample debt order data');
 		}
-		console.log(sampleDebtOrders[0]);
+
+		const tokenRegistry = await dharma.contracts.loadTokenRegistry();
+		for (let debtOrder of sampleDebtOrders) {
+			const principalToken = await tokenRegistry.getTokenAddress.callAsync(debtOrder.principalTokenSymbol);
+
+			const simpleInterestLoan = {
+				principalToken,
+				principalAmount: new BigNumber(debtOrder.principalAmount),
+				interestRate: new BigNumber(debtOrder.interestRate),
+				amortizationUnit: debtOrder.amortizationUnit,
+				termLength: new BigNumber(debtOrder.termLength)
+			};
+			const dharmaDebtOrder = await dharma.adapters.simpleInterestLoan.toDebtOrder(simpleInterestLoan);
+			dharmaDebtOrder.debtor = defaultAccount;
+			dharmaDebtOrder.creditor = defaultAccount;
+
+			// Set the token allowance to unlimited
+			await dharma.token.setUnlimitedProxyAllowanceAsync(principalToken);
+
+			/*
+			const tokenBalance = await dharma.token.getBalanceAsync(principalToken, dharmaDebtOrder.creditor);
+			const tokenAllowance = await dharma.token.getProxyAllowanceAsync(principalToken, dharmaDebtOrder.creditor);
+			 */
+
+			dharmaDebtOrder.debtorSignature = await dharma.sign.asDebtor(dharmaDebtOrder);
+			dharmaDebtOrder.creditorSignature = await dharma.sign.asCreditor(dharmaDebtOrder);
+
+			const txHash = await dharma.order.fillAsync(dharmaDebtOrder, {from: defaultAccount});
+			const receipt = await promisify(web3.eth.getTransactionReceipt)(txHash);
+			const debtOrderFilledLog = ABIDecoder.decodeLogs(receipt.logs);
+			console.log(txHash);
+			console.log(debtOrderFilledLog);
+		}
 	} catch (e) {
 		throw new Error(e);
 	}
