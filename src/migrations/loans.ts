@@ -11,6 +11,8 @@ const TokenRegistry = require('../../../src/artifacts/TokenRegistry.json');
 const DebtToken = require('../../../src/artifacts/DebtToken.json');
 const TermsContractRegistry = require('../../../src/artifacts/TermsContractRegistry.json');
 
+const sampleDebtOrder = require('../../../src/migrations/sampleDebtOrder.json');
+console.log(sampleDebtOrder);
 let	web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
 
 if (web3.isConnected()) {
@@ -54,6 +56,5 @@ async function instantiateDharma() {
 }
 
 async function generateDebtOrder(web3: any, dharma: any) {
-	console.log(dharma);
 	console.log('here');
 }

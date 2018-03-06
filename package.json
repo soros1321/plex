@@ -53,7 +53,7 @@
     "test": "react-scripts-ts test --env=jsdom",
     "eject": "react-scripts-ts eject",
     "ngrok:start": "ngrok http 3000",
-		"migrations:loans": "tsc; node build/dist/testMigrations/loans.js"
+		"migrations:loans": "tsc; node build/dist/migrations/loans.js"
   },
   "devDependencies": {
     "enzyme": "^3.3.0",
