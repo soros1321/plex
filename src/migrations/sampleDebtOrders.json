@@ -1,0 +1,37 @@
+[
+	{
+		"principalAmount": 10,
+		"principalTokenSymbol": "REP",
+		"interestRate": "12.3",
+		"amortizationUnit": "hours",
+		"termLength": "100"
+	},
+	{
+		"principalAmount": 130,
+		"principalTokenSymbol": "MKR",
+		"interestRate": "5",
+		"amortizationUnit": "days",
+		"termLength": "30"
+	},
+	{
+		"principalAmount": 500,
+		"principalTokenSymbol": "ZRX",
+		"interestRate": "3.2",
+		"amortizationUnit": "weeks",
+		"termLength": "6"
+	},
+	{
+		"principalAmount": 928,
+		"principalTokenSymbol": "REP",
+		"interestRate": "23",
+		"amortizationUnit": "months",
+		"termLength": "10"
+	},
+	{
+		"principalAmount": 10000,
+		"principalTokenSymbol": "ZRX",
+		"interestRate": "0.2",
+		"amortizationUnit": "years",
+		"termLength": "20"
+	}
+]

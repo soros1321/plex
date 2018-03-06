@@ -11,8 +11,9 @@ const TokenRegistry = require('../../../src/artifacts/TokenRegistry.json');
 const DebtToken = require('../../../src/artifacts/DebtToken.json');
 const TermsContractRegistry = require('../../../src/artifacts/TermsContractRegistry.json');
 
-const sampleDebtOrder = require('../../../src/migrations/sampleDebtOrder.json');
-console.log(sampleDebtOrder);
+// Sample data
+const sampleDebtOrders = require('../../../src/migrations/sampleDebtOrders.json');
+
 let	web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
 
 if (web3.isConnected()) {
@@ -49,12 +50,22 @@ async function instantiateDharma() {
 		};
 
 		const dharma = new Dharma.default(web3.currentProvider, dharmaConfig);
-		generateDebtOrder(web3, dharma);
+		generateDebtOrder(dharma);
 	} catch (e) {
 		throw new Error(e);
 	}
 }
 
-async function generateDebtOrder(web3: any, dharma: any) {
-	console.log('here');
+async function generateDebtOrder(dharma: any) {
+	try {
+		if (!web3 || !dharma) {
+			throw new Error('Unable to connect to blockchain');
+		}
+		if (!sampleDebtOrders) {
+			throw new Error('Unable to find sample debt order data');
+		}
+		console.log(sampleDebtOrders[0]);
+	} catch (e) {
+		throw new Error(e);
+	}
 }
