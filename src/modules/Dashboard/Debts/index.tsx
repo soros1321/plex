@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { DebtOrderEntity } from '../../../models';
 import { Header, MainWrapper } from '../../../components';
-import { DebtsMetrics } from './DebtsMetrics';
+import { DebtsMetricsContainer } from './DebtsMetrics/DebtsMetricsContainer';
 import { ActiveDebtOrderContainer } from './ActiveDebtOrder/ActiveDebtOrderContainer';
 import { DebtOrderHistory } from './DebtOrderHistory';
 
@@ -26,7 +26,7 @@ class Debts extends React.Component<Props, {}> {
 		return (
 			<MainWrapper>
 				<Header title="Your debts" />
-				<DebtsMetrics debtOrders={this.props.debtOrders} />
+				<DebtsMetricsContainer debtOrders={this.props.debtOrders} />
 				{ activeDebtOrders.map((debtOrder) => (
 						<ActiveDebtOrderContainer debtOrder={debtOrder} key={debtOrder.identifier} />
 					))
