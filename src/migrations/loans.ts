@@ -125,7 +125,7 @@ async function fillDebtOrders() {
 				}
 			}
 		}
-		fs.writeFile(ROOT_DIR + 'src/migrations/filledDebtOrders.json', JSON.stringify(filledDebtOrders), (err: any) => {
+		fs.writeFile(ROOT_DIR + 'src/migrations/filledDebtOrders.json', JSON.stringify(filledDebtOrders, null, 2), (err: any) => {
 			if (err) {
 				throw err;
 			}
