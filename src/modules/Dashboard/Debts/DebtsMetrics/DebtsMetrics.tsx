@@ -54,8 +54,10 @@ class DebtsMetrics extends React.Component<Props, State> {
 		if (debtOrders && debtOrders.length) {
 			for (let debtOrder of debtOrders) {
 				if (tokenBalances[debtOrder.principalTokenSymbol]) {
-					tokenBalances[debtOrder.principalTokenSymbol].totalRequested = tokenBalances[debtOrder.principalTokenSymbol].totalRequested.plus(debtOrder.principalAmount);
-					tokenBalances[debtOrder.principalTokenSymbol].totalRepaid = tokenBalances[debtOrder.principalTokenSymbol].totalRepaid.plus(debtOrder.repaidAmount);
+					if (debtOrder.status !== 'pending') {
+						tokenBalances[debtOrder.principalTokenSymbol].totalRequested = tokenBalances[debtOrder.principalTokenSymbol].totalRequested.plus(debtOrder.principalAmount);
+						tokenBalances[debtOrder.principalTokenSymbol].totalRepaid = tokenBalances[debtOrder.principalTokenSymbol].totalRepaid.plus(debtOrder.repaidAmount);
+					}
 				}
 			}
 			this.setState({ tokenBalances });
