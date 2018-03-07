@@ -112,8 +112,8 @@ async function fillDebtOrders() {
 			if (debtOrderFilledLog.name === 'LogDebtOrderFilled') {
 				const filledDebtOrder = Object.assign({ issuanceHash }, dharmaDebtOrder);
 
-				// Pay 1/4 of the debt order
-				const repaymentAmount = filledDebtOrder.principalAmount.div(4);
+				// Pay the debt order
+				const repaymentAmount = new BigNumber(debtOrder.repaymentAmount);
 				const repaymentSuccess = await makeRepayment(
 					filledDebtOrder.issuanceHash,
 					repaymentAmount,
