@@ -113,6 +113,7 @@ async function fillDebtOrders() {
 			const [debtOrderFilledLog] = compact(ABIDecoder.decodeLogs(receipt.logs));
 			if (debtOrderFilledLog.name === 'LogDebtOrderFilled') {
 				const filledDebtOrder = Object.assign({ issuanceHash }, dharmaDebtOrder);
+				filledDebtOrder.principalTokenSymbol = debtOrder.principalTokenSymbol;
 
 				// Generate the shortUrl for this debtOrder
 				const urlParams = {
@@ -123,7 +124,7 @@ async function fillDebtOrders() {
 					debtorSignature: JSON.stringify(filledDebtOrder.debtorSignature),
 					debtor: filledDebtOrder.debtor,
 					description: debtOrder.description,
-					principalTokenSymbol: debtOrder.principalTokenSymbol
+					principalTokenSymbol: filledDebtOrder.principalTokenSymbol
 				};
 				const bitlyResult = await bitly.shorten(process.env.REACT_APP_NGROK_HOSTNAME + '/fill/loan?' + encodeUrlParams(urlParams));
 				let fillLoanShortUrl: string = '';
