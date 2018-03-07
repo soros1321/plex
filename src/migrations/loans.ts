@@ -114,6 +114,7 @@ async function fillDebtOrders() {
 			if (debtOrderFilledLog.name === 'LogDebtOrderFilled') {
 				const filledDebtOrder = Object.assign({ issuanceHash }, dharmaDebtOrder);
 				filledDebtOrder.principalTokenSymbol = debtOrder.principalTokenSymbol;
+				filledDebtOrder.description = debtOrder.description;
 
 				// Generate the shortUrl for this debtOrder
 				const urlParams = {
