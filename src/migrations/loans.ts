@@ -4,21 +4,27 @@ const promisify = require('tiny-promisify');
 const BigNumber = require('bignumber.js');
 const ABIDecoder = require('abi-decoder');
 const compact = require('lodash.compact');
+const fs = require('fs');
+
+const ROOT_DIR = __dirname + '/../../../';
 
 // Import Currently Deployed Dharma contracts (should only be done in test context -- otherwise)
-const DebtRegistry = require('../../../src/artifacts/DebtRegistry.json');
-const DebtKernel = require('../../../src/artifacts/DebtKernel.json');
-const RepaymentRouter = require('../../../src/artifacts/RepaymentRouter.json');
-const TokenTransferProxy = require('../../../src/artifacts/TokenTransferProxy.json');
-const TokenRegistry = require('../../../src/artifacts/TokenRegistry.json');
-const DebtToken = require('../../../src/artifacts/DebtToken.json');
-const TermsContractRegistry = require('../../../src/artifacts/TermsContractRegistry.json');
+const DebtRegistry = require(ROOT_DIR + 'src/artifacts/DebtRegistry.json');
+const DebtKernel = require(ROOT_DIR + 'src/artifacts/DebtKernel.json');
+const RepaymentRouter = require(ROOT_DIR + 'src/artifacts/RepaymentRouter.json');
+const TokenTransferProxy = require(ROOT_DIR + 'src/artifacts/TokenTransferProxy.json');
+const TokenRegistry = require(ROOT_DIR + 'src/artifacts/TokenRegistry.json');
+const DebtToken = require(ROOT_DIR + 'src/artifacts/DebtToken.json');
+const TermsContractRegistry = require(ROOT_DIR + 'src/artifacts/TermsContractRegistry.json');
 
 // Sample data
-const sampleDebtOrders = require('../../../src/migrations/sampleDebtOrders.json');
+const sampleDebtOrders = require(ROOT_DIR + 'src/migrations/sampleDebtOrders.json');
 
 let	web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
 let defaultAccount = '';
+
+// Add DebtKernel.abi to ABIDecoder
+ABIDecoder.addABI(DebtKernel.abi);
 
 if (web3.isConnected()) {
 	instantiateDharma();
@@ -71,6 +77,7 @@ async function fillDebtOrders(dharma: any) {
 		}
 
 		const tokenRegistry = await dharma.contracts.loadTokenRegistry();
+		let filledDebtOrders: any[] = [];
 		for (let debtOrder of sampleDebtOrders) {
 			const principalToken = await tokenRegistry.getTokenAddress.callAsync(debtOrder.principalTokenSymbol);
 
@@ -88,20 +95,29 @@ async function fillDebtOrders(dharma: any) {
 			// Set the token allowance to unlimited
 			await dharma.token.setUnlimitedProxyAllowanceAsync(principalToken);
 
-			/*
-			const tokenBalance = await dharma.token.getBalanceAsync(principalToken, dharmaDebtOrder.creditor);
-			const tokenAllowance = await dharma.token.getProxyAllowanceAsync(principalToken, dharmaDebtOrder.creditor);
-			 */
-
+			// Sign as debtor
 			dharmaDebtOrder.debtorSignature = await dharma.sign.asDebtor(dharmaDebtOrder);
+
+			// Sign as creditor
 			dharmaDebtOrder.creditorSignature = await dharma.sign.asCreditor(dharmaDebtOrder);
+
+			// Get issuance hash for this debt order
+			const issuanceHash = await dharma.order.getIssuanceHash(dharmaDebtOrder);
 
 			const txHash = await dharma.order.fillAsync(dharmaDebtOrder, {from: defaultAccount});
 			const receipt = await promisify(web3.eth.getTransactionReceipt)(txHash);
-			const debtOrderFilledLog = ABIDecoder.decodeLogs(receipt.logs);
-			console.log(txHash);
-			console.log(debtOrderFilledLog);
+			const [debtOrderFilledLog] = compact(ABIDecoder.decodeLogs(receipt.logs));
+			if (debtOrderFilledLog.name === 'LogDebtOrderFilled') {
+				const filledDebtOrder = Object.assign({ issuanceHash }, dharmaDebtOrder);
+				filledDebtOrders.push(filledDebtOrder);
+			}
 		}
+		fs.writeFile(ROOT_DIR + 'src/migrations/filledDebtOrders.json', JSON.stringify(filledDebtOrders), (err: any) => {
+			if (err) {
+				throw err;
+			}
+			console.log('src/migrations/filledDebtOrders.json updated!');
+		});
 	} catch (e) {
 		throw new Error(e);
 	}
