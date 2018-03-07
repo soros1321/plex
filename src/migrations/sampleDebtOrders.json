@@ -5,6 +5,7 @@
 		"interestRate": "12.3",
 		"amortizationUnit": "hours",
 		"termLength": "100",
+		"description": "Hello, Can I borrow some REP please?",
 		"repaymentAmount": 4
 	},
 	{
@@ -13,6 +14,7 @@
 		"interestRate": "5",
 		"amortizationUnit": "days",
 		"termLength": "30",
+		"description": "Hello, Can I borrow some MKR please?",
 		"repaymentAmount": 130
 	},
 	{
@@ -21,6 +23,7 @@
 		"interestRate": "3.2",
 		"amortizationUnit": "weeks",
 		"termLength": "6",
+		"description": "Hello, Can I borrow some ZRX please?",
 		"repaymentAmount": 100
 	},
 	{
@@ -29,6 +32,7 @@
 		"interestRate": "23",
 		"amortizationUnit": "months",
 		"termLength": "10",
+		"description": "Hello, Can I borrow some REP please?",
 		"repaymentAmount": 928
 	},
 	{
@@ -37,6 +41,7 @@
 		"interestRate": "0.2",
 		"amortizationUnit": "years",
 		"termLength": "20",
+		"description": "Hello, Can I borrow some ZRX please?",
 		"repaymentAmount": 10
 	}
 ]

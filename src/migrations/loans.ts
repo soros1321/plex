@@ -1,3 +1,5 @@
+require('dotenv').config();
+const ROOT_DIR = __dirname + '/../../../';
 const Web3 = require('web3');
 const Dharma = require('@dharmaprotocol/dharma.js');
 const promisify = require('tiny-promisify');
@@ -5,8 +7,8 @@ const BigNumber = require('bignumber.js');
 const ABIDecoder = require('abi-decoder');
 const compact = require('lodash.compact');
 const fs = require('fs');
-
-const ROOT_DIR = __dirname + '/../../../';
+const BitlyClient = require('bitly');
+const bitly = new BitlyClient(process.env.REACT_APP_BITLY_ACCESS_TOKEN);
 
 // Import Currently Deployed Dharma contracts (should only be done in test context -- otherwise)
 const DebtRegistry = require(ROOT_DIR + 'src/artifacts/DebtRegistry.json');
@@ -112,6 +114,24 @@ async function fillDebtOrders() {
 			if (debtOrderFilledLog.name === 'LogDebtOrderFilled') {
 				const filledDebtOrder = Object.assign({ issuanceHash }, dharmaDebtOrder);
 
+				// Generate the shortUrl for this debtOrder
+				const urlParams = {
+					principalAmount: filledDebtOrder.principalAmount.toNumber(),
+					principalToken: principalToken,
+					termsContract: filledDebtOrder.termsContract,
+					termsContractParameters: filledDebtOrder.termsContractParameters,
+					debtorSignature: JSON.stringify(filledDebtOrder.debtorSignature),
+					debtor: filledDebtOrder.debtor,
+					description: debtOrder.description,
+					principalTokenSymbol: debtOrder.principalTokenSymbol
+				};
+				const bitlyResult = await bitly.shorten(process.env.REACT_APP_NGROK_HOSTNAME + '/fill/loan?' + encodeUrlParams(urlParams));
+				let fillLoanShortUrl: string = '';
+				if (bitlyResult.status_code === 200) {
+					fillLoanShortUrl = bitlyResult.data.url;
+				}
+				filledDebtOrder.fillLoanShortUrl = fillLoanShortUrl;
+
 				// Pay the debt order
 				const repaymentAmount = new BigNumber(debtOrder.repaymentAmount);
 				const repaymentSuccess = await makeRepayment(
@@ -150,4 +170,11 @@ async function makeRepayment(issuanceHash: string, amount: any, principalToken: 
 	} catch (e) {
 		throw new Error(e);
 	}
+}
+
+function encodeUrlParams(params: any): string {
+	const encodedParams = Object.keys(params).map(function(k: string) {
+		return encodeURIComponent(k) + '=' + encodeURIComponent(params[k]);
+	}).join('&');
+	return encodedParams;
 }
