@@ -56,7 +56,6 @@ class AppRouter extends React.Component<Props, {}> {
 		if (web3.isConnected()) {
 			dispatch(web3Connected(web3));
 			await this.instantiateDharma(web3);
-			await this.migrateDebtOrders();
 		}
 	}
 
@@ -92,10 +91,11 @@ class AppRouter extends React.Component<Props, {}> {
 
 			const dharma = new Dharma(web3.currentProvider, dharmaConfig);
 			dispatch(dharmaInstantiated(dharma));
+			await this.migrateDebtOrders(dharma);
 		}
 	}
 
-	async migrateDebtOrders() {
+	async migrateDebtOrders(dharma: Dharma) {
 		const { dispatch } = this.props.store;
 		if (!filledDebtOrders.length) {
 			return;
@@ -115,7 +115,19 @@ class AppRouter extends React.Component<Props, {}> {
 				issuanceHash: filledDebtOrder.issuanceHash,
 				fillLoanShortUrl: filledDebtOrder.fillLoanShortUrl
 			};
-			debtOrders.push(debtOrder);
+			try {
+				// Check whether this debtOrder exist on current network
+				const dharmaDebtOrder = {
+					principalAmount: debtOrder.principalAmount,
+					principalToken: debtOrder.principalToken,
+					termsContract: debtOrder.termsContract,
+					termsContractParameters: debtOrder.termsContractParameters
+				};
+				await dharma.adapters.simpleInterestLoan.fromDebtOrder(dharmaDebtOrder);
+				debtOrders.push(debtOrder);
+			} catch (e) {
+				// console.log(e);
+			}
 		}
 		dispatch(setDebtOrders(debtOrders));
 	}
