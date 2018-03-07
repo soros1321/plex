@@ -111,7 +111,9 @@ async function fillDebtOrders() {
 			const txHash = await dharma.order.fillAsync(dharmaDebtOrder, {from: dharmaDebtOrder.creditor});
 			const receipt = await promisify(web3.eth.getTransactionReceipt)(txHash);
 			const [debtOrderFilledLog] = compact(ABIDecoder.decodeLogs(receipt.logs));
+			console.log('Issuance Hash: ' + issuanceHash);
 			if (debtOrderFilledLog.name === 'LogDebtOrderFilled') {
+				console.log('- Debt order filled');
 				const filledDebtOrder = Object.assign({ issuanceHash }, dharmaDebtOrder);
 				filledDebtOrder.principalTokenSymbol = debtOrder.principalTokenSymbol;
 				filledDebtOrder.description = debtOrder.description;
@@ -131,6 +133,9 @@ async function fillDebtOrders() {
 				let fillLoanShortUrl: string = '';
 				if (bitlyResult.status_code === 200) {
 					fillLoanShortUrl = bitlyResult.data.url;
+					console.log('- Short Url generated');
+				} else {
+					console.log('- Unable to generate short url');
 				}
 				filledDebtOrder.fillLoanShortUrl = fillLoanShortUrl;
 
@@ -143,9 +148,15 @@ async function fillDebtOrders() {
 					{from: filledDebtOrder.debtor}
 				);
 				if (repaymentSuccess) {
+					console.log('- Repayment success');
 					filledDebtOrders.push(filledDebtOrder);
+				} else {
+					console.log('- Repayment failed');
 				}
+			} else {
+				console.log('- Unable to fill debt order');
 			}
+			console.log('\n');
 		}
 		fs.writeFile(ROOT_DIR + 'src/migrations/filledDebtOrders.json', JSON.stringify(filledDebtOrders, null, 2), (err: any) => {
 			if (err) {
