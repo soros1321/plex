@@ -21,7 +21,7 @@ import {
 import { getIdenticonImgSrc } from '../../../../utils';
 
 interface Props {
-	issuanceHash: string | undefined;
+	issuanceHash: string;
 	shortUrl: string;
 	onShareSocial: (socialMediaName: string) => void;
 }

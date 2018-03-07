@@ -8,8 +8,10 @@ import {
 	TokenWrapper,
 	Label
 } from './styledComponents';
+import Dharma from '@dharmaprotocol/dharma.js';
 
 interface Props {
+	dharma: Dharma;
 	debtOrders: DebtOrderEntity[];
 	tokens: TokenEntity[];
 }
@@ -18,7 +20,7 @@ interface State {
 	tokenBalances: {
 		[key: string]: {
 			totalRequested: BigNumber;
-			totalRepayed: BigNumber;
+			totalRepaid: BigNumber;
 		}
 	};
 }
@@ -32,22 +34,22 @@ class DebtsMetrics extends React.Component<Props, State> {
 	}
 
 	componentDidMount() {
-		this.initiateTokenBalance(this.props.tokens, this.props.debtOrders);
+		this.initiateTokenBalance(this.props.dharma, this.props.tokens, this.props.debtOrders);
 	}
 
 	componentWillReceiveProps(nextProps: Props) {
-		if (nextProps.tokens && nextProps.debtOrders) {
-			this.initiateTokenBalance(nextProps.tokens, nextProps.debtOrders);
+		if (nextProps.dharma && nextProps.tokens && nextProps.debtOrders) {
+			this.initiateTokenBalance(nextProps.dharma, nextProps.tokens, nextProps.debtOrders);
 		}
 	}
 
-	initiateTokenBalance(tokens: TokenEntity[], debtOrders: DebtOrderEntity[]) {
+	async initiateTokenBalance(dharma: Dharma, tokens: TokenEntity[], debtOrders: DebtOrderEntity[]) {
 		let tokenBalances: any = {};
 		if (tokens && tokens.length) {
 			for (let token of tokens) {
 				tokenBalances[token.tokenSymbol] = {
 					totalRequested: new BigNumber(0),
-					totalRepayed: new BigNumber(0)
+					totalRepaid: new BigNumber(0)
 				};
 			}
 		}
@@ -55,6 +57,12 @@ class DebtsMetrics extends React.Component<Props, State> {
 			for (let debtOrder of debtOrders) {
 				if (tokenBalances[debtOrder.principalTokenSymbol]) {
 					tokenBalances[debtOrder.principalTokenSymbol].totalRequested = tokenBalances[debtOrder.principalTokenSymbol].totalRequested.plus(debtOrder.principalAmount);
+					try {
+						const repaidAmount = await dharma.servicing.getValueRepaid(debtOrder.issuanceHash);
+						tokenBalances[debtOrder.principalTokenSymbol].totalRepaid = tokenBalances[debtOrder.principalTokenSymbol].totalRepaid.plus(repaidAmount);
+					} catch (e) {
+						// console.log(e);
+					}
 				}
 			}
 			this.setState({ tokenBalances });
@@ -64,9 +72,9 @@ class DebtsMetrics extends React.Component<Props, State> {
 	render() {
 		const { tokenBalances } = this.state;
 		let totalRequestedRows: JSX.Element[] = [];
-		let totalRepayedRows: JSX.Element[] = [];
+		let totalRepaidRows: JSX.Element[] = [];
 		for (let token in tokenBalances) {
-			if (tokenBalances[token].totalRequested.gt(0) || tokenBalances[token].totalRepayed.gt(0)) {
+			if (tokenBalances[token].totalRequested.gt(0) || tokenBalances[token].totalRepaid.gt(0)) {
 				if (tokenBalances[token].totalRequested.gt(0)) {
 					if (totalRequestedRows.length >= 4) {
 						continue;
@@ -81,24 +89,24 @@ class DebtsMetrics extends React.Component<Props, State> {
 						);
 					}
 				}
-				if (tokenBalances[token].totalRepayed.gt(0)) {
-					if (totalRepayedRows.length >= 4) {
+				if (tokenBalances[token].totalRepaid.gt(0)) {
+					if (totalRepaidRows.length >= 4) {
 						continue;
 					}
-					if (totalRepayedRows.length === 3) {
-						totalRepayedRows.push(
+					if (totalRepaidRows.length === 3) {
+						totalRepaidRows.push(
 							<TokenWrapper key={'more'}>AND MORE</TokenWrapper>
 						);
 					} else {
-						totalRepayedRows.push(
-							<TokenWrapper key={token}>{tokenBalances[token].totalRepayed.toNumber() + ' ' + token}</TokenWrapper>
+						totalRepaidRows.push(
+							<TokenWrapper key={token}>{tokenBalances[token].totalRepaid.toNumber() + ' ' + token}</TokenWrapper>
 						);
 					}
 				}
 			}
 		}
 		const defaultTotalRequested = <TokenWrapper>0 ETH</TokenWrapper>;
-		const defaultTotalRepayed = <TokenWrapper>0 ETH</TokenWrapper>;
+		const defaultTotalRepaid = <TokenWrapper>0 ETH</TokenWrapper>;
 		return (
 			<Wrapper>
 				<HalfCol>
@@ -112,12 +120,12 @@ class DebtsMetrics extends React.Component<Props, State> {
 				</HalfCol>
 				<HalfCol>
 					<Value>
-						{totalRepayedRows.length
-							? totalRepayedRows
-							: defaultTotalRepayed
+						{totalRepaidRows.length
+							? totalRepaidRows
+							: defaultTotalRepaid
 						}
 					</Value>
-					<Label>Total Repayed</Label>
+					<Label>Total Repaid</Label>
 				</HalfCol>
 			</Wrapper>
 		);

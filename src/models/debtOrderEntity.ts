@@ -10,7 +10,7 @@ export class DebtOrderEntity {
 	termsContract: string | undefined;
 	termsContractParameters: string | undefined;
 	description: string | undefined;
-	issuanceHash: string | undefined;
+	issuanceHash: string;
 	fillLoanShortUrl: string;
 
 	public constructor () {
