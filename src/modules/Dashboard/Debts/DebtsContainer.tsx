@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { ActiveDebtOrder } from './ActiveDebtOrder';
+import { Debts } from './Debts';
 
 const mapStateToProps = (state: any) => {
 	return {
@@ -12,7 +12,7 @@ const mapDispatchToProps = (dispatch: any) => {
 	};
 };
 
-export const ActiveDebtOrderContainer = connect(
+export const DebtsContainer = connect(
 	mapStateToProps,
 	mapDispatchToProps
-)(ActiveDebtOrder);
+)(Debts);

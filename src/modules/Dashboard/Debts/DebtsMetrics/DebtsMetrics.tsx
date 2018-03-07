@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DebtOrderEntity, TokenEntity } from '../../../../models';
+import { TokenEntity, DebtOrderMoreDetail } from '../../../../models';
 import { BigNumber } from 'bignumber.js';
 import {
 	Wrapper,
@@ -8,11 +8,9 @@ import {
 	TokenWrapper,
 	Label
 } from './styledComponents';
-import Dharma from '@dharmaprotocol/dharma.js';
 
 interface Props {
-	dharma: Dharma;
-	debtOrders: DebtOrderEntity[];
+	debtOrders: DebtOrderMoreDetail[];
 	tokens: TokenEntity[];
 }
 
@@ -34,16 +32,16 @@ class DebtsMetrics extends React.Component<Props, State> {
 	}
 
 	componentDidMount() {
-		this.initiateTokenBalance(this.props.dharma, this.props.tokens, this.props.debtOrders);
+		this.initiateTokenBalance(this.props.tokens, this.props.debtOrders);
 	}
 
 	componentWillReceiveProps(nextProps: Props) {
-		if (nextProps.dharma && nextProps.tokens && nextProps.debtOrders) {
-			this.initiateTokenBalance(nextProps.dharma, nextProps.tokens, nextProps.debtOrders);
+		if (nextProps.tokens && nextProps.debtOrders) {
+			this.initiateTokenBalance(nextProps.tokens, nextProps.debtOrders);
 		}
 	}
 
-	async initiateTokenBalance(dharma: Dharma, tokens: TokenEntity[], debtOrders: DebtOrderEntity[]) {
+	async initiateTokenBalance(tokens: TokenEntity[], debtOrders: DebtOrderMoreDetail[]) {
 		let tokenBalances: any = {};
 		if (tokens && tokens.length) {
 			for (let token of tokens) {
@@ -57,12 +55,7 @@ class DebtsMetrics extends React.Component<Props, State> {
 			for (let debtOrder of debtOrders) {
 				if (tokenBalances[debtOrder.principalTokenSymbol]) {
 					tokenBalances[debtOrder.principalTokenSymbol].totalRequested = tokenBalances[debtOrder.principalTokenSymbol].totalRequested.plus(debtOrder.principalAmount);
-					try {
-						const repaidAmount = await dharma.servicing.getValueRepaid(debtOrder.issuanceHash);
-						tokenBalances[debtOrder.principalTokenSymbol].totalRepaid = tokenBalances[debtOrder.principalTokenSymbol].totalRepaid.plus(repaidAmount);
-					} catch (e) {
-						// console.log(e);
-					}
+					tokenBalances[debtOrder.principalTokenSymbol].totalRepaid = tokenBalances[debtOrder.principalTokenSymbol].totalRepaid.plus(debtOrder.repaidAmount);
 				}
 			}
 			this.setState({ tokenBalances });

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DebtOrderEntity } from '../../../../models';
+import { DebtOrderMoreDetail } from '../../../../models';
 import {
 	formatDate,
 	formatTime,
@@ -32,11 +32,9 @@ import {
 	DetailLink
 } from './styledComponents';
 import { Row, Col, Collapse } from 'reactstrap';
-import Dharma from '@dharmaprotocol/dharma.js';
 
 interface Props {
-	debtOrder: DebtOrderEntity;
-	dharma: Dharma;
+	debtOrder: DebtOrderMoreDetail;
 }
 
 interface RepaymentSchedule {
@@ -46,49 +44,15 @@ interface RepaymentSchedule {
 
 interface State {
 	collapse: boolean;
-	termLength: number | undefined;
-	interestRate: number | undefined;
-	amortizationUnit: string;
 }
 
 class ActiveDebtOrder extends React.Component<Props, State> {
 	constructor(props: Props) {
 		super(props);
 		this.state = {
-			collapse: false,
-			termLength: undefined,
-			interestRate: undefined,
-			amortizationUnit: ''
+			collapse: false
 		};
 		this.toggleDrawer = this.toggleDrawer.bind(this);
-		this.getDebtOrderDetail(this.props.dharma, this.props.debtOrder);
-	}
-
-	componentWillReceiveProps(nextProps: Props) {
-		if (nextProps.dharma && nextProps.debtOrder) {
-			this.getDebtOrderDetail(nextProps.dharma, nextProps.debtOrder);
-		}
-	}
-
-	async getDebtOrderDetail(dharma: Dharma, debtOrder: DebtOrderEntity) {
-		if (!dharma || !debtOrder) {
-			return;
-		}
-
-		const dharmaDebtOrder = {
-			principalAmount: debtOrder.principalAmount,
-			principalToken: debtOrder.principalToken,
-			termsContract: debtOrder.termsContract,
-			termsContractParameters: debtOrder.termsContractParameters
-		};
-		if (dharmaDebtOrder.termsContract && dharmaDebtOrder.termsContractParameters) {
-			const fromDebtOrder = await dharma.adapters.simpleInterestLoan.fromDebtOrder(dharmaDebtOrder);
-			this.setState({
-				termLength: fromDebtOrder.termLength.toNumber(),
-				amortizationUnit: fromDebtOrder.amortizationUnit,
-				interestRate: fromDebtOrder.interestRate.toNumber()
-			});
-		}
 	}
 
 	toggleDrawer() {
@@ -97,7 +61,6 @@ class ActiveDebtOrder extends React.Component<Props, State> {
 
 	render() {
 		const { debtOrder } = this.props;
-		const { termLength, interestRate, amortizationUnit } = this.state;
 		const now = Math.round((new Date()).getTime() / 1000);
 		const pastIcon = require('../../../../assets/img/ok_circle.png');
 		const futureIcon = require('../../../../assets/img/circle_outline.png');
@@ -184,10 +147,6 @@ class ActiveDebtOrder extends React.Component<Props, State> {
 			maxDisplay++;
 		});
 
-		// TODO: need a way to figure out whether this debt order
-		// is active or pending, i.e has start date?
-		const active: boolean = false;
-
 		const identiconImgSrc = getIdenticonImgSrc(debtOrder.issuanceHash, 60, 0.1);
 
 		return (
@@ -205,10 +164,10 @@ class ActiveDebtOrder extends React.Component<Props, State> {
 								{shortenString(debtOrder.identifier)}
 							</DetailLink>
 						</Url>
-						{active ? <StatusActive>Active</StatusActive> : <StatusPending>Pending</StatusPending>}
+						{debtOrder.status === 'active' ? <StatusActive>Active</StatusActive> : <StatusPending>Pending</StatusPending>}
 						<Terms>Simple Interest (Installments)</Terms>
 					</DetailContainer>
-					<RepaymentScheduleContainer className={active ? 'active' : ''}>
+					<RepaymentScheduleContainer className={debtOrder.status === 'active' ? 'active' : ''}>
 						<Title>Repayment Schedule</Title>
 						{repaymentScheduleItems}
 					</RepaymentScheduleContainer>
@@ -232,7 +191,7 @@ class ActiveDebtOrder extends React.Component<Props, State> {
 										Term Length
 									</InfoItemTitle>
 									<InfoItemContent>
-										{(termLength && amortizationUnit ? termLength + ' ' + amortizationUnit : '-')}
+										{(debtOrder.termLength && debtOrder.amortizationUnit ? debtOrder.termLength.toNumber() + ' ' + debtOrder.amortizationUnit : '-')}
 									</InfoItemContent>
 								</InfoItem>
 							</Col>
@@ -242,7 +201,7 @@ class ActiveDebtOrder extends React.Component<Props, State> {
 										Interest Rate
 									</InfoItemTitle>
 									<InfoItemContent>
-										{(interestRate ? interestRate + '%' : '-')}
+										{(debtOrder.interestRate ? debtOrder.interestRate.toNumber() + '%' : '-')}
 									</InfoItemContent>
 								</InfoItem>
 							</Col>
@@ -252,7 +211,7 @@ class ActiveDebtOrder extends React.Component<Props, State> {
 										Installment Frequency
 									</InfoItemTitle>
 									<InfoItemContent>
-										{(amortizationUnit ? amortizationUnitToFrequency(amortizationUnit) : '-')}
+										{(debtOrder.amortizationUnit ? amortizationUnitToFrequency(debtOrder.amortizationUnit) : '-')}
 									</InfoItemContent>
 								</InfoItem>
 							</Col>

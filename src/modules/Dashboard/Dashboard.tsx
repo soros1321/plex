@@ -7,7 +7,7 @@ import {
 	TabContent,
 	TabPane
 } from 'reactstrap';
-import { Debts } from './Debts';
+import { DebtsContainer } from './Debts/DebtsContainer';
 import { Investments } from './Investments';
 import { StyledNavItem, TitleFirstWord, TitleRest } from './styledComponents';
 
@@ -50,7 +50,7 @@ class Dashboard extends React.Component<Props, States> {
 			{
 				id: '1',
 				title: 'Your Debts (' + (this.props.debtOrders && this.props.debtOrders.length) + ')',
-				content: <Debts debtOrders={this.props.debtOrders} />
+				content: <DebtsContainer debtOrders={this.props.debtOrders} />
 			},
 			{
 				id: '2',

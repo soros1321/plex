@@ -3,8 +3,7 @@ import { DebtsMetrics } from './DebtsMetrics';
 
 const mapStateToProps = (state: any) => {
 	return {
-		tokens: state.tokenReducer.tokens,
-		dharma: state.dharmaReducer.dharma
+		tokens: state.tokenReducer.tokens
 	};
 };
 
