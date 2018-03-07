@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { DebtOrderEntity } from '../../../../models';
+import { DebtOrderMoreDetail } from '../../../../models';
+import { shortenString } from '../../../../utils';
 // import { formatDate } from '../../../../utils';
 import {
 	Wrapper,
@@ -8,11 +9,12 @@ import {
 } from './styledComponents';
 
 interface Props {
-	debtOrders: DebtOrderEntity[];
+	debtOrders: DebtOrderMoreDetail[];
 }
 
 class DebtOrderHistory extends React.Component<Props, {}> {
 	render() {
+		const { debtOrders } = this.props;
 		return (
 			<Wrapper>
 				<Title>Past debts and loan request</Title>
@@ -27,16 +29,16 @@ class DebtOrderHistory extends React.Component<Props, {}> {
 					</thead>
 					<tbody>
 						{
-							/*
-							this.props.debtOrders.map((debt) => (
-							<tr key={loan.id}>
-								<td>{loan.amount} {loan.currency}</td>
-								<td>{loan.id}</td>
-								<td>{loan.paid ? 'Repaid ' + formatDate(loan.paidOnTimestamp) : '-'}</td>
-								<td className="terms">{loan.terms} Interest{loan.installments ? ' (Installments)' : ''}</td>
-							</tr>
+							debtOrders.map((debtOrder) => (
+								<tr key={debtOrder.identifier}>
+									<td>{debtOrder.principalAmount.toNumber() + ' ' + debtOrder.principalTokenSymbol}</td>
+									<td>{shortenString(debtOrder.identifier)}</td>
+									<td>{debtOrder.principalAmount.eq(debtOrder.repaidAmount) ? 'Paid' : 'Unpaid'}</td>
+									<td className="terms">
+										{(debtOrder.termLength && debtOrder.amortizationUnit ? debtOrder.termLength.toNumber() + ' ' + debtOrder.amortizationUnit : '-')}
+									</td>
+								</tr>
 							))
-							*/
 						}
 					</tbody>
 				</DebtOrderHistoryTable>
