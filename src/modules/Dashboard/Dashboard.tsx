@@ -49,7 +49,7 @@ class Dashboard extends React.Component<Props, States> {
 		const tabs = [
 			{
 				id: '1',
-				title: 'Your Debts (' + (this.props.debtOrders.length) + ')',
+				title: 'Your Debts (' + (this.props.debtOrders && this.props.debtOrders.length) + ')',
 				content: <Debts debtOrders={this.props.debtOrders} />
 			},
 			{

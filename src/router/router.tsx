@@ -16,11 +16,12 @@ import {
 } from '../modules';
 import { ParentContainer } from '../layouts';
 import * as Web3 from 'web3';
-import { web3Connected, dharmaInstantiated, setAccounts, setError } from '../common/actions';
+import { web3Connected, dharmaInstantiated, setAccounts, setError, setDebtOrders } from '../common/actions';
 const promisify = require('tiny-promisify');
 
 // Import Dharma libraries
 import Dharma from '@dharmaprotocol/dharma.js';
+import { BigNumber } from 'bignumber.js';
 
 // Import Currently Deployed Dharma contracts (should only be done in test context -- otherwise)
 const DebtRegistry = require('../artifacts/DebtRegistry.json');
@@ -30,6 +31,10 @@ const TokenTransferProxy = require('../artifacts/TokenTransferProxy.json');
 const TokenRegistry = require('../artifacts/TokenRegistry.json');
 const DebtToken = require('../artifacts/DebtToken.json');
 const TermsContractRegistry = require('../artifacts/TermsContractRegistry.json');
+
+// Import testing filled Debt Orders (if exist)
+import { DebtOrderEntity } from '../models';
+const filledDebtOrders = require('../migrations/filledDebtOrders.json');
 
 interface Props {
 	store: any;
@@ -51,6 +56,7 @@ class AppRouter extends React.Component<Props, {}> {
 		if (web3.isConnected()) {
 			dispatch(web3Connected(web3));
 			await this.instantiateDharma(web3);
+			await this.migrateDebtOrders();
 		}
 	}
 
@@ -87,6 +93,31 @@ class AppRouter extends React.Component<Props, {}> {
 			const dharma = new Dharma(web3.currentProvider, dharmaConfig);
 			dispatch(dharmaInstantiated(dharma));
 		}
+	}
+
+	async migrateDebtOrders() {
+		const { dispatch } = this.props.store;
+		if (!filledDebtOrders.length) {
+			return;
+		}
+		const debtOrders: DebtOrderEntity[] = [];
+		for (let filledDebtOrder of filledDebtOrders) {
+			const debtOrder: DebtOrderEntity = {
+				identifier: filledDebtOrder.debtorSignature.r,
+				debtor: filledDebtOrder.debtor,
+				debtorSignature: JSON.stringify(filledDebtOrder.debtorSignature),
+				principalAmount: new BigNumber(filledDebtOrder.principalAmount),
+				principalToken: filledDebtOrder.principalToken,
+				principalTokenSymbol: filledDebtOrder.principalTokenSymbol,
+				termsContract: filledDebtOrder.termsContract,
+				termsContractParameters: filledDebtOrder.termsContractParameters,
+				description: filledDebtOrder.description,
+				issuanceHash: filledDebtOrder.issuanceHash,
+				fillLoanShortUrl: filledDebtOrder.fillLoanShortUrl
+			};
+			debtOrders.push(debtOrder);
+		}
+		dispatch(setDebtOrders(debtOrders));
 	}
 
 	render() {

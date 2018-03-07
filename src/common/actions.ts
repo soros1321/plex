@@ -1,4 +1,5 @@
 import { actionsEnums } from './actionsEnums';
+import { DebtOrderEntity } from '../models';
 
 export const web3Connected = (web3: any) => {
 	return {
@@ -25,5 +26,12 @@ export const setError = (errorMessage: string) => {
 	return {
 		type: actionsEnums.SET_ERROR,
 		errorMessage: errorMessage
+	};
+};
+
+export const setDebtOrders = (debtOrders: DebtOrderEntity[]) => {
+	return {
+		type: actionsEnums.SET_DEBT_ORDERS,
+		debtOrders: debtOrders
 	};
 };

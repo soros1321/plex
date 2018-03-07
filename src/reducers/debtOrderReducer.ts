@@ -29,12 +29,21 @@ const handleGetDebtOrder = (state: DebtOrderReducerState, payload: string) => {
 	};
 };
 
+const handleSetDebtOrders = (state: DebtOrderReducerState, payload: any) => {
+	return {
+		...state,
+		debtOrders: payload.debtOrders
+	};
+};
+
 export const debtOrderReducer = (state: DebtOrderReducerState = new DebtOrderReducerState(), action: any) => {
 	switch (action.type) {
 		case actionsEnums.REQUEST_DEBT_ORDER:
 			return handleRequestDebtOrder(state, action.payload);
 		case actionsEnums.GET_DEBT_ORDER:
 			return handleGetDebtOrder(state, action.payload);
+		case actionsEnums.SET_DEBT_ORDERS:
+			return handleSetDebtOrders(state, action);
 		default:
 			return state;
 	}

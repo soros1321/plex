@@ -43,16 +43,22 @@ class DebtsMetrics extends React.Component<Props, State> {
 
 	initiateTokenBalance(tokens: TokenEntity[], debtOrders: DebtOrderEntity[]) {
 		let tokenBalances: any = {};
-		for (let token of tokens) {
-			tokenBalances[token.tokenSymbol] = {
-				totalRequested: new BigNumber(0),
-				totalRepayed: new BigNumber(0)
-			};
+		if (tokens && tokens.length) {
+			for (let token of tokens) {
+				tokenBalances[token.tokenSymbol] = {
+					totalRequested: new BigNumber(0),
+					totalRepayed: new BigNumber(0)
+				};
+			}
 		}
-		for (let debtOrder of debtOrders) {
-			tokenBalances[debtOrder.principalTokenSymbol].totalRequested = tokenBalances[debtOrder.principalTokenSymbol].totalRequested.plus(debtOrder.principalAmount);
+		if (debtOrders && debtOrders.length) {
+			for (let debtOrder of debtOrders) {
+				if (tokenBalances[debtOrder.principalTokenSymbol]) {
+					tokenBalances[debtOrder.principalTokenSymbol].totalRequested = tokenBalances[debtOrder.principalTokenSymbol].totalRequested.plus(debtOrder.principalAmount);
+				}
+			}
+			this.setState({ tokenBalances });
 		}
-		this.setState({ tokenBalances });
 	}
 
 	render() {
