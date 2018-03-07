@@ -21,10 +21,12 @@ const TermsContractRegistry = require(ROOT_DIR + 'src/artifacts/TermsContractReg
 const sampleDebtOrders = require(ROOT_DIR + 'src/migrations/sampleDebtOrders.json');
 
 let	web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
-let defaultAccount = '';
+let defaultAccount: string = '';
+let dharma: any = null;
 
-// Add DebtKernel.abi to ABIDecoder
+// Add abi to ABIDecoder
 ABIDecoder.addABI(DebtKernel.abi);
+ABIDecoder.addABI(RepaymentRouter.abi);
 
 if (web3.isConnected()) {
 	instantiateDharma();
@@ -60,14 +62,14 @@ async function instantiateDharma() {
 			debtRegistryAddress: DebtRegistry.networks[networkId].address
 		};
 
-		const dharma = new Dharma.default(web3.currentProvider, dharmaConfig);
-		fillDebtOrders(dharma);
+		dharma = new Dharma.default(web3.currentProvider, dharmaConfig);
+		fillDebtOrders();
 	} catch (e) {
 		throw new Error(e);
 	}
 }
 
-async function fillDebtOrders(dharma: any) {
+async function fillDebtOrders() {
 	try {
 		if (!web3 || !dharma) {
 			throw new Error('Unable to connect to blockchain');
@@ -104,12 +106,23 @@ async function fillDebtOrders(dharma: any) {
 			// Get issuance hash for this debt order
 			const issuanceHash = await dharma.order.getIssuanceHash(dharmaDebtOrder);
 
-			const txHash = await dharma.order.fillAsync(dharmaDebtOrder, {from: defaultAccount});
+			const txHash = await dharma.order.fillAsync(dharmaDebtOrder, {from: dharmaDebtOrder.creditor});
 			const receipt = await promisify(web3.eth.getTransactionReceipt)(txHash);
 			const [debtOrderFilledLog] = compact(ABIDecoder.decodeLogs(receipt.logs));
 			if (debtOrderFilledLog.name === 'LogDebtOrderFilled') {
 				const filledDebtOrder = Object.assign({ issuanceHash }, dharmaDebtOrder);
-				filledDebtOrders.push(filledDebtOrder);
+
+				// Pay 1/4 of the debt order
+				const repaymentAmount = filledDebtOrder.principalAmount.div(4);
+				const repaymentSuccess = await makeRepayment(
+					filledDebtOrder.issuanceHash,
+					repaymentAmount,
+					filledDebtOrder.principalToken,
+					{from: filledDebtOrder.debtor}
+				);
+				if (repaymentSuccess) {
+					filledDebtOrders.push(filledDebtOrder);
+				}
 			}
 		}
 		fs.writeFile(ROOT_DIR + 'src/migrations/filledDebtOrders.json', JSON.stringify(filledDebtOrders), (err: any) => {
@@ -118,6 +131,22 @@ async function fillDebtOrders(dharma: any) {
 			}
 			console.log('src/migrations/filledDebtOrders.json updated!');
 		});
+	} catch (e) {
+		throw new Error(e);
+	}
+}
+
+async function makeRepayment(issuanceHash: string, amount: any, principalToken: string, options: any): Promise<boolean> {
+	try {
+		const txHash = await dharma.servicing.makeRepayment(
+			issuanceHash,
+			amount,
+			principalToken,
+			options
+		);
+		const receipt = await promisify(web3.eth.getTransactionReceipt)(txHash);
+		const [logs] = compact(ABIDecoder.decodeLogs(receipt.logs));
+		return (logs.name === 'LogRepayment');
 	} catch (e) {
 		throw new Error(e);
 	}
