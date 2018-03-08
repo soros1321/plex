@@ -192,9 +192,16 @@ export const ShowMore = PaymentDate.extend`
 export const Drawer = styled.div`
 	padding: 20px;
 	background-color: #F5F5F5;
+
+	@media only screen and (max-width: 480px) {
+		padding: 10px;
+	}
 `;
 
 export const InfoItem = styled.div`
+	@media only screen and (max-width: 480px) {
+		margin-bottom: 5px;
+	}
 `;
 
 export const InfoItemTitle = styled.div`

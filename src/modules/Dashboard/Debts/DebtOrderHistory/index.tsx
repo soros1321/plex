@@ -35,7 +35,7 @@ class DebtOrderHistory extends React.Component<Props, {}> {
 				</TableHeaderRow>
 				{
 					debtOrders.map((debtOrder) => (
-						<DebtOrderRow debtOrder={debtOrder} />
+						<DebtOrderRow debtOrder={debtOrder} key={debtOrder.identifier} />
 					))
 				}
 			</Wrapper>
