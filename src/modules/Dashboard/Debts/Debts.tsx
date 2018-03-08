@@ -98,7 +98,7 @@ class Debts extends React.Component<Props, State> {
 				<Header title="Your debts" />
 				<DebtsMetricsContainer debtOrders={allDebtOrders} />
 				{ activeDebtOrders.map((debtOrder) => (
-						<ActiveDebtOrder debtOrder={debtOrder} key={debtOrder.identifier} />
+						<ActiveDebtOrder debtOrder={debtOrder} key={debtOrder.issuanceHash} />
 					))
 				}
 				<DebtOrderHistory debtOrders={inactiveDebtOrders} />

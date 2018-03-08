@@ -40,7 +40,7 @@ class DebtOrderRow extends React.Component<Props, State> {
 						{debtOrder.principalAmount.toNumber() + ' ' + debtOrder.principalTokenSymbol}
 					</Col>
 					<Col xs="3" md="2">
-						{shortenString(debtOrder.identifier)}
+						{shortenString(debtOrder.issuanceHash)}
 					</Col>
 					<Col xs="3" md="5">
 						{debtOrder.principalAmount.eq(debtOrder.repaidAmount) ? 'Paid' : 'Delinquent'}

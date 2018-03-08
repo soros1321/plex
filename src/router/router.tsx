@@ -16,7 +16,8 @@ import {
 } from '../modules';
 import { ParentContainer } from '../layouts';
 import * as Web3 from 'web3';
-import { web3Connected, dharmaInstantiated, setAccounts, setError, setDebtOrders } from '../common/actions';
+import { web3Connected, dharmaInstantiated, setAccounts, setDebtOrders } from './actions';
+import { setError } from '../components/Error/actions';
 const promisify = require('tiny-promisify');
 
 // Import Dharma libraries
@@ -104,7 +105,6 @@ class AppRouter extends React.Component<Props, {}> {
 		const debtOrders: DebtOrderEntity[] = [];
 		for (let filledDebtOrder of filledDebtOrders) {
 			const debtOrder: DebtOrderEntity = {
-				identifier: filledDebtOrder.debtorSignature.r,
 				debtor: filledDebtOrder.debtor,
 				debtorSignature: JSON.stringify(filledDebtOrder.debtorSignature),
 				principalAmount: new BigNumber(filledDebtOrder.principalAmount),
@@ -148,7 +148,7 @@ class AppRouter extends React.Component<Props, {}> {
 					<Route path="/dashboard" component={DashboardContainer} />
 					<Route path="/request" component={ParentContainer}>
 						<IndexRoute component={RequestLoanFormContainer} />
-						<Route path="success/:identifier" component={RequestLoanSuccessContainer} />
+						<Route path="success/:issuanceHash" component={RequestLoanSuccessContainer} />
 					</Route>
 					<Route path="/fill" component={ParentContainer}>
 						<IndexRoute component={FillLoanEmpty} />

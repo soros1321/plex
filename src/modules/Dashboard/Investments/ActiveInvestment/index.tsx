@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { InvestmentEntity } from '../../../../models';
+/*
 import {
 	formatDate,
 	formatTime,
@@ -28,15 +29,18 @@ import {
 	PaymentDate,
 	ShowMore
 } from './styledComponents';
+*/
 
 interface Props {
 	investment: InvestmentEntity;
 }
 
+/*
 interface RepaymentSchedule {
 	timestamp: number;
 	type: string;
 }
+*/
 
 class ActiveInvestment extends React.Component<Props, {}> {
 	constructor(props: Props) {
@@ -49,6 +53,8 @@ class ActiveInvestment extends React.Component<Props, {}> {
 	}
 
 	render() {
+		return null;
+		/*
 		const investment = this.props.investment;
 		const now = Math.round((new Date()).getTime() / 1000);
 		const pastIcon = require('../../../../assets/img/ok_circle.png');
@@ -163,6 +169,7 @@ class ActiveInvestment extends React.Component<Props, {}> {
 				</RepaymentScheduleContainer>
 			</Wrapper>
 		);
+		*/
 	}
 }
 

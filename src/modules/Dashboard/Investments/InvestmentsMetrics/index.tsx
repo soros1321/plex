@@ -1,11 +1,13 @@
 import * as React from 'react';
 import { InvestmentEntity } from '../../../../models';
+/*
 import {
 	Wrapper,
 	HalfCol,
 	Value,
 	Label
 } from './styledComponents';
+*/
 
 interface Props {
 	investments: InvestmentEntity[];
@@ -13,6 +15,8 @@ interface Props {
 
 class InvestmentsMetrics extends React.Component<Props, {}> {
 	render() {
+		return null;
+		/*
 		let totalLended: number = 0;
 		let totalEarned: number = 0;
 		this.props.investments.forEach((investment) => {
@@ -31,6 +35,7 @@ class InvestmentsMetrics extends React.Component<Props, {}> {
 				</HalfCol>
 			</Wrapper>
 		);
+		*/
 	}
 }
 

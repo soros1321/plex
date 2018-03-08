@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { DebtOrderEntity, InvestmentEntity } from '../../models';
-import { investmentAPI } from '../../services';
 import {
 	Nav,
 	NavLink,
@@ -8,16 +7,16 @@ import {
 	TabPane
 } from 'reactstrap';
 import { DebtsContainer } from './Debts/DebtsContainer';
-import { Investments } from './Investments';
+// import { Investments } from './Investments';
 import { StyledNavItem, TitleFirstWord, TitleRest } from './styledComponents';
 
 interface Props {
 	debtOrders: DebtOrderEntity[];
+	investments: InvestmentEntity[];
 }
 
 interface States {
 	activeTab: string;
-	investments: InvestmentEntity[];
 }
 
 class Dashboard extends React.Component<Props, States> {
@@ -26,15 +25,8 @@ class Dashboard extends React.Component<Props, States> {
 
 		this.toggle = this.toggle.bind(this);
 		this.state = {
-			activeTab: '1',
-			investments: []
+			activeTab: '1'
 		};
-	}
-
-	componentDidMount() {
-		investmentAPI.fetchInvestments().then((investments) => {
-			this.setState({investments});
-		});
 	}
 
 	toggle(tab: string) {
@@ -54,8 +46,8 @@ class Dashboard extends React.Component<Props, States> {
 			},
 			{
 				id: '2',
-				title: 'Your Investments (' + (this.state.investments.length) + ')',
-				content: <Investments investments={this.state.investments} />
+				title: 'Your Investments ()',
+				content: <div />
 			}
 		];
 		const tabNavs = tabs.map((tab) => (

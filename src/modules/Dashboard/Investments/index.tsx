@@ -1,9 +1,11 @@
 import * as React from 'react';
 import { InvestmentEntity } from '../../../models';
+/*
 import { Header, MainWrapper } from '../../../components';
 import { InvestmentsMetrics } from './InvestmentsMetrics';
 import { ActiveInvestment } from './ActiveInvestment';
 import { InvestmentHistory } from './InvestmentHistory';
+*/
 
 interface Props {
 	investments: InvestmentEntity[];
@@ -11,6 +13,8 @@ interface Props {
 
 class Investments extends React.Component<Props, {}> {
 	render() {
+		return null;
+		/*
 		const activeInvestments: InvestmentEntity[] = [];
 		const pastInvestments: InvestmentEntity[] = [];
 		this.props.investments.forEach((investment) => {
@@ -32,6 +36,7 @@ class Investments extends React.Component<Props, {}> {
 				<InvestmentHistory investments={pastInvestments} />
 			</MainWrapper>
 		);
+		*/
 	}
 }
 

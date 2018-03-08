@@ -1,23 +1,31 @@
-export interface InvestmentEntity {
-	id: string;
-	loanId: string;
-	amountLended: number;
-	currency: string;
-	collateralized: boolean;
-	collateralSource: string;
-	collateralAmount: number;
-	collateralCurrency: string;
-	collateralLockupPeriod: string;
-	collateralCustomLockupPeriod: number;
-	terms: string;
-	installments: boolean;
-	amountPaid: number;
-	active: boolean;
-	defaulted: boolean;
-	collected: boolean;
-	paid: boolean;
-	createdOnTimestamp: number;
-	paidOnTimestamp: number;
-	defaultedOnTimestamp: number;
-	collectedOnTimestamp: number;
+import { BigNumber } from 'bignumber.js';
+
+export class InvestmentEntity {
+	debtorSignature: string;
+	debtor: string;
+	creditorSignature: string | undefined;
+	creditor: string;
+	principalAmount: BigNumber;
+	principalToken: string;
+	principalTokenSymbol: string;
+	termsContract: string;
+	termsContractParameters: string;
+	description: string;
+	issuanceHash: string;
+	fillLoanShortUrl: string;
+
+	public constructor () {
+		this.debtorSignature = '';
+		this.debtor = '';
+		this.creditorSignature = '';
+		this.creditor = '';
+		this.principalAmount = new BigNumber(0);
+		this.principalToken = '';
+		this.principalTokenSymbol = '';
+		this.termsContract = '';
+		this.termsContractParameters = '';
+		this.description = '';
+		this.issuanceHash = '';
+		this.fillLoanShortUrl = '';
+	}
 }

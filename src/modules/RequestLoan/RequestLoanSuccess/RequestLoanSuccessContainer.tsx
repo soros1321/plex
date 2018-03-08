@@ -11,7 +11,7 @@ const mapStateToProps = (state: any) => {
 
 const mapDispatchToProps = (dispatch: any) => {
 	return {
-		getDebtOrder: (identifier: string) => dispatch(getDebtOrder(identifier))
+		getDebtOrder: (issuanceHash: string) => dispatch(getDebtOrder(issuanceHash))
 	};
 };
 

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { InvestmentEntity } from '../../../../models';
+/*
 import { formatDate, shortenString } from '../../../../utils';
 import {
 	Wrapper,
@@ -9,6 +10,7 @@ import {
 	TableCell,
 	TermsCell
 } from './styledComponents';
+*/
 
 interface Props {
 	investments: InvestmentEntity[];
@@ -21,6 +23,8 @@ class InvestmentHistory extends React.Component<Props, {}> {
 	}
 
 	determineStatus(investment: InvestmentEntity): string {
+		return '';
+		/*
 		let investmentStatus: string = '-';
 		if (investment.defaulted && investment.collected) {
 			investmentStatus = 'Delinquent ' + formatDate(investment.defaultedOnTimestamp) + ', Collected ' + formatDate(investment.collectedOnTimestamp);
@@ -28,9 +32,12 @@ class InvestmentHistory extends React.Component<Props, {}> {
 			investmentStatus = 'Repaid ' + formatDate(investment.paidOnTimestamp);
 		}
 		return investmentStatus;
+		*/
 	}
 
 	render() {
+		return null;
+		/*
 		return (
 			<Wrapper>
 				<Title>Past debts and investment request</Title>
@@ -57,6 +64,7 @@ class InvestmentHistory extends React.Component<Props, {}> {
 				</StyledTable>
 			</Wrapper>
 		);
+		*/
 	}
 }
 

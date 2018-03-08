@@ -160,8 +160,8 @@ class ActiveDebtOrder extends React.Component<Props, State> {
 					<DetailContainer>
 						<Amount>{debtOrder.principalAmount.toNumber()} {debtOrder.principalTokenSymbol}</Amount>
 						<Url>
-							<DetailLink to={`/request/success/${debtOrder.identifier}`}>
-								{shortenString(debtOrder.identifier)}
+							<DetailLink to={`/request/success/${debtOrder.issuanceHash}`}>
+								{shortenString(debtOrder.issuanceHash)}
 							</DetailLink>
 						</Url>
 						{debtOrder.status === 'active' ? <StatusActive>Active</StatusActive> : <StatusPending>Pending</StatusPending>}
