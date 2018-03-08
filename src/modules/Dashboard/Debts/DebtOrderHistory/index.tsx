@@ -1,11 +1,12 @@
 import * as React from 'react';
 import { DebtOrderMoreDetail } from '../../../../models';
-import { shortenString } from '../../../../utils';
 // import { formatDate } from '../../../../utils';
+import { Col } from 'reactstrap';
+import { DebtOrderRow } from './DebtOrderRow';
 import {
 	Wrapper,
 	Title,
-	DebtOrderHistoryTable
+	TableHeaderRow
 } from './styledComponents';
 
 interface Props {
@@ -18,30 +19,25 @@ class DebtOrderHistory extends React.Component<Props, {}> {
 		return (
 			<Wrapper>
 				<Title>Past debts and loan request</Title>
-				<DebtOrderHistoryTable hover={true}>
-					<thead>
-						<tr>
-							<th>Amount</th>
-							<th>ID</th>
-							<th>Status</th>
-							<th>Terms</th>
-						</tr>
-					</thead>
-					<tbody>
-						{
-							debtOrders.map((debtOrder) => (
-								<tr key={debtOrder.identifier}>
-									<td>{debtOrder.principalAmount.toNumber() + ' ' + debtOrder.principalTokenSymbol}</td>
-									<td>{shortenString(debtOrder.identifier)}</td>
-									<td>{debtOrder.principalAmount.eq(debtOrder.repaidAmount) ? 'Paid' : 'Unpaid'}</td>
-									<td className="terms">
-										{(debtOrder.termLength && debtOrder.amortizationUnit ? debtOrder.termLength.toNumber() + ' ' + debtOrder.amortizationUnit : '-')}
-									</td>
-								</tr>
-							))
-						}
-					</tbody>
-				</DebtOrderHistoryTable>
+				<TableHeaderRow>
+					<Col xs="3" md="2">
+						Amount
+					</Col>
+					<Col xs="3" md="2">
+						ID
+					</Col>
+					<Col xs="3" md="5">
+						Status
+					</Col>
+					<Col xs="3" md="3">
+						Terms
+					</Col>
+				</TableHeaderRow>
+				{
+					debtOrders.map((debtOrder) => (
+						<DebtOrderRow debtOrder={debtOrder} />
+					))
+				}
 			</Wrapper>
 		);
 	}
