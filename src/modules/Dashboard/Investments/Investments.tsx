@@ -3,12 +3,9 @@ import { InvestmentEntity, InvestmentMoreDetail } from '../../../models';
 import { Header, MainWrapper } from '../../../components';
 import { InvestmentsMetricsContainer } from './InvestmentsMetrics/InvestmentsMetricsContainer';
 import { ActiveInvestment } from './ActiveInvestment';
+import { InvestmentHistory } from './InvestmentHistory';
 import Dharma from '@dharmaprotocol/dharma.js';
 import { BigNumber } from 'bignumber.js';
-
-/*
-import { InvestmentHistory } from './InvestmentHistory';
-*/
 
 interface Props {
 	dharma: Dharma;
@@ -93,7 +90,7 @@ class Investments extends React.Component<Props, State> {
 	}
 
 	render() {
-		const { allInvestments, activeInvestments } = this.state;
+		const { allInvestments, activeInvestments, inactiveInvestments } = this.state;
 
 		return (
 			<MainWrapper>
@@ -103,6 +100,7 @@ class Investments extends React.Component<Props, State> {
 						<ActiveInvestment investment={investment} key={investment.issuanceHash} />
 					))
 				}
+				<InvestmentHistory investments={inactiveInvestments} />
 			</MainWrapper>
 		);
 	}

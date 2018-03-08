@@ -1,70 +1,45 @@
 import * as React from 'react';
-import { InvestmentEntity } from '../../../../models';
-/*
-import { formatDate, shortenString } from '../../../../utils';
+import { InvestmentMoreDetail } from '../../../../models';
+// import { formatDate } from '../../../../utils';
+import { Col } from 'reactstrap';
+import { InvestmentRow } from './InvestmentRow';
 import {
 	Wrapper,
 	Title,
-	StyledTable,
-	TableHeaderCell,
-	TableCell,
-	TermsCell
+	TableHeaderRow
 } from './styledComponents';
-*/
 
 interface Props {
-	investments: InvestmentEntity[];
+	investments: InvestmentMoreDetail[];
 }
 
 class InvestmentHistory extends React.Component<Props, {}> {
-	constructor(props: Props) {
-		super(props);
-		this.determineStatus = this.determineStatus.bind(this);
-	}
-
-	determineStatus(investment: InvestmentEntity): string {
-		return '';
-		/*
-		let investmentStatus: string = '-';
-		if (investment.defaulted && investment.collected) {
-			investmentStatus = 'Delinquent ' + formatDate(investment.defaultedOnTimestamp) + ', Collected ' + formatDate(investment.collectedOnTimestamp);
-		} else if (investment.paid) {
-			investmentStatus = 'Repaid ' + formatDate(investment.paidOnTimestamp);
-		}
-		return investmentStatus;
-		*/
-	}
-
 	render() {
-		return null;
-		/*
+		const  { investments } = this.props;
 		return (
 			<Wrapper>
-				<Title>Past debts and investment request</Title>
-				<StyledTable>
-					<thead>
-						<tr>
-							<TableHeaderCell>Amount</TableHeaderCell>
-							<TableHeaderCell>ID</TableHeaderCell>
-							<TableHeaderCell>Status</TableHeaderCell>
-							<TableHeaderCell>Terms</TableHeaderCell>
-						</tr>
-					</thead>
-					<tbody>
-						{this.props.investments.map((investment) => (
-							<tr key={investment.id}>
-								<TableCell>{investment.amountLended} {investment.currency}</TableCell>
-								<TableCell>{shortenString(investment.id)}</TableCell>
-								<TableCell>{this.determineStatus(investment)}</TableCell>
-								<TermsCell className="terms">{investment.terms} Interest{investment.installments ? ' (Installments)' : ''}</TermsCell>
-							</tr>
-						))
-						}
-					</tbody>
-				</StyledTable>
+				<Title>Past debts and loan request</Title>
+				<TableHeaderRow>
+					<Col xs="3" md="2">
+						Amount
+					</Col>
+					<Col xs="3" md="2">
+						ID
+					</Col>
+					<Col xs="3" md="5">
+						Status
+					</Col>
+					<Col xs="3" md="3">
+						Terms
+					</Col>
+				</TableHeaderRow>
+				{
+					investments.map((investment) => (
+						<InvestmentRow investment={investment} key={investment.issuanceHash} />
+					))
+				}
 			</Wrapper>
 		);
-		*/
 	}
 }
 

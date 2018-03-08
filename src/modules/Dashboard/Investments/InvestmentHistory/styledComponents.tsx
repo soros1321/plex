@@ -1,14 +1,12 @@
-import * as React from 'react';
 import styled from 'styled-components';
-import { Table } from 'reactstrap';
+import { Row } from 'reactstrap';
 
-interface Props {
-	className?: string;
-}
-
-// styles-components
 export const Wrapper = styled.div`
 	margin-top: 80px;
+
+	@media only screen and (max-width: 480px) {
+		margin-top: 40px;
+	}
 `;
 
 export const Title = styled.div`
@@ -18,42 +16,64 @@ export const Title = styled.div`
 	margin-bottom: 20px;
 `;
 
-class UglyTable extends React.Component<Props, {}> {
-	render() {
-		return (
-			<Table className={this.props.className} hover={true}>
-				{this.props.children}
-			</Table>
-		);
-	}
-}
-
-export const StyledTable = styled(UglyTable)`
-	@media only screen and (max-width: 480px) {
-		font-size: 11px !important;
-	}
-`;
-
-export const TableHeaderCell = styled.th`
+export const TableHeaderRow = styled(Row)`
+	text-transform: uppercase;
+	border-bottom: 4px solid #DDDDDD;
 	opacity: 0.5;
 	color: #002326;
-	font-size: 17px;
+	font-family: DIN-Bold;
+	font-size: 15px;
 	line-height: 25px;
-	text-transform: uppercase;
-	border-top: 0 !important;
-	border-bottom: 4px solid #F0F0F0 !important;
+	padding-bottom: 8px;
 
 	@media only screen and (max-width: 480px) {
-		font-size: 13px !important;
+		font-size: 13px;
 	}
 `;
 
-export const TableCell = styled.td`
-	border: 0 !important;
-	font-size: 11px !important;
+export const StyledRow = styled(Row)`
+	color: #002326;
+	font-family: DIN;
+	font-size: 17px;
+	line-height: 25px;
+	padding: 15px 0px;
+	cursor: pointer;
+
+	@media only screen and (max-width: 480px) {
+		font-size: 11px;
+		padding: 8px 0px;
+	}
 `;
-export const TermsCell = TableCell.extend`
-	font-family: DIN-Bold;
+
+export const Drawer = styled.div`
+	padding: 20px;
+	background-color: #F5F5F5;
+
+	@media only screen and (max-width: 480px) {
+		padding: 10px;
+	}
+`;
+
+export const InfoItem = styled.div`
+	@media only screen and (max-width: 480px) {
+		margin-bottom: 5px;
+	}
+`;
+
+export const InfoItemTitle = styled.div`
 	text-transform: uppercase;
-	font-size: 8px !important;
+	font-family: DIN-Bold;
+	opacity: 0.5;
+	color: #002326;
+	font-size: 13px;
+	line-height: 20px;
+`;
+
+export const InfoItemContent = styled.div`
+	margin-top: 5px;
+	font-family: DIN-Bold;
+	opacity: 1;
+	color: #002326;
+	font-size: 13px;
+	line-height: 20px;
 `;
