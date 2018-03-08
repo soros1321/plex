@@ -4911,8 +4911,13 @@
       "events": {},
       "links": {},
       "address": "0x247ce6f450dfd216b2ce79710031502c8359958a"
+    },
+    "1520497125855": {
+      "events": {},
+      "links": {},
+      "address": "0x532a1c42f93713cf03b7c619f5856b29f18b7508"
     }
   },
   "schemaVersion": "1.0.1",
-  "updatedAt": "2018-03-07T23:48:23.691Z"
+  "updatedAt": "2018-03-08T08:19:03.078Z"
 }

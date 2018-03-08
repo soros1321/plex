@@ -81,7 +81,7 @@ async function fillDebtOrders() {
 		}
 
 		const tokenRegistry = await dharma.contracts.loadTokenRegistry();
-		let filledDebtOrders: any[] = [];
+		let migratedDebtOrders: any[] = [];
 		for (let debtOrder of sampleDebtOrders) {
 			const principalToken = await tokenRegistry.getTokenAddress.callAsync(debtOrder.principalTokenSymbol);
 
@@ -107,27 +107,71 @@ async function fillDebtOrders() {
 
 			// Get issuance hash for this debt order
 			const issuanceHash = await dharma.order.getIssuanceHash(dharmaDebtOrder);
-
-			const txHash = await dharma.order.fillAsync(dharmaDebtOrder, {from: dharmaDebtOrder.creditor});
-			const receipt = await promisify(web3.eth.getTransactionReceipt)(txHash);
-			const [debtOrderFilledLog] = compact(ABIDecoder.decodeLogs(receipt.logs));
 			console.log('Issuance Hash: ' + issuanceHash);
-			if (debtOrderFilledLog.name === 'LogDebtOrderFilled') {
-				console.log('- Debt order filled');
-				const filledDebtOrder = Object.assign({ issuanceHash }, dharmaDebtOrder);
-				filledDebtOrder.principalTokenSymbol = debtOrder.principalTokenSymbol;
-				filledDebtOrder.description = debtOrder.description;
+			if (debtOrder.fill) {
+				const txHash = await dharma.order.fillAsync(dharmaDebtOrder, {from: dharmaDebtOrder.creditor});
+				const receipt = await promisify(web3.eth.getTransactionReceipt)(txHash);
+				const [debtOrderFilledLog] = compact(ABIDecoder.decodeLogs(receipt.logs));
+				if (debtOrderFilledLog.name === 'LogDebtOrderFilled') {
+					console.log('- Debt order filled');
+					const filledDebtOrder = Object.assign({ issuanceHash }, dharmaDebtOrder);
+					filledDebtOrder.principalTokenSymbol = debtOrder.principalTokenSymbol;
+					filledDebtOrder.description = debtOrder.description;
+
+					// Generate the shortUrl for this debtOrder
+					const urlParams = {
+						principalAmount: filledDebtOrder.principalAmount.toNumber(),
+						principalToken: principalToken,
+						termsContract: filledDebtOrder.termsContract,
+						termsContractParameters: filledDebtOrder.termsContractParameters,
+						debtorSignature: JSON.stringify(filledDebtOrder.debtorSignature),
+						debtor: filledDebtOrder.debtor,
+						description: debtOrder.description,
+						principalTokenSymbol: filledDebtOrder.principalTokenSymbol
+					};
+					const bitlyResult = await bitly.shorten(process.env.REACT_APP_NGROK_HOSTNAME + '/fill/loan?' + encodeUrlParams(urlParams));
+					let fillLoanShortUrl: string = '';
+					if (bitlyResult.status_code === 200) {
+						fillLoanShortUrl = bitlyResult.data.url;
+						console.log('- Short Url generated');
+					} else {
+						console.log('- Unable to generate short url');
+					}
+					filledDebtOrder.fillLoanShortUrl = fillLoanShortUrl;
+
+					// Pay the debt order
+					const repaymentAmount = new BigNumber(debtOrder.repaymentAmount);
+					const repaymentSuccess = await makeRepayment(
+						filledDebtOrder.issuanceHash,
+						repaymentAmount,
+						filledDebtOrder.principalToken,
+						{from: filledDebtOrder.debtor}
+					);
+					if (repaymentSuccess) {
+						console.log('- Repayment success');
+						migratedDebtOrders.push(filledDebtOrder);
+					} else {
+						console.log('- Repayment failed');
+					}
+				} else {
+					console.log('- Unable to fill debt order');
+				}
+			} else {
+				console.log('- Skipping filling debt order');
+				dharmaDebtOrder.issuanceHash = issuanceHash;
+				dharmaDebtOrder.principalTokenSymbol = debtOrder.principalTokenSymbol;
+				dharmaDebtOrder.description = debtOrder.description;
 
 				// Generate the shortUrl for this debtOrder
 				const urlParams = {
-					principalAmount: filledDebtOrder.principalAmount.toNumber(),
+					principalAmount: dharmaDebtOrder.principalAmount.toNumber(),
 					principalToken: principalToken,
-					termsContract: filledDebtOrder.termsContract,
-					termsContractParameters: filledDebtOrder.termsContractParameters,
-					debtorSignature: JSON.stringify(filledDebtOrder.debtorSignature),
-					debtor: filledDebtOrder.debtor,
+					termsContract: dharmaDebtOrder.termsContract,
+					termsContractParameters: dharmaDebtOrder.termsContractParameters,
+					debtorSignature: JSON.stringify(dharmaDebtOrder.debtorSignature),
+					debtor: dharmaDebtOrder.debtor,
 					description: debtOrder.description,
-					principalTokenSymbol: filledDebtOrder.principalTokenSymbol
+					principalTokenSymbol: dharmaDebtOrder.principalTokenSymbol
 				};
 				const bitlyResult = await bitly.shorten(process.env.REACT_APP_NGROK_HOSTNAME + '/fill/loan?' + encodeUrlParams(urlParams));
 				let fillLoanShortUrl: string = '';
@@ -137,32 +181,16 @@ async function fillDebtOrders() {
 				} else {
 					console.log('- Unable to generate short url');
 				}
-				filledDebtOrder.fillLoanShortUrl = fillLoanShortUrl;
-
-				// Pay the debt order
-				const repaymentAmount = new BigNumber(debtOrder.repaymentAmount);
-				const repaymentSuccess = await makeRepayment(
-					filledDebtOrder.issuanceHash,
-					repaymentAmount,
-					filledDebtOrder.principalToken,
-					{from: filledDebtOrder.debtor}
-				);
-				if (repaymentSuccess) {
-					console.log('- Repayment success');
-					filledDebtOrders.push(filledDebtOrder);
-				} else {
-					console.log('- Repayment failed');
-				}
-			} else {
-				console.log('- Unable to fill debt order');
+				dharmaDebtOrder.fillLoanShortUrl = fillLoanShortUrl;
+				migratedDebtOrders.push(dharmaDebtOrder);
 			}
 			console.log('\n');
 		}
-		fs.writeFile(ROOT_DIR + 'src/migrations/filledDebtOrders.json', JSON.stringify(filledDebtOrders, null, 2), (err: any) => {
+		fs.writeFile(ROOT_DIR + 'src/migrations/migratedDebtOrders.json', JSON.stringify(migratedDebtOrders, null, 2), (err: any) => {
 			if (err) {
 				throw err;
 			}
-			console.log('src/migrations/filledDebtOrders.json updated!');
+			console.log('src/migrations/migratedDebtOrders.json updated!');
 		});
 	} catch (e) {
 		throw new Error(e);

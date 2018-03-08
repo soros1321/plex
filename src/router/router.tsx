@@ -33,9 +33,9 @@ const TokenRegistry = require('../artifacts/TokenRegistry.json');
 const DebtToken = require('../artifacts/DebtToken.json');
 const TermsContractRegistry = require('../artifacts/TermsContractRegistry.json');
 
-// Import testing filled Debt Orders (if exist)
+// Import testing Debt Orders (if exist)
 import { DebtOrderEntity, InvestmentEntity } from '../models';
-const filledDebtOrders = require('../migrations/filledDebtOrders.json');
+const migratedDebtOrders = require('../migrations/migratedDebtOrders.json');
 
 interface Props {
 	store: any;
@@ -99,25 +99,25 @@ class AppRouter extends React.Component<Props, {}> {
 
 	async migrateDebtOrders(dharma: Dharma) {
 		const { dispatch } = this.props.store;
-		if (!filledDebtOrders.length) {
+		if (!migratedDebtOrders.length) {
 			return;
 		}
 
 		const debtOrders: DebtOrderEntity[] = [];
 		const investments: InvestmentEntity[] = [];
 
-		for (let filledDebtOrder of filledDebtOrders) {
+		for (let migratedDebtOrder of migratedDebtOrders) {
 			const debtOrder: DebtOrderEntity = {
-				...filledDebtOrder,
-				debtorSignature: JSON.stringify(filledDebtOrder.debtorSignature),
-				principalAmount: new BigNumber(filledDebtOrder.principalAmount)
+				...migratedDebtOrder,
+				debtorSignature: JSON.stringify(migratedDebtOrder.debtorSignature),
+				principalAmount: new BigNumber(migratedDebtOrder.principalAmount)
 			};
 
 			const investment: InvestmentEntity = {
-				...filledDebtOrder,
-				debtorSignature: JSON.stringify(filledDebtOrder.debtorSignature),
-				creditorSignature: JSON.stringify(filledDebtOrder.creditorSignature),
-				principalAmount: new BigNumber(filledDebtOrder.principalAmount)
+				...migratedDebtOrder,
+				debtorSignature: JSON.stringify(migratedDebtOrder.debtorSignature),
+				creditorSignature: JSON.stringify(migratedDebtOrder.creditorSignature),
+				principalAmount: new BigNumber(migratedDebtOrder.principalAmount)
 			};
 
 			try {
@@ -130,7 +130,14 @@ class AppRouter extends React.Component<Props, {}> {
 				};
 				await dharma.adapters.simpleInterestLoan.fromDebtOrder(dharmaDebtOrder);
 				debtOrders.push(debtOrder);
-				investments.push(investment);
+
+				try {
+					// If there is a repaid value, means this order is filled
+					await dharma.servicing.getValueRepaid(investment.issuanceHash);
+					investments.push(investment);
+				} catch (ex) {
+					// console.log(ex);
+				}
 			} catch (e) {
 				// console.log(e);
 			}

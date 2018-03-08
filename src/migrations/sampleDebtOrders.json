@@ -6,6 +6,7 @@
 		"amortizationUnit": "hours",
 		"termLength": "100",
 		"description": "Hello, Can I borrow some REP please?",
+		"fill": true,
 		"repaymentAmount": 4
 	},
 	{
@@ -15,6 +16,7 @@
 		"amortizationUnit": "days",
 		"termLength": "30",
 		"description": "Hello, Can I borrow some MKR please?",
+		"fill": true,
 		"repaymentAmount": 130
 	},
 	{
@@ -24,7 +26,8 @@
 		"amortizationUnit": "weeks",
 		"termLength": "6",
 		"description": "Hello, Can I borrow some ZRX please?",
-		"repaymentAmount": 100
+		"fill": false,
+		"repaymentAmount": 0
 	},
 	{
 		"principalAmount": 928,
@@ -33,6 +36,7 @@
 		"amortizationUnit": "months",
 		"termLength": "10",
 		"description": "Hello, Can I borrow some REP please?",
+		"fill": true,
 		"repaymentAmount": 928
 	},
 	{
@@ -42,6 +46,27 @@
 		"amortizationUnit": "years",
 		"termLength": "20",
 		"description": "Hello, Can I borrow some ZRX please?",
-		"repaymentAmount": 10
+		"fill": false,
+		"repaymentAmount": 0
+	},
+	{
+		"principalAmount": 345,
+		"principalTokenSymbol": "MKR",
+		"interestRate": "4",
+		"amortizationUnit": "weeks",
+		"termLength": "20",
+		"description": "Hello, Can I borrow some MKR please?",
+		"fill": true,
+		"repaymentAmount": 100
+	},
+	{
+		"principalAmount": 1000,
+		"principalTokenSymbol": "REP",
+		"interestRate": "0.02",
+		"amortizationUnit": "years",
+		"termLength": "20",
+		"description": "Hello, Can I borrow some REP please?",
+		"fill": true,
+		"repaymentAmount": 1000
 	}
 ]
