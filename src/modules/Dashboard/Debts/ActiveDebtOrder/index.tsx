@@ -25,11 +25,11 @@ import {
 	Strikethrough,
 	PaymentDate,
 	ShowMore,
+	DetailLink,
 	Drawer,
 	InfoItem,
 	InfoItemTitle,
-	InfoItemContent,
-	DetailLink
+	InfoItemContent
 } from './styledComponents';
 import { Row, Col, Collapse } from 'reactstrap';
 
@@ -178,7 +178,7 @@ class ActiveDebtOrder extends React.Component<Props, State> {
 							<Col xs="12" md="2">
 								<InfoItem>
 									<InfoItemTitle>
-										Principal
+										Requested
 									</InfoItemTitle>
 									<InfoItemContent>
 										{debtOrder.principalAmount.toNumber() + ' ' + debtOrder.principalTokenSymbol}
@@ -188,10 +188,20 @@ class ActiveDebtOrder extends React.Component<Props, State> {
 							<Col xs="12" md="2">
 								<InfoItem>
 									<InfoItemTitle>
+										Repaid
+									</InfoItemTitle>
+									<InfoItemContent>
+										{debtOrder.repaidAmount.toNumber() + ' ' + debtOrder.principalTokenSymbol}
+									</InfoItemContent>
+								</InfoItem>
+							</Col>
+							<Col xs="12" md="2">
+								<InfoItem>
+									<InfoItemTitle>
 										Term Length
 									</InfoItemTitle>
 									<InfoItemContent>
-										{(debtOrder.termLength && debtOrder.amortizationUnit ? debtOrder.termLength.toNumber() + ' ' + debtOrder.amortizationUnit : '-')}
+										{debtOrder.termLength.toNumber() + ' ' + debtOrder.amortizationUnit}
 									</InfoItemContent>
 								</InfoItem>
 							</Col>
@@ -201,21 +211,21 @@ class ActiveDebtOrder extends React.Component<Props, State> {
 										Interest Rate
 									</InfoItemTitle>
 									<InfoItemContent>
-										{(debtOrder.interestRate ? debtOrder.interestRate.toNumber() + '%' : '-')}
+										{debtOrder.interestRate.toNumber() + '%'}
 									</InfoItemContent>
 								</InfoItem>
 							</Col>
-							<Col xs="12" md="3">
+							<Col xs="12" md="2">
 								<InfoItem>
 									<InfoItemTitle>
 										Installment Frequency
 									</InfoItemTitle>
 									<InfoItemContent>
-										{(debtOrder.amortizationUnit ? amortizationUnitToFrequency(debtOrder.amortizationUnit) : '-')}
+										{amortizationUnitToFrequency(debtOrder.amortizationUnit)}
 									</InfoItemContent>
 								</InfoItem>
 							</Col>
-							<Col xs="12" md="3">
+							<Col xs="12" md="2">
 								<InfoItem>
 									<InfoItemTitle>
 										Description

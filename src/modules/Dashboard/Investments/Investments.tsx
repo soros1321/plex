@@ -2,11 +2,11 @@ import * as React from 'react';
 import { InvestmentEntity, InvestmentMoreDetail } from '../../../models';
 import { Header, MainWrapper } from '../../../components';
 import { InvestmentsMetricsContainer } from './InvestmentsMetrics/InvestmentsMetricsContainer';
+import { ActiveInvestment } from './ActiveInvestment';
 import Dharma from '@dharmaprotocol/dharma.js';
 import { BigNumber } from 'bignumber.js';
 
 /*
-import { ActiveInvestment } from './ActiveInvestment';
 import { InvestmentHistory } from './InvestmentHistory';
 */
 
@@ -93,12 +93,16 @@ class Investments extends React.Component<Props, State> {
 	}
 
 	render() {
-		const { allInvestments } = this.state;
+		const { allInvestments, activeInvestments } = this.state;
 
 		return (
 			<MainWrapper>
 				<Header title="Your investments" />
 				<InvestmentsMetricsContainer investments={allInvestments} />
+				{ activeInvestments.map((investment) => (
+						<ActiveInvestment investment={investment} key={investment.issuanceHash} />
+					))
+				}
 			</MainWrapper>
 		);
 	}

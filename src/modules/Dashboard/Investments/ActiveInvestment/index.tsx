@@ -1,22 +1,19 @@
 import * as React from 'react';
-import { InvestmentEntity } from '../../../../models';
-/*
+import { InvestmentMoreDetail } from '../../../../models';
 import {
 	formatDate,
 	formatTime,
 	getIdenticonImgSrc,
-	shortenString
+	shortenString,
+	amortizationUnitToFrequency
 } from '../../../../utils';
-import { Row } from 'reactstrap';
 import {
 	Wrapper,
 	ImageContainer,
 	IdenticonImage,
 	DetailContainer,
-	HalfCol,
 	Amount,
 	Url,
-	CollectButton,
 	StatusActive,
 	StatusDefaulted,
 	Terms,
@@ -27,39 +24,54 @@ import {
 	ScheduleIcon,
 	Strikethrough,
 	PaymentDate,
-	ShowMore
+	ShowMore,
+	DetailLink,
+	Drawer,
+	InfoItem,
+	InfoItemTitle,
+	InfoItemContent
 } from './styledComponents';
-*/
+import { Row, Col, Collapse } from 'reactstrap';
 
 interface Props {
-	investment: InvestmentEntity;
+	investment: InvestmentMoreDetail;
 }
 
-/*
 interface RepaymentSchedule {
 	timestamp: number;
 	type: string;
 }
-*/
 
-class ActiveInvestment extends React.Component<Props, {}> {
+interface State {
+	collapse: boolean;
+}
+
+class ActiveInvestment extends React.Component<Props, State> {
 	constructor(props: Props) {
 		super(props);
+		this.state = {
+			collapse: false
+		};
 		this.handleCollectInvestment = this.handleCollectInvestment.bind(this);
+		this.toggleDrawer = this.toggleDrawer.bind(this);
 	}
 
 	handleCollectInvestment(investmentId: string) {
 		console.log('collect investment', investmentId);
 	}
 
+	toggleDrawer() {
+		this.setState({ collapse: !this.state.collapse });
+	}
+
 	render() {
-		return null;
-		/*
-		const investment = this.props.investment;
+		const { investment } = this.props;
 		const now = Math.round((new Date()).getTime() / 1000);
 		const pastIcon = require('../../../../assets/img/ok_circle.png');
 		const futureIcon = require('../../../../assets/img/circle_outline.png');
 		const repaymentSchedules: RepaymentSchedule[] = [];
+
+		/*
 		let repaymentTimestamp = investment.createdOnTimestamp;
 		if (investment.installments) {
 			let count = 0;
@@ -108,6 +120,7 @@ class ActiveInvestment extends React.Component<Props, {}> {
 			}
 			repaymentSchedules.push({timestamp: repaymentTimestamp, type: 'date'});
 		}
+		*/
 
 		const repaymentScheduleItems: JSX.Element[] = [];
 		let maxDisplay = 0;
@@ -140,36 +153,99 @@ class ActiveInvestment extends React.Component<Props, {}> {
 			maxDisplay++;
 		});
 
-		const identiconImgSrc = getIdenticonImgSrc(investment.id, 60, 0.1);
+		const identiconImgSrc = getIdenticonImgSrc(investment.issuanceHash, 60, 0.1);
 		return (
-			<Wrapper>
-				<ImageContainer>
-					{identiconImgSrc && (
-						<IdenticonImage src={identiconImgSrc} />
-					)}
-				</ImageContainer>
-				<DetailContainer>
-					<Row>
-						<HalfCol>
-							<Amount>{investment.amountLended} {investment.currency}</Amount>
-							<Url href="#">{shortenString(investment.id)}</Url>
-						</HalfCol>
-						<HalfCol>
-							{(investment.defaulted && !investment.collected) && (
-								<CollectButton className="button" onClick={() => this.handleCollectInvestment(investment.id)}>Collect Now</CollectButton>
-							)}
-						</HalfCol>
-					</Row>
-					{investment.defaulted ? <StatusDefaulted>Defaulted</StatusDefaulted> : <StatusActive>Active</StatusActive>}
-					<Terms>{investment.terms} Interest{investment.installments ? ' (Installments)' : ''}</Terms>
-				</DetailContainer>
-				<RepaymentScheduleContainer>
-					<Title>Repayment Schedule</Title>
-					{repaymentScheduleItems}
-				</RepaymentScheduleContainer>
+			<Wrapper onClick={this.toggleDrawer}>
+				<Row>
+					<ImageContainer>
+						{identiconImgSrc && (
+							<IdenticonImage src={identiconImgSrc} />
+						)}
+					</ImageContainer>
+					<DetailContainer>
+						<Amount>{investment.principalAmount.toNumber()} {investment.principalTokenSymbol}</Amount>
+						<Url>
+							<DetailLink to={`/request/success/${investment.issuanceHash}`}>
+								{shortenString(investment.issuanceHash)}
+							</DetailLink>
+						</Url>
+						{investment.status === 'active' ? <StatusActive>Active</StatusActive> : <StatusDefaulted>Defaulted</StatusDefaulted>}
+						<Terms>Simple Interest (Installments)</Terms>
+					</DetailContainer>
+					<RepaymentScheduleContainer>
+						<Title>Repayment Schedule</Title>
+						{repaymentScheduleItems}
+					</RepaymentScheduleContainer>
+				</Row>
+				<Collapse isOpen={this.state.collapse}>
+					<Drawer>
+						<Row>
+							<Col xs="12" md="2">
+								<InfoItem>
+									<InfoItemTitle>
+										Lended
+									</InfoItemTitle>
+									<InfoItemContent>
+										{investment.principalAmount.toNumber() + ' ' + investment.principalTokenSymbol}
+									</InfoItemContent>
+								</InfoItem>
+							</Col>
+							<Col xs="12" md="2">
+								<InfoItem>
+									<InfoItemTitle>
+										Earned
+									</InfoItemTitle>
+									<InfoItemContent>
+										{investment.earnedAmount.toNumber() + ' ' + investment.principalTokenSymbol}
+									</InfoItemContent>
+								</InfoItem>
+							</Col>
+
+							<Col xs="12" md="2">
+								<InfoItem>
+									<InfoItemTitle>
+										Term Length
+									</InfoItemTitle>
+									<InfoItemContent>
+										{investment.termLength.toNumber() + ' ' + investment.amortizationUnit}
+									</InfoItemContent>
+								</InfoItem>
+							</Col>
+							<Col xs="12" md="2">
+								<InfoItem>
+									<InfoItemTitle>
+										Interest Rate
+									</InfoItemTitle>
+									<InfoItemContent>
+										{investment.interestRate.toNumber() + '%'}
+									</InfoItemContent>
+								</InfoItem>
+							</Col>
+							<Col xs="12" md="2">
+								<InfoItem>
+									<InfoItemTitle>
+										Installment Frequency
+									</InfoItemTitle>
+									<InfoItemContent>
+										{amortizationUnitToFrequency(investment.amortizationUnit)}
+									</InfoItemContent>
+								</InfoItem>
+							</Col>
+							<Col xs="12" md="2">
+								<InfoItem>
+									<InfoItemTitle>
+										Description
+									</InfoItemTitle>
+									<InfoItemContent>
+										{investment.description}
+									</InfoItemContent>
+								</InfoItem>
+							</Col>
+						</Row>
+					</Drawer>
+				</Collapse>
 			</Wrapper>
 		);
-		*/
 	}
 }
 

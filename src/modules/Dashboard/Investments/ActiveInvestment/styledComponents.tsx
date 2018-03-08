@@ -1,16 +1,18 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { Row, Col } from 'reactstrap';
+import { Col } from 'reactstrap';
+import { StyledLink } from '../../../../components';
 
 interface Props {
 	className?: string;
 }
 
 // styles-components
-export const Wrapper = styled(Row)`
+export const Wrapper = styled.div`
 	margin: 20px 0px;
 	background-color: #FFFFFF;
 	box-shadow: 0 12px 24px 0 rgba(0,0,0,0.12);
+	cursor: pointer;
 `;
 
 class UglyImageContainer extends React.Component<Props, {}> {
@@ -30,7 +32,6 @@ export const ImageContainer = styled(UglyImageContainer)`
 export const IdenticonImage = styled.img`
 	width: 60px;
 	height: 60px;
-
 	@media only screen and (max-width: 480px) {
 		width: 100px;
 		height: 100px;
@@ -51,17 +52,6 @@ export const DetailContainer = styled(UglyDetailContainer)`
 	padding: 15px !important;
 `;
 
-class HalfCol extends React.Component<Props, {}> {
-	render() {
-		return (
-			<Col className={this.props.className} xs="12" md="6">
-				{this.props.children}
-			</Col>
-		);
-	}
-}
-export { HalfCol };
-
 export const Amount = styled.div`
 	color: #002326;
 	font-family: DIN-Bold;
@@ -69,19 +59,10 @@ export const Amount = styled.div`
 	line-height: 25px;
 `;
 
-export const Url = styled.a`
+export const Url = styled.div`
 	color: #002326;
 	font-size: 15px;
 	line-height: 25px;
-	display: block;
-`;
-
-export const CollectButton = styled.button`
-	background-color: #E93D59 !important;
-	border: 1px #E93D59 !important;
-	min-width: auto !important;
-	padding: 2px 15px !important;
-	float: right;
 `;
 
 export const StatusActive = styled.div`
@@ -107,12 +88,28 @@ export const Terms = styled.div`
 	font-size: 13px;
 	line-height: 16px;
 	text-transform: uppercase;
+
+	@media only screen and (max-width: 480px) {
+		font-size: 11px;
+	}
 `;
+
+class HalfCol extends React.Component<Props, {}> {
+	render() {
+		return (
+			<Col className={this.props.className} xs="12" md="6">
+				{this.props.children}
+			</Col>
+		);
+	}
+}
+export { HalfCol };
 
 export const RepaymentScheduleContainer = styled(HalfCol)`
 	padding: 15px 30px !important;
 	background-color: #082C30;
 	color: #FFFFFF;
+	display: block;
 `;
 
 export const Title = styled.div`
@@ -187,4 +184,53 @@ export const PaymentDate = styled.div`
 
 export const ShowMore = PaymentDate.extend`
 	text-transform: uppercase;
+`;
+
+export const Drawer = styled.div`
+	padding: 20px;
+	background-color: #F5F5F5;
+
+	@media only screen and (max-width: 480px) {
+		padding: 10px;
+	}
+`;
+
+export const InfoItem = styled.div`
+ @media only screen and (max-width: 480px) {
+	 margin-bottom: 5px;
+ }
+`;
+
+export const InfoItemTitle = styled.div`
+	text-transform: uppercase;
+	font-family: DIN-Bold;
+	opacity: 0.5;
+	color: #002326;
+	font-size: 13px;
+	font-weight: bold;
+	line-height: 20px;
+`;
+
+export const InfoItemContent = styled.div`
+	margin-top: 5px;
+	font-family: DIN-Bold;
+	opacity: 1;
+	color: #002326;
+	font-size: 13px;
+	line-height: 20px;
+`;
+
+export const DetailLink = StyledLink.extend`
+	font-family: DIN;
+	&:hover {
+		font-family: DIN;
+	}
+`;
+
+export const CollectButton = styled.button`
+	background-color: #E93D59 !important;
+	border: 1px #E93D59 !important;
+	min-width: auto !important;
+	padding: 2px 15px !important;
+	float: right;
 `;
