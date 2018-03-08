@@ -66,6 +66,7 @@ class AppRouter extends React.Component<Props, {}> {
 
 		if (!accounts.length) {
 			dispatch(setError('Unable to find active account on current Ethereum network'));
+			return;
 		}
 
 		dispatch(setAccounts(accounts));
@@ -78,21 +79,21 @@ class AppRouter extends React.Component<Props, {}> {
 			networkId in TermsContractRegistry.networks &&
 			networkId in DebtRegistry.networks)) {
 			dispatch(setError('Unable to connect to the blockchain'));
-		} else {
-			const dharmaConfig = {
-				kernelAddress: DebtKernel.networks[networkId].address,
-				repaymentRouterAddress: RepaymentRouter.networks[networkId].address,
-				tokenTransferProxyAddress: TokenTransferProxy.networks[networkId].address,
-				tokenRegistryAddress: TokenRegistry.networks[networkId].address,
-				debtTokenAddress: DebtToken.networks[networkId].address,
-				termsContractRegistry: TermsContractRegistry.networks[networkId].address,
-				debtRegistryAddress: DebtRegistry.networks[networkId].address
-			};
-
-			const dharma = new Dharma(web3.currentProvider, dharmaConfig);
-			dispatch(dharmaInstantiated(dharma));
-			await this.migrateDebtOrders(dharma);
+			return;
 		}
+		const dharmaConfig = {
+			kernelAddress: DebtKernel.networks[networkId].address,
+			repaymentRouterAddress: RepaymentRouter.networks[networkId].address,
+			tokenTransferProxyAddress: TokenTransferProxy.networks[networkId].address,
+			tokenRegistryAddress: TokenRegistry.networks[networkId].address,
+			debtTokenAddress: DebtToken.networks[networkId].address,
+			termsContractRegistry: TermsContractRegistry.networks[networkId].address,
+			debtRegistryAddress: DebtRegistry.networks[networkId].address
+		};
+
+		const dharma = new Dharma(web3.currentProvider, dharmaConfig);
+		dispatch(dharmaInstantiated(dharma));
+		await this.migrateDebtOrders(dharma);
 	}
 
 	async migrateDebtOrders(dharma: Dharma) {
