@@ -24,7 +24,14 @@ import * as Web3 from 'web3';
 import Dharma from '@dharmaprotocol/dharma.js';
 import { DebtOrder } from '@dharmaprotocol/dharma.js/dist/types/src/types';
 import { BigNumber } from 'bignumber.js';
-import { TokenEntity } from '../../../models';
+import { TokenEntity, InvestmentEntity } from '../../../models';
+const compact = require('lodash.compact');
+const ABIDecoder = require('abi-decoder');
+const DebtKernel = require('../../../artifacts/DebtKernel.json');
+const promisify = require('tiny-promisify');
+
+// Set up ABIDecoder
+ABIDecoder.addABI(DebtKernel.abi);
 
 interface DebtOrderWithDescription extends DebtOrder {
 	description?: string;
@@ -37,6 +44,7 @@ interface Props {
 	dharma: Dharma;
 	tokens: TokenEntity[];
 	handleSetError: (errorMessage: string) => void;
+	handleFillDebtOrder: (investment: InvestmentEntity) => void;
 }
 
 interface States {
@@ -47,6 +55,7 @@ interface States {
 	termLength: BigNumber | undefined;
 	amortizationUnit: string;
 	principalTokenSymbol: string;
+	issuanceHash: string;
 }
 
 class FillLoanEntered extends React.Component<Props, States> {
@@ -60,7 +69,8 @@ class FillLoanEntered extends React.Component<Props, States> {
 			interestRate: undefined,
 			termLength: undefined,
 			amortizationUnit: '',
-			principalTokenSymbol: ''
+			principalTokenSymbol: '',
+			issuanceHash: ''
 		};
 		this.confirmationModalToggle = this.confirmationModalToggle.bind(this);
 		this.successModalToggle = this.successModalToggle.bind(this);
@@ -99,14 +109,16 @@ class FillLoanEntered extends React.Component<Props, States> {
 
 			if (debtOrderWithDescription.termsContract && debtOrderWithDescription.termsContractParameters) {
 				const fromDebtOrder = await dharma.adapters.simpleInterestLoan.fromDebtOrder(debtOrderWithDescription);
+				const issuanceHash = await dharma.order.getIssuanceHash(debtOrderWithDescription);
 				this.setState({
 					interestRate: fromDebtOrder.interestRate,
 					termLength: fromDebtOrder.termLength,
-					amortizationUnit: fromDebtOrder.amortizationUnit
+					amortizationUnit: fromDebtOrder.amortizationUnit,
+					issuanceHash: issuanceHash
 				});
 			}
 		} catch (e) {
-			console.log(e);
+			// console.log(e);
 		}
 	}
 
@@ -129,7 +141,6 @@ class FillLoanEntered extends React.Component<Props, States> {
 				}
 			}
 		}
-
 		this.confirmationModalToggle();
 	}
 
@@ -137,13 +148,33 @@ class FillLoanEntered extends React.Component<Props, States> {
 		try {
 			this.props.handleSetError('');
 			const { dharma, accounts } = this.props;
-			const { debtOrderWithDescription } = this.state;
+			const { debtOrderWithDescription, principalTokenSymbol, issuanceHash } = this.state;
 
 			debtOrderWithDescription.creditor = accounts[0];
-			const response = await dharma.order.fillAsync(debtOrderWithDescription);
-
-			console.log(response);
-			this.successModalToggle();
+			const txHash = await dharma.order.fillAsync(debtOrderWithDescription, {from: accounts[0]});
+			const receipt = await promisify(web3.eth.getTransactionReceipt)(txHash);
+			const [debtOrderFilledLog] = compact(ABIDecoder.decodeLogs(receipt.logs));
+			if (debtOrderFilledLog.name === 'LogDebtOrderFilled') {
+				const investment: InvestmentEntity = {
+					debtorSignature: JSON.stringify(debtOrderWithDescription.debtorSignature),
+					debtor: debtOrderWithDescription.debtor,
+					creditor: debtOrderWithDescription.creditor,
+					principalAmount: debtOrderWithDescription.principalAmount,
+					principalToken: debtOrderWithDescription.principalToken,
+					principalTokenSymbol,
+					termsContract: debtOrderWithDescription.termsContract,
+					termsContractParameters: debtOrderWithDescription.termsContractParameters,
+					description: debtOrderWithDescription.description,
+					issuanceHash
+				};
+				this.props.handleFillDebtOrder(investment);
+				this.successModalToggle();
+			} else {
+				this.props.handleSetError('Unable to fill this Debt Order');
+				this.setState({
+					confirmationModal: false
+				});
+			}
 		} catch (e) {
 			this.props.handleSetError('Unable to fill this Debt Order');
 			this.setState({

@@ -163,7 +163,7 @@ class ActiveInvestment extends React.Component<Props, State> {
 						)}
 					</ImageContainer>
 					<DetailContainer>
-						<Amount>{investment.principalAmount.toNumber()} {investment.principalTokenSymbol}</Amount>
+						<Amount>{investment.principalAmount ? investment.principalAmount.toNumber() + ' ' + investment.principalTokenSymbol : '-'}</Amount>
 						<Url>
 							<DetailLink to={`/request/success/${investment.issuanceHash}`}>
 								{shortenString(investment.issuanceHash)}
@@ -186,7 +186,7 @@ class ActiveInvestment extends React.Component<Props, State> {
 										Lended
 									</InfoItemTitle>
 									<InfoItemContent>
-										{investment.principalAmount.toNumber() + ' ' + investment.principalTokenSymbol}
+										{investment.principalAmount ? investment.principalAmount.toNumber() + ' ' + investment.principalTokenSymbol : '-'}
 									</InfoItemContent>
 								</InfoItem>
 							</Col>

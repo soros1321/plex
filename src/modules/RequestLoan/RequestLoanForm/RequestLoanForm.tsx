@@ -72,7 +72,7 @@ class RequestLoanForm extends React.Component<Props, State> {
 			this.props.handleSetError('');
 			const { principalAmount, principalTokenSymbol, description } = this.state.formData.loan;
 			const { interestRate, amortizationUnit, termLength } = this.state.formData.terms;
-			const dharma = this.props.dharma;
+			const { dharma, accounts } = this.props;
 
 			const tokenRegistry = await dharma.contracts.loadTokenRegistry();
 			const principalToken = await tokenRegistry.getTokenAddress.callAsync(principalTokenSymbol);
@@ -85,6 +85,7 @@ class RequestLoanForm extends React.Component<Props, State> {
 				termLength: new BigNumber(termLength)
 			};
 			const debtOrder = await dharma.adapters.simpleInterestLoan.toDebtOrder(simpleInterestLoan);
+			debtOrder.debtor = accounts[0];
 			const issuanceHash = await dharma.order.getIssuanceHash(debtOrder);
 			const debtOrderWithDescriptionIssuanceHash: DebtOrderWithDescriptionIssuanceHash = {
 				...debtOrder,
@@ -110,7 +111,6 @@ class RequestLoanForm extends React.Component<Props, State> {
 
 			const debtOrder = JSON.parse(this.state.debtOrder);
 			debtOrder.principalAmount = new BigNumber(debtOrder.principalAmount);
-			debtOrder.debtor = this.props.accounts[0];
 
 			// Sign as debtor
 			const debtorSignature = await this.props.dharma.sign.asDebtor(debtOrder);

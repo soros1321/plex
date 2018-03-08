@@ -68,7 +68,7 @@ class Investments extends React.Component<Props, State> {
 					// The repaid value from debtor is the earned amount for creditor
 					const earnedAmount = await dharma.servicing.getValueRepaid(investment.issuanceHash);
 					investmentMoreDetail.earnedAmount = earnedAmount;
-					investmentMoreDetail.status = earnedAmount.lt(investment.principalAmount) ? 'active' : 'inactive';
+					investmentMoreDetail.status = investment.principalAmount && earnedAmount.lt(investment.principalAmount) ? 'active' : 'inactive';
 					if (investmentMoreDetail.status === 'active') {
 						activeInvestments.push(investmentMoreDetail);
 					} else {

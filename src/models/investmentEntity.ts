@@ -2,17 +2,16 @@ import { BigNumber } from 'bignumber.js';
 
 export class InvestmentEntity {
 	debtorSignature: string;
-	debtor: string;
-	creditorSignature: string | undefined;
+	debtor: string | undefined;
+	creditorSignature?: string;
 	creditor: string;
-	principalAmount: BigNumber;
-	principalToken: string;
+	principalAmount: BigNumber | undefined;
+	principalToken: string | undefined;
 	principalTokenSymbol: string;
-	termsContract: string;
-	termsContractParameters: string;
-	description: string;
+	termsContract: string | undefined;
+	termsContractParameters: string | undefined;
+	description: string | undefined;
 	issuanceHash: string;
-	fillLoanShortUrl: string;
 
 	public constructor () {
 		this.debtorSignature = '';
@@ -26,6 +25,5 @@ export class InvestmentEntity {
 		this.termsContractParameters = '';
 		this.description = '';
 		this.issuanceHash = '';
-		this.fillLoanShortUrl = '';
 	}
 }
