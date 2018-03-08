@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import { RequestLoanForm } from './RequestLoanForm';
 import { userRequestDebtOrder } from './actions';
 import { DebtOrderEntity } from '../../../models';
-import { setError } from '../../../common/actions';
+import { setError } from '../../../components/Error/actions';
 
 const mapStateToProps = (state: any) => {
 	return {

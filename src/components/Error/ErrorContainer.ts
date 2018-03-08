@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import { Error } from './Error';
-import { setError } from '../../common/actions';
+import { setError } from './actions';
 
 const mapStateToProps = (state: any) => {
 	return {
