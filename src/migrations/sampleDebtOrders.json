@@ -36,8 +36,8 @@
 		"amortizationUnit": "months",
 		"termLength": "10",
 		"description": "Hello, Can I borrow some REP please?",
-		"fill": true,
-		"repaymentAmount": 928
+		"fill": false,
+		"repaymentAmount": 0
 	},
 	{
 		"principalAmount": 10000,
@@ -46,8 +46,8 @@
 		"amortizationUnit": "years",
 		"termLength": "20",
 		"description": "Hello, Can I borrow some ZRX please?",
-		"fill": false,
-		"repaymentAmount": 0
+		"fill": true,
+		"repaymentAmount": 302
 	},
 	{
 		"principalAmount": 345,

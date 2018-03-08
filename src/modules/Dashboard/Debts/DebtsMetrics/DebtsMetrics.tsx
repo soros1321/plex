@@ -54,10 +54,9 @@ class DebtsMetrics extends React.Component<Props, State> {
 		if (debtOrders && debtOrders.length) {
 			for (let debtOrder of debtOrders) {
 				if (tokenBalances[debtOrder.principalTokenSymbol]) {
-					if (debtOrder.status !== 'pending') {
-						tokenBalances[debtOrder.principalTokenSymbol].totalRequested = tokenBalances[debtOrder.principalTokenSymbol].totalRequested.plus(debtOrder.principalAmount);
-						tokenBalances[debtOrder.principalTokenSymbol].totalRepaid = tokenBalances[debtOrder.principalTokenSymbol].totalRepaid.plus(debtOrder.repaidAmount);
-					}
+					// TODO: Should we exclude pending debt orders?
+					tokenBalances[debtOrder.principalTokenSymbol].totalRequested = tokenBalances[debtOrder.principalTokenSymbol].totalRequested.plus(debtOrder.principalAmount);
+					tokenBalances[debtOrder.principalTokenSymbol].totalRepaid = tokenBalances[debtOrder.principalTokenSymbol].totalRepaid.plus(debtOrder.repaidAmount);
 				}
 			}
 			this.setState({ tokenBalances });
