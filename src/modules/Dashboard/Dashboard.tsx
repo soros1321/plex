@@ -7,7 +7,7 @@ import {
 	TabPane
 } from 'reactstrap';
 import { DebtsContainer } from './Debts/DebtsContainer';
-// import { Investments } from './Investments';
+import { InvestmentsContainer } from './Investments/InvestmentsContainer';
 import { StyledNavItem, TitleFirstWord, TitleRest } from './styledComponents';
 
 interface Props {
@@ -46,8 +46,8 @@ class Dashboard extends React.Component<Props, States> {
 			},
 			{
 				id: '2',
-				title: 'Your Investments ()',
-				content: <div />
+				title: 'Your Investments (' + (this.props.investments && this.props.investments.length) + ')',
+				content: <InvestmentsContainer investments={this.props.investments} />
 			}
 		];
 		const tabNavs = tabs.map((tab) => (

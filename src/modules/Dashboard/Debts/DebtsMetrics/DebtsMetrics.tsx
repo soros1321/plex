@@ -41,7 +41,7 @@ class DebtsMetrics extends React.Component<Props, State> {
 		}
 	}
 
-	async initiateTokenBalance(tokens: TokenEntity[], debtOrders: DebtOrderMoreDetail[]) {
+	initiateTokenBalance(tokens: TokenEntity[], debtOrders: DebtOrderMoreDetail[]) {
 		let tokenBalances: any = {};
 		if (tokens && tokens.length) {
 			for (let token of tokens) {
@@ -100,15 +100,14 @@ class DebtsMetrics extends React.Component<Props, State> {
 				}
 			}
 		}
-		const defaultTotalRequested = <TokenWrapper>0 ETH</TokenWrapper>;
-		const defaultTotalRepaid = <TokenWrapper>0 ETH</TokenWrapper>;
+		const defaultTotal = <TokenWrapper>0 ETH</TokenWrapper>;
 		return (
 			<Wrapper>
 				<HalfCol>
 					<Value>
 						{totalRequestedRows.length
 							? totalRequestedRows
-							: defaultTotalRequested
+							: defaultTotal
 						}
 					</Value>
 					<Label>Total Requested</Label>
@@ -117,7 +116,7 @@ class DebtsMetrics extends React.Component<Props, State> {
 					<Value>
 						{totalRepaidRows.length
 							? totalRepaidRows
-							: defaultTotalRepaid
+							: defaultTotal
 						}
 					</Value>
 					<Label>Total Repaid</Label>

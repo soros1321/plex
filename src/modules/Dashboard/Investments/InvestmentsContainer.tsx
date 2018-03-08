@@ -1,10 +1,9 @@
 import { connect } from 'react-redux';
-import { Dashboard } from './Dashboard';
+import { Investments } from './Investments';
 
 const mapStateToProps = (state: any) => {
 	return {
-		debtOrders: state.debtOrderReducer.debtOrders,
-		investments: state.investmentReducer.investments
+		dharma: state.dharmaReducer.dharma
 	};
 };
 
@@ -13,7 +12,7 @@ const mapDispatchToProps = (dispatch: any) => {
 	};
 };
 
-export const DashboardContainer = connect(
+export const InvestmentsContainer = connect(
 	mapStateToProps,
 	mapDispatchToProps
-)(Dashboard);
+)(Investments);

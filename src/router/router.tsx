@@ -16,7 +16,7 @@ import {
 } from '../modules';
 import { ParentContainer } from '../layouts';
 import * as Web3 from 'web3';
-import { web3Connected, dharmaInstantiated, setAccounts, setDebtOrders } from './actions';
+import { web3Connected, dharmaInstantiated, setAccounts, setDebtOrders, setInvestments } from './actions';
 import { setError } from '../components/Error/actions';
 const promisify = require('tiny-promisify');
 
@@ -34,7 +34,7 @@ const DebtToken = require('../artifacts/DebtToken.json');
 const TermsContractRegistry = require('../artifacts/TermsContractRegistry.json');
 
 // Import testing filled Debt Orders (if exist)
-import { DebtOrderEntity } from '../models';
+import { DebtOrderEntity, InvestmentEntity } from '../models';
 const filledDebtOrders = require('../migrations/filledDebtOrders.json');
 
 interface Props {
@@ -102,20 +102,24 @@ class AppRouter extends React.Component<Props, {}> {
 		if (!filledDebtOrders.length) {
 			return;
 		}
+
 		const debtOrders: DebtOrderEntity[] = [];
+		const investments: InvestmentEntity[] = [];
+
 		for (let filledDebtOrder of filledDebtOrders) {
 			const debtOrder: DebtOrderEntity = {
-				debtor: filledDebtOrder.debtor,
+				...filledDebtOrder,
 				debtorSignature: JSON.stringify(filledDebtOrder.debtorSignature),
-				principalAmount: new BigNumber(filledDebtOrder.principalAmount),
-				principalToken: filledDebtOrder.principalToken,
-				principalTokenSymbol: filledDebtOrder.principalTokenSymbol,
-				termsContract: filledDebtOrder.termsContract,
-				termsContractParameters: filledDebtOrder.termsContractParameters,
-				description: filledDebtOrder.description,
-				issuanceHash: filledDebtOrder.issuanceHash,
-				fillLoanShortUrl: filledDebtOrder.fillLoanShortUrl
+				principalAmount: new BigNumber(filledDebtOrder.principalAmount)
 			};
+
+			const investment: InvestmentEntity = {
+				...filledDebtOrder,
+				debtorSignature: JSON.stringify(filledDebtOrder.debtorSignature),
+				creditorSignature: JSON.stringify(filledDebtOrder.creditorSignature),
+				principalAmount: new BigNumber(filledDebtOrder.principalAmount)
+			};
+
 			try {
 				// Check whether this debtOrder exist on current network
 				const dharmaDebtOrder = {
@@ -126,11 +130,13 @@ class AppRouter extends React.Component<Props, {}> {
 				};
 				await dharma.adapters.simpleInterestLoan.fromDebtOrder(dharmaDebtOrder);
 				debtOrders.push(debtOrder);
+				investments.push(investment);
 			} catch (e) {
 				// console.log(e);
 			}
 		}
 		dispatch(setDebtOrders(debtOrders));
+		dispatch(setInvestments(investments));
 	}
 
 	render() {
