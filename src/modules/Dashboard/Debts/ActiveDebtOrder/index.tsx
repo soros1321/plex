@@ -165,7 +165,7 @@ class ActiveDebtOrder extends React.Component<Props, State> {
 							</DetailLink>
 						</Url>
 						{debtOrder.status === 'active' ? <StatusActive>Active</StatusActive> : <StatusPending>Pending</StatusPending>}
-						<Terms>Simple Interest (Installments)</Terms>
+						<Terms>Simple Interest (Non-Collateralized)</Terms>
 					</DetailContainer>
 					<RepaymentScheduleContainer className={debtOrder.status === 'active' ? 'active' : ''}>
 						<Title>Repayment Schedule</Title>

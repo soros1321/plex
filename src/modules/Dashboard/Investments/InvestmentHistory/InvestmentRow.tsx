@@ -42,16 +42,26 @@ class InvestmentRow extends React.Component<Props, State> {
 					<Col xs="3" md="2">
 						{shortenString(investment.issuanceHash)}
 					</Col>
-					<Col xs="3" md="5">
+					<Col xs="3" md="4">
 						{investment.principalAmount.eq(investment.earnedAmount) ? 'Paid' : 'Delinquent'}
 					</Col>
-					<Col xs="3" md="3">
-						{investment.termLength.toNumber() + ' ' + investment.amortizationUnit}
+					<Col xs="3" md="4">
+						Simple Interest Loan (Non-Collateralized)
 					</Col>
 				</StyledRow>
 				<Collapse isOpen={this.state.collapse}>
 					<Drawer>
 						<Row>
+							<Col xs="12" md="2">
+								<InfoItem>
+									<InfoItemTitle>
+										Term Length
+									</InfoItemTitle>
+									<InfoItemContent>
+										{investment.termLength.toNumber() + ' ' + investment.amortizationUnit}
+									</InfoItemContent>
+								</InfoItem>
+							</Col>
 							<Col xs="12" md="2">
 								<InfoItem>
 									<InfoItemTitle>
@@ -72,7 +82,7 @@ class InvestmentRow extends React.Component<Props, State> {
 									</InfoItemContent>
 								</InfoItem>
 							</Col>
-							<Col xs="12" md="7">
+							<Col xs="12" md="5">
 								<InfoItem>
 									<InfoItemTitle>
 										Description

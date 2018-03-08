@@ -170,7 +170,7 @@ class ActiveInvestment extends React.Component<Props, State> {
 							</DetailLink>
 						</Url>
 						{investment.status === 'active' ? <StatusActive>Active</StatusActive> : <StatusDefaulted>Defaulted</StatusDefaulted>}
-						<Terms>Simple Interest (Installments)</Terms>
+						<Terms>Simple Interest (Non-Collateralized)</Terms>
 					</DetailContainer>
 					<RepaymentScheduleContainer>
 						<Title>Repayment Schedule</Title>

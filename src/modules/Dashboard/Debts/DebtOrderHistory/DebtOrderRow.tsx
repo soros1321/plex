@@ -42,16 +42,26 @@ class DebtOrderRow extends React.Component<Props, State> {
 					<Col xs="3" md="2">
 						{shortenString(debtOrder.issuanceHash)}
 					</Col>
-					<Col xs="3" md="5">
+					<Col xs="3" md="4">
 						{debtOrder.principalAmount.eq(debtOrder.repaidAmount) ? 'Paid' : 'Delinquent'}
 					</Col>
-					<Col xs="3" md="3">
-						{debtOrder.termLength.toNumber() + ' ' + debtOrder.amortizationUnit}
+					<Col xs="3" md="4">
+						Simple Interest Loan (Non-Collateralized)
 					</Col>
 				</StyledRow>
 				<Collapse isOpen={this.state.collapse}>
 					<Drawer>
 						<Row>
+							<Col xs="12" md="2">
+								<InfoItem>
+									<InfoItemTitle>
+										Term Length
+									</InfoItemTitle>
+									<InfoItemContent>
+										{debtOrder.termLength.toNumber() + ' ' + debtOrder.amortizationUnit}
+									</InfoItemContent>
+								</InfoItem>
+							</Col>
 							<Col xs="12" md="2">
 								<InfoItem>
 									<InfoItemTitle>
@@ -72,7 +82,7 @@ class DebtOrderRow extends React.Component<Props, State> {
 									</InfoItemContent>
 								</InfoItem>
 							</Col>
-							<Col xs="12" md="7">
+							<Col xs="12" md="5">
 								<InfoItem>
 									<InfoItemTitle>
 										Description

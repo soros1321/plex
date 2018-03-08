@@ -26,10 +26,10 @@ class DebtOrderHistory extends React.Component<Props, {}> {
 					<Col xs="3" md="2">
 						ID
 					</Col>
-					<Col xs="3" md="5">
+					<Col xs="3" md="4">
 						Status
 					</Col>
-					<Col xs="3" md="3">
+					<Col xs="3" md="4">
 						Terms
 					</Col>
 				</TableHeaderRow>
