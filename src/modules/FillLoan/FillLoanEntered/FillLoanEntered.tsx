@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Link } from 'react-router';
+import { Link, browserHistory } from 'react-router';
 import { amortizationUnitToFrequency, shortenString } from '../../../utils';
 import { PaperLayout } from '../../../layouts';
 import {
@@ -193,7 +193,7 @@ class FillLoanEntered extends React.Component<Props, States> {
 	}
 
 	render() {
-		const { debtOrderWithDescription: debtOrder, interestRate, termLength, amortizationUnit, principalTokenSymbol } = this.state;
+		const { debtOrderWithDescription: debtOrder, interestRate, termLength, amortizationUnit, principalTokenSymbol, issuanceHash } = this.state;
 		if (!debtOrder) {
 			return null;
 		}
@@ -266,7 +266,7 @@ class FillLoanEntered extends React.Component<Props, States> {
 						<FillLoanButton onClick={this.validateFillOrder}>Fill Loan</FillLoanButton>
 					</ButtonContainer>
 					<ConfirmationModal modal={this.state.confirmationModal} title="Please confirm" content={confirmationModalContent} onToggle={this.confirmationModalToggle} onSubmit={this.handleFillOrder} closeButtonText="Cancel" submitButtonText="Fill Order" />
-					<SuccessModal modal={this.state.successModal} onToggle={this.successModalToggle} debtorSignature={debtOrder.debtorSignature ? debtOrder.debtorSignature.r : ''} />
+					<SuccessModal modal={this.state.successModal} onToggle={this.successModalToggle} issuanceHash={issuanceHash} onRedirect={() => browserHistory.push('/dashboard')} />
 				</MainWrapper>
 			</PaperLayout>
 		);
