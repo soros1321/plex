@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Router, Route, IndexRoute, browserHistory } from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux';
-import App from '../App';
+import { AppContainer } from '../AppContainer';
 import {
 	WelcomeContainer,
 	FillLoanEmpty,
@@ -94,10 +94,10 @@ class AppRouter extends React.Component<Props, {}> {
 
 		const dharma = new Dharma(web3.currentProvider, dharmaConfig);
 		dispatch(dharmaInstantiated(dharma));
-		await this.migrateDebtOrders(dharma);
+		await this.migrateDebtOrders(dharma, accounts[0]);
 	}
 
-	async migrateDebtOrders(dharma: Dharma) {
+	async migrateDebtOrders(dharma: Dharma, defaultAccount: string) {
 		const { dispatch } = this.props.store;
 		if (!migratedDebtOrders.length) {
 			return;
@@ -129,12 +129,15 @@ class AppRouter extends React.Component<Props, {}> {
 					termsContractParameters: debtOrder.termsContractParameters
 				};
 				await dharma.adapters.simpleInterestLoan.fromDebtOrder(dharmaDebtOrder);
-				debtOrders.push(debtOrder);
-
+				if (migratedDebtOrder.debtor === defaultAccount) {
+					debtOrders.push(debtOrder);
+				}
 				try {
 					// If there is a repaid value, means this order is filled
 					await dharma.servicing.getValueRepaid(investment.issuanceHash);
-					investments.push(investment);
+					if (migratedDebtOrder.creditor === defaultAccount) {
+						investments.push(investment);
+					}
 				} catch (ex) {
 					// console.log(ex);
 				}
@@ -150,7 +153,7 @@ class AppRouter extends React.Component<Props, {}> {
 		const history = syncHistoryWithStore(browserHistory, this.props.store);
 		return (
 			<Router history={history}>
-				<Route path="/" component={App} >
+				<Route path="/" component={AppContainer} >
 					<IndexRoute component={WelcomeContainer} />
 					<Route path="/bazaar" component={DefaultContent} />
 					<Route path="/whitepaper" component={DefaultContent} />
