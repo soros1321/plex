@@ -60,11 +60,19 @@ class RequestLoanForm extends React.Component<Props, State> {
 
 	handleChange(formData: any) {
 		this.setState({
-			formData: formData,
-			principalAmount: formData.loan.principalAmount || 0,
-			principalTokenSymbol: formData.loan.principalTokenSymbol || '',
-			interestRate: formData.terms.interestRate || 0
+			formData: formData
 		});
+		if (formData.loan) {
+			if (formData.loan.principalAmount) {
+				this.setState({ principalAmount: formData.loan.principalAmount });
+			}
+			if (formData.loan.principalTokenSymbol!) {
+				this.setState({ principalTokenSymbol: formData.loan.principalTokenSymbol });
+			}
+		}
+		if (formData.terms && formData.terms.interestRate) {
+			this.setState({ interestRate: formData.terms.interestRate });
+		}
 	}
 
 	async handleSubmit() {

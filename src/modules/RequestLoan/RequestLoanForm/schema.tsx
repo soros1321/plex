@@ -19,96 +19,134 @@ export const schema: JSONSchema4 = {
 		}
 	},
 	properties: {
-		loan: {
-			type: 'object',
-			title: 'How much do you want?',
-			required: [
-				'principalAmount',
-				'principalTokenSymbol'
+		debtOrderType: {
+			type: 'string',
+			title: 'Which type of debt would you like?',
+			enum: [
+				'simpleInterestLoanNonCollateralized',
+				'compoundInterestLoanNonCollateralized',
+				'simpleInterestLoanCollateralized',
+				'compoundInterestLoanCollateralized'
 			],
-			properties: {
-				principalAmount: {
-					type: 'number',
-					title: 'Amount',
-				},
-				principalTokenSymbol: {
-					'$ref': '#/definitions/tokens'
-				},
-				description: {
-					type: 'string',
-				}
-			}
-		},
-		collateral: {
-			type: 'object',
-			title: 'Do you want it collateralized?',
-			properties: {
-				collateralized: {
-					type: 'boolean',
-					title: 'Collateralized',
-					description: 'A quick, layman\'s definition of what collateralized means and why it\'s a smart idea goes here.'
-				}
-			},
-			dependencies: {
-				collateralized: {
+			enumNames: [
+				'Simple Interest Loan (Non-Collateralized)',
+				'Compound Interest Loan (Non-Collateralized)',
+				'Simple Interest Loan (Collateralized)',
+				'Compound Interest Loan (Collateralized)'
+			],
+			default: 'simpleInterestLoanNonCollateralized'
+		}
+	},
+	required: ['debtOrderType'],
+	dependencies: {
+		debtOrderType: {
+			oneOf: [
+				{
 					properties: {
-						collateralSource: {
-							title: 'Collateral',
-							'$ref': '#/definitions/tokens'
+						debtOrderType: {
+							enum: ['simpleInterestLoanNonCollateralized']
 						},
-						collateralAmount: {
-							type: 'number',
+						loan: {
+							type: 'object',
+							title: 'How much do you want?',
+							required: [
+								'principalAmount',
+								'principalTokenSymbol'
+							],
+							properties: {
+								principalAmount: {
+									type: 'number',
+									title: 'Amount',
+								},
+								principalTokenSymbol: {
+									'$ref': '#/definitions/tokens'
+								},
+								description: {
+									type: 'string',
+								}
+							}
 						},
-						collateralTokenSymbol: {
-							'$ref': '#/definitions/tokens'
+						/*
+						collateral: {
+							type: 'object',
+							title: 'Do you want it collateralized?',
+							properties: {
+								collateralized: {
+									type: 'boolean',
+									title: 'Collateralized',
+									description: 'A quick, layman\'s definition of what collateralized means and why it\'s a smart idea goes here.'
+								}
+							},
+							dependencies: {
+								collateralized: {
+									properties: {
+										collateralSource: {
+											title: 'Collateral',
+											'$ref': '#/definitions/tokens'
+										},
+										collateralAmount: {
+											type: 'number',
+										},
+										collateralTokenSymbol: {
+											'$ref': '#/definitions/tokens'
+										}
+									}
+								}
+							}
+						},
+						*/
+						terms: {
+							type: 'object',
+							title: 'What terms would you like?',
+							description: 'The most commonly chosen options are selected by default.',
+							required: [
+								'interestRate',
+								'amortizationUnit',
+								'termLength'
+							],
+							properties: {
+								interestRate: {
+									type: 'number',
+									title: 'Interest Rate'
+								},
+								amortizationUnit: {
+									type: 'string',
+									title: 'Installments Type',
+									enum: [
+										'hours',
+										'days',
+										'weeks',
+										'months',
+										'years'
+									],
+									enumNames: [
+										'Hourly',
+										'Daily',
+										'Weekly',
+										'Monthly',
+										'Yearly'
+									]
+								},
+								termLength: {
+									type: 'number',
+									title: 'Term Length',
+									description: 'Enter the length of the entire debt agreement, in units of the chosen installments (e.g. a term length of 2 with an installment type of "monthly" would be equivalent to a 2 month long loan)'
+								}
+							}
 						}
 					}
 				}
-			}
-		},
-		terms: {
-			type: 'object',
-			title: 'What terms would you like?',
-			description: 'The most commonly chosen options are selected by default.',
-			required: [
-				'interestRate',
-				'amortizationUnit',
-				'termLength'
-			],
-			properties: {
-				interestRate: {
-					type: 'number',
-					title: 'Interest Rate'
-				},
-				amortizationUnit: {
-					type: 'string',
-					title: 'Installments Type',
-					enum: [
-						'hours',
-						'days',
-						'weeks',
-						'months',
-						'years'
-					],
-					enumNames: [
-						'Hourly',
-						'Daily',
-						'Weekly',
-						'Monthly',
-						'Yearly'
-					]
-				},
-				termLength: {
-					type: 'number',
-					title: 'Term Length',
-					description: 'Enter the length of the entire debt agreement, in units of the chosen installments (e.g. a term length of 2 with an installment type of "monthly" would be equivalent to a 2 month long loan)'
-				}
-			}
+			]
 		}
 	}
 };
 
 export const uiSchema = {
+	debtOrderType: {
+		'ui:options': {
+			pressEnter: false
+		}
+	},
 	loan: {
 		principalAmount: {
 			'ui:autofocus': true,
@@ -135,6 +173,7 @@ export const uiSchema = {
 			classNames: 'group-field'
 		}
 	},
+	/*
 	collateral: {
 		collateralized: {
 			'ui:disabled': true,
@@ -167,6 +206,7 @@ export const uiSchema = {
 			classNames: 'inline-field width35'
 		}
 	},
+	*/
 	terms: {
 		interestRate: {
 			'ui:placeholder': '8.12%',
