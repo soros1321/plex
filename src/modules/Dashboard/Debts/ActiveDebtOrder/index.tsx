@@ -29,7 +29,8 @@ import {
 	Drawer,
 	InfoItem,
 	InfoItemTitle,
-	InfoItemContent
+	InfoItemContent,
+	MakeRepaymentButton
 } from './styledComponents';
 import { Row, Col, Collapse } from 'reactstrap';
 
@@ -53,10 +54,17 @@ class ActiveDebtOrder extends React.Component<Props, State> {
 			collapse: false
 		};
 		this.toggleDrawer = this.toggleDrawer.bind(this);
+		this.makeRepayment = this.makeRepayment.bind(this);
 	}
 
 	toggleDrawer() {
 		this.setState({ collapse: !this.state.collapse });
+	}
+
+	makeRepayment(event: React.MouseEvent<HTMLElement>) {
+		event.stopPropagation();
+		const { debtOrder } = this.props;
+		console.log('Make repayment: ' + debtOrder.issuanceHash);
 	}
 
 	render() {
@@ -158,12 +166,21 @@ class ActiveDebtOrder extends React.Component<Props, State> {
 						)}
 					</ImageContainer>
 					<DetailContainer>
-						<Amount>{debtOrder.principalAmount.toNumber()} {debtOrder.principalTokenSymbol}</Amount>
-						<Url>
-							<DetailLink to={`/request/success/${debtOrder.issuanceHash}`}>
-								{shortenString(debtOrder.issuanceHash)}
-							</DetailLink>
-						</Url>
+						<Row>
+							<Col xs="12" md="6">
+								<Amount>{debtOrder.principalAmount.toNumber()} {debtOrder.principalTokenSymbol}</Amount>
+								<Url>
+									<DetailLink to={`/request/success/${debtOrder.issuanceHash}`}>
+										{shortenString(debtOrder.issuanceHash)}
+									</DetailLink>
+								</Url>
+							</Col>
+							<Col xs="12" md="6">
+								{debtOrder.status === 'active' && (
+									<MakeRepaymentButton onClick={this.makeRepayment}>Make Repayment</MakeRepaymentButton>
+								)}
+							</Col>
+						</Row>
 						{debtOrder.status === 'active' ? <StatusActive>Active</StatusActive> : <StatusPending>Pending</StatusPending>}
 						<Terms>Simple Interest (Non-Collateralized)</Terms>
 					</DetailContainer>
