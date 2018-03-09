@@ -242,6 +242,8 @@ export const MakeRepaymentButton = StyledButton.extend`
 
 	@media only screen and (max-width: 480px) {
 		float: none;
+		margin: 5px 0px !important;
+		font-size: 11px !important;
+		line-height: 24px !important;
 	}
-
 `;

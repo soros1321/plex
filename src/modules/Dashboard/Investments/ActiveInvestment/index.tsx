@@ -29,7 +29,8 @@ import {
 	Drawer,
 	InfoItem,
 	InfoItemTitle,
-	InfoItemContent
+	InfoItemContent,
+	TransferButton
 } from './styledComponents';
 import { Row, Col, Collapse } from 'reactstrap';
 
@@ -52,12 +53,14 @@ class ActiveInvestment extends React.Component<Props, State> {
 		this.state = {
 			collapse: false
 		};
-		this.handleCollectInvestment = this.handleCollectInvestment.bind(this);
+		this.handleTransfer = this.handleTransfer.bind(this);
 		this.toggleDrawer = this.toggleDrawer.bind(this);
 	}
 
-	handleCollectInvestment(investmentId: string) {
-		console.log('collect investment', investmentId);
+	handleTransfer(event: React.MouseEvent<HTMLElement>) {
+		event.stopPropagation();
+		const { investment } = this.props;
+		console.log('Transfer: ', investment.issuanceHash);
 	}
 
 	toggleDrawer() {
@@ -163,12 +166,21 @@ class ActiveInvestment extends React.Component<Props, State> {
 						)}
 					</ImageContainer>
 					<DetailContainer>
-						<Amount>{investment.principalAmount ? investment.principalAmount.toNumber() + ' ' + investment.principalTokenSymbol : '-'}</Amount>
-						<Url>
-							<DetailLink to={`/request/success/${investment.issuanceHash}`}>
-								{shortenString(investment.issuanceHash)}
-							</DetailLink>
-						</Url>
+						<Row>
+							<Col xs="12" md="6">
+								<Amount>{investment.principalAmount ? investment.principalAmount.toNumber() + ' ' + investment.principalTokenSymbol : '-'}</Amount>
+								<Url>
+									<DetailLink to={`/request/success/${investment.issuanceHash}`}>
+										{shortenString(investment.issuanceHash)}
+									</DetailLink>
+								</Url>
+							</Col>
+							<Col xs="12" md="6">
+								{investment.status === 'active' && (
+									<TransferButton onClick={this.handleTransfer}>Transfer</TransferButton>
+								)}
+							</Col>
+						</Row>
 						{investment.status === 'active' ? <StatusActive>Active</StatusActive> : <StatusDefaulted>Defaulted</StatusDefaulted>}
 						<Terms>Simple Interest (Non-Collateralized)</Terms>
 					</DetailContainer>

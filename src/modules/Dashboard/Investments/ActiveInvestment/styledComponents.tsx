@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { Col } from 'reactstrap';
-import { StyledLink } from '../../../../components';
+import { StyledLink, StyledButton } from '../../../../components';
 
 interface Props {
 	className?: string;
@@ -227,10 +227,20 @@ export const DetailLink = StyledLink.extend`
 	}
 `;
 
-export const CollectButton = styled.button`
+export const TransferButton = StyledButton.extend`
 	background-color: #E93D59 !important;
-	border: 1px #E93D59 !important;
+	font-size: 13px !important;
+	border-color: #E93D59 !important;
 	min-width: auto !important;
-	padding: 2px 15px !important;
+	padding: 0px 15px !important;
 	float: right;
+	font-weight: bold !important;
+	line-height: 36px !important;
+
+	@media only screen and (max-width: 480px) {
+		float: none;
+		margin: 5px 0px !important;
+		font-size: 11px !important;
+		line-height: 24px !important;
+	}
 `;
