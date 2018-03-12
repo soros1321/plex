@@ -60,12 +60,12 @@ describe('<ConfirmationModal />', () => {
 		expect(wrapper.find(ModalFooter).find(Button).get(1).props.children).toBe(props.submitButtonText);
 	});
 
-	it('calls onToggle prop when the close button is click', () => {
+	it('calls onToggle prop when the close button is clicked', () => {
 		wrapper.find(ModalFooter).find(Button).at(0).simulate('click');
 		expect(props.onToggle.mock.calls.length).toBe(1);
 	});
 
-	it('calls onSubmit prop when the submit button is click', () => {
+	it('calls onSubmit prop when the submit button is clicked', () => {
 		wrapper.find(ModalFooter).find(Button).at(1).simulate('click');
 		expect(props.onSubmit.mock.calls.length).toBe(1);
 	});
