@@ -14,14 +14,14 @@ describe('<ConfirmationModal />', () => {
 	const props = {
 		modal: true,
 		title: 'Confirmation Modal Title',
-		content: <div>Confirmation Modal Content</div>
+		content: (<div>Confirmation Modal Content</div>),
 		closeButtonText: 'Close',
 		submitButtonText: 'Submit',
 		onToggle: jest.fn(),
 		onSubmit: jest.fn()
 	};
 
-	beforeEach(() => {
+	beforeAll(() => {
 		wrapper = shallow(<ConfirmationModal {... props} />);
 	});
 
