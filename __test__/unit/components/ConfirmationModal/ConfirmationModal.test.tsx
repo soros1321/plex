@@ -8,7 +8,6 @@ import {
 	Button
 } from 'reactstrap';
 
-
 describe('<ConfirmationModal />', () => {
 	let wrapper;
 	const props = {
