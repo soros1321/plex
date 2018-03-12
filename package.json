@@ -38,7 +38,7 @@
     "react-scroll": "^1.7.6",
     "react-select": "^1.2.1",
     "react-toggle": "4.0.1",
-    "reactstrap": "^5.0.0-beta",
+    "reactstrap": "5.0.0-beta",
     "redux": "^3.7.2",
     "redux-thunk": "^2.2.0",
     "styled-components": "^3.1.6",
@@ -53,7 +53,6 @@
     "start": "react-scripts-ts start --history-api-fallback",
     "build": "react-scripts-ts build",
     "test:watch": "jest --watch --runInBand",
-    "test": "react-scripts-ts test --env=jsdom",
     "eject": "react-scripts-ts eject",
     "ngrok:start": "ngrok http 3000",
     "migrations:loans": "tsc; node build/dist/migrations/loans.js"
@@ -87,7 +86,8 @@
       "/test/"
     ],
     "testPathIgnorePatterns": [
-      "<rootDir>/__test__/setup.js"
+      "<rootDir>/__test__/setup.js",
+      "/build/dist/"
     ],
     "coverageThreshold": {
       "global": {

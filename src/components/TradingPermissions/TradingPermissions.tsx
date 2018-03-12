@@ -15,8 +15,6 @@ import {
 import { TokenEntity } from '../../models';
 const promisify = require('tiny-promisify');
 import { Collapse } from 'reactstrap';
-const arrowDown = require('../../assets/img/arrow_down_white.png');
-const arrowUp = require('../../assets/img/arrow_up_white.png');
 
 interface Props {
 	web3: Web3;
@@ -66,42 +64,56 @@ class TradingPermissions extends React.Component<Props, State> {
 	}
 
 	async getTokenBalance(tokenAddress: string) {
-		const accounts = await promisify(this.props.web3.eth.getAccounts)();
-		// TODO: handle account retrieval error more robustly
-		if (!accounts || !accounts[0]) {
-			return new BigNumber(-1);
-		}
+		try {
+			const { dharma, web3 } = this.props;
+			if (!dharma || !web3) {
+				return new BigNumber(-1);
+			}
+			const accounts = await promisify(web3.eth.getAccounts)();
+			// TODO: handle account retrieval error more robustly
+			if (!accounts || !accounts[0]) {
+				return new BigNumber(-1);
+			}
 
-		const ownerAddress = accounts[0];
-		const tokenBalance = await this.props.dharma.token.getBalanceAsync(tokenAddress, ownerAddress);
-		return new BigNumber(tokenBalance);
+			const ownerAddress = accounts[0];
+			const tokenBalance = await dharma.token.getBalanceAsync(tokenAddress, ownerAddress);
+			return new BigNumber(tokenBalance);
+		} catch (e) {
+			return new BigNumber(-1);
+			// console.log(e);
+		}
 	}
 
 	async getTokenData(dharma: Dharma) {
-		if (!dharma) {
-			return;
+		try {
+			const { handleSetAllTokensTradingPermission } = this.props;
+			if (!dharma || !handleSetAllTokensTradingPermission) {
+				return;
+			}
+
+			const tokenRegistry = await dharma.contracts.loadTokenRegistry();
+			// TODO: get token tickers from dharma.js
+			const tokenSymbols = ['REP', 'MKR', 'ZRX'];
+
+			let allTokens: TokenEntity[] = [];
+
+			for (let tokenSymbol of tokenSymbols) {
+				const address = await tokenRegistry.getTokenAddress.callAsync(tokenSymbol);
+				const tradingPermitted = this.isAllowanceUnlimited(await this.getTokenAllowance(address));
+				let balance = await this.getTokenBalance(address);
+				// balance = tokenSymbol !== 'REP' ? new BigNumber(0) : balance;
+				allTokens.push({
+					address,
+					tokenSymbol: tokenSymbol,
+					tradingPermitted,
+					balance
+				});
+			}
+
+			handleSetAllTokensTradingPermission(allTokens);
+		} catch (e) {
+			console.log(e);
 		}
-
-		const tokenRegistry = await dharma.contracts.loadTokenRegistry();
-		// TODO: get token tickers from dharma.js
-		const tokenSymbols = ['REP', 'MKR', 'ZRX'];
-
-		let allTokens: TokenEntity[] = [];
-
-		for (let tokenSymbol of tokenSymbols) {
-			const address = await tokenRegistry.getTokenAddress.callAsync(tokenSymbol);
-			const tradingPermitted = this.isAllowanceUnlimited(await this.getTokenAllowance(address));
-			let balance = await this.getTokenBalance(address);
-			// balance = tokenSymbol !== 'REP' ? new BigNumber(0) : balance;
-			allTokens.push({
-				address,
-				tokenSymbol: tokenSymbol,
-				tradingPermitted,
-				balance
-			});
-		}
-
-		this.props.handleSetAllTokensTradingPermission(allTokens);
 	}
 
 	async updateProxyAllowanceAsync(tradingPermitted: boolean, tokenSymbol: string) {
@@ -196,7 +208,7 @@ class TradingPermissions extends React.Component<Props, State> {
 					{tokenItemsMore}
 				</Collapse>
 				<ShowMoreButton onClick={this.showMore}>
-					More <Arrow src={this.state.collapse ? arrowUp : arrowDown} />
+					More <Arrow src={this.state.collapse ? require('../../assets/img/arrow_up_white.png') : require('../../assets/img/arrow_down_white.png')} />
 				</ShowMoreButton>
 			</TradingPermissionsContainer>
 		);
