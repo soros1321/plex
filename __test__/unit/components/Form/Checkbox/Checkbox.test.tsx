@@ -17,7 +17,7 @@ describe('<Checkbox />', () => {
 		onChange: jest.fn()
 	};
 
-	beforeAll(() => {
+	beforeEach(() => {
 		wrapper = shallow(<Checkbox {... props} />);
 	});
 
@@ -41,8 +41,14 @@ describe('<Checkbox />', () => {
 		expect(wrapper.find(FormGroup).find(CheckboxLabel).find(Input).length).toEqual(1);
 	});
 
-	it('<Input /> should have an id of #{prepend}-{name}', () => {
+	it('<Input /> should have an id of #{prepend}-{name} when prepend id is included', () => {
+		wrapper.setProps({ prepend: 'some-id' });
 		expect(wrapper.find(FormGroup).find(CheckboxLabel).find(Input).prop('id')).toEqual(props.prepend + '-' + props.name);
+	});
+
+	it('<Input /> should have an id of #{name} when prepend id is not included', () => {
+		wrapper.setProps({ prepend: '' });
+		expect(wrapper.find(FormGroup).find(CheckboxLabel).find(Input).prop('id')).toEqual(props.name);
 	});
 
 	it('calls onChange prop when the input checkbox is changed', () => {
