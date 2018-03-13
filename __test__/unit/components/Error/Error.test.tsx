@@ -85,4 +85,41 @@ describe('<Error /> componentWillReceiveProps', () => {
 		wrapper.setProps({ errorMessage: 'Some error' });
 		expect(spy).toHaveBeenCalledWith({visible: true});
 	});
+
+	it('should not set visible to true if there is no errorMessage', () => {
+		const spy = jest.spyOn(Error.prototype, 'setState');
+		const props = {
+			errorMessage: '',
+			handleSetError: jest.fn()
+		};
+		wrapper = mount(<Error {... props} />);
+		wrapper.setProps({ errorMessage: '' });
+		expect(spy).not.toHaveBeenCalledWith();
+	});
+
+});
+
+describe('<Error /> onDismiss()', () => {
+	let wrapper;
+
+  it('set visible to false onDismiss()', () => {
+		const spy = jest.spyOn(Error.prototype, 'setState');
+		const props = {
+			errorMessage: '',
+			handleSetError: jest.fn()
+		};
+		wrapper = mount(<Error {... props} />);
+    wrapper.instance().onDismiss();
+		expect(spy).toHaveBeenCalledWith({visible: false});
+  });
+
+  it('calls props handleSetError onDismiss()', () => {
+		const props = {
+			errorMessage: '',
+			handleSetError: jest.fn()
+		};
+		wrapper = mount(<Error {... props} />);
+    wrapper.instance().onDismiss();
+		expect(props.handleSetError).toHaveBeenCalledWith('');
+  });
 });
