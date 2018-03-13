@@ -3,7 +3,6 @@ import { shallow } from 'enzyme';
 import { CustomCheckbox } from '../../../../../src/components/Form/JSONSchemaForm/CustomCheckbox';
 import { CheckboxLabel, Checkmark } from '../../../../../src/components/Form/JSONSchemaForm/styledComponents';
 
-
 describe('<CustomCheckbox />', () => {
 	let wrapper;
 	const props = {
