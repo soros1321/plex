@@ -6,7 +6,8 @@ import {
 
 export const CustomCheckbox = function(props: any) {
 	return (
-		<CheckboxLabel>{props.schema.title} {props.required ? '*' : null}
+		<CheckboxLabel>
+			<span>{props.schema.title} {props.required ? '*' : null}</span>
 			<input type="checkbox" onChange={() => props.onChange(!props.value)} />
 			<Checkmark />
 		</CheckboxLabel>
