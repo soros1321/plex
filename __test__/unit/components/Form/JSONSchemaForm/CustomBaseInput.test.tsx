@@ -18,7 +18,7 @@ describe('<CustomBaseInput />', () => {
 		onChange: jest.fn()
 	};
 
-	beforeAll(() => {
+	beforeEach(() => {
 		wrapper = shallow(<CustomBaseInput {... props} />);
 	});
 
@@ -50,12 +50,24 @@ describe('<CustomBaseInput />', () => {
 		expect(wrapper.find('input').prop('readOnly')).toBe(props.readonly);
 	});
 
-	it('should render a <PressEnter /> component', () => {
+	it('should not render a <PressEnter /> component when options.pressEnter is false', () => {
+		wrapper.setProps({ options: {pressEnter: false}});
+		expect(wrapper.find(PressEnter).length).toEqual(0);
+	});
+
+	it('should render a <PressEnter /> component when options.pressEnter is undefined', () => {
+		wrapper.setProps({ options: {pressEnter: undefined}});
 		expect(wrapper.find(PressEnter).length).toEqual(1);
 	});
 
-	it('<PressEnter /> should not have active class', () => {
+	it('<PressEnter /> should not have active class when input does not have value', () => {
+		wrapper.setProps({ value: ''});
 		expect(wrapper.find(PressEnter).hasClass('active')).toEqual(false);
+	});
+
+	it('<PressEnter /> should have active class when input does have value', () => {
+		wrapper.setProps({ value: 'some value'});
+		expect(wrapper.find(PressEnter).hasClass('active')).toEqual(true);
 	});
 
 	it('calls onChange prop when the input is changed', () => {
