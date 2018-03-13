@@ -14,7 +14,7 @@ class Error extends React.Component<Props, State> {
 	constructor(props: Props) {
 		super(props);
 		this.state = {
-			visible: true
+			visible: false
 		};
 		this.onDismiss = this.onDismiss.bind(this);
 	}

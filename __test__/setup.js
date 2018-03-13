@@ -3,6 +3,7 @@ global.requestAnimationFrame = (callback) => {
 };
 
 global.scrollTo = jest.fn();
+global.addEventListener = jest.fn();
 
 /*
 import * as Enzyme from 'enzyme';

@@ -63,3 +63,26 @@ describe('<ErrorContainer />', () => {
 		expect(actions[0]).toEqual(expectedPayload);
 	});
 });
+
+describe('<Error /> componentWillReceiveProps', () => {
+	let wrapper;
+	it('should render the component', () => {
+		const props = {
+			errorMessage: 'Some error message',
+			handleSetError: jest.fn()
+		};
+		wrapper = mount(<Error {... props} />);
+		expect(wrapper.length).toEqual(1);
+	});
+
+	it('set visible to true if there is errorMessage', () => {
+		const spy = jest.spyOn(Error.prototype, 'setState');
+		const props = {
+			errorMessage: '',
+			handleSetError: jest.fn()
+		};
+		wrapper = mount(<Error {... props} />);
+		wrapper.setProps({ errorMessage: 'Some error' });
+		expect(spy).toHaveBeenCalledWith({visible: true});
+	});
+});
