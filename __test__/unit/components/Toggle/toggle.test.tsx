@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { shallow } from 'enzyme';
+import { shallow, mount } from 'enzyme';
 import { Toggle } from '../../../../src/components/Toggle';
 import { ToggleLabel, ToggleName } from '../../../../src/components/Toggle/styledComponents';
 import ReactToggle from 'react-toggle';
@@ -8,13 +8,13 @@ describe('Toggle Component (Unit)', () => {
 	let wrapper;
 	const props = {
 		disabled: false,
-		name: 'Some Toggle',
+		name: 'some-name',
 		label: 'Some Toggle',
 		checked: false,
 		onChange: jest.fn()
 	};
 
-	beforeAll(() => {
+	beforeEach(() => {
 		wrapper = shallow(<Toggle {... props} />);
 	});
 
@@ -47,4 +47,16 @@ describe('Toggle Component (Unit)', () => {
     wrapper.instance().handleChange(event);
     expect(props.onChange.mock.calls.length).toBe(1);
   });
+
+	it('should have the same disabled state as the props', () => {
+		props.disabled = true;
+		wrapper = shallow(<Toggle {... props} />);
+		expect(wrapper.state('disabled')).toBe(props.disabled);
+	});
+
+	it('should have the correct id', () => {
+		props.prepend = 'prepend';
+		wrapper = shallow(<Toggle {... props} />);
+		expect(wrapper.find(ReactToggle).prop('id')).toEqual(props.prepend + '-' + props.name);
+	});
 });
