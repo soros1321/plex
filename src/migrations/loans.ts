@@ -2,6 +2,15 @@ require('dotenv').config();
 const ROOT_DIR = __dirname + '/../../../';
 const Web3 = require('web3');
 const Dharma = require('@dharmaprotocol/dharma.js');
+const {
+	DebtRegistry,
+	DebtKernel,
+	RepaymentRouter,
+	TokenTransferProxy,
+	TokenRegistry,
+	DebtToken,
+	TermsContractRegistry
+} = require('@dharmaprotocol/contracts');
 const promisify = require('tiny-promisify');
 const BigNumber = require('bignumber.js');
 const ABIDecoder = require('abi-decoder');
@@ -9,15 +18,6 @@ const compact = require('lodash.compact');
 const fs = require('fs');
 const BitlyClient = require('bitly');
 const bitly = new BitlyClient(process.env.REACT_APP_BITLY_ACCESS_TOKEN);
-
-// Import Currently Deployed Dharma contracts (should only be done in test context -- otherwise)
-const DebtRegistry = require(ROOT_DIR + 'src/artifacts/DebtRegistry.json');
-const DebtKernel = require(ROOT_DIR + 'src/artifacts/DebtKernel.json');
-const RepaymentRouter = require(ROOT_DIR + 'src/artifacts/RepaymentRouter.json');
-const TokenTransferProxy = require(ROOT_DIR + 'src/artifacts/TokenTransferProxy.json');
-const TokenRegistry = require(ROOT_DIR + 'src/artifacts/TokenRegistry.json');
-const DebtToken = require(ROOT_DIR + 'src/artifacts/DebtToken.json');
-const TermsContractRegistry = require(ROOT_DIR + 'src/artifacts/TermsContractRegistry.json');
 
 // Sample data
 const sampleDebtOrders = require(ROOT_DIR + 'src/migrations/sampleDebtOrders.json');
@@ -38,7 +38,6 @@ async function instantiateDharma() {
 	try {
 		const networkId = await promisify(web3.version.getNetwork)();
 		const accounts = await promisify(web3.eth.getAccounts)();
-
 		if (!accounts.length) {
 			throw new Error('ETH account not available');
 		}
@@ -83,7 +82,7 @@ async function fillDebtOrders() {
 		const tokenRegistry = await dharma.contracts.loadTokenRegistry();
 		let migratedDebtOrders: any[] = [];
 		for (let debtOrder of sampleDebtOrders) {
-			const principalToken = await tokenRegistry.getTokenAddress.callAsync(debtOrder.principalTokenSymbol);
+			const principalToken = await tokenRegistry.getTokenAddressBySymbol.callAsync(debtOrder.principalTokenSymbol);
 
 			const simpleInterestLoan = {
 				principalToken,

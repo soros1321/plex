@@ -83,7 +83,7 @@ class RequestLoanForm extends React.Component<Props, State> {
 			const { dharma, accounts } = this.props;
 
 			const tokenRegistry = await dharma.contracts.loadTokenRegistry();
-			const principalToken = await tokenRegistry.getTokenAddress.callAsync(principalTokenSymbol);
+			const principalToken = await tokenRegistry.getTokenAddressBySymbol.callAsync(principalTokenSymbol);
 
 			const simpleInterestLoan = {
 				principalToken,

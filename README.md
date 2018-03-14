@@ -22,9 +22,9 @@ Run local test chain:
 yarn chain
 ```
 
-Compile & migrate contracts:
+Migrate contracts on to local chain:
 ```
-yarn contracts:compile && yarn contracts:migrate
+yarn contracts:migrate
 ```
 
 Pre-populate the app with some test loans data:

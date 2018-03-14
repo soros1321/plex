@@ -22,12 +22,12 @@ import {
 } from './styledComponents';
 import * as Web3 from 'web3';
 import Dharma from '@dharmaprotocol/dharma.js';
+import { DebtKernel } from '@dharmaprotocol/contracts';
 import { DebtOrder } from '@dharmaprotocol/dharma.js/dist/types/src/types';
 import { BigNumber } from 'bignumber.js';
 import { TokenEntity, InvestmentEntity } from '../../../models';
 const compact = require('lodash.compact');
 const ABIDecoder = require('abi-decoder');
-const DebtKernel = require('../../../artifacts/DebtKernel.json');
 const promisify = require('tiny-promisify');
 
 // Set up ABIDecoder

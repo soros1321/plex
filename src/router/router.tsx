@@ -25,13 +25,15 @@ import Dharma from '@dharmaprotocol/dharma.js';
 import { BigNumber } from 'bignumber.js';
 
 // Import Currently Deployed Dharma contracts (should only be done in test context -- otherwise)
-const DebtRegistry = require('../artifacts/DebtRegistry.json');
-const DebtKernel = require('../artifacts/DebtKernel.json');
-const RepaymentRouter = require('../artifacts/RepaymentRouter.json');
-const TokenTransferProxy = require('../artifacts/TokenTransferProxy.json');
-const TokenRegistry = require('../artifacts/TokenRegistry.json');
-const DebtToken = require('../artifacts/DebtToken.json');
-const TermsContractRegistry = require('../artifacts/TermsContractRegistry.json');
+import {
+	DebtRegistry,
+	DebtKernel,
+	RepaymentRouter,
+	TokenTransferProxy,
+	TokenRegistry,
+	DebtToken,
+	TermsContractRegistry
+} from '@dharmaprotocol/contracts';
 
 // Import testing Debt Orders (if exist)
 import { DebtOrderEntity, InvestmentEntity } from '../models';

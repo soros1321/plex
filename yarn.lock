@@ -23,9 +23,9 @@
     NonFungibleToken "https://github.com/dharmaprotocol/NonFungibleToken.git"
     zeppelin-solidity "^1.6.0"
 
-"@dharmaprotocol/dharma.js@^0.0.17":
-  version "0.0.17"
-  resolved "https://registry.yarnpkg.com/@dharmaprotocol/dharma.js/-/dharma.js-0.0.17.tgz#bb76fc2c39899935cf74272e120f02ba1bc10092"
+"@dharmaprotocol/dharma.js@^0.0.18":
+  version "0.0.18"
+  resolved "https://registry.yarnpkg.com/@dharmaprotocol/dharma.js/-/dharma.js-0.0.18.tgz#75fc9c7d1d618d08309a754ca4918a4d604952e5"
   dependencies:
     "@dharmaprotocol/contracts" "^0.0.15"
     bignumber.js "^5.0.0"
@@ -147,17 +147,16 @@
   dependencies:
     "@types/react" "*"
 
-"NonFungibleToken@git+https://github.com/dharmaprotocol/NonFungibleToken.git":
+"NonFungibleToken@https://github.com/dharmaprotocol/NonFungibleToken":
   version "0.0.1"
-  uid "0044be43b2cb19e701a230e826ef5dd6a701215a"
-  resolved "git+https://github.com/dharmaprotocol/NonFungibleToken.git#0044be43b2cb19e701a230e826ef5dd6a701215a"
+  resolved "https://github.com/dharmaprotocol/NonFungibleToken#0044be43b2cb19e701a230e826ef5dd6a701215a"
   dependencies:
     abi-decoder "^1.0.9"
     zeppelin-solidity "^1.4.0"
 
-"NonFungibleToken@https://github.com/dharmaprotocol/NonFungibleToken":
+"NonFungibleToken@https://github.com/dharmaprotocol/NonFungibleToken.git":
   version "0.0.1"
-  resolved "https://github.com/dharmaprotocol/NonFungibleToken#0044be43b2cb19e701a230e826ef5dd6a701215a"
+  resolved "https://github.com/dharmaprotocol/NonFungibleToken.git#0044be43b2cb19e701a230e826ef5dd6a701215a"
   dependencies:
     abi-decoder "^1.0.9"
     zeppelin-solidity "^1.4.0"

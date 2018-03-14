@@ -98,7 +98,7 @@ class TradingPermissions extends React.Component<Props, State> {
 			let allTokens: TokenEntity[] = [];
 
 			for (let tokenSymbol of tokenSymbols) {
-				const address = await tokenRegistry.getTokenAddress.callAsync(tokenSymbol);
+				const address = await tokenRegistry.getTokenAddressBySymbol.callAsync(tokenSymbol);
 				const tradingPermitted = this.isAllowanceUnlimited(await this.getTokenAllowance(address));
 				let balance = await this.getTokenBalance(address);
 				// balance = tokenSymbol !== 'REP' ? new BigNumber(0) : balance;
