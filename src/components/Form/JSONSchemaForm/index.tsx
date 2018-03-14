@@ -152,7 +152,6 @@ function highlightNextSibling(el: any) {
 
 function highlightElement(clickedElm: any) {
 	let parentElm: any = clickedElm;
-	console.log(parentElm);
 	if (!parentElm.classList.contains(fieldClassName)) {
 		parentElm = findAncestor(clickedElm, fieldClassName);
 		if (!parentElm) {
