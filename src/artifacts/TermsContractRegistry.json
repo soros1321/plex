@@ -777,9 +777,14 @@
     "1520983912614": {
       "events": {},
       "links": {},
-      "address": "0x2b2f26b29166e2ec5b3c8fb5b94bf8a13e291ed9"
+      "address": "0x677072dec424b47b720178c0a3571e555ff36579"
+    },
+    "1520992342737": {
+      "events": {},
+      "links": {},
+      "address": "0xb4c0c2f55ec78b49ccfe695c179547e6463731a7"
     }
   },
   "schemaVersion": "1.0.1",
-  "updatedAt": "2018-03-14T00:26:06.026Z"
+  "updatedAt": "2018-03-14T01:52:34.040Z"
 }
