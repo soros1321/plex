@@ -117,29 +117,37 @@ class TradingPermissions extends React.Component<Props, State> {
 	}
 
 	async updateProxyAllowanceAsync(tradingPermitted: boolean, tokenSymbol: string) {
-		const { tokens, dharma } = this.props;
-		let selectedToken: TokenEntity | undefined = undefined;
-		for (let token of tokens) {
-			if (token.tokenSymbol === tokenSymbol) {
-				selectedToken = token;
-				break;
+		try {
+			const { tokens, dharma } = this.props;
+			let selectedToken: TokenEntity | undefined = undefined;
+			for (let token of tokens) {
+				if (token.tokenSymbol === tokenSymbol) {
+					selectedToken = token;
+					break;
+				}
 			}
-		}
-		if (selectedToken) {
-			if (tradingPermitted) {
-				await dharma.token.setProxyAllowanceAsync(selectedToken.address, new BigNumber(0));
-			} else {
-				await dharma.token.setUnlimitedProxyAllowanceAsync(selectedToken.address);
+			if (selectedToken) {
+				let txHash;
+				if (tradingPermitted) {
+					txHash = await dharma.token.setProxyAllowanceAsync(selectedToken.address, new BigNumber(0));
+				} else {
+					txHash = await dharma.token.setUnlimitedProxyAllowanceAsync(selectedToken.address);
+				}
+
+				// TODO: remove the sleep hack
+				// await this.props.dharma.blockchain.awaitTransactionMinedAsync(transactionHash);
+				const receipt = await dharma.blockchain.awaitTransactionMinedAsync(txHash, 1000, 10000);
+				console.log(receipt);
+
+				// await new Promise(resolve => setTimeout(resolve, 5000));
+
+				selectedToken.tradingPermitted = this.isAllowanceUnlimited(
+					await this.getTokenAllowance(selectedToken.address));
+
+				this.props.handleToggleTokenTradingPermission(tokenSymbol, !tradingPermitted);
 			}
-
-			// TODO: remove the sleep hack
-			// await this.props.dharma.blockchain.awaitTransactionMinedAsync(transactionHash);
-			await new Promise(resolve => setTimeout(resolve, 5000));
-
-			selectedToken.tradingPermitted = this.isAllowanceUnlimited(
-				await this.getTokenAllowance(selectedToken.address));
-
-			this.props.handleToggleTokenTradingPermission(tokenSymbol, !tradingPermitted);
+		} catch (e) {
+			throw new Error(e);
 		}
 	}
 
