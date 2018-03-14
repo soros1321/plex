@@ -26,6 +26,8 @@ Migrate contracts on to local chain:
 ```
 yarn contracts:migrate
 ```
+> If you run `yarn contracts:migrate` after `yarn start`, make sure to re-run `yarn start` again in order
+> to pick up the latest `networkId`
 
 Pre-populate the app with some test loans data:
 ```
