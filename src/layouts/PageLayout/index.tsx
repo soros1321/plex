@@ -11,13 +11,19 @@ import {
 } from './styledComponents';
 
 class PageLayout extends React.Component {
-  render() {
-    return (
+	render() {
+		const linkItems = [
+			{url: '/dashboard', display: 'DASHBOARD'},
+			{url: '/request', display: 'REQUEST LOAN'},
+			{url: '/fill', display: 'FILL LOAN'}
+		];
+
+		return (
 			<Wrapper>
 				<TopNavBar />
 				<StyledRow>
 					<LeftContainer>
-						<LeftNavBar />
+						<LeftNavBar linkItems={linkItems} />
 					</LeftContainer>
 					<RightContainer>
 						{this.props.children}

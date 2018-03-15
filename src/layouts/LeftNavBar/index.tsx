@@ -16,14 +16,19 @@ import {
 } from './styledComponents';
 import { TradingPermissionsContainer } from '../../components';
 
-class LeftNavBar extends React.Component {
+interface LinkItem {
+	url: string;
+	display: string;
+}
+
+interface Props {
+	linkItems: LinkItem[];
+}
+
+class LeftNavBar extends React.Component<Props, {}> {
 	render() {
-		const links = [
-			{url: '/dashboard', display: 'DASHBOARD'},
-			{url: '/request', display: 'REQUEST LOAN'},
-			{url: '/fill', display: 'FILL LOAN'}
-		];
-		const linkItems = links.map((link) =>
+		const { linkItems } = this.props;
+		const linkItemRows = linkItems.map((link) =>
 			(
 				<StyledCol key={link.display}>
 					<NavItem>
@@ -49,7 +54,7 @@ class LeftNavBar extends React.Component {
 				</LogoContainer>
 				<Nav>
 					<Row>
-						{linkItems}
+						{linkItemRows}
 					</Row>
 				</Nav>
 				<TradingPermissionsContainer className="left" />
