@@ -34,7 +34,12 @@ Pre-populate the app with some test loans data:
 yarn migrations:loans
 ```
 
-Run the app in development mode
+Run the app in development mode:
 ```
 yarn start
+```
+
+Run testing:
+```
+yarn test:watch
 ```
