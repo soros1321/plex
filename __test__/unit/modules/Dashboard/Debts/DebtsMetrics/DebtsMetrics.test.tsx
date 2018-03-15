@@ -64,6 +64,7 @@ describe('<DebtsMetrics />', () => {
 		expect(wrapper.find(HalfCol).first().find(Label).get(0).props.children).toEqual('Total Requested');
 		expect(wrapper.find(HalfCol).last().find(Value).find(TokenWrapper).get(0).props.children).toEqual(defaultTotal);
 		expect(wrapper.find(HalfCol).last().find(Label).get(0).props.children).toEqual('Total Repaid');
+		expect(wrapper.state('tokenBalances')).toEqual({});
 	});
 
 	describe('#componentDidMount', () => {
@@ -226,6 +227,32 @@ describe('<DebtsMetrics />', () => {
 			props = { debtOrders, tokens };
 		});
 
+		it('should have the correct tokenBalances', () => {
+			const wrapper = shallow(<DebtsMetrics {... props} />);
+			expect(wrapper.state('tokenBalances')).toEqual({
+				MKR: {
+					totalRequested: new BigNumber(345),
+					totalRepaid: new BigNumber(10)
+				},
+				ZRX: {
+					totalRequested: new BigNumber(345),
+					totalRepaid: new BigNumber(10)
+				},
+				REP: {
+					totalRequested: new BigNumber(345),
+					totalRepaid: new BigNumber(10)
+				},
+				SNT: {
+					totalRequested: new BigNumber(345),
+					totalRepaid: new BigNumber(10)
+				},
+				OMG: {
+					totalRequested: new BigNumber(345),
+					totalRepaid: new BigNumber(10)
+				}
+			});
+		});
+
 		it('should not render more than 4 Tokens in Total Requested section', () => {
 			const wrapper = shallow(<DebtsMetrics {... props} />);
 			expect(tokens.length).toEqual(5);
@@ -308,10 +335,34 @@ describe('<DebtsMetrics />', () => {
 			props = { debtOrders, tokens };
 		});
 
+		it('should have the correct tokenBalances', () => {
+			const wrapper = shallow(<DebtsMetrics {... props} />);
+			expect(wrapper.state('tokenBalances')).toEqual({
+				MKR: {
+					totalRequested: new BigNumber(345),
+					totalRepaid: new BigNumber(10)
+				},
+				REP: {
+					totalRequested: new BigNumber(345),
+					totalRepaid: new BigNumber(10)
+				}
+			});
+		});
+
 		it('should render 2 Tokens in Total Requested section', () => {
 			const wrapper = shallow(<DebtsMetrics {... props} />);
 			expect(tokens.length).toEqual(2);
 			expect(wrapper.find(HalfCol).first().find(TokenWrapper).length).toEqual(2);
+			expect(wrapper.state('tokenBalances')).toEqual({
+				MKR: {
+					totalRequested: new BigNumber(345),
+					totalRepaid: new BigNumber(10)
+				},
+				REP: {
+					totalRequested: new BigNumber(345),
+					totalRepaid: new BigNumber(10)
+				}
+			});
 		});
 
 		it('last element should not render AND MORE', () => {
@@ -384,6 +435,16 @@ describe('<DebtsMetrics />', () => {
 			props = { debtOrders, tokens };
 		});
 
+		it('should have the correct tokenBalances', () => {
+			const wrapper = shallow(<DebtsMetrics {... props} />);
+			expect(wrapper.state('tokenBalances')).toEqual({
+				MKR: {
+					totalRequested: new BigNumber(345),
+					totalRepaid: new BigNumber(10)
+				}
+			});
+		});
+
 		it('should render 1 Token in Total Requested section', () => {
 			const wrapper = shallow(<DebtsMetrics {... props} />);
 			expect(tokens.length).toEqual(1);
@@ -453,6 +514,24 @@ describe('<DebtsMetrics />', () => {
 			];
 
 			props = { debtOrders, tokens };
+		});
+
+		it('should have the correct tokenBalances', () => {
+			const wrapper = shallow(<DebtsMetrics {... props} />);
+			expect(wrapper.state('tokenBalances')).toEqual({
+				MKR: {
+					totalRequested: new BigNumber(345),
+					totalRepaid: new BigNumber(0)
+				},
+				REP: {
+					totalRequested: new BigNumber(345),
+					totalRepaid: new BigNumber(10)
+				},
+				OMG: {
+					totalRequested: new BigNumber(0),
+					totalRepaid: new BigNumber(0)
+				}
+			});
 		});
 
 		it('should render 10 REP in Total Repaid section', () => {
