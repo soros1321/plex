@@ -32,7 +32,9 @@ class DebtsMetrics extends React.Component<Props, State> {
 	}
 
 	componentDidMount() {
-		this.initiateTokenBalance(this.props.tokens, this.props.debtOrders);
+		if (this.props.tokens && this.props.debtOrders) {
+			this.initiateTokenBalance(this.props.tokens, this.props.debtOrders);
+		}
 	}
 
 	componentWillReceiveProps(nextProps: Props) {
@@ -43,7 +45,7 @@ class DebtsMetrics extends React.Component<Props, State> {
 
 	initiateTokenBalance(tokens: TokenEntity[], debtOrders: DebtOrderMoreDetail[]) {
 		let tokenBalances: any = {};
-		if (tokens && tokens.length) {
+		if (tokens.length) {
 			for (let token of tokens) {
 				tokenBalances[token.tokenSymbol] = {
 					totalRequested: new BigNumber(0),
@@ -51,7 +53,7 @@ class DebtsMetrics extends React.Component<Props, State> {
 				};
 			}
 		}
-		if (debtOrders && debtOrders.length) {
+		if (debtOrders.length) {
 			for (let debtOrder of debtOrders) {
 				if (tokenBalances[debtOrder.principalTokenSymbol]) {
 					// TODO: Should we exclude pending debt orders?
@@ -69,10 +71,7 @@ class DebtsMetrics extends React.Component<Props, State> {
 		let totalRepaidRows: JSX.Element[] = [];
 		for (let token in tokenBalances) {
 			if (tokenBalances[token].totalRequested.gt(0) || tokenBalances[token].totalRepaid.gt(0)) {
-				if (tokenBalances[token].totalRequested.gt(0)) {
-					if (totalRequestedRows.length >= 4) {
-						continue;
-					}
+				if (tokenBalances[token].totalRequested.gt(0) && totalRequestedRows.length < 4) {
 					if (totalRequestedRows.length === 3) {
 						totalRequestedRows.push(
 							<TokenWrapper key={'more'}>AND MORE</TokenWrapper>
@@ -83,10 +82,7 @@ class DebtsMetrics extends React.Component<Props, State> {
 						);
 					}
 				}
-				if (tokenBalances[token].totalRepaid.gt(0)) {
-					if (totalRepaidRows.length >= 4) {
-						continue;
-					}
+				if (tokenBalances[token].totalRepaid.gt(0) && totalRepaidRows.length < 4) {
 					if (totalRepaidRows.length === 3) {
 						totalRepaidRows.push(
 							<TokenWrapper key={'more'}>AND MORE</TokenWrapper>
