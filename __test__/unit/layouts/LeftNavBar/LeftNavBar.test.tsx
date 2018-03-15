@@ -60,15 +60,15 @@ describe('<StyledLink />', () => {
 			]
 		};
 		wrapper = shallow(<LeftNavBar {... props} />);
-		expect(wrapper.find(StyledLink).find(TitleFirst).get(0).props.children).toEqual('Some');
-		expect(wrapper.find(StyledLink).find(TitleRest).get(0).props.children).toEqual(' Url');
+		expect(wrapper.find(StyledLink).first().find(TitleFirst).get(0).props.children).toEqual('Some');
+		expect(wrapper.find(StyledLink).first().find(TitleRest).get(0).props.children).toEqual(' Url');
 		props = {
 			linkItems: [
 				{url: '/someurl', display: 'Title'}
 			]
 		};
 		wrapper = shallow(<LeftNavBar {... props} />);
-		expect(wrapper.find(StyledLink).find(TitleFirst).get(0).props.children).toEqual('Title');
-		expect(wrapper.find(StyledLink).find(TitleRest).get(0).props.children).toEqual('');
+		expect(wrapper.find(StyledLink).first().find(TitleFirst).get(0).props.children).toEqual('Title');
+		expect(wrapper.find(StyledLink).first().find(TitleRest).get(0).props.children).toEqual('');
 	});
 });

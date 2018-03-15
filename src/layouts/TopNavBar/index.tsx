@@ -18,8 +18,17 @@ interface TopNavBarState {
 	isOpen: boolean;
 }
 
-class TopNavBar extends React.Component<{}, TopNavBarState> {
-	constructor(props: {}) {
+interface LinkItem {
+	url: string;
+	display: string;
+}
+
+interface Props {
+	linkItems: LinkItem[];
+}
+
+class TopNavBar extends React.Component<Props, TopNavBarState> {
+	constructor(props: Props) {
 		super(props);
 
 		this.toggle = this.toggle.bind(this);
@@ -31,17 +40,8 @@ class TopNavBar extends React.Component<{}, TopNavBarState> {
 	}
 
 	render() {
-		const links = [
-			{url: '/bazaar', display: 'BAZAAR'},
-			{url: '/whitepaper', display: 'WHITEPAPER'},
-			{url: '/blog', display: 'BLOG'},
-			{url: '/github', display: 'GITHUB'},
-			{url: '/chat', display: 'CHAT'},
-			{url: '/twitter', display: 'TWITTER'},
-			{url: '/terms', display: 'TERMS OF USE'},
-			{url: '/privacy', display: 'PRIVACY POLICY'}
-		];
-		const linkItems = links.map((link) =>
+		const { linkItems } = this.props;
+		const linkItemRows = linkItems.map((link) =>
 			(
 				<StyledNavItem key={link.display}>
 					<StyledLink to={link.url} activeClassName="active">{link.display}</StyledLink>
@@ -57,7 +57,7 @@ class TopNavBar extends React.Component<{}, TopNavBarState> {
 					<StyledNavbarToggler onClick={this.toggle} />
 					<Collapse isOpen={this.state.isOpen} navbar={true}>
 						<Nav className="ml-auto" navbar={true}>
-							{linkItems}
+							{linkItemRows}
 						</Nav>
 						<TradingPermissionsContainer />
 					</Collapse>
