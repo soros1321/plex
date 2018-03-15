@@ -100,6 +100,11 @@
       }
     },
     "collectCoverage": true,
+		"collectCoverageFrom": [
+			"**/*.{ts,tsx}",
+			"!**/styledComponents.tsx",
+			"!**/*Container.{ts,tsx}"
+		],
     "mapCoverage": true,
     "setupTestFrameworkScriptFile": "./__test__/setup.js",
     "unmockedModulePathPatterns": [
