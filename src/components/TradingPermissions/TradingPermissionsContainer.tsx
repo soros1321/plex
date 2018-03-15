@@ -2,6 +2,7 @@ import { connect } from 'react-redux';
 import { TradingPermissions } from './TradingPermissions';
 import { TokenEntity } from '../../models';
 import { setAllTokensTradingPermission, toggleTokenTradingPermission } from './actions';
+import { setError } from '../../components/Error/actions';
 
 const mapStateToProps = (state: any) => {
 	return {
@@ -14,7 +15,8 @@ const mapStateToProps = (state: any) => {
 const mapDispatchToProps = (dispatch: any) => {
 	return {
 		handleSetAllTokensTradingPermission: (tokens: TokenEntity[]) => dispatch(setAllTokensTradingPermission(tokens)),
-		handleToggleTokenTradingPermission: (tokenSymbol: string, permission: boolean) => dispatch(toggleTokenTradingPermission(tokenSymbol, permission))
+		handleToggleTokenTradingPermission: (tokenSymbol: string, permission: boolean) => dispatch(toggleTokenTradingPermission(tokenSymbol, permission)),
+		handleSetError: (errorMessage: string) => dispatch(setError(errorMessage))
 	};
 };
 

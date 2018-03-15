@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@dharmaprotocol/contracts": "^0.0.15",
-    "@dharmaprotocol/dharma.js": "^0.0.18",
+    "@dharmaprotocol/dharma.js": "^0.0.19",
     "@types/bignumber.js": "^5.0.0",
     "@types/enzyme": "^3.1.9",
     "@types/jest": "^22.1.4",
@@ -77,7 +77,7 @@
       "js"
     ],
     "moduleNameMapper": {
-			"\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/fileMock.js",
+      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/fileMock.js",
       "\\.(css|less)$": "<rootDir>/__mocks__/styleMock.js"
     },
     "modulePaths": [
@@ -100,11 +100,11 @@
       }
     },
     "collectCoverage": true,
-		"collectCoverageFrom": [
-			"**/*.{ts,tsx}",
-			"!**/styledComponents.tsx",
-			"!**/*Container.{ts,tsx}"
-		],
+    "collectCoverageFrom": [
+      "**/*.{ts,tsx}",
+      "!**/styledComponents.tsx",
+      "!**/*Container.{ts,tsx}"
+    ],
     "mapCoverage": true,
     "setupTestFrameworkScriptFile": "./__test__/setup.js",
     "unmockedModulePathPatterns": [

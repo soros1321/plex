@@ -20,9 +20,10 @@ interface Props {
 	web3: Web3;
 	dharma: Dharma;
 	tokens: TokenEntity[];
+	className?: string;
 	handleSetAllTokensTradingPermission: (tokens: TokenEntity[]) => void;
 	handleToggleTokenTradingPermission: (tokenSymbol: string, permission: boolean) => void;
-	className?: string;
+	handleSetError: (errorMessage: string) => void;
 }
 
 interface State {
@@ -112,6 +113,7 @@ class TradingPermissions extends React.Component<Props, State> {
 
 			handleSetAllTokensTradingPermission(allTokens);
 		} catch (e) {
+			this.props.handleSetError('Unable to get token data');
 			console.log(e);
 		}
 	}

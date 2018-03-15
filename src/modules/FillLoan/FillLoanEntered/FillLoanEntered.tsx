@@ -28,7 +28,6 @@ import { BigNumber } from 'bignumber.js';
 import { TokenEntity, InvestmentEntity } from '../../../models';
 const compact = require('lodash.compact');
 const ABIDecoder = require('abi-decoder');
-// const promisify = require('tiny-promisify');
 
 // Set up ABIDecoder
 ABIDecoder.addABI(DebtKernel.abi);
@@ -152,34 +151,36 @@ class FillLoanEntered extends React.Component<Props, States> {
 
 			debtOrderWithDescription.creditor = accounts[0];
 			const txHash = await dharma.order.fillAsync(debtOrderWithDescription, {from: accounts[0]});
-			// const receipt = await promisify(web3.eth.getTransactionReceipt)(txHash);
 			const receipt = await dharma.blockchain.awaitTransactionMinedAsync(txHash, 1000, 10000);
-			/*
 			const errorLogs = await dharma.blockchain.getErrorLogs(txHash);
-			console.log(errorLogs);
-			*/
-
-			const [debtOrderFilledLog] = compact(ABIDecoder.decodeLogs(receipt.logs));
-			if (debtOrderFilledLog.name === 'LogDebtOrderFilled') {
-				const investment: InvestmentEntity = {
-					debtorSignature: JSON.stringify(debtOrderWithDescription.debtorSignature),
-					debtor: debtOrderWithDescription.debtor,
-					creditor: debtOrderWithDescription.creditor,
-					principalAmount: debtOrderWithDescription.principalAmount,
-					principalToken: debtOrderWithDescription.principalToken,
-					principalTokenSymbol,
-					termsContract: debtOrderWithDescription.termsContract,
-					termsContractParameters: debtOrderWithDescription.termsContractParameters,
-					description: debtOrderWithDescription.description,
-					issuanceHash
-				};
-				this.props.handleFillDebtOrder(investment);
-				this.successModalToggle();
-			} else {
-				this.props.handleSetError('Unable to fill this Debt Order');
+			if (errorLogs.length) {
+				this.props.handleSetError(errorLogs[0]);
 				this.setState({
 					confirmationModal: false
 				});
+			} else {
+				const [debtOrderFilledLog] = compact(ABIDecoder.decodeLogs(receipt.logs));
+				if (debtOrderFilledLog.name === 'LogDebtOrderFilled') {
+					const investment: InvestmentEntity = {
+						debtorSignature: JSON.stringify(debtOrderWithDescription.debtorSignature),
+						debtor: debtOrderWithDescription.debtor,
+						creditor: debtOrderWithDescription.creditor,
+						principalAmount: debtOrderWithDescription.principalAmount,
+						principalToken: debtOrderWithDescription.principalToken,
+						principalTokenSymbol,
+						termsContract: debtOrderWithDescription.termsContract,
+						termsContractParameters: debtOrderWithDescription.termsContractParameters,
+						description: debtOrderWithDescription.description,
+						issuanceHash
+					};
+					this.props.handleFillDebtOrder(investment);
+					this.successModalToggle();
+				} else {
+					this.props.handleSetError('Unable to fill this Debt Order');
+					this.setState({
+						confirmationModal: false
+					});
+				}
 			}
 		} catch (e) {
 			this.props.handleSetError('Unable to fill this Debt Order');
