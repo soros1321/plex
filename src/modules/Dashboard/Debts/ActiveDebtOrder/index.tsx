@@ -1,8 +1,6 @@
 import * as React from 'react';
 import { DebtOrderMoreDetail } from '../../../../models';
 import {
-	formatDate,
-	formatTime,
 	getIdenticonImgSrc,
 	shortenString,
 	amortizationUnitToFrequency
@@ -19,12 +17,6 @@ import {
 	Terms,
 	RepaymentScheduleContainer,
 	Title,
-	Schedule,
-	ScheduleIconContainer,
-	ScheduleIcon,
-	Strikethrough,
-	PaymentDate,
-	ShowMore,
 	DetailLink,
 	Drawer,
 	InfoItem,
@@ -38,10 +30,12 @@ interface Props {
 	debtOrder: DebtOrderMoreDetail;
 }
 
+/*
 interface RepaymentSchedule {
 	timestamp: number;
 	type: string;
 }
+*/
 
 interface State {
 	collapse: boolean;
@@ -69,10 +63,10 @@ class ActiveDebtOrder extends React.Component<Props, State> {
 
 	render() {
 		const { debtOrder } = this.props;
-		const now = Math.round((new Date()).getTime() / 1000);
-		const pastIcon = require('../../../../assets/img/ok_circle.png');
-		const futureIcon = require('../../../../assets/img/circle_outline.png');
-		const repaymentSchedules: RepaymentSchedule[] = [];
+		// const now = Math.round((new Date()).getTime() / 1000);
+		// const pastIcon = require('../../../../assets/img/ok_circle.png');
+		// const futureIcon = require('../../../../assets/img/circle_outline.png');
+		// const repaymentSchedules: RepaymentSchedule[] = [];
 		/*
 		let repaymentTimestamp = loan.createdOnTimestamp;
 		if (loan.installments) {
@@ -125,6 +119,7 @@ class ActiveDebtOrder extends React.Component<Props, State> {
 		*/
 
 		const repaymentScheduleItems: JSX.Element[] = [];
+		/*
 		let maxDisplay = 0;
 		repaymentSchedules.forEach((paymentSchedule) => {
 			if (maxDisplay < 5) {
@@ -154,6 +149,7 @@ class ActiveDebtOrder extends React.Component<Props, State> {
 			}
 			maxDisplay++;
 		});
+		*/
 
 		const identiconImgSrc = getIdenticonImgSrc(debtOrder.issuanceHash, 60, 0.1);
 
