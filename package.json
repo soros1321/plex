@@ -104,6 +104,7 @@
       "**/*.{ts,tsx}",
       "!**/styledComponents.tsx",
       "!**/*Container.{ts,tsx}",
+      "!**/models/index.ts",
       "!**/modules/index.ts",
       "!**/modules/Welcome/index.ts",
       "!**/modules/Dashboard/index.ts"
