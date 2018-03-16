@@ -104,7 +104,9 @@
       "**/*.{ts,tsx}",
       "!**/styledComponents.tsx",
       "!**/*Container.{ts,tsx}",
-      "!**/Welcome/index.ts"
+      "!**/modules/index.ts",
+      "!**/modules/Welcome/index.ts",
+      "!**/modules/Dashboard/index.ts"
     ],
     "mapCoverage": true,
     "setupTestFrameworkScriptFile": "./__test__/setup.js",

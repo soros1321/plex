@@ -41,12 +41,14 @@ class Dashboard extends React.Component<Props, States> {
 		const tabs = [
 			{
 				id: '1',
-				title: 'Your Debts (' + (this.props.debtOrders && this.props.debtOrders.length) + ')',
+				titleFirstWord: 'Your ',
+				titleRest: 'Debts (' + (this.props.debtOrders && this.props.debtOrders.length) + ')',
 				content: <DebtsContainer debtOrders={this.props.debtOrders} />
 			},
 			{
 				id: '2',
-				title: 'Your Investments (' + (this.props.investments && this.props.investments.length) + ')',
+				titleFirstWord: 'Your ',
+				titleRest: 'Investments (' + (this.props.investments && this.props.investments.length) + ')',
 				content: <InvestmentsContainer investments={this.props.investments} />
 			}
 		];
@@ -57,10 +59,10 @@ class Dashboard extends React.Component<Props, States> {
 					onClick={() => { this.toggle(tab.id); }}
 				>
 					<TitleFirstWord>
-						{tab.title.indexOf(' ') >= 0 ? tab.title.substr(0, tab.title.indexOf(' ')) : tab.title}
+						{tab.titleFirstWord}
 					</TitleFirstWord>
 					<TitleRest>
-						{tab.title.indexOf(' ') >= 0 ? tab.title.substr(tab.title.indexOf(' ')) : ''}
+						{tab.titleRest}
 					</TitleRest>
 				</NavLink>
 			</StyledNavItem>
