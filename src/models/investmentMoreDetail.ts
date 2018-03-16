@@ -1,4 +1,4 @@
-import { InvestmentEntity } from './investmentEntity';
+import { InvestmentEntity } from './InvestmentEntity';
 import { BigNumber } from 'bignumber.js';
 
 export interface InvestmentMoreDetail extends InvestmentEntity {

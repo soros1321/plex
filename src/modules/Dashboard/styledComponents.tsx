@@ -9,6 +9,7 @@ export const StyledNavItem = styled(NavItem)`
 
 export const TitleFirstWord = styled.span`
 	display: inline-block;
+	margin-right: 5px;
 
 	@media only screen and (max-width: 480px) {
 		display:none;
