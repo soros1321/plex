@@ -312,6 +312,10 @@ class JSONSchemaForm extends React.Component<Props, {}> {
 	handleError(response: FormResponse) {
 		const fieldErrors = document.getElementsByClassName('field-error-message') as HTMLCollectionOf<HTMLElement>;
 		if (fieldErrors.length) {
+			const rootElm = document.querySelector('.' + fieldClassName);
+			if (rootElm && !rootElm.classList.contains(activeClassName)) {
+				rootElm.classList.add(activeClassName);
+			}
 			const firstError = fieldErrors[0];
 			highlightElement(firstError);
 		}
@@ -334,24 +338,24 @@ class JSONSchemaForm extends React.Component<Props, {}> {
 	}
 
 	handleKeyPress(event: any) {
-		if (event! && event!.key! && event!.path! && event.key === 'Enter' && (event.path[0].nodeName === 'INPUT' || event.path[0].nodeName === 'SELECT' || event.path[0].nodeName === 'TEXTAREA')) {
+		if (event! && event!.key! && event!.target! && event.key === 'Enter' && (event.target.nodeName === 'INPUT' || event.target.nodeName === 'SELECT' || event.target.nodeName === 'TEXTAREA')) {
 			event.preventDefault();
 			let value: any = '';
-			switch (event.path[0].nodeName) {
+			switch (event.target.nodeName) {
 				case 'INPUT':
 				case 'TEXTAREA':
-					value = event.path[0].value;
+					value = event.target.value;
 					break;
 				case 'SELECT':
-					value = event.path[0].options[event.path[0].selectedIndex].value;
+					value = event.target.options[event.target.selectedIndex].value;
 					break;
 				default:
 					break;
 			}
-			if (event.path[0].required && !value) {
+			if (event.target.required && !value) {
 				return;
 			}
-			const parentElm = findAncestor(event.path[0], fieldClassName);
+			const parentElm = findAncestor(event.target, fieldClassName);
 			if (parentElm) {
 				highlightNextSibling(parentElm);
 			}
@@ -359,33 +363,33 @@ class JSONSchemaForm extends React.Component<Props, {}> {
 	}
 
 	handleKeyUp(event: any) {
-		if (event! && event!.key! && event!.path! && event.key !== 'Enter' && (event.srcElement.nodeName === 'INPUT' || event.srcElement.nodeName === 'SELECT' || event.srcElement.nodeName === 'TEXTAREA')) {
+		if (event! && event!.key! && event!.target! && event.key !== 'Enter' && (event.target.nodeName === 'INPUT' || event.target.nodeName === 'SELECT' || event.target.nodeName === 'TEXTAREA')) {
 			let value: any = '';
-			switch (event.srcElement.nodeName) {
+			switch (event.target.nodeName) {
 				case 'INPUT':
 				case 'TEXTAREA':
-					value = event.srcElement.value;
+					value = event.target.value;
 					break;
 				case 'SELECT':
-					value = event.srcElement.options[event.srcElement.selectedIndex].value;
+					value = event.target.options[event.target.selectedIndex].value;
 					break;
 				default:
 					break;
 			}
 			if (event.key === 'Tab') {
-				highlightElement(event.path[0]);
+				highlightElement(event.target);
 			} else {
-				const parentElm = findAncestor(event.srcElement, fieldClassName);
+				const parentElm = findAncestor(event.target, fieldClassName);
 				if (parentElm && isLastElement(parentElm)) {
-					highlightGrandParentPressEnter(parentElm, value, event.srcElement.required);
+					highlightGrandParentPressEnter(parentElm, value, event.target.required);
 				}
 			}
 		}
 	}
 
 	handleClick(event: any) {
-		if (event! && event!.path!) {
-			highlightElement(event.path[0]);
+		if (event! && event!.target!) {
+			highlightElement(event.target);
 		}
 	}
 

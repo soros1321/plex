@@ -39,6 +39,7 @@ textarea.form-control {
 	-webkit-appearance: none;
 	-moz-appearance: none;
 	appearance: none;
+	box-shadow: none;
 }
 select.form-control {
 	background: url(../img/arrow_down.png) calc(100% - 10px) / 10px no-repeat #FFFFFF;
