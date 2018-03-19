@@ -29,7 +29,9 @@ class Debts extends React.Component<Props, State> {
 	}
 
 	componentDidMount() {
-		this.getDebtOrdersDetails(this.props.dharma, this.props.debtOrders);
+		if (this.props.dharma && this.props.debtOrders) {
+			this.getDebtOrdersDetails(this.props.dharma, this.props.debtOrders);
+		}
 	}
 
 	componentWillReceiveProps(nextProps: Props) {
