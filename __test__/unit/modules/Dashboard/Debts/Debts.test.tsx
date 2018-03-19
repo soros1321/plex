@@ -5,7 +5,6 @@ import { Header, MainWrapper } from '../../../../../src/components';
 import { DebtsMetricsContainer } from '../../../../../src/modules/Dashboard/Debts/DebtsMetrics/DebtsMetricsContainer';
 import { ActiveDebtOrder } from '../../../../../src/modules/Dashboard/Debts/ActiveDebtOrder';
 import { DebtOrderHistory } from '../../../../../src/modules/Dashboard/Debts/DebtOrderHistory';
-import Dharma from '@dharmaprotocol/dharma.js';
 import MockDharma from '../../../../../__mocks__/dharma.js';
 import { BigNumber } from 'bignumber.js';
 
@@ -96,11 +95,9 @@ describe('<Debts />', () => {
 			wrapper.setProps({ dharma: dharma, debtOrders: debtOrders });
 			await expect(spy).toHaveBeenCalledWith(dharma, debtOrders);
 		});
-
-
 	});
 
-	describe('#getDebtOrderDetails', async () => {
+	describe('#getDebtOrdersDetails', async () => {
 		let determineExpectedState = async (dharma, debtOrders) => {
 			const allDebtOrders = [];
 			const activeDebtOrders = [];

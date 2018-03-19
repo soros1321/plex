@@ -29,7 +29,9 @@ class Investments extends React.Component<Props, State> {
 	}
 
 	componentDidMount() {
-		this.getInvestmentsDetails(this.props.dharma, this.props.investments);
+		if (this.props.dharma && this.props.investments) {
+			this.getInvestmentsDetails(this.props.dharma, this.props.investments);
+		}
 	}
 
 	componentWillReceiveProps(nextProps: Props) {
