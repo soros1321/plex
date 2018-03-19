@@ -4,9 +4,14 @@ const eth = {
   getAccounts: mockGetAccounts
 };
 
+const mockFromWei = jest.fn((value, to) => {
+	return value;
+});
+
 const mockWeb3 = jest.fn().mockImplementation(() => {
   return {
-    eth
+    eth,
+		fromWei: mockFromWei
   };
 });
 

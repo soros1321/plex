@@ -14,3 +14,4 @@ export const mockGetProxyAllowanceAsync = jest.fn(async (tokenAddress, ownerAddr
 });
 export const mockSetProxyAllowanceAsync = jest.fn();
 export const mockSetUnlimitedProxyAllowanceAsync = jest.fn();
+export const mockGetBalanceAsync = jest.fn();

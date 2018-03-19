@@ -67,9 +67,6 @@ class TradingPermissions extends React.Component<Props, State> {
 	async getTokenBalance(tokenAddress: string) {
 		try {
 			const { dharma, web3 } = this.props;
-			if (!dharma || !web3) {
-				return new BigNumber(-1);
-			}
 			const accounts = await promisify(web3.eth.getAccounts)();
 			// TODO: handle account retrieval error more robustly
 			if (!accounts || !accounts[0]) {
@@ -144,7 +141,9 @@ class TradingPermissions extends React.Component<Props, State> {
 				this.props.handleToggleTokenTradingPermission(tokenSymbol, !tradingPermitted);
 			}
 		} catch (e) {
-			throw new Error(e);
+			this.props.handleSetError('Unable to update token trading permission');
+			console.log(e);
+			// throw new Error(e);
 		}
 	}
 

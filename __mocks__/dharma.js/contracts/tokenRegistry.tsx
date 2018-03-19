@@ -6,7 +6,7 @@ const mockGetTokenAddress = {
 
 const mockTokenRegistry = jest.fn().mockImplementation(() => {
   return {
-    getTokenAddress: mockGetTokenAddress
+    getTokenAddressBySymbol: mockGetTokenAddress
   };
 });
 
