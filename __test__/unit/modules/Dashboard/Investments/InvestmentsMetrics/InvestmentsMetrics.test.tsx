@@ -470,4 +470,102 @@ describe('<InvestmentsMetrics />', () => {
 		});
 	});
 
+	describe('Only render Token with amount in Total Lended/Earned section', () => {
+		beforeEach(() => {
+			investments = [
+				{
+					debtorSignature: '{v: 27,r: "0xb90c74efb3b13bc6459f37cf1fc65f1f29a391d0d6280b15beac2a34572a3d9a",s: "0x66358c759588ba845ec0d3bded452c5dcef638f3fae6489a709ed26c75da138b"}',
+					debtor: '0x431194c3e0f35bc7f1266ec6bb85e0c5ec554935',
+					creditorSignature: '{v: 27,r: "0xb90c74efb3b13bc6459f37cf1fc65f1f29a391d0d6280b15beac2a34572a3d9a",s: "0x66358c759588ba845ec0d3bded452c5dcef638f3fae6489a709ed26c75da138b"}',
+					creditor: '0x431194c3e0f35bc7f1266ec6bb85e0c5ec554935',
+					principalAmount: new BigNumber(345),
+					principalToken: '0x07e93e27ac8a1c114f1931f65e3c8b5186b9b77e',
+					principalTokenSymbol: 'MKR',
+					termsContract: '0x60a1779d5af15f808d91f3afbc4bcaddbf288ced',
+					termsContractParameters: '0x000000000000000000000000000006bd02000000000000000000000000000014',
+					description: 'Hello, Can I borrow some MKR please?',
+					issuanceHash: '0xe48276c5b64237ac1c8bd8ee5dc8a06e170e8f34aab0debab0c06ede8c725e83',
+					earnedAmount: new BigNumber(0),
+					termLength: new BigNumber(20),
+					interestRate: new BigNumber(3.12),
+					amortizationUnit: 'hours',
+					status: 'active'
+				},
+				{
+					debtorSignature: '{v: 27,r: "0xb90c74efb3b13bc6459f37cf1fc65f1f29a391d0d6280b15beac2a34572a3d9a",s: "0x66358c759588ba845ec0d3bded452c5dcef638f3fae6489a709ed26c75da138b"}',
+					debtor: '0x431194c3e0f35bc7f1266ec6bb85e0c5ec554935',
+					creditorSignature: '{v: 27,r: "0xb90c74efb3b13bc6459f37cf1fc65f1f29a391d0d6280b15beac2a34572a3d9a",s: "0x66358c759588ba845ec0d3bded452c5dcef638f3fae6489a709ed26c75da138b"}',
+					creditor: '0x431194c3e0f35bc7f1266ec6bb85e0c5ec554935',
+					principalAmount: new BigNumber(345),
+					principalToken: '0xc3017eb5cd063bf6745723895edead65257a5f6e',
+					principalTokenSymbol: 'ZRX',
+					termsContract: '0x60a1779d5af15f808d91f3afbc4bcaddbf288ced',
+					termsContractParameters: '0x000000000000000000000000000006bd02000000000000000000000000000014',
+					description: 'Hello, Can I borrow some ZRX please?',
+					issuanceHash: '0xe48276c5b64237ac1c8bd8ee5dc8a06e170e8f34aab0debab0c06ede8c725e83',
+					earnedAmount: new BigNumber(10),
+					termLength: new BigNumber(20),
+					interestRate: new BigNumber(3.12),
+					amortizationUnit: 'hours',
+					status: 'active'
+				}
+			];
+
+			tokens = [
+				{
+					address: '0x07e93e27ac8a1c114f1931f65e3c8b5186b9b77e',
+					tokenSymbol: 'MKR',
+					tradingPermitted: true,
+					balance: new BigNumber(10000)
+				},
+				{
+					address: '0xc3017eb5cd063bf6745723895edead65257a5f6e',
+					tokenSymbol: 'ZRX',
+					tradingPermitted: true,
+					balance: new BigNumber(10000)
+				},
+				{
+					address: '0xd26114cd6EE289AccF82350c8d8487fedB8A0C07',
+					tokenSymbol: 'OMG',
+					tradingPermitted: true,
+					balance: new BigNumber(10000)
+				}
+			];
+
+			props = { investments, tokens };
+		});
+
+		it('should have the correct tokenBalances', () => {
+			const wrapper = shallow(<InvestmentsMetrics {... props} />);
+			expect(wrapper.state('tokenBalances')).toEqual({
+				MKR: {
+					totalLended: new BigNumber(345),
+					totalEarned: new BigNumber(0)
+				},
+				ZRX: {
+					totalLended: new BigNumber(345),
+					totalEarned: new BigNumber(10)
+				},
+				OMG: {
+					totalLended: new BigNumber(0),
+					totalEarned: new BigNumber(0)
+				}
+			});
+		});
+
+		it('should render 10 ZRX in Total Earned section', () => {
+			const wrapper = shallow(<InvestmentsMetrics {... props} />);
+			expect(tokens.length).toEqual(3);
+			expect(wrapper.find(HalfCol).last().find(TokenWrapper).length).toEqual(1);
+			expect(wrapper.find(HalfCol).last().find(TokenWrapper).get(0).props.children).toEqual('10 ZRX');
+		});
+
+		it('should render 345 MKR and 345 ZRX in Total Lended section', () => {
+			const wrapper = shallow(<InvestmentsMetrics {... props} />);
+			expect(tokens.length).toEqual(3);
+			expect(wrapper.find(HalfCol).first().find(TokenWrapper).length).toEqual(2);
+			expect(wrapper.find(HalfCol).first().find(TokenWrapper).first().get(0).props.children).toEqual('345 MKR');
+			expect(wrapper.find(HalfCol).first().find(TokenWrapper).last().get(0).props.children).toEqual('345 ZRX');
+		});
+	});
 });

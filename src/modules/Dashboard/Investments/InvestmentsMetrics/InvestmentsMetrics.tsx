@@ -70,10 +70,7 @@ class InvestmentsMetrics extends React.Component<Props, State> {
 		let totalEarnedRows: JSX.Element[] = [];
 		for (let token in tokenBalances) {
 			if (tokenBalances[token].totalLended.gt(0) || tokenBalances[token].totalEarned.gt(0)) {
-				if (tokenBalances[token].totalLended.gt(0)) {
-					if (totalLendedRows.length >= 4) {
-						continue;
-					}
+				if (tokenBalances[token].totalLended.gt(0) && totalLendedRows.length < 4) {
 					if (totalLendedRows.length === 3) {
 						totalLendedRows.push(
 							<TokenWrapper key={'more'}>AND MORE</TokenWrapper>
@@ -84,10 +81,7 @@ class InvestmentsMetrics extends React.Component<Props, State> {
 						);
 					}
 				}
-				if (tokenBalances[token].totalEarned.gt(0)) {
-					if (totalEarnedRows.length >= 4) {
-						continue;
-					}
+				if (tokenBalances[token].totalEarned.gt(0) && totalEarnedRows.length < 4) {
 					if (totalEarnedRows.length === 3) {
 						totalEarnedRows.push(
 							<TokenWrapper key={'more'}>AND MORE</TokenWrapper>

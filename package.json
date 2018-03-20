@@ -108,7 +108,7 @@
       "!**/modules/index.ts",
       "!**/modules/Welcome/index.ts",
       "!**/modules/Dashboard/index.ts",
-			"!**/components/Form/JSONSchemaForm/typeDef.ts"
+      "!**/components/Form/JSONSchemaForm/typeDef.ts"
     ],
     "mapCoverage": true,
     "setupTestFrameworkScriptFile": "./__test__/setup.js",
@@ -117,6 +117,6 @@
       "enzyme",
       "jest-enzyme"
     ],
-		"testURL": "http://localhost"
+    "testURL": "http://localhost"
   }
 }
