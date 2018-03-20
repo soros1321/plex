@@ -207,7 +207,6 @@ export const InfoItemTitle = styled.div`
 	opacity: 0.5;
 	color: #002326;
 	font-size: 13px;
-	font-weight: bold;
 	line-height: 20px;
 `;
 
@@ -234,7 +233,6 @@ export const TransferButton = StyledButton.extend`
 	min-width: auto !important;
 	padding: 0px 15px !important;
 	float: right;
-	font-weight: bold !important;
 	line-height: 36px !important;
 
 	@media only screen and (max-width: 480px) {

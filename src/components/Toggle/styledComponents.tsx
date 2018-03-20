@@ -16,7 +16,6 @@ export const ToggleName = styled.div`
   display: inline-block;
   font-family: DIN;
   font-size: 13px;
-  font-weight: bold;
   line-height: 25px;
   margin-left: 10px;
   opacity: 1;

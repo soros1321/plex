@@ -55,11 +55,11 @@ export const StyledCol = styled(UglyCol)`
 `;
 
 export const StyledLink = styled(Link)`
+	font-family: DIN;
 	text-transform: uppercase;
 	letter-spacing: 1px;
 	font-size: 14px;
 	color: #FFFFFF;
-	font-weight: bold;
 	line-height: 25px;
 	opacity: 0.5;
 	padding: 20px 25px !important;

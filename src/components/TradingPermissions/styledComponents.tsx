@@ -19,7 +19,6 @@ export const TradingPermissionsContainer = styled.div`
 export const TradingPermissionsTitle = styled.div`
   color: #FFFFFF;
   font-size: 13px;
-  font-weight: bold;
   line-height: 25px;
   opacity: 0.5;
   padding: 5px 0px;

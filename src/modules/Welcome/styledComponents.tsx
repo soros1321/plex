@@ -23,7 +23,6 @@ export const Header = styled.div`
 	color: #002326;
 	font-family: DIN-Bold;
 	font-size: 40px;
-	font-weight: 900;
 	line-height: 50px;
 	width: 499px;
 

@@ -20,7 +20,6 @@ h1 {
 	font-family: DIN-Bold;
 	color: #002326;
 	font-size: 40px;
-	font-weight: 900;
 	line-height: 50px;
 }
 label {
@@ -200,7 +199,6 @@ button:focus {
 	font-family: DIN-Bold;
 	color: #002326;
 	font-size: 40px;
-	font-weight: 900;
 	line-height: 50px;
 }
 .modal .modal-header .close {
@@ -245,7 +243,6 @@ button:focus {
 @media only screen and (max-width: 480px) {
 	h1 {
 		font-size: 30px;
-		font-weight: 500;
 		line-height: 30px;
 	}
 	.row.button-container {

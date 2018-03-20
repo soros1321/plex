@@ -38,7 +38,6 @@ export const Title = styled.div`
 	opacity: 0.5;
 	color: #002326;
 	font-size: 15px;
-	font-weight: bold;
 	line-height: 25px;
 	text-transform: uppercase;
 `;
