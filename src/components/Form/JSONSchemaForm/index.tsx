@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Button } from 'reactstrap';
 import { JSONSchema4 } from 'json-schema';
-import { StyledForm, FieldWrapper } from './styledComponents';
+import { StyledForm, FieldWrapper, PressEnter } from './styledComponents';
 import { ObjectFieldTemplate } from './ObjectFieldTemplate';
 import { FieldTemplate } from './FieldTemplate';
 import { CustomCheckbox } from './CustomCheckbox';
@@ -412,6 +412,7 @@ class JSONSchemaForm extends React.Component<Props, {}> {
 			>
 				<FieldWrapper className="field-wrapper button-container">
 					<Button type="submit" className="button">{this.props.buttonText || 'Submit'}</Button>
+					<PressEnter className="press-enter">OK, Press ENTER</PressEnter>
 				</FieldWrapper>
 			</StyledForm>
 		);
