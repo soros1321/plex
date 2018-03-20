@@ -32,7 +32,9 @@ class InvestmentsMetrics extends React.Component<Props, State> {
 	}
 
 	componentDidMount() {
-		this.initiateTokenBalance(this.props.tokens, this.props.investments);
+		if (this.props.tokens && this.props.investments) {
+			this.initiateTokenBalance(this.props.tokens, this.props.investments);
+		}
 	}
 
 	componentWillReceiveProps(nextProps: Props) {
