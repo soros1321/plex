@@ -1,8 +1,6 @@
 import * as React from 'react';
 import { InvestmentMoreDetail } from '../../../../models';
 import {
-	formatDate,
-	formatTime,
 	getIdenticonImgSrc,
 	shortenString,
 	amortizationUnitToFrequency
@@ -19,12 +17,6 @@ import {
 	Terms,
 	RepaymentScheduleContainer,
 	Title,
-	Schedule,
-	ScheduleIconContainer,
-	ScheduleIcon,
-	Strikethrough,
-	PaymentDate,
-	ShowMore,
 	DetailLink,
 	Drawer,
 	InfoItem,
@@ -38,10 +30,12 @@ interface Props {
 	investment: InvestmentMoreDetail;
 }
 
+/*
 interface RepaymentSchedule {
 	timestamp: number;
 	type: string;
 }
+*/
 
 interface State {
 	collapse: boolean;
@@ -69,12 +63,12 @@ class ActiveInvestment extends React.Component<Props, State> {
 
 	render() {
 		const { investment } = this.props;
+		/*
 		const now = Math.round((new Date()).getTime() / 1000);
 		const pastIcon = require('../../../../assets/img/ok_circle.png');
 		const futureIcon = require('../../../../assets/img/circle_outline.png');
 		const repaymentSchedules: RepaymentSchedule[] = [];
 
-		/*
 		let repaymentTimestamp = investment.createdOnTimestamp;
 		if (investment.installments) {
 			let count = 0;
@@ -126,6 +120,7 @@ class ActiveInvestment extends React.Component<Props, State> {
 		*/
 
 		const repaymentScheduleItems: JSX.Element[] = [];
+		/*
 		let maxDisplay = 0;
 		repaymentSchedules.forEach((paymentSchedule) => {
 			if (maxDisplay < 5) {
@@ -155,6 +150,7 @@ class ActiveInvestment extends React.Component<Props, State> {
 			}
 			maxDisplay++;
 		});
+		*/
 
 		const identiconImgSrc = getIdenticonImgSrc(investment.issuanceHash, 60, 0.1);
 		return (
@@ -168,7 +164,7 @@ class ActiveInvestment extends React.Component<Props, State> {
 					<DetailContainer>
 						<Row>
 							<Col xs="12" md="6">
-								<Amount>{investment.principalAmount ? investment.principalAmount.toNumber() + ' ' + investment.principalTokenSymbol : '-'}</Amount>
+								<Amount>{investment!.principalAmount!.toNumber() + ' ' + investment.principalTokenSymbol}</Amount>
 								<Url>
 									<DetailLink to={`/request/success/${investment.issuanceHash}`}>
 										{shortenString(investment.issuanceHash)}
@@ -198,7 +194,7 @@ class ActiveInvestment extends React.Component<Props, State> {
 										Lended
 									</InfoItemTitle>
 									<InfoItemContent>
-										{investment.principalAmount ? investment.principalAmount.toNumber() + ' ' + investment.principalTokenSymbol : '-'}
+										{investment!.principalAmount!.toNumber() + ' ' + investment.principalTokenSymbol}
 									</InfoItemContent>
 								</InfoItem>
 							</Col>
@@ -212,7 +208,6 @@ class ActiveInvestment extends React.Component<Props, State> {
 									</InfoItemContent>
 								</InfoItem>
 							</Col>
-
 							<Col xs="12" md="2">
 								<InfoItem>
 									<InfoItemTitle>
