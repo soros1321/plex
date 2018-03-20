@@ -268,6 +268,7 @@ class JSONSchemaForm extends React.Component<Props, {}> {
 		this.handleKeyPress = this.handleKeyPress.bind(this);
 		this.handleKeyUp = this.handleKeyUp.bind(this);
 		this.handleClick = this.handleClick.bind(this);
+		this.handleSelectGoToNext = this.handleSelectGoToNext.bind(this);
 	}
 
 	componentDidMount() {
@@ -275,6 +276,7 @@ class JSONSchemaForm extends React.Component<Props, {}> {
 		window.addEventListener('keypress', this.handleKeyPress);
 		window.addEventListener('keyup', this.handleKeyUp);
 		window.addEventListener('click', this.handleClick);
+		window.addEventListener('selectGoToNext', this.handleSelectGoToNext);
 
 		// Always set the root element as active
 		const rootElm = document.querySelector('.' + fieldClassName);
@@ -299,6 +301,7 @@ class JSONSchemaForm extends React.Component<Props, {}> {
 		window.removeEventListener('keypress', this.handleKeyPress);
 		window.removeEventListener('keyup', this.handleKeyUp);
 		window.removeEventListener('click', this.handleClick);
+		window.removeEventListener('selectGoToNext', this.handleSelectGoToNext);
 	}
 
 	handleChange(response: FormResponse) {
@@ -338,26 +341,46 @@ class JSONSchemaForm extends React.Component<Props, {}> {
 	}
 
 	handleKeyPress(event: any) {
-		if (event! && event!.key! && event!.target! && event.key === 'Enter' && (event.target.nodeName === 'INPUT' || event.target.nodeName === 'SELECT' || event.target.nodeName === 'TEXTAREA')) {
-			event.preventDefault();
-			let value: any = '';
-			switch (event.target.nodeName) {
-				case 'INPUT':
-				case 'TEXTAREA':
-					value = event.target.value;
-					break;
-				case 'SELECT':
-					value = event.target.options[event.target.selectedIndex].value;
-					break;
-				default:
-					break;
-			}
-			if (event.target.required && !value) {
-				return;
-			}
-			const parentElm = findAncestor(event.target, fieldClassName);
-			if (parentElm) {
-				highlightNextSibling(parentElm);
+		if (event! && event!.key! && event!.target! && event.key === 'Enter') {
+			if (event.target.nodeName === 'INPUT' || event.target.nodeName === 'SELECT' || event.target.nodeName === 'TEXTAREA') {
+				event.preventDefault();
+				let value: any = '';
+				switch (event.target.nodeName) {
+					case 'INPUT':
+					case 'TEXTAREA':
+						value = event.target.value;
+						break;
+					case 'SELECT':
+						value = event.target.options[event.target.selectedIndex].value;
+						break;
+					default:
+						break;
+				}
+				if (event.target.required && !value) {
+					return;
+				}
+				const parentElm = findAncestor(event.target, fieldClassName);
+				if (parentElm) {
+					highlightNextSibling(parentElm);
+				}
+			} else if (event.target.nodeName === 'BODY') {
+				// If user press enter on body, then we want to either highlight the next sibling
+				// Or trigger a form submission
+				//
+				const activeElms = document.querySelectorAll('.' + fieldClassName + '.' + activeClassName);
+				// We know that the first active elm is root
+				// Check if the 2nd elm has press enter active
+				if (activeElms.length > 1) {
+					let pressEnterDivs = activeElms[1].getElementsByClassName(pressEnterClassName);
+					if (pressEnterDivs.length && pressEnterDivs[0].classList.contains(activeClassName)) {
+						const isButton = activeElms[1]!.querySelector('button')! ? true : false;
+						if (isButton) {
+							this.handleSubmit();
+						} else {
+							highlightNextSibling(activeElms[1]);
+						}
+					}
+				}
 			}
 		}
 	}
@@ -390,6 +413,14 @@ class JSONSchemaForm extends React.Component<Props, {}> {
 	handleClick(event: any) {
 		if (event! && event!.target!) {
 			highlightElement(event.target);
+		}
+	}
+
+	handleSelectGoToNext(event: any) {
+		const elm = document.querySelector('input[name="' + event.detail.name + '"]');
+		const parentElm = findAncestor(elm, fieldClassName);
+		if (parentElm) {
+			highlightNextSibling(parentElm);
 		}
 	}
 

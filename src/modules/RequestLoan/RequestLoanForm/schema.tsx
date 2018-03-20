@@ -143,13 +143,13 @@ export const schema: JSONSchema4 = {
 
 export const uiSchema = {
 	debtOrderType: {
+		'ui:autofocus': true,
 		'ui:options': {
-			pressEnter: false
+			pressEnter: true
 		}
 	},
 	loan: {
 		principalAmount: {
-			'ui:autofocus': true,
 			'ui:placeholder': '100.3',
 			classNames: 'inline-field width65',
 			'ui:options': {
