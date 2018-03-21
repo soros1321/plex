@@ -37,7 +37,7 @@ class InvestmentRow extends React.Component<Props, State> {
 			<div onClick={this.toggleDrawer}>
 				<StyledRow>
 					<Col xs="3" md="2">
-						{investment.principalAmount ? investment.principalAmount.toNumber() + ' ' + investment.principalTokenSymbol : '-'}
+						{investment!.principalAmount!.toNumber() + ' ' + investment.principalTokenSymbol}
 					</Col>
 					<Col xs="3" md="2">
 						{shortenString(investment.issuanceHash)}

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { shallow } from 'enzyme';
-import { DebtOrderRow } from '../../../../../../src/modules/Dashboard/Debts/DebtOrderHistory/DebtOrderRow';
+import { InvestmentRow } from '../../../../../../src/modules/Dashboard/Investments/InvestmentHistory/InvestmentRow';
 import { shortenString, amortizationUnitToFrequency } from '../../../../../../src/utils';
 import {
 	StyledRow,
@@ -8,14 +8,16 @@ import {
 	InfoItem,
 	InfoItemTitle,
 	InfoItemContent
-} from '../../../../../../src/modules/Dashboard/Debts/DebtOrderHistory/styledComponents';
+} from '../../../../../../src/modules/Dashboard/Investments/InvestmentHistory/styledComponents';
 import { BigNumber } from 'bignumber.js';
 import { Col, Collapse } from 'reactstrap';
 
-describe('<DebtOrderRow />', () => {
-	const debtOrder = {
+describe('<InvestmentRow />', () => {
+	const investment = {
 		debtorSignature: '{"v": 27,"r": "0xfe481d58d09ac4bf3057a02afe1ef155ef08d3a44a707d98309d305b1a3120a0","s": "0x7fdd34c625a73e543465b38506358a659c221897b1fcfc5c94b3bb74b2e1f246"}',
 		debtor: '0x431194c3e0f35bc7f1266ec6bb85e0c5ec554935',
+		creditorSignature: '{"v": 27,"r": "0xfe481d58d09ac4bf3057a02afe1ef155ef08d3a44a707d98309d305b1a3120a0","s": "0x7fdd34c625a73e543465b38506358a659c221897b1fcfc5c94b3bb74b2e1f246"}',
+		creditor: '0x431194c3e0f35bc7f1266ec6bb85e0c5ec554935',
 		principalAmount: new BigNumber(123),
 		principalToken: '0x9b62bd396837417ce319e2e5c8845a5a960010ea',
 		principalTokenSymbol: 'REP',
@@ -23,8 +25,7 @@ describe('<DebtOrderRow />', () => {
 		termsContractParameters: '0x0000000000000000000000000000008500000000000000000000000000000064',
 		description: 'Hello, Can I borrow some REP please?',
 		issuanceHash: '0x89e9eac37c5f14b657c69ccd891704b3236b84b9ca1d449bd09c5fbaa24afebf',
-		fillLoanShortUrl: 'http://bit.ly/2HDpT2P',
-		repaidAmount: new BigNumber(10),
+		earnedAmount: new BigNumber(10),
 		termLength: new BigNumber(20),
 		interestRate: new BigNumber(3.24),
 		amortizationUnit: 'days',
@@ -35,8 +36,8 @@ describe('<DebtOrderRow />', () => {
 		let wrapper;
 		let props;
 		beforeEach(() => {
-			props = { debtOrder };
-			wrapper = shallow(<DebtOrderRow {... props} />);
+			props = { investment };
+			wrapper = shallow(<InvestmentRow {... props} />);
 		});
 
 		it('should render successfully', () => {
@@ -48,6 +49,7 @@ describe('<DebtOrderRow />', () => {
 			beforeEach(() => {
 				styledRow = wrapper.find(StyledRow);
 			});
+
 			it('should render', () => {
 				expect(styledRow.length).toEqual(1);
 			});
@@ -57,18 +59,18 @@ describe('<DebtOrderRow />', () => {
 			});
 
 			it('1st <Col /> should render principal info', () => {
-				const content = props.debtOrder.principalAmount.toNumber() + ' ' + props.debtOrder.principalTokenSymbol;
+				const content = props.investment.principalAmount.toNumber() + ' ' + props.investment.principalTokenSymbol;
 				expect(styledRow.find(Col).at(0).get(0).props.children).toEqual(content);
 			});
 
 			it('2nd <Col /> should render issuance hash info', () => {
-				const content = shortenString(props.debtOrder.issuanceHash);
+				const content = shortenString(props.investment.issuanceHash);
 				expect(styledRow.find(Col).at(1).get(0).props.children).toEqual(content);
 			});
 
 			it('3rd <Col /> should render status info', () => {
 				expect(styledRow.find(Col).at(2).get(0).props.children).toEqual('Delinquent');
-				props.debtOrder.repaidAmount = props.debtOrder.principalAmount;
+				props.investment.earnedAmount = props.investment.principalAmount;
 				wrapper.setProps(props);
 				styledRow = wrapper.find(StyledRow);
 				expect(styledRow.find(Col).at(2).get(0).props.children).toEqual('Paid');
@@ -96,28 +98,28 @@ describe('<DebtOrderRow />', () => {
 			it('1st <InfoItem /> should render Term Length info', () => {
 				const elm = collapse.find(InfoItem).at(0);
 				expect(elm.find(InfoItemTitle).get(0).props.children).toEqual('Term Length');
-				const content = props.debtOrder.termLength.toNumber() + ' ' + props.debtOrder.amortizationUnit;
+				const content = props.investment.termLength.toNumber() + ' ' + props.investment.amortizationUnit;
 				expect(elm.find(InfoItemContent).get(0).props.children).toEqual(content);
 			});
 
 			it('2nd <InfoItem /> should render Interest Rate info', () => {
 				const elm = collapse.find(InfoItem).at(1);
 				expect(elm.find(InfoItemTitle).get(0).props.children).toEqual('Interest Rate');
-				const content = props.debtOrder.interestRate.toNumber() + '%';
+				const content = props.investment.interestRate.toNumber() + '%';
 				expect(elm.find(InfoItemContent).get(0).props.children).toEqual(content);
 			});
 
 			it('3rd <InfoItem /> should render Installment Frequency info', () => {
 				const elm = collapse.find(InfoItem).at(2);
 				expect(elm.find(InfoItemTitle).get(0).props.children).toEqual('Installment Frequency');
-				const content = amortizationUnitToFrequency(props.debtOrder.amortizationUnit);
+				const content = amortizationUnitToFrequency(props.investment.amortizationUnit);
 				expect(elm.find(InfoItemContent).get(0).props.children).toEqual(content);
 			});
 
 			it('4th <InfoItem /> should render Description info', () => {
 				const elm = collapse.find(InfoItem).at(3);
 				expect(elm.find(InfoItemTitle).get(0).props.children).toEqual('Description');
-				const content = props.debtOrder.description;
+				const content = props.investment.description;
 				expect(elm.find(InfoItemContent).get(0).props.children).toEqual(content);
 			});
 		});
@@ -125,17 +127,17 @@ describe('<DebtOrderRow />', () => {
 
 	describe('#onClick Div', () => {
 		it('should call toggleDrawer on click', () => {
-			const props = { debtOrder };
-			const spy = jest.spyOn(DebtOrderRow.prototype, 'toggleDrawer');
-			const wrapper = shallow(<DebtOrderRow {... props} />);
+			const props = { investment };
+			const spy = jest.spyOn(InvestmentRow.prototype, 'toggleDrawer');
+			const wrapper = shallow(<InvestmentRow {... props} />);
 			wrapper.simulate('click');
 			expect(spy).toHaveBeenCalled();
 		});
 
 		it('toggleDrawer should call setState', () => {
-			const props = { debtOrder };
-			const spy = jest.spyOn(DebtOrderRow.prototype, 'setState');
-			const wrapper = shallow(<DebtOrderRow {... props} />);
+			const props = { investment };
+			const spy = jest.spyOn(InvestmentRow.prototype, 'setState');
+			const wrapper = shallow(<InvestmentRow {... props} />);
 			const collapse = wrapper.state('collapse');
 			wrapper.simulate('click');
 			expect(spy).toHaveBeenCalledWith({collapse: !collapse});

@@ -152,6 +152,13 @@
   dependencies:
     "@types/react" "*"
 
+"NonFungibleToken@git+https://github.com/dharmaprotocol/NonFungibleToken.git":
+  version "0.0.1"
+  resolved "git+https://github.com/dharmaprotocol/NonFungibleToken.git#162e8609569654630a5a5ef3bbbe5e0ebbe90f1d"
+  dependencies:
+    abi-decoder "^1.0.9"
+    zeppelin-solidity "^1.4.0"
+
 "NonFungibleToken@https://github.com/dharmaprotocol/NonFungibleToken":
   version "0.0.1"
   resolved "https://github.com/dharmaprotocol/NonFungibleToken#0044be43b2cb19e701a230e826ef5dd6a701215a"
