@@ -13,8 +13,9 @@ import { BigNumber } from 'bignumber.js';
 describe('<DebtOrderHistory />', () => {
 	let wrapper;
 	let debtOrders = [];
+	let props;
 	beforeEach(() => {
-		const props = { debtOrders };
+		props = { debtOrders };
 		wrapper = shallow(<DebtOrderHistory {... props} />);
 	});
 
