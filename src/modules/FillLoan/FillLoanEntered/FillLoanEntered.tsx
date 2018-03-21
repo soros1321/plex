@@ -78,7 +78,9 @@ class FillLoanEntered extends React.Component<Props, States> {
 	}
 
 	async componentDidMount() {
-		this.getDebtOrderDetail(this.props.dharma, this.props.location.query);
+		if (this.props.dharma && this.props.location.query) {
+			this.getDebtOrderDetail(this.props.dharma, this.props.location.query);
+		}
 	}
 
 	componentWillReceiveProps(nextProps: Props) {
@@ -89,9 +91,6 @@ class FillLoanEntered extends React.Component<Props, States> {
 
 	async getDebtOrderDetail(dharma: Dharma, urlParams: any) {
 		try {
-			if (!dharma || !urlParams) {
-				return;
-			}
 			let debtOrderWithDescription: DebtOrderWithDescription = {
 				principalAmount: new BigNumber(urlParams.principalAmount),
 				principalToken: urlParams.principalToken,
@@ -201,9 +200,6 @@ class FillLoanEntered extends React.Component<Props, States> {
 
 	render() {
 		const { debtOrderWithDescription: debtOrder, interestRate, termLength, amortizationUnit, principalTokenSymbol, issuanceHash } = this.state;
-		if (!debtOrder) {
-			return null;
-		}
 
 		const leftInfoItems = [
 			{title: 'Principal', content: (debtOrder.principalAmount ? debtOrder.principalAmount.toNumber() + ' ' + principalTokenSymbol : '')},

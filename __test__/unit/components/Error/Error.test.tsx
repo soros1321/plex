@@ -3,7 +3,6 @@ import { shallow, mount } from 'enzyme';
 import configureStore from 'redux-mock-store';
 import { Provider } from 'react-redux';
 import { createStore } from 'redux';
-import { errorReducer } from '../../../../src/reducers/errorReducer';
 import { setError } from '../../../../src/components/Error/actions';
 import { Error } from '../../../../src/components/Error/Error';
 import { ErrorContainer } from '../../../../src/components/Error/ErrorContainer';

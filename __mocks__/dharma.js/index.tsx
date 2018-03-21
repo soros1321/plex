@@ -8,6 +8,7 @@ import {
 import { mockFromDebtOrder } from './adapters/simpleInterestLoan';
 import { mockGetValueRepaid } from './servicing';
 import { mockAwaitTransactionMinedAsync } from './blockchain';
+import { mockGetIssuanceHash } from './order';
 
 const contracts = {
   loadTokenRegistry: mockTokenRegistry
@@ -34,13 +35,18 @@ const blockchain = {
 	awaitTransactionMinedAsync: mockAwaitTransactionMinedAsync
 };
 
+const order = {
+	getIssuanceHash: mockGetIssuanceHash
+};
+
 const mockDharma = jest.fn().mockImplementation(() => {
   return {
     contracts,
     token,
 		adapters,
 		servicing,
-		blockchain
+		blockchain,
+		order
   };
 });
 
