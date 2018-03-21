@@ -108,6 +108,7 @@
       "!**/modules/index.ts",
       "!**/modules/Welcome/index.ts",
       "!**/modules/Dashboard/index.ts",
+      "!**/modules/FillLoan/index.ts",
       "!**/components/Form/JSONSchemaForm/typeDef.ts"
     ],
     "mapCoverage": true,
