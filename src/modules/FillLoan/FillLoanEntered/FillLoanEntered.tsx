@@ -75,6 +75,7 @@ class FillLoanEntered extends React.Component<Props, States> {
 		this.successModalToggle = this.successModalToggle.bind(this);
 		this.handleFillOrder = this.handleFillOrder.bind(this);
 		this.validateFillOrder = this.validateFillOrder.bind(this);
+		this.handleRedirect = this.handleRedirect.bind(this);
 	}
 
 	async componentDidMount() {
@@ -127,17 +128,36 @@ class FillLoanEntered extends React.Component<Props, States> {
 	}
 
 	validateFillOrder() {
-		const { debtOrderWithDescription } = this.state;
+		const { debtOrderWithDescription, principalTokenSymbol } = this.state;
 		const { tokens } = this.props;
+		const principalAmount = debtOrderWithDescription.principalAmount || new BigNumber(0);
+		if (principalAmount.eq(0)) {
+			this.props.handleSetError('Invalid debt order');
+			return;
+		}
 
 		this.props.handleSetError('');
+		let found: boolean = false;
+		let error: boolean = false;
 		if (debtOrderWithDescription.principalToken && tokens.length) {
 			for (let token of tokens) {
-				if (debtOrderWithDescription.principalToken === token.address && !token.tradingPermitted) {
-					this.props.handleSetError(token.tokenSymbol + ' is currently disabled for trading');
-					return;
+				if (debtOrderWithDescription.principalToken === token.address) {
+					found = true;
+					if (!token.tradingPermitted || token.balance.lt(principalAmount)) {
+						error = true;
+						break;
+					}
 				}
 			}
+		} else {
+			error = true;
+		}
+		if (!found) {
+			error = true;
+		}
+		if (error) {
+			this.props.handleSetError(principalTokenSymbol + ' is currently disabled for trading');
+			return;
 		}
 		this.confirmationModalToggle();
 	}
@@ -186,8 +206,6 @@ class FillLoanEntered extends React.Component<Props, States> {
 			this.setState({
 				confirmationModal: false
 			});
-			console.log(e);
-			return;
 		}
 	}
 
@@ -196,6 +214,10 @@ class FillLoanEntered extends React.Component<Props, States> {
 			confirmationModal: false,
 			successModal: !this.state.successModal
 		});
+	}
+
+	handleRedirect() {
+		browserHistory.push('/dashboard');
 	}
 
 	render() {
@@ -269,7 +291,7 @@ class FillLoanEntered extends React.Component<Props, States> {
 						<FillLoanButton onClick={this.validateFillOrder}>Fill Loan</FillLoanButton>
 					</ButtonContainer>
 					<ConfirmationModal modal={this.state.confirmationModal} title="Please confirm" content={confirmationModalContent} onToggle={this.confirmationModalToggle} onSubmit={this.handleFillOrder} closeButtonText="Cancel" submitButtonText="Fill Order" />
-					<SuccessModal modal={this.state.successModal} onToggle={this.successModalToggle} issuanceHash={issuanceHash} onRedirect={() => browserHistory.push('/dashboard')} />
+					<SuccessModal modal={this.state.successModal} onToggle={this.successModalToggle} issuanceHash={issuanceHash} onRedirect={this.handleRedirect} />
 				</MainWrapper>
 			</PaperLayout>
 		);

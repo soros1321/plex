@@ -287,7 +287,7 @@ describe('TradingPermissions (Unit)', () => {
 			it('calls Dharma#awaitTransactionMinedAsync', async () => {
 				const tradingPermissions = shallow(<TradingPermissions {...props} />);
 				await tradingPermissions.instance().updateProxyAllowanceAsync(true, props.tokens[0].tokenSymbol);
-				await expect(dharma.token.setProxyAllowanceAsync).toHaveBeenCalledWith(props.tokens[0].address, new BigNumber(0));
+				await expect(dharma.blockchain.awaitTransactionMinedAsync).toHaveBeenCalled();
 			});
 
 			it('calls getTokenAllowance', async () => {
@@ -333,7 +333,7 @@ describe('TradingPermissions (Unit)', () => {
 			it('calls Dharma#awaitTransactionMinedAsync', async () => {
 				const tradingPermissions = shallow(<TradingPermissions {...props} />);
 				await tradingPermissions.instance().updateProxyAllowanceAsync(false, props.tokens[0].tokenSymbol);
-				await expect(dharma.token.setProxyAllowanceAsync).toHaveBeenCalledWith(props.tokens[0].address, new BigNumber(0));
+				await expect(dharma.blockchain.awaitTransactionMinedAsync).toHaveBeenCalled();
 			});
 
 			it('calls getTokenAllowance', async () => {

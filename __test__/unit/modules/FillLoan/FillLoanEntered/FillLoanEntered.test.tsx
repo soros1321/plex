@@ -23,11 +23,15 @@ import {
 import MockWeb3 from '../../../../../__mocks__/web3';
 import MockDharma from '../../../../../__mocks__/dharma.js';
 import { BigNumber } from 'bignumber.js';
-import { Link } from 'react-router';
+import { Link, browserHistory } from 'react-router';
 import configureStore from 'redux-mock-store';
 import { Provider } from 'react-redux';
 import { createStore } from 'redux';
 import { fillDebtOrder } from '../../../../../src/modules/FillLoan/FillLoanEntered/actions';
+import { DebtKernel } from '@dharmaprotocol/contracts';
+const compact = require('lodash.compact');
+const ABIDecoder = require('abi-decoder');
+ABIDecoder.addABI(DebtKernel.abi);
 
 describe('<FillLoanEntered />', () => {
 	let web3;
@@ -50,7 +54,7 @@ describe('<FillLoanEntered />', () => {
 				}
 			},
 			web3,
-			accounts: [],
+			accounts: ['0x12345'],
 			dharma,
 			tokens: [],
 			handleSetError: jest.fn(),
@@ -276,6 +280,213 @@ describe('<FillLoanEntered />', () => {
 			delete(debtOrderWithDescription.principalTokenSymbol);
 			await wrapper.instance().getDebtOrderDetail(props.dharma, props.location.query);
 			await expect(dharma.order.getIssuanceHash).toHaveBeenCalledWith(debtOrderWithDescription);
+		});
+
+		describe('no termsContract or no termsContractParameters', () => {
+			it('should not call Dharma#fromDebtOrder', async () => {
+				dharma.adapters.simpleInterestLoan.fromDebtOrder.mockRestore();
+				dharma.adapters.simpleInterestLoan.fromDebtOrder.mockReset();
+				const _props = Object.assign({}, props);
+				_props.location.query.termsContract = null;
+				_props.location.query.termsContractParameters = null;
+				const wrapper = shallow(<FillLoanEntered {... _props} />);
+				await wrapper.instance().getDebtOrderDetail(_props.dharma, _props.location.query);
+				await expect(dharma.adapters.simpleInterestLoan.fromDebtOrder).not.toHaveBeenCalled();
+			});
+		});
+	});
+
+	describe('#handleFillOrder', () => {
+		describe('no error', () => {
+			let debtOrderWithDescription;
+			beforeEach(() => {
+				debtOrderWithDescription = {
+					...props.location.query,
+					principalAmount: new BigNumber(props.location.query.principalAmount),
+					debtorSignature: JSON.parse(props.location.query.debtorSignature),
+					creditor: props.accounts[0]
+				};
+				delete(debtOrderWithDescription.principalTokenSymbol);
+				ABIDecoder.decodeLogs = jest.fn((logs) => [{name: 'LogDebtOrderFilled'}]);
+			});
+
+			afterEach(() => {
+				ABIDecoder.decodeLogs.mockRestore();
+			});
+
+			it('should call props handleSetError', async () => {
+				const wrapper = shallow(<FillLoanEntered {... props} />);
+				await wrapper.instance().handleFillOrder();
+				await expect(props.handleSetError).toHaveBeenCalledWith('');
+			});
+
+			it('calls Dharma#fillAsync', async () => {
+				const wrapper = shallow(<FillLoanEntered {... props} />);
+				await wrapper.instance().handleFillOrder();
+				await expect(dharma.order.fillAsync).toHaveBeenCalledWith(debtOrderWithDescription, {from: props.accounts[0]});
+			});
+
+			it('calls Dharma#awaitTransactionMinedAsync', async () => {
+				const wrapper = shallow(<FillLoanEntered {... props} />);
+				await wrapper.instance().handleFillOrder();
+				const expectedTxHash = await dharma.order.fillAsync(debtOrderWithDescription);
+				await expect(dharma.blockchain.awaitTransactionMinedAsync).toHaveBeenCalledWith(expectedTxHash, 1000, 10000);
+			});
+
+			it('calls Dharma#getErrorLogs', async () => {
+				const wrapper = shallow(<FillLoanEntered {... props} />);
+				await wrapper.instance().handleFillOrder();
+				const expectedTxHash = await dharma.order.fillAsync(debtOrderWithDescription);
+				const expectedErrorLogs = await dharma.blockchain.getErrorLogs(expectedTxHash);
+				await expect(dharma.blockchain.getErrorLogs).toHaveBeenCalledWith(expectedTxHash);
+			});
+
+			it('calls ABIDecoder.decodeLogs', async () => {
+				const spy = jest.spyOn(ABIDecoder, 'decodeLogs');
+				const wrapper = shallow(<FillLoanEntered {... props} />);
+				await wrapper.instance().handleFillOrder();
+				await expect(spy).toHaveBeenCalled();
+				await expect(ABIDecoder.decodeLogs).toHaveBeenCalled();
+			});
+
+			it('calls props handleFillDebtOrder', async () => {
+				const wrapper = shallow(<FillLoanEntered {... props} />);
+				await wrapper.instance().handleFillOrder();
+				await expect(props.handleFillDebtOrder).toHaveBeenCalled();
+			});
+
+			it('calls successModalToggle', async () => {
+				const spy = jest.spyOn(FillLoanEntered.prototype, 'successModalToggle');
+				const wrapper = shallow(<FillLoanEntered {... props} />);
+				await wrapper.instance().handleFillOrder();
+				await expect(spy).toHaveBeenCalled();
+			});
+		});
+
+		describe('#ABIDecoder.decodeLogs does\'t return LogDebtOrderFilled event', () => {
+			it('should call props.handleSetError', async () => {
+				ABIDecoder.decodeLogs = jest.fn((logs) => [{name: ''}]);
+				const wrapper = shallow(<FillLoanEntered {... props} />);
+				await wrapper.instance().handleFillOrder();
+				await expect(props.handleSetError).toHaveBeenCalled();
+				ABIDecoder.decodeLogs.mockRestore();
+			});
+		});
+
+		describe('#getErrorLogs has error', () => {
+			it('should call props.handleSetError', async () => {
+				dharma.blockchain.getErrorLogs = jest.fn( async(txHash) => ['Some error message']);
+				const wrapper = shallow(<FillLoanEntered {... props} />);
+				await wrapper.instance().handleFillOrder();
+				await expect(props.handleSetError).toHaveBeenCalled();
+				await expect(props.handleFillDebtOrder).not.toHaveBeenCalled();
+				dharma.blockchain.getErrorLogs.mockRestore();
+			});
+		});
+
+		describe('#throw error', () => {
+			it('should call props.handleSetError', async () => {
+				dharma.order.fillAsync = jest.fn( async(debtOrder, txData) => throw new Error('error'); );
+				const wrapper = shallow(<FillLoanEntered {... props} />);
+				await wrapper.instance().handleFillOrder();
+				await expect(props.handleSetError).toHaveBeenCalled();
+				dharma.order.fillAsync.mockRestore();
+			});
+		});
+	});
+
+	describe('#handleRedirect', () => {
+		it('should call browserHistory', () => {
+			const spy = jest.spyOn(browserHistory, 'push');
+			const wrapper = shallow(<FillLoanEntered {... props} />);
+			wrapper.instance().handleRedirect();
+			expect(spy).toHaveBeenCalledWith('/dashboard');
+		});
+	});
+
+	describe('#validateFillOrder', () => {
+		it('should call clear error', () => {
+			const wrapper = shallow(<FillLoanEntered {... props} />);
+			wrapper.instance().validateFillOrder();
+			expect(props.handleSetError).toHaveBeenCalledWith('');
+		});
+
+		describe('no token', () => {
+			it('should set error', () => {
+				const wrapper = shallow(<FillLoanEntered {... props} />);
+				wrapper.instance().validateFillOrder();
+				const errorMessage = props.location.query.principalTokenSymbol + ' is currently disabled for trading';
+				expect(props.handleSetError).toHaveBeenCalledWith(errorMessage);
+			});
+		});
+
+		describe('token is not permitted for trading', () => {
+			it('should set error', () => {
+				props.tokens = [
+					{
+						address: '0x07e93e27ac8a1c114f1931f65e3c8b5186b9b77e',
+						tokenSymbol: 'MKR',
+						tradingPermitted: false,
+						balance: new BigNumber(0)
+					}
+				];
+				const wrapper = shallow(<FillLoanEntered {... props} />);
+				wrapper.instance().validateFillOrder();
+				const errorMessage = props.location.query.principalTokenSymbol + ' is currently disabled for trading';
+				expect(props.handleSetError).toHaveBeenCalledWith(errorMessage);
+			});
+		});
+
+		describe('token is permitted for trading', () => {
+			it('should call confirmationModalToggle', () => {
+				props.tokens = [
+					{
+						address: '0x07e93e27ac8a1c114f1931f65e3c8b5186b9b77e',
+						tokenSymbol: 'MKR',
+						tradingPermitted: true,
+						balance: new BigNumber(1000000)
+					}
+				];
+				const wrapper = shallow(<FillLoanEntered {... props} />);
+				const spy = jest.spyOn(wrapper.instance(), 'confirmationModalToggle');
+				wrapper.instance().validateFillOrder();
+				expect(spy).toHaveBeenCalled();
+			});
+		});
+
+		describe('no token match', () => {
+			it('should set error', () => {
+				props.tokens = [
+					{
+						address: '0x00000',
+						tokenSymbol: 'REP',
+						tradingPermitted: true,
+						balance: new BigNumber(1000000)
+					}
+				];
+				const wrapper = shallow(<FillLoanEntered {... props} />);
+				wrapper.instance().validateFillOrder();
+				const errorMessage = props.location.query.principalTokenSymbol + ' is currently disabled for trading';
+				expect(props.handleSetError).toHaveBeenCalledWith(errorMessage);
+			});
+		});
+
+		describe('no principalAmount', () => {
+			it('should set error', () => {
+				props.tokens = [
+					{
+						address: '0x07e93e27ac8a1c114f1931f65e3c8b5186b9b77e',
+						tokenSymbol: 'MKR',
+						tradingPermitted: true,
+						balance: new BigNumber(1000000)
+					}
+				];
+				props.location.query.principalAmount = null;
+				const wrapper = shallow(<FillLoanEntered {... props} />);
+				wrapper.instance().validateFillOrder();
+				const errorMessage = 'Invalid debt order';
+				expect(props.handleSetError).toHaveBeenCalledWith(errorMessage);
+			});
 		});
 	});
 });
