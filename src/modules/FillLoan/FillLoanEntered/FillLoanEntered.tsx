@@ -32,7 +32,7 @@ const ABIDecoder = require('abi-decoder');
 // Set up ABIDecoder
 ABIDecoder.addABI(DebtKernel.abi);
 
-interface DebtOrderWithDescription extends DebtOrder {
+interface DebtOrderWithDescription extends DebtOrder.Instance {
 	description?: string;
 }
 

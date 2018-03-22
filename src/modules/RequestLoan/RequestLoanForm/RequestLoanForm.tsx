@@ -25,7 +25,7 @@ interface Props {
 	handleSetError: (errorMessage: string) => void;
 }
 
-interface DebtOrderWithDescriptionIssuanceHash extends DebtOrder {
+interface DebtOrderWithDescriptionIssuanceHash extends DebtOrder.Instance {
 	description: string;
 	issuanceHash: string;
 }

@@ -23,11 +23,18 @@
     NonFungibleToken "https://github.com/dharmaprotocol/NonFungibleToken.git"
     zeppelin-solidity "^1.6.0"
 
-"@dharmaprotocol/dharma.js@^0.0.20":
-  version "0.0.20"
-  resolved "https://registry.yarnpkg.com/@dharmaprotocol/dharma.js/-/dharma.js-0.0.20.tgz#c3864b963495b78d586a8953ee2e58bbedd8e08f"
+"@dharmaprotocol/contracts@^0.0.16":
+  version "0.0.16"
+  resolved "https://registry.yarnpkg.com/@dharmaprotocol/contracts/-/contracts-0.0.16.tgz#1f955287c1437cebd0852d68d4533491fe61fddf"
   dependencies:
-    "@dharmaprotocol/contracts" "^0.0.15"
+    NonFungibleToken "https://github.com/dharmaprotocol/NonFungibleToken.git"
+    zeppelin-solidity "^1.6.0"
+
+"@dharmaprotocol/dharma.js@^0.0.22":
+  version "0.0.22"
+  resolved "https://registry.yarnpkg.com/@dharmaprotocol/dharma.js/-/dharma.js-0.0.22.tgz#532a36424b83f50d0d8028c8d4e94926b48b72e2"
+  dependencies:
+    "@dharmaprotocol/contracts" "^0.0.16"
     "@types/lodash" "^4.14.104"
     bignumber.js "^5.0.0"
     ethereumjs-util "^5.1.4"
@@ -37,6 +44,7 @@
     lodash.isfunction "^3.0.9"
     lodash.isobject "^3.0.2"
     lodash.isundefined "^3.0.1"
+    lodash.map "^4.6.0"
     lodash.omit "^4.5.0"
     lodash.pickby "^4.6.0"
     lodash.values "^4.3.0"
@@ -151,13 +159,6 @@
   resolved "https://registry.yarnpkg.com/@types/reactstrap/-/reactstrap-5.0.17.tgz#3d85b7d373b310b554436d95a01b5369d4d7fbc4"
   dependencies:
     "@types/react" "*"
-
-"NonFungibleToken@git+https://github.com/dharmaprotocol/NonFungibleToken.git":
-  version "0.0.1"
-  resolved "git+https://github.com/dharmaprotocol/NonFungibleToken.git#162e8609569654630a5a5ef3bbbe5e0ebbe90f1d"
-  dependencies:
-    abi-decoder "^1.0.9"
-    zeppelin-solidity "^1.4.0"
 
 "NonFungibleToken@https://github.com/dharmaprotocol/NonFungibleToken":
   version "0.0.1"
@@ -4903,6 +4904,10 @@ lodash.keys@^3.0.0:
     lodash._getnative "^3.0.0"
     lodash.isarguments "^3.0.0"
     lodash.isarray "^3.0.0"
+
+lodash.map@^4.6.0:
+  version "4.6.0"
+  resolved "https://registry.yarnpkg.com/lodash.map/-/lodash.map-4.6.0.tgz#771ec7839e3473d9c4cde28b19394c3562f4f6d3"
 
 lodash.memoize@^4.1.2:
   version "4.1.2"

@@ -5,21 +5,37 @@
     "principalAmount": "10",
     "termsContract": "0x1c907384489d939400fa5c6571d8aad778213d74",
     "termsContractParameters": "0x0000000000000000000000000000008500000000000000000000000000000064",
+    "kernelVersion": "0x89c5b853e9e32bf47c7da1ccb02e981b74c47f2f",
+    "issuanceVersion": "0x1d8e76d2022e017c6c276b44cb2e4c71bd3cc3de",
     "debtor": "0x431194c3e0f35bc7f1266ec6bb85e0c5ec554935",
+    "debtorFee": "0",
     "creditor": "0x431194c3e0f35bc7f1266ec6bb85e0c5ec554935",
+    "creditorFee": "0",
+    "relayer": "0x0000000000000000000000000000000000000000",
+    "relayerFee": "0",
+    "underwriter": "0x0000000000000000000000000000000000000000",
+    "underwriterFee": "0",
+    "underwriterRiskRating": "0",
+    "expirationTimestampInSec": "1524288745",
+    "salt": "0",
     "debtorSignature": {
-      "v": 27,
-      "r": "0xfb53ad484d07eff27bc967e843cefc073bfaddf7aff4ffc0dfaead30b1434eb0",
-      "s": "0x40854f49ab6106825ba5ee2b9907a7f4647c06d18df097b1c9a243eeca69391a"
+      "v": 28,
+      "r": "0x7744fc4c929663ff4ee37a90679ca077de381723949693f979a7e11327f9a806",
+      "s": "0x3f5d699bd5ade9c71111f5264aead2ae6d01fb1947e7759adaf0cf2cb76d2c0c"
     },
     "creditorSignature": {
-      "v": 27,
-      "r": "0xfb53ad484d07eff27bc967e843cefc073bfaddf7aff4ffc0dfaead30b1434eb0",
-      "s": "0x40854f49ab6106825ba5ee2b9907a7f4647c06d18df097b1c9a243eeca69391a"
+      "v": 28,
+      "r": "0x7744fc4c929663ff4ee37a90679ca077de381723949693f979a7e11327f9a806",
+      "s": "0x3f5d699bd5ade9c71111f5264aead2ae6d01fb1947e7759adaf0cf2cb76d2c0c"
+    },
+    "underWriterSignature": {
+      "r": "",
+      "s": "",
+      "v": 0
     },
     "principalTokenSymbol": "REP",
     "description": "Hello, Can I borrow some REP please?",
-    "fillLoanShortUrl": "http://bit.ly/2FSB5MF"
+    "fillLoanShortUrl": "http://bit.ly/2HQuAqb"
   },
   {
     "issuanceHash": "0x3b226123fba365dea96ad801b6b4f7537c646ff939a8469a40595e1cb08f190d",
@@ -27,65 +43,113 @@
     "principalAmount": "130",
     "termsContract": "0x60a1779d5af15f808d91f3afbc4bcaddbf288ced",
     "termsContractParameters": "0x0000000000000000000000000000030c0100000000000000000000000000001e",
+    "kernelVersion": "0x89c5b853e9e32bf47c7da1ccb02e981b74c47f2f",
+    "issuanceVersion": "0x1d8e76d2022e017c6c276b44cb2e4c71bd3cc3de",
     "debtor": "0x431194c3e0f35bc7f1266ec6bb85e0c5ec554935",
+    "debtorFee": "0",
     "creditor": "0x431194c3e0f35bc7f1266ec6bb85e0c5ec554935",
+    "creditorFee": "0",
+    "relayer": "0x0000000000000000000000000000000000000000",
+    "relayerFee": "0",
+    "underwriter": "0x0000000000000000000000000000000000000000",
+    "underwriterFee": "0",
+    "underwriterRiskRating": "0",
+    "expirationTimestampInSec": "1524288745",
+    "salt": "0",
     "debtorSignature": {
-      "v": 27,
-      "r": "0x7a3dd817b003a6f45c24c4a64e1112a45f80c809043d999ba7eaf1526da51b01",
-      "s": "0x42653d824d0fbebc859a2b4ecbb931805d735b5735a9f7628bf58a5ff9bc4749"
+      "v": 28,
+      "r": "0x055b47460e5a73d7481ad8ac37ceb4ad7358195555a9f32e914f4a9909067b98",
+      "s": "0x21d608897e35a72dce0439cd3b735fd13dc53b715fdbdabc53933bef01c0a7a3"
     },
     "creditorSignature": {
-      "v": 27,
-      "r": "0x7a3dd817b003a6f45c24c4a64e1112a45f80c809043d999ba7eaf1526da51b01",
-      "s": "0x42653d824d0fbebc859a2b4ecbb931805d735b5735a9f7628bf58a5ff9bc4749"
+      "v": 28,
+      "r": "0x055b47460e5a73d7481ad8ac37ceb4ad7358195555a9f32e914f4a9909067b98",
+      "s": "0x21d608897e35a72dce0439cd3b735fd13dc53b715fdbdabc53933bef01c0a7a3"
+    },
+    "underWriterSignature": {
+      "r": "",
+      "s": "",
+      "v": 0
     },
     "principalTokenSymbol": "MKR",
     "description": "Hello, Can I borrow some MKR please?",
-    "fillLoanShortUrl": "http://bit.ly/2HTVnlm"
+    "fillLoanShortUrl": "http://bit.ly/2FWcq9V"
   },
   {
     "principalToken": "0xc3017eb5cd063bf6745723895edead65257a5f6e",
     "principalAmount": "500",
     "termsContract": "0x1bc731b55eea80df37c077f8a87a8c8d492f2fd7",
     "termsContractParameters": "0x0000000000000000000000000000083402000000000000000000000000000006",
+    "kernelVersion": "0x89c5b853e9e32bf47c7da1ccb02e981b74c47f2f",
+    "issuanceVersion": "0x1d8e76d2022e017c6c276b44cb2e4c71bd3cc3de",
     "debtor": "0x431194c3e0f35bc7f1266ec6bb85e0c5ec554935",
+    "debtorFee": "0",
     "creditor": "0x431194c3e0f35bc7f1266ec6bb85e0c5ec554935",
+    "creditorFee": "0",
+    "relayer": "0x0000000000000000000000000000000000000000",
+    "relayerFee": "0",
+    "underwriter": "0x0000000000000000000000000000000000000000",
+    "underwriterFee": "0",
+    "underwriterRiskRating": "0",
+    "expirationTimestampInSec": "1524288745",
+    "salt": "0",
     "debtorSignature": {
       "v": 28,
-      "r": "0x015173b7f0103e3a01a09a13eab6f00affacd819966ff04f2ae21edab6b80ea1",
-      "s": "0x7e08ad10f9a3c020e23d042a3b22e10d9c5305e4fa1377d6ccbe5d284594dac8"
+      "r": "0xe2b2694edded21f65707cd1f055144e05e2ec4f4420aec263a528bfa34f90180",
+      "s": "0x697aeedff95d74936b6c417abd7efac95ace58575dd36ac62620db35d5e0fa1e"
     },
     "creditorSignature": {
       "v": 28,
-      "r": "0x015173b7f0103e3a01a09a13eab6f00affacd819966ff04f2ae21edab6b80ea1",
-      "s": "0x7e08ad10f9a3c020e23d042a3b22e10d9c5305e4fa1377d6ccbe5d284594dac8"
+      "r": "0xe2b2694edded21f65707cd1f055144e05e2ec4f4420aec263a528bfa34f90180",
+      "s": "0x697aeedff95d74936b6c417abd7efac95ace58575dd36ac62620db35d5e0fa1e"
+    },
+    "underWriterSignature": {
+      "r": "",
+      "s": "",
+      "v": 0
     },
     "issuanceHash": "0x9a11d54fd11a4307ee56234b7bcfd5df3d684dc528c6f142b3d92284ebda84bb",
     "principalTokenSymbol": "ZRX",
     "description": "Hello, Can I borrow some ZRX please?",
-    "fillLoanShortUrl": "http://bit.ly/2u5Pm30"
+    "fillLoanShortUrl": "http://bit.ly/2uakPkx"
   },
   {
     "principalToken": "0x9b62bd396837417ce319e2e5c8845a5a960010ea",
     "principalAmount": "928",
     "termsContract": "0x1c907384489d939400fa5c6571d8aad778213d74",
     "termsContractParameters": "0x000000000000000000000000000057000300000000000000000000000000000a",
+    "kernelVersion": "0x89c5b853e9e32bf47c7da1ccb02e981b74c47f2f",
+    "issuanceVersion": "0x1d8e76d2022e017c6c276b44cb2e4c71bd3cc3de",
     "debtor": "0x431194c3e0f35bc7f1266ec6bb85e0c5ec554935",
+    "debtorFee": "0",
     "creditor": "0x431194c3e0f35bc7f1266ec6bb85e0c5ec554935",
+    "creditorFee": "0",
+    "relayer": "0x0000000000000000000000000000000000000000",
+    "relayerFee": "0",
+    "underwriter": "0x0000000000000000000000000000000000000000",
+    "underwriterFee": "0",
+    "underwriterRiskRating": "0",
+    "expirationTimestampInSec": "1524288745",
+    "salt": "0",
     "debtorSignature": {
-      "v": 28,
-      "r": "0xc86e516971ad00de60fafd52309ec75225acdde4d2b72c9584f4fcd5e2211502",
-      "s": "0x306404b06484aa49f14ef12a6ba78cda71520a1832b97ac7552d45ae4427abde"
+      "v": 27,
+      "r": "0xf9093fe38f3f28455e9c05c5cbd222bcd1f238af576a8a956b6598959e1d06c3",
+      "s": "0x6b1ad045a513a1d9f5cf9cefb82f606762e0b9927ae4394f38013a5fb4144b0f"
     },
     "creditorSignature": {
-      "v": 28,
-      "r": "0xc86e516971ad00de60fafd52309ec75225acdde4d2b72c9584f4fcd5e2211502",
-      "s": "0x306404b06484aa49f14ef12a6ba78cda71520a1832b97ac7552d45ae4427abde"
+      "v": 27,
+      "r": "0xf9093fe38f3f28455e9c05c5cbd222bcd1f238af576a8a956b6598959e1d06c3",
+      "s": "0x6b1ad045a513a1d9f5cf9cefb82f606762e0b9927ae4394f38013a5fb4144b0f"
+    },
+    "underWriterSignature": {
+      "r": "",
+      "s": "",
+      "v": 0
     },
     "issuanceHash": "0x0ea4d8895b9ce19acd8436acb96dee2278f6c2bef4bb8090bcd81c410e290302",
     "principalTokenSymbol": "REP",
     "description": "Hello, Can I borrow some REP please?",
-    "fillLoanShortUrl": "http://bit.ly/2u9HWvz"
+    "fillLoanShortUrl": "http://bit.ly/2HUnQYe"
   },
   {
     "issuanceHash": "0x8464385457434e60e43a91b88ef7049080153cf070da121bd7e84c759f39f88f",
@@ -93,21 +157,37 @@
     "principalAmount": "10000",
     "termsContract": "0x1bc731b55eea80df37c077f8a87a8c8d492f2fd7",
     "termsContractParameters": "0x00000000000000000000000000002ee004000000000000000000000000000014",
+    "kernelVersion": "0x89c5b853e9e32bf47c7da1ccb02e981b74c47f2f",
+    "issuanceVersion": "0x1d8e76d2022e017c6c276b44cb2e4c71bd3cc3de",
     "debtor": "0x431194c3e0f35bc7f1266ec6bb85e0c5ec554935",
+    "debtorFee": "0",
     "creditor": "0x431194c3e0f35bc7f1266ec6bb85e0c5ec554935",
+    "creditorFee": "0",
+    "relayer": "0x0000000000000000000000000000000000000000",
+    "relayerFee": "0",
+    "underwriter": "0x0000000000000000000000000000000000000000",
+    "underwriterFee": "0",
+    "underwriterRiskRating": "0",
+    "expirationTimestampInSec": "1524288745",
+    "salt": "0",
     "debtorSignature": {
-      "v": 28,
-      "r": "0x1ef336a072f8bcf84c8acb3070b0a88f360b720972c8130a0bc430262bb86f96",
-      "s": "0x43f44ec9e31ae9818c54afa52b1c5fa9911d38bc92d5669712d765b8cf1b638f"
+      "v": 27,
+      "r": "0x7e2444aede10d188dfb9f7d55e2daf148877177df542d7419cb52ee8adb93556",
+      "s": "0x29cb94990371c54e2ff6a1287e38a7572f9e23205b6334fb1ae41566afb972cf"
     },
     "creditorSignature": {
-      "v": 28,
-      "r": "0x1ef336a072f8bcf84c8acb3070b0a88f360b720972c8130a0bc430262bb86f96",
-      "s": "0x43f44ec9e31ae9818c54afa52b1c5fa9911d38bc92d5669712d765b8cf1b638f"
+      "v": 27,
+      "r": "0x7e2444aede10d188dfb9f7d55e2daf148877177df542d7419cb52ee8adb93556",
+      "s": "0x29cb94990371c54e2ff6a1287e38a7572f9e23205b6334fb1ae41566afb972cf"
+    },
+    "underWriterSignature": {
+      "r": "",
+      "s": "",
+      "v": 0
     },
     "principalTokenSymbol": "ZRX",
     "description": "Hello, Can I borrow some ZRX please?",
-    "fillLoanShortUrl": "http://bit.ly/2HV3PAK"
+    "fillLoanShortUrl": "http://bit.ly/2uf1PSc"
   },
   {
     "issuanceHash": "0xe48276c5b64237ac1c8bd8ee5dc8a06e170e8f34aab0debab0c06ede8c725e83",
@@ -115,21 +195,37 @@
     "principalAmount": "345",
     "termsContract": "0x60a1779d5af15f808d91f3afbc4bcaddbf288ced",
     "termsContractParameters": "0x000000000000000000000000000006bd02000000000000000000000000000014",
+    "kernelVersion": "0x89c5b853e9e32bf47c7da1ccb02e981b74c47f2f",
+    "issuanceVersion": "0x1d8e76d2022e017c6c276b44cb2e4c71bd3cc3de",
     "debtor": "0x431194c3e0f35bc7f1266ec6bb85e0c5ec554935",
+    "debtorFee": "0",
     "creditor": "0x431194c3e0f35bc7f1266ec6bb85e0c5ec554935",
+    "creditorFee": "0",
+    "relayer": "0x0000000000000000000000000000000000000000",
+    "relayerFee": "0",
+    "underwriter": "0x0000000000000000000000000000000000000000",
+    "underwriterFee": "0",
+    "underwriterRiskRating": "0",
+    "expirationTimestampInSec": "1524288745",
+    "salt": "0",
     "debtorSignature": {
-      "v": 27,
-      "r": "0xe9de609125c46dbb3f7bbf155364a3447ff030a0f6231314a9a48f75c40b0489",
-      "s": "0x0da3ad0d2d6a108525f88b34dcdaf51d9c0a456a40256e1527d8bb01b2c9c992"
+      "v": 28,
+      "r": "0x38f75f1905c524f2d01a8de432fa00d6c7afce2cf61c9aa9a1c454481ab9bc7a",
+      "s": "0x6c35f42dbe378af47e91c7839cff27dab38e622a7aa9ebebfceec7f7306d109a"
     },
     "creditorSignature": {
-      "v": 27,
-      "r": "0xe9de609125c46dbb3f7bbf155364a3447ff030a0f6231314a9a48f75c40b0489",
-      "s": "0x0da3ad0d2d6a108525f88b34dcdaf51d9c0a456a40256e1527d8bb01b2c9c992"
+      "v": 28,
+      "r": "0x38f75f1905c524f2d01a8de432fa00d6c7afce2cf61c9aa9a1c454481ab9bc7a",
+      "s": "0x6c35f42dbe378af47e91c7839cff27dab38e622a7aa9ebebfceec7f7306d109a"
+    },
+    "underWriterSignature": {
+      "r": "",
+      "s": "",
+      "v": 0
     },
     "principalTokenSymbol": "MKR",
     "description": "Hello, Can I borrow some MKR please?",
-    "fillLoanShortUrl": "http://bit.ly/2u7ABNl"
+    "fillLoanShortUrl": "http://bit.ly/2HTlFUP"
   },
   {
     "issuanceHash": "0x5805244ea3524dde2d8e5bd1d9150c58b045b09c47170581451ac6f105ac95b8",
@@ -137,20 +233,36 @@
     "principalAmount": "1000",
     "termsContract": "0x1c907384489d939400fa5c6571d8aad778213d74",
     "termsContractParameters": "0x000000000000000000000000000003fc04000000000000000000000000000014",
+    "kernelVersion": "0x89c5b853e9e32bf47c7da1ccb02e981b74c47f2f",
+    "issuanceVersion": "0x1d8e76d2022e017c6c276b44cb2e4c71bd3cc3de",
     "debtor": "0x431194c3e0f35bc7f1266ec6bb85e0c5ec554935",
+    "debtorFee": "0",
     "creditor": "0x431194c3e0f35bc7f1266ec6bb85e0c5ec554935",
+    "creditorFee": "0",
+    "relayer": "0x0000000000000000000000000000000000000000",
+    "relayerFee": "0",
+    "underwriter": "0x0000000000000000000000000000000000000000",
+    "underwriterFee": "0",
+    "underwriterRiskRating": "0",
+    "expirationTimestampInSec": "1524288745",
+    "salt": "0",
     "debtorSignature": {
-      "v": 27,
-      "r": "0x04bbf7d5a790cd756133296e24ea2fcd8cc6daec403063ada361a16bffb72a9d",
-      "s": "0x1e8707d5be0366064e9ba06ff357e3a994b668ec0330d396f2319c35ce675241"
+      "v": 28,
+      "r": "0xf2b70c54dc277e2d6408146256d249a5dc22163bf10b8fce5e6494ca45b0df80",
+      "s": "0x2119130c0cc8f87391d1c62054dad36f520848003638fe225040e7b4d2172048"
     },
     "creditorSignature": {
-      "v": 27,
-      "r": "0x04bbf7d5a790cd756133296e24ea2fcd8cc6daec403063ada361a16bffb72a9d",
-      "s": "0x1e8707d5be0366064e9ba06ff357e3a994b668ec0330d396f2319c35ce675241"
+      "v": 28,
+      "r": "0xf2b70c54dc277e2d6408146256d249a5dc22163bf10b8fce5e6494ca45b0df80",
+      "s": "0x2119130c0cc8f87391d1c62054dad36f520848003638fe225040e7b4d2172048"
+    },
+    "underWriterSignature": {
+      "r": "",
+      "s": "",
+      "v": 0
     },
     "principalTokenSymbol": "REP",
     "description": "Hello, Can I borrow some REP please?",
-    "fillLoanShortUrl": "http://bit.ly/2udLmOe"
+    "fillLoanShortUrl": "http://bit.ly/2HSSEsp"
   }
 ]
