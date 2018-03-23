@@ -102,11 +102,13 @@ class ActiveDebtOrder extends React.Component<Props, State> {
 
 		const repaymentScheduleItems: JSX.Element[] = [];
 		let maxDisplay = 0;
+		let selected = false;
+		let selectedPaymentSchedule = 0;
 		repaymentSchedule.forEach((paymentSchedule) => {
 			if (maxDisplay < 5) {
 				if (maxDisplay === 4 && repaymentSchedule.length > 5) {
 					repaymentScheduleItems.push((
-							<Schedule className="active" key={paymentSchedule}>
+							<Schedule key={paymentSchedule}>
 								<ScheduleIconContainer>
 									<ScheduleIcon src={futureIcon} />
 								</ScheduleIconContainer>
@@ -116,8 +118,12 @@ class ActiveDebtOrder extends React.Component<Props, State> {
 						)
 					);
 				} else {
+					if (now <= paymentSchedule && !selected) {
+						selectedPaymentSchedule = paymentSchedule;
+						selected = true;
+					}
 					repaymentScheduleItems.push((
-							<Schedule className={(now > paymentSchedule ? '' : 'active')} key={paymentSchedule}>
+							<Schedule className={(selectedPaymentSchedule === paymentSchedule ? 'active' : '')} key={paymentSchedule}>
 								<ScheduleIconContainer>
 									<ScheduleIcon src={now > paymentSchedule ? pastIcon : futureIcon} />
 								</ScheduleIconContainer>

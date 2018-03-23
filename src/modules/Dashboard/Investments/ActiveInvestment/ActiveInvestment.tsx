@@ -100,6 +100,8 @@ class ActiveInvestment extends React.Component<Props, State> {
 		const futureIcon = require('../../../../assets/img/circle_outline.png');
 		const repaymentScheduleItems: JSX.Element[] = [];
 		let maxDisplay = 0;
+		let selected = false;
+		let selectedPaymentSchedule = 0;
 		repaymentSchedule.forEach((paymentSchedule) => {
 			if (maxDisplay < 5) {
 				if (maxDisplay === 4 && repaymentSchedule.length > 5) {
@@ -114,8 +116,12 @@ class ActiveInvestment extends React.Component<Props, State> {
 						)
 					);
 				} else {
+					if (now <= paymentSchedule && !selected) {
+						selectedPaymentSchedule = paymentSchedule;
+						selected = true;
+					}
 					repaymentScheduleItems.push((
-							<Schedule key={paymentSchedule}>
+							<Schedule className={(selectedPaymentSchedule === paymentSchedule ? 'active' : '')} key={paymentSchedule}>
 								<ScheduleIconContainer>
 									<ScheduleIcon src={now > paymentSchedule ? pastIcon : futureIcon} />
 								</ScheduleIconContainer>
