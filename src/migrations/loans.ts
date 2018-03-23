@@ -22,6 +22,24 @@ const bitly = new BitlyClient(process.env.REACT_APP_BITLY_ACCESS_TOKEN);
 // Sample data
 const sampleDebtOrders = require(ROOT_DIR + 'src/migrations/sampleDebtOrders.json');
 
+const normalizeDebtOrder = (debtOrder: any) => {
+	const _debtOrder = {
+		...debtOrder,
+		principalAmount: debtOrder!.principalAmount!.toNumber(),
+		debtorFee: debtOrder!.debtorFee!.toNumber(),
+		creditorFee: debtOrder!.creditorFee!.toNumber(),
+		relayerFee: debtOrder!.relayerFee!.toNumber(),
+		underwriterFee: debtOrder!.underwriterFee!.toNumber(),
+		underwriterRiskRating: debtOrder!.underwriterRiskRating!.toNumber(),
+		expirationTimestampInSec: debtOrder!.expirationTimestampInSec!.toNumber(),
+		salt: debtOrder!.salt!.toNumber(),
+		debtorSignature: JSON.stringify(debtOrder.debtorSignature),
+		creditorSignature: JSON.stringify(debtOrder.creditorSignature),
+		underwriterSignature: JSON.stringify(debtOrder.underwriterSignature)
+	};
+	return _debtOrder;
+};
+
 let	web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
 let defaultAccount: string = '';
 let dharma: any = null;
@@ -93,62 +111,67 @@ async function fillDebtOrders() {
 			};
 			const dharmaDebtOrder = await dharma.adapters.simpleInterestLoan.toDebtOrder(simpleInterestLoan);
 			dharmaDebtOrder.debtor = defaultAccount;
-			dharmaDebtOrder.creditor = defaultAccount;
 
 			// Set the token allowance to unlimited
 			await dharma.token.setUnlimitedProxyAllowanceAsync(principalToken);
-
-			// Sign as debtor
 			dharmaDebtOrder.debtorSignature = await dharma.sign.asDebtor(dharmaDebtOrder);
-
-			// Sign as creditor
-			dharmaDebtOrder.creditorSignature = await dharma.sign.asCreditor(dharmaDebtOrder);
 
 			// Get issuance hash for this debt order
 			const issuanceHash = await dharma.order.getIssuanceHash(dharmaDebtOrder);
+
 			console.log('Issuance Hash: ' + issuanceHash);
+
+			// Generate the shortUrl for this debtOrder
+			const urlParams = normalizeDebtOrder(Object.assign({ description: debtOrder.description, principalTokenSymbol: debtOrder.principalTokenSymbol }, dharmaDebtOrder));
+			const bitlyResult = await bitly.shorten(process.env.REACT_APP_NGROK_HOSTNAME + '/fill/loan?' + encodeUrlParams(urlParams));
+			let fillLoanShortUrl: string = '';
+			if (bitlyResult.status_code === 200) {
+				fillLoanShortUrl = bitlyResult.data.url;
+				console.log('- Short Url generated');
+			} else {
+				console.log('- Unable to generate short url');
+			}
+
+			// Get terms length / interest rate / amortization unit info
+			const generatedDebtOrder = await dharma.adapters.simpleInterestLoan.fromDebtOrder(dharmaDebtOrder);
+			let storeDebtOrder = {
+				json: JSON.stringify(dharmaDebtOrder),
+				principalTokenSymbol: debtOrder.principalTokenSymbol,
+				description: debtOrder.description,
+				issuanceHash,
+				fillLoanShortUrl,
+				repaidAmount: new BigNumber(0),
+				termLength: generatedDebtOrder.termLength,
+				interestRate: generatedDebtOrder.interestRate,
+				amortizationUnit: generatedDebtOrder.amortizationUnit,
+				status: 'pending'
+			};
+
 			if (debtOrder.fill) {
+				// Sign as creditor
+				dharmaDebtOrder.creditor = defaultAccount;
+				dharmaDebtOrder.creditorSignature = await dharma.sign.asCreditor(dharmaDebtOrder);
+				storeDebtOrder.json = JSON.stringify(dharmaDebtOrder);
+
 				const txHash = await dharma.order.fillAsync(dharmaDebtOrder, {from: dharmaDebtOrder.creditor});
 				const receipt = await promisify(web3.eth.getTransactionReceipt)(txHash);
 				const [debtOrderFilledLog] = compact(ABIDecoder.decodeLogs(receipt.logs));
 				if (debtOrderFilledLog.name === 'LogDebtOrderFilled') {
 					console.log('- Debt order filled');
-					const filledDebtOrder = Object.assign({ issuanceHash }, dharmaDebtOrder);
-					filledDebtOrder.principalTokenSymbol = debtOrder.principalTokenSymbol;
-					filledDebtOrder.description = debtOrder.description;
-
-					// Generate the shortUrl for this debtOrder
-					const urlParams = {
-						principalAmount: filledDebtOrder.principalAmount.toNumber(),
-						principalToken: principalToken,
-						termsContract: filledDebtOrder.termsContract,
-						termsContractParameters: filledDebtOrder.termsContractParameters,
-						debtorSignature: JSON.stringify(filledDebtOrder.debtorSignature),
-						debtor: filledDebtOrder.debtor,
-						description: debtOrder.description,
-						principalTokenSymbol: filledDebtOrder.principalTokenSymbol
-					};
-					const bitlyResult = await bitly.shorten(process.env.REACT_APP_NGROK_HOSTNAME + '/fill/loan?' + encodeUrlParams(urlParams));
-					let fillLoanShortUrl: string = '';
-					if (bitlyResult.status_code === 200) {
-						fillLoanShortUrl = bitlyResult.data.url;
-						console.log('- Short Url generated');
-					} else {
-						console.log('- Unable to generate short url');
-					}
-					filledDebtOrder.fillLoanShortUrl = fillLoanShortUrl;
 
 					// Pay the debt order
 					const repaymentAmount = new BigNumber(debtOrder.repaymentAmount);
 					const repaymentSuccess = await makeRepayment(
-						filledDebtOrder.issuanceHash,
+						storeDebtOrder.issuanceHash,
 						repaymentAmount,
-						filledDebtOrder.principalToken,
-						{from: filledDebtOrder.debtor}
+						dharmaDebtOrder.principalToken,
+						{from: dharmaDebtOrder.debtor}
 					);
 					if (repaymentSuccess) {
 						console.log('- Repayment success');
-						migratedDebtOrders.push(filledDebtOrder);
+						storeDebtOrder.repaidAmount = repaymentAmount;
+						storeDebtOrder.status = repaymentAmount.lt(dharmaDebtOrder.principalAmount) ? 'active' : 'inactive';
+						migratedDebtOrders.push(storeDebtOrder);
 					} else {
 						console.log('- Repayment failed');
 					}
@@ -157,31 +180,7 @@ async function fillDebtOrders() {
 				}
 			} else {
 				console.log('- Skipping filling debt order');
-				dharmaDebtOrder.issuanceHash = issuanceHash;
-				dharmaDebtOrder.principalTokenSymbol = debtOrder.principalTokenSymbol;
-				dharmaDebtOrder.description = debtOrder.description;
-
-				// Generate the shortUrl for this debtOrder
-				const urlParams = {
-					principalAmount: dharmaDebtOrder.principalAmount.toNumber(),
-					principalToken: principalToken,
-					termsContract: dharmaDebtOrder.termsContract,
-					termsContractParameters: dharmaDebtOrder.termsContractParameters,
-					debtorSignature: JSON.stringify(dharmaDebtOrder.debtorSignature),
-					debtor: dharmaDebtOrder.debtor,
-					description: debtOrder.description,
-					principalTokenSymbol: dharmaDebtOrder.principalTokenSymbol
-				};
-				const bitlyResult = await bitly.shorten(process.env.REACT_APP_NGROK_HOSTNAME + '/fill/loan?' + encodeUrlParams(urlParams));
-				let fillLoanShortUrl: string = '';
-				if (bitlyResult.status_code === 200) {
-					fillLoanShortUrl = bitlyResult.data.url;
-					console.log('- Short Url generated');
-				} else {
-					console.log('- Unable to generate short url');
-				}
-				dharmaDebtOrder.fillLoanShortUrl = fillLoanShortUrl;
-				migratedDebtOrders.push(dharmaDebtOrder);
+				migratedDebtOrders.push(storeDebtOrder);
 			}
 			console.log('\n');
 		}

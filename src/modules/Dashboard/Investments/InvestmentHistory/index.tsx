@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { InvestmentMoreDetail } from '../../../../models';
+import { InvestmentEntity } from '../../../../models';
 // import { formatDate } from '../../../../utils';
 import { Col } from 'reactstrap';
 import { InvestmentRow } from './InvestmentRow';
@@ -10,7 +10,7 @@ import {
 } from './styledComponents';
 
 interface Props {
-	investments: InvestmentMoreDetail[];
+	investments: InvestmentEntity[];
 }
 
 class InvestmentHistory extends React.Component<Props, {}> {

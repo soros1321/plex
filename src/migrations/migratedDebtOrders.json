@@ -1,268 +1,86 @@
 [
   {
-    "issuanceHash": "0x89e9eac37c5f14b657c69ccd891704b3236b84b9ca1d449bd09c5fbaa24afebf",
-    "principalToken": "0x9b62bd396837417ce319e2e5c8845a5a960010ea",
-    "principalAmount": "10",
-    "termsContract": "0x1c907384489d939400fa5c6571d8aad778213d74",
-    "termsContractParameters": "0x0000000000000000000000000000008500000000000000000000000000000064",
-    "kernelVersion": "0x89c5b853e9e32bf47c7da1ccb02e981b74c47f2f",
-    "issuanceVersion": "0x1d8e76d2022e017c6c276b44cb2e4c71bd3cc3de",
-    "debtor": "0x431194c3e0f35bc7f1266ec6bb85e0c5ec554935",
-    "debtorFee": "0",
-    "creditor": "0x431194c3e0f35bc7f1266ec6bb85e0c5ec554935",
-    "creditorFee": "0",
-    "relayer": "0x0000000000000000000000000000000000000000",
-    "relayerFee": "0",
-    "underwriter": "0x0000000000000000000000000000000000000000",
-    "underwriterFee": "0",
-    "underwriterRiskRating": "0",
-    "expirationTimestampInSec": "1524288745",
-    "salt": "0",
-    "debtorSignature": {
-      "v": 28,
-      "r": "0x7744fc4c929663ff4ee37a90679ca077de381723949693f979a7e11327f9a806",
-      "s": "0x3f5d699bd5ade9c71111f5264aead2ae6d01fb1947e7759adaf0cf2cb76d2c0c"
-    },
-    "creditorSignature": {
-      "v": 28,
-      "r": "0x7744fc4c929663ff4ee37a90679ca077de381723949693f979a7e11327f9a806",
-      "s": "0x3f5d699bd5ade9c71111f5264aead2ae6d01fb1947e7759adaf0cf2cb76d2c0c"
-    },
-    "underWriterSignature": {
-      "r": "",
-      "s": "",
-      "v": 0
-    },
+    "json": "{\"principalToken\":\"0x47c27e72e0eb44e4bd157d1f5a1d4b6dd625dee2\",\"principalAmount\":\"10\",\"termsContract\":\"0x7bacd1795f0916fb290ce67d1d12af52e56dab71\",\"termsContractParameters\":\"0x0000000000000000000000000000008500000000000000000000000000000064\",\"kernelVersion\":\"0xc5c21a84f569048a71899965c8e67425763cfeab\",\"issuanceVersion\":\"0x3ae089a1c292491140e7a7ef9b7efdc464e4a97e\",\"debtor\":\"0x431194c3e0f35bc7f1266ec6bb85e0c5ec554935\",\"debtorFee\":\"0\",\"creditor\":\"0x431194c3e0f35bc7f1266ec6bb85e0c5ec554935\",\"creditorFee\":\"0\",\"relayer\":\"0x0000000000000000000000000000000000000000\",\"relayerFee\":\"0\",\"underwriter\":\"0x0000000000000000000000000000000000000000\",\"underwriterFee\":\"0\",\"underwriterRiskRating\":\"0\",\"expirationTimestampInSec\":\"1524378845\",\"salt\":\"0\",\"debtorSignature\":{\"v\":27,\"r\":\"0xe787e69662cb8e2b354aa56d42a9e5f8c6cda9b7e2750a85c4dde28b0d3433b1\",\"s\":\"0x7a5f132146e9f3198979aaf6ae53d6205d9e33b15f3fcd07cd9b634a7eb738c3\"},\"creditorSignature\":{\"v\":27,\"r\":\"0xe787e69662cb8e2b354aa56d42a9e5f8c6cda9b7e2750a85c4dde28b0d3433b1\",\"s\":\"0x7a5f132146e9f3198979aaf6ae53d6205d9e33b15f3fcd07cd9b634a7eb738c3\"},\"underwriterSignature\":{\"r\":\"\",\"s\":\"\",\"v\":0}}",
     "principalTokenSymbol": "REP",
     "description": "Hello, Can I borrow some REP please?",
-    "fillLoanShortUrl": "http://bit.ly/2HQuAqb"
+    "issuanceHash": "0x47a6cdbf1d42221d2d93b1b80350895159198bdb0d3b29c2aac3d30ec062d10f",
+    "fillLoanShortUrl": "http://bit.ly/2pAMUMp",
+    "repaidAmount": "4",
+    "termLength": "100",
+    "interestRate": "12.3",
+    "amortizationUnit": "hours",
+    "status": "active"
   },
   {
-    "issuanceHash": "0x3b226123fba365dea96ad801b6b4f7537c646ff939a8469a40595e1cb08f190d",
-    "principalToken": "0x07e93e27ac8a1c114f1931f65e3c8b5186b9b77e",
-    "principalAmount": "130",
-    "termsContract": "0x60a1779d5af15f808d91f3afbc4bcaddbf288ced",
-    "termsContractParameters": "0x0000000000000000000000000000030c0100000000000000000000000000001e",
-    "kernelVersion": "0x89c5b853e9e32bf47c7da1ccb02e981b74c47f2f",
-    "issuanceVersion": "0x1d8e76d2022e017c6c276b44cb2e4c71bd3cc3de",
-    "debtor": "0x431194c3e0f35bc7f1266ec6bb85e0c5ec554935",
-    "debtorFee": "0",
-    "creditor": "0x431194c3e0f35bc7f1266ec6bb85e0c5ec554935",
-    "creditorFee": "0",
-    "relayer": "0x0000000000000000000000000000000000000000",
-    "relayerFee": "0",
-    "underwriter": "0x0000000000000000000000000000000000000000",
-    "underwriterFee": "0",
-    "underwriterRiskRating": "0",
-    "expirationTimestampInSec": "1524288745",
-    "salt": "0",
-    "debtorSignature": {
-      "v": 28,
-      "r": "0x055b47460e5a73d7481ad8ac37ceb4ad7358195555a9f32e914f4a9909067b98",
-      "s": "0x21d608897e35a72dce0439cd3b735fd13dc53b715fdbdabc53933bef01c0a7a3"
-    },
-    "creditorSignature": {
-      "v": 28,
-      "r": "0x055b47460e5a73d7481ad8ac37ceb4ad7358195555a9f32e914f4a9909067b98",
-      "s": "0x21d608897e35a72dce0439cd3b735fd13dc53b715fdbdabc53933bef01c0a7a3"
-    },
-    "underWriterSignature": {
-      "r": "",
-      "s": "",
-      "v": 0
-    },
+    "json": "{\"principalToken\":\"0xc6e0d8103209ac03e358233970ffe9a166e5b6db\",\"principalAmount\":\"130\",\"termsContract\":\"0x3be57ec12d61ddd667c7f7fe594b683b1e6d6ed5\",\"termsContractParameters\":\"0x0000000000000000000000000000030c0100000000000000000000000000001e\",\"kernelVersion\":\"0xc5c21a84f569048a71899965c8e67425763cfeab\",\"issuanceVersion\":\"0x3ae089a1c292491140e7a7ef9b7efdc464e4a97e\",\"debtor\":\"0x431194c3e0f35bc7f1266ec6bb85e0c5ec554935\",\"debtorFee\":\"0\",\"creditor\":\"0x431194c3e0f35bc7f1266ec6bb85e0c5ec554935\",\"creditorFee\":\"0\",\"relayer\":\"0x0000000000000000000000000000000000000000\",\"relayerFee\":\"0\",\"underwriter\":\"0x0000000000000000000000000000000000000000\",\"underwriterFee\":\"0\",\"underwriterRiskRating\":\"0\",\"expirationTimestampInSec\":\"1524378845\",\"salt\":\"0\",\"debtorSignature\":{\"v\":27,\"r\":\"0xa5b0df74240b7d2142e9fa08808fd240cfbdadfa8e25a66dad075076f549e53a\",\"s\":\"0x61ad052c9a68710a2424965854e4361b52ff1bfbcf55c01b466f436e43f4b28d\"},\"creditorSignature\":{\"v\":27,\"r\":\"0xa5b0df74240b7d2142e9fa08808fd240cfbdadfa8e25a66dad075076f549e53a\",\"s\":\"0x61ad052c9a68710a2424965854e4361b52ff1bfbcf55c01b466f436e43f4b28d\"},\"underwriterSignature\":{\"r\":\"\",\"s\":\"\",\"v\":0}}",
     "principalTokenSymbol": "MKR",
     "description": "Hello, Can I borrow some MKR please?",
-    "fillLoanShortUrl": "http://bit.ly/2FWcq9V"
+    "issuanceHash": "0xc9fa392fd0d0ebacc6e3893f0e6667380af8841171afeeccb1f4785efcc6c07a",
+    "fillLoanShortUrl": "http://bit.ly/2GhGtZ6",
+    "repaidAmount": "130",
+    "termLength": "30",
+    "interestRate": "5",
+    "amortizationUnit": "days",
+    "status": "inactive"
   },
   {
-    "principalToken": "0xc3017eb5cd063bf6745723895edead65257a5f6e",
-    "principalAmount": "500",
-    "termsContract": "0x1bc731b55eea80df37c077f8a87a8c8d492f2fd7",
-    "termsContractParameters": "0x0000000000000000000000000000083402000000000000000000000000000006",
-    "kernelVersion": "0x89c5b853e9e32bf47c7da1ccb02e981b74c47f2f",
-    "issuanceVersion": "0x1d8e76d2022e017c6c276b44cb2e4c71bd3cc3de",
-    "debtor": "0x431194c3e0f35bc7f1266ec6bb85e0c5ec554935",
-    "debtorFee": "0",
-    "creditor": "0x431194c3e0f35bc7f1266ec6bb85e0c5ec554935",
-    "creditorFee": "0",
-    "relayer": "0x0000000000000000000000000000000000000000",
-    "relayerFee": "0",
-    "underwriter": "0x0000000000000000000000000000000000000000",
-    "underwriterFee": "0",
-    "underwriterRiskRating": "0",
-    "expirationTimestampInSec": "1524288745",
-    "salt": "0",
-    "debtorSignature": {
-      "v": 28,
-      "r": "0xe2b2694edded21f65707cd1f055144e05e2ec4f4420aec263a528bfa34f90180",
-      "s": "0x697aeedff95d74936b6c417abd7efac95ace58575dd36ac62620db35d5e0fa1e"
-    },
-    "creditorSignature": {
-      "v": 28,
-      "r": "0xe2b2694edded21f65707cd1f055144e05e2ec4f4420aec263a528bfa34f90180",
-      "s": "0x697aeedff95d74936b6c417abd7efac95ace58575dd36ac62620db35d5e0fa1e"
-    },
-    "underWriterSignature": {
-      "r": "",
-      "s": "",
-      "v": 0
-    },
-    "issuanceHash": "0x9a11d54fd11a4307ee56234b7bcfd5df3d684dc528c6f142b3d92284ebda84bb",
+    "json": "{\"principalToken\":\"0x1d6c4601d06a140acb5958b928bad34a306f88cb\",\"principalAmount\":\"500\",\"termsContract\":\"0x18f01626c17bf62fcc18aa8e6217f62d356967c1\",\"termsContractParameters\":\"0x0000000000000000000000000000083402000000000000000000000000000006\",\"kernelVersion\":\"0xc5c21a84f569048a71899965c8e67425763cfeab\",\"issuanceVersion\":\"0x3ae089a1c292491140e7a7ef9b7efdc464e4a97e\",\"debtor\":\"0x431194c3e0f35bc7f1266ec6bb85e0c5ec554935\",\"debtorFee\":\"0\",\"creditor\":\"0x0000000000000000000000000000000000000000\",\"creditorFee\":\"0\",\"relayer\":\"0x0000000000000000000000000000000000000000\",\"relayerFee\":\"0\",\"underwriter\":\"0x0000000000000000000000000000000000000000\",\"underwriterFee\":\"0\",\"underwriterRiskRating\":\"0\",\"expirationTimestampInSec\":\"1524378845\",\"salt\":\"0\",\"debtorSignature\":{\"v\":28,\"r\":\"0xdfff28a747b10cb73b445666b462ee8f250810491da2321b6b257beb0151d152\",\"s\":\"0x6747c0e6f29ea1122e056643737f77e74bcff81de1ecbabf9afba8f3ad025431\"},\"creditorSignature\":{\"r\":\"\",\"s\":\"\",\"v\":0},\"underwriterSignature\":{\"r\":\"\",\"s\":\"\",\"v\":0}}",
     "principalTokenSymbol": "ZRX",
     "description": "Hello, Can I borrow some ZRX please?",
-    "fillLoanShortUrl": "http://bit.ly/2uakPkx"
+    "issuanceHash": "0xab3caf663c50b2205ecefc39071983acde61e44ba5aaac44c3c0da0411c28fe5",
+    "fillLoanShortUrl": "http://bit.ly/2G4ybR0",
+    "repaidAmount": "0",
+    "termLength": "6",
+    "interestRate": "3.2",
+    "amortizationUnit": "weeks",
+    "status": "pending"
   },
   {
-    "principalToken": "0x9b62bd396837417ce319e2e5c8845a5a960010ea",
-    "principalAmount": "928",
-    "termsContract": "0x1c907384489d939400fa5c6571d8aad778213d74",
-    "termsContractParameters": "0x000000000000000000000000000057000300000000000000000000000000000a",
-    "kernelVersion": "0x89c5b853e9e32bf47c7da1ccb02e981b74c47f2f",
-    "issuanceVersion": "0x1d8e76d2022e017c6c276b44cb2e4c71bd3cc3de",
-    "debtor": "0x431194c3e0f35bc7f1266ec6bb85e0c5ec554935",
-    "debtorFee": "0",
-    "creditor": "0x431194c3e0f35bc7f1266ec6bb85e0c5ec554935",
-    "creditorFee": "0",
-    "relayer": "0x0000000000000000000000000000000000000000",
-    "relayerFee": "0",
-    "underwriter": "0x0000000000000000000000000000000000000000",
-    "underwriterFee": "0",
-    "underwriterRiskRating": "0",
-    "expirationTimestampInSec": "1524288745",
-    "salt": "0",
-    "debtorSignature": {
-      "v": 27,
-      "r": "0xf9093fe38f3f28455e9c05c5cbd222bcd1f238af576a8a956b6598959e1d06c3",
-      "s": "0x6b1ad045a513a1d9f5cf9cefb82f606762e0b9927ae4394f38013a5fb4144b0f"
-    },
-    "creditorSignature": {
-      "v": 27,
-      "r": "0xf9093fe38f3f28455e9c05c5cbd222bcd1f238af576a8a956b6598959e1d06c3",
-      "s": "0x6b1ad045a513a1d9f5cf9cefb82f606762e0b9927ae4394f38013a5fb4144b0f"
-    },
-    "underWriterSignature": {
-      "r": "",
-      "s": "",
-      "v": 0
-    },
-    "issuanceHash": "0x0ea4d8895b9ce19acd8436acb96dee2278f6c2bef4bb8090bcd81c410e290302",
+    "json": "{\"principalToken\":\"0x47c27e72e0eb44e4bd157d1f5a1d4b6dd625dee2\",\"principalAmount\":\"928\",\"termsContract\":\"0x7bacd1795f0916fb290ce67d1d12af52e56dab71\",\"termsContractParameters\":\"0x000000000000000000000000000057000300000000000000000000000000000a\",\"kernelVersion\":\"0xc5c21a84f569048a71899965c8e67425763cfeab\",\"issuanceVersion\":\"0x3ae089a1c292491140e7a7ef9b7efdc464e4a97e\",\"debtor\":\"0x431194c3e0f35bc7f1266ec6bb85e0c5ec554935\",\"debtorFee\":\"0\",\"creditor\":\"0x0000000000000000000000000000000000000000\",\"creditorFee\":\"0\",\"relayer\":\"0x0000000000000000000000000000000000000000\",\"relayerFee\":\"0\",\"underwriter\":\"0x0000000000000000000000000000000000000000\",\"underwriterFee\":\"0\",\"underwriterRiskRating\":\"0\",\"expirationTimestampInSec\":\"1524378845\",\"salt\":\"0\",\"debtorSignature\":{\"v\":27,\"r\":\"0xb932cb1421d89f270a5412850c8dd8d8bf3d2c190597127bf6ce0a5b83c7cd12\",\"s\":\"0x0b1957dcc9ed81430cbb635639f287a72f29db624a165243d0e479c82233c6dc\"},\"creditorSignature\":{\"r\":\"\",\"s\":\"\",\"v\":0},\"underwriterSignature\":{\"r\":\"\",\"s\":\"\",\"v\":0}}",
     "principalTokenSymbol": "REP",
     "description": "Hello, Can I borrow some REP please?",
-    "fillLoanShortUrl": "http://bit.ly/2HUnQYe"
+    "issuanceHash": "0xab15b0cb4063c001b4a846dbd5196763b32a14be4acbdad50977cda3584cc8a9",
+    "fillLoanShortUrl": "http://bit.ly/2py4BMC",
+    "repaidAmount": "0",
+    "termLength": "10",
+    "interestRate": "23",
+    "amortizationUnit": "months",
+    "status": "pending"
   },
   {
-    "issuanceHash": "0x8464385457434e60e43a91b88ef7049080153cf070da121bd7e84c759f39f88f",
-    "principalToken": "0xc3017eb5cd063bf6745723895edead65257a5f6e",
-    "principalAmount": "10000",
-    "termsContract": "0x1bc731b55eea80df37c077f8a87a8c8d492f2fd7",
-    "termsContractParameters": "0x00000000000000000000000000002ee004000000000000000000000000000014",
-    "kernelVersion": "0x89c5b853e9e32bf47c7da1ccb02e981b74c47f2f",
-    "issuanceVersion": "0x1d8e76d2022e017c6c276b44cb2e4c71bd3cc3de",
-    "debtor": "0x431194c3e0f35bc7f1266ec6bb85e0c5ec554935",
-    "debtorFee": "0",
-    "creditor": "0x431194c3e0f35bc7f1266ec6bb85e0c5ec554935",
-    "creditorFee": "0",
-    "relayer": "0x0000000000000000000000000000000000000000",
-    "relayerFee": "0",
-    "underwriter": "0x0000000000000000000000000000000000000000",
-    "underwriterFee": "0",
-    "underwriterRiskRating": "0",
-    "expirationTimestampInSec": "1524288745",
-    "salt": "0",
-    "debtorSignature": {
-      "v": 27,
-      "r": "0x7e2444aede10d188dfb9f7d55e2daf148877177df542d7419cb52ee8adb93556",
-      "s": "0x29cb94990371c54e2ff6a1287e38a7572f9e23205b6334fb1ae41566afb972cf"
-    },
-    "creditorSignature": {
-      "v": 27,
-      "r": "0x7e2444aede10d188dfb9f7d55e2daf148877177df542d7419cb52ee8adb93556",
-      "s": "0x29cb94990371c54e2ff6a1287e38a7572f9e23205b6334fb1ae41566afb972cf"
-    },
-    "underWriterSignature": {
-      "r": "",
-      "s": "",
-      "v": 0
-    },
+    "json": "{\"principalToken\":\"0x1d6c4601d06a140acb5958b928bad34a306f88cb\",\"principalAmount\":\"10000\",\"termsContract\":\"0x18f01626c17bf62fcc18aa8e6217f62d356967c1\",\"termsContractParameters\":\"0x00000000000000000000000000002ee004000000000000000000000000000014\",\"kernelVersion\":\"0xc5c21a84f569048a71899965c8e67425763cfeab\",\"issuanceVersion\":\"0x3ae089a1c292491140e7a7ef9b7efdc464e4a97e\",\"debtor\":\"0x431194c3e0f35bc7f1266ec6bb85e0c5ec554935\",\"debtorFee\":\"0\",\"creditor\":\"0x431194c3e0f35bc7f1266ec6bb85e0c5ec554935\",\"creditorFee\":\"0\",\"relayer\":\"0x0000000000000000000000000000000000000000\",\"relayerFee\":\"0\",\"underwriter\":\"0x0000000000000000000000000000000000000000\",\"underwriterFee\":\"0\",\"underwriterRiskRating\":\"0\",\"expirationTimestampInSec\":\"1524378845\",\"salt\":\"0\",\"debtorSignature\":{\"v\":27,\"r\":\"0x2e8074d40b81a5fc25a15f9263ab466d856f191f3324a30f7eb7a1883b060955\",\"s\":\"0x78fb551c0f8d581f461c4e5fcb61808f5f9f673a47a7c5468aac07442cd09758\"},\"creditorSignature\":{\"v\":27,\"r\":\"0x2e8074d40b81a5fc25a15f9263ab466d856f191f3324a30f7eb7a1883b060955\",\"s\":\"0x78fb551c0f8d581f461c4e5fcb61808f5f9f673a47a7c5468aac07442cd09758\"},\"underwriterSignature\":{\"r\":\"\",\"s\":\"\",\"v\":0}}",
     "principalTokenSymbol": "ZRX",
     "description": "Hello, Can I borrow some ZRX please?",
-    "fillLoanShortUrl": "http://bit.ly/2uf1PSc"
+    "issuanceHash": "0x51bd13526cac3d3f46d8eb635e37e44b2e7833539e2b38c26134d36c8dc03f31",
+    "fillLoanShortUrl": "http://bit.ly/2G4RN7J",
+    "repaidAmount": "302",
+    "termLength": "20",
+    "interestRate": "0.2",
+    "amortizationUnit": "years",
+    "status": "active"
   },
   {
-    "issuanceHash": "0xe48276c5b64237ac1c8bd8ee5dc8a06e170e8f34aab0debab0c06ede8c725e83",
-    "principalToken": "0x07e93e27ac8a1c114f1931f65e3c8b5186b9b77e",
-    "principalAmount": "345",
-    "termsContract": "0x60a1779d5af15f808d91f3afbc4bcaddbf288ced",
-    "termsContractParameters": "0x000000000000000000000000000006bd02000000000000000000000000000014",
-    "kernelVersion": "0x89c5b853e9e32bf47c7da1ccb02e981b74c47f2f",
-    "issuanceVersion": "0x1d8e76d2022e017c6c276b44cb2e4c71bd3cc3de",
-    "debtor": "0x431194c3e0f35bc7f1266ec6bb85e0c5ec554935",
-    "debtorFee": "0",
-    "creditor": "0x431194c3e0f35bc7f1266ec6bb85e0c5ec554935",
-    "creditorFee": "0",
-    "relayer": "0x0000000000000000000000000000000000000000",
-    "relayerFee": "0",
-    "underwriter": "0x0000000000000000000000000000000000000000",
-    "underwriterFee": "0",
-    "underwriterRiskRating": "0",
-    "expirationTimestampInSec": "1524288745",
-    "salt": "0",
-    "debtorSignature": {
-      "v": 28,
-      "r": "0x38f75f1905c524f2d01a8de432fa00d6c7afce2cf61c9aa9a1c454481ab9bc7a",
-      "s": "0x6c35f42dbe378af47e91c7839cff27dab38e622a7aa9ebebfceec7f7306d109a"
-    },
-    "creditorSignature": {
-      "v": 28,
-      "r": "0x38f75f1905c524f2d01a8de432fa00d6c7afce2cf61c9aa9a1c454481ab9bc7a",
-      "s": "0x6c35f42dbe378af47e91c7839cff27dab38e622a7aa9ebebfceec7f7306d109a"
-    },
-    "underWriterSignature": {
-      "r": "",
-      "s": "",
-      "v": 0
-    },
+    "json": "{\"principalToken\":\"0xc6e0d8103209ac03e358233970ffe9a166e5b6db\",\"principalAmount\":\"345\",\"termsContract\":\"0x3be57ec12d61ddd667c7f7fe594b683b1e6d6ed5\",\"termsContractParameters\":\"0x000000000000000000000000000006bd02000000000000000000000000000014\",\"kernelVersion\":\"0xc5c21a84f569048a71899965c8e67425763cfeab\",\"issuanceVersion\":\"0x3ae089a1c292491140e7a7ef9b7efdc464e4a97e\",\"debtor\":\"0x431194c3e0f35bc7f1266ec6bb85e0c5ec554935\",\"debtorFee\":\"0\",\"creditor\":\"0x431194c3e0f35bc7f1266ec6bb85e0c5ec554935\",\"creditorFee\":\"0\",\"relayer\":\"0x0000000000000000000000000000000000000000\",\"relayerFee\":\"0\",\"underwriter\":\"0x0000000000000000000000000000000000000000\",\"underwriterFee\":\"0\",\"underwriterRiskRating\":\"0\",\"expirationTimestampInSec\":\"1524378845\",\"salt\":\"0\",\"debtorSignature\":{\"v\":27,\"r\":\"0x9b6d951410449e856a7e902b685b332805d6ec34db5fbeb778233a8fce6f6e05\",\"s\":\"0x34a9d30704bbc47bf67f77b989620a8b0e6c9ea9f9ce481af3e577da93eb8ad9\"},\"creditorSignature\":{\"v\":27,\"r\":\"0x9b6d951410449e856a7e902b685b332805d6ec34db5fbeb778233a8fce6f6e05\",\"s\":\"0x34a9d30704bbc47bf67f77b989620a8b0e6c9ea9f9ce481af3e577da93eb8ad9\"},\"underwriterSignature\":{\"r\":\"\",\"s\":\"\",\"v\":0}}",
     "principalTokenSymbol": "MKR",
     "description": "Hello, Can I borrow some MKR please?",
-    "fillLoanShortUrl": "http://bit.ly/2HTlFUP"
+    "issuanceHash": "0x2748510feba4233bded7a20bca892f1a8da22edd6e1f3784acdbeda994bc1d0d",
+    "fillLoanShortUrl": "http://bit.ly/2G1Hdyg",
+    "repaidAmount": "100",
+    "termLength": "20",
+    "interestRate": "4",
+    "amortizationUnit": "weeks",
+    "status": "active"
   },
   {
-    "issuanceHash": "0x5805244ea3524dde2d8e5bd1d9150c58b045b09c47170581451ac6f105ac95b8",
-    "principalToken": "0x9b62bd396837417ce319e2e5c8845a5a960010ea",
-    "principalAmount": "1000",
-    "termsContract": "0x1c907384489d939400fa5c6571d8aad778213d74",
-    "termsContractParameters": "0x000000000000000000000000000003fc04000000000000000000000000000014",
-    "kernelVersion": "0x89c5b853e9e32bf47c7da1ccb02e981b74c47f2f",
-    "issuanceVersion": "0x1d8e76d2022e017c6c276b44cb2e4c71bd3cc3de",
-    "debtor": "0x431194c3e0f35bc7f1266ec6bb85e0c5ec554935",
-    "debtorFee": "0",
-    "creditor": "0x431194c3e0f35bc7f1266ec6bb85e0c5ec554935",
-    "creditorFee": "0",
-    "relayer": "0x0000000000000000000000000000000000000000",
-    "relayerFee": "0",
-    "underwriter": "0x0000000000000000000000000000000000000000",
-    "underwriterFee": "0",
-    "underwriterRiskRating": "0",
-    "expirationTimestampInSec": "1524288745",
-    "salt": "0",
-    "debtorSignature": {
-      "v": 28,
-      "r": "0xf2b70c54dc277e2d6408146256d249a5dc22163bf10b8fce5e6494ca45b0df80",
-      "s": "0x2119130c0cc8f87391d1c62054dad36f520848003638fe225040e7b4d2172048"
-    },
-    "creditorSignature": {
-      "v": 28,
-      "r": "0xf2b70c54dc277e2d6408146256d249a5dc22163bf10b8fce5e6494ca45b0df80",
-      "s": "0x2119130c0cc8f87391d1c62054dad36f520848003638fe225040e7b4d2172048"
-    },
-    "underWriterSignature": {
-      "r": "",
-      "s": "",
-      "v": 0
-    },
+    "json": "{\"principalToken\":\"0x47c27e72e0eb44e4bd157d1f5a1d4b6dd625dee2\",\"principalAmount\":\"1000\",\"termsContract\":\"0x7bacd1795f0916fb290ce67d1d12af52e56dab71\",\"termsContractParameters\":\"0x000000000000000000000000000003fc04000000000000000000000000000014\",\"kernelVersion\":\"0xc5c21a84f569048a71899965c8e67425763cfeab\",\"issuanceVersion\":\"0x3ae089a1c292491140e7a7ef9b7efdc464e4a97e\",\"debtor\":\"0x431194c3e0f35bc7f1266ec6bb85e0c5ec554935\",\"debtorFee\":\"0\",\"creditor\":\"0x431194c3e0f35bc7f1266ec6bb85e0c5ec554935\",\"creditorFee\":\"0\",\"relayer\":\"0x0000000000000000000000000000000000000000\",\"relayerFee\":\"0\",\"underwriter\":\"0x0000000000000000000000000000000000000000\",\"underwriterFee\":\"0\",\"underwriterRiskRating\":\"0\",\"expirationTimestampInSec\":\"1524378845\",\"salt\":\"0\",\"debtorSignature\":{\"v\":28,\"r\":\"0x0efbf90cd0c1718875a7bed5506cc076abbf0ea600bef405bb19fee4b9820d94\",\"s\":\"0x30612edf66dae996c59458742e98fd7df4560833213d379ff157192608482eab\"},\"creditorSignature\":{\"v\":28,\"r\":\"0x0efbf90cd0c1718875a7bed5506cc076abbf0ea600bef405bb19fee4b9820d94\",\"s\":\"0x30612edf66dae996c59458742e98fd7df4560833213d379ff157192608482eab\"},\"underwriterSignature\":{\"r\":\"\",\"s\":\"\",\"v\":0}}",
     "principalTokenSymbol": "REP",
     "description": "Hello, Can I borrow some REP please?",
-    "fillLoanShortUrl": "http://bit.ly/2HSSEsp"
+    "issuanceHash": "0x18ad43b3ec7b08090be1720042ac965fb958441249ea805657c03603918905a0",
+    "fillLoanShortUrl": "http://bit.ly/2pxQ5Ve",
+    "repaidAmount": "1000",
+    "termLength": "20",
+    "interestRate": "0.02",
+    "amortizationUnit": "years",
+    "status": "inactive"
   }
 ]

@@ -4,8 +4,7 @@ import { getDebtOrder } from './actions';
 
 const mapStateToProps = (state: any) => {
 	return {
-		debtOrder: state.debtOrderReducer.singleDebtOrder,
-		dharma: state.dharmaReducer.dharma
+		debtOrder: state.debtOrderReducer.singleDebtOrder
 	};
 };
 

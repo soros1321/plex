@@ -1,9 +1,10 @@
 import * as React from 'react';
-import { DebtOrderMoreDetail } from '../../../../models';
+import { DebtOrderEntity } from '../../../../models';
 import {
 	getIdenticonImgSrc,
 	shortenString,
-	amortizationUnitToFrequency
+	amortizationUnitToFrequency,
+	debtOrderFromJSON
 } from '../../../../utils';
 import {
 	Wrapper,
@@ -27,7 +28,7 @@ import {
 import { Row, Col, Collapse } from 'reactstrap';
 
 interface Props {
-	debtOrder: DebtOrderMoreDetail;
+	debtOrder: DebtOrderEntity;
 }
 
 /*
@@ -63,6 +64,8 @@ class ActiveDebtOrder extends React.Component<Props, State> {
 
 	render() {
 		const { debtOrder } = this.props;
+		const debtOrderInfo = debtOrderFromJSON(debtOrder.json);
+
 		// const now = Math.round((new Date()).getTime() / 1000);
 		// const pastIcon = require('../../../../assets/img/ok_circle.png');
 		// const futureIcon = require('../../../../assets/img/circle_outline.png');
@@ -164,7 +167,7 @@ class ActiveDebtOrder extends React.Component<Props, State> {
 					<DetailContainer>
 						<Row>
 							<Col xs="12" md="6">
-								<Amount>{debtOrder.principalAmount.toNumber()} {debtOrder.principalTokenSymbol}</Amount>
+								<Amount>{debtOrderInfo!.principalAmount!.toNumber()} {debtOrder.principalTokenSymbol}</Amount>
 								<Url>
 									<DetailLink to={`/request/success/${debtOrder.issuanceHash}`}>
 										{shortenString(debtOrder.issuanceHash)}
@@ -194,7 +197,7 @@ class ActiveDebtOrder extends React.Component<Props, State> {
 										Requested
 									</InfoItemTitle>
 									<InfoItemContent>
-										{debtOrder.principalAmount.toNumber() + ' ' + debtOrder.principalTokenSymbol}
+										{debtOrderInfo!.principalAmount!.toNumber() + ' ' + debtOrder.principalTokenSymbol}
 									</InfoItemContent>
 								</InfoItem>
 							</Col>

@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { DebtOrderEntity, DebtOrderMoreDetail } from '../../../models';
+import { DebtOrderEntity } from '../../../models';
 import { Header, MainWrapper } from '../../../components';
 import { DebtsMetricsContainer } from './DebtsMetrics/DebtsMetricsContainer';
 import { ActiveDebtOrder } from './ActiveDebtOrder';
 import { DebtOrderHistory } from './DebtOrderHistory';
 import Dharma from '@dharmaprotocol/dharma.js';
-import { BigNumber } from 'bignumber.js';
+import { debtOrderFromJSON } from '../../../utils';
 
 interface Props {
 	dharma: Dharma;
@@ -13,9 +13,9 @@ interface Props {
 }
 
 interface State {
-	allDebtOrders: DebtOrderMoreDetail[];
-	activeDebtOrders: DebtOrderMoreDetail[];
-	inactiveDebtOrders: DebtOrderMoreDetail[];
+	allDebtOrders: DebtOrderEntity[];
+	activeDebtOrders: DebtOrderEntity[];
+	inactiveDebtOrders: DebtOrderEntity[];
 }
 
 class Debts extends React.Component<Props, State> {
@@ -44,45 +44,25 @@ class Debts extends React.Component<Props, State> {
 		if (!debtOrders.length) {
 			return;
 		}
-		const allDebtOrders: DebtOrderMoreDetail[] = [];
-		const activeDebtOrders: DebtOrderMoreDetail[] = [];
-		const inactiveDebtOrders: DebtOrderMoreDetail[] = [];
+		const allDebtOrders: DebtOrderEntity[] = [];
+		const activeDebtOrders: DebtOrderEntity[] = [];
+		const inactiveDebtOrders: DebtOrderEntity[] = [];
 		for (let debtOrder of debtOrders) {
 			try {
-				const dharmaDebtOrder = {
-					principalAmount: debtOrder.principalAmount,
-					principalToken: debtOrder.principalToken,
-					termsContract: debtOrder.termsContract,
-					termsContractParameters: debtOrder.termsContractParameters
-				};
-
-				const fromDebtOrder = await dharma.adapters.simpleInterestLoan.fromDebtOrder(dharmaDebtOrder);
-				const debtOrderMoreDetail = {
-					...debtOrder,
-					termLength: fromDebtOrder.termLength,
-					amortizationUnit: fromDebtOrder.amortizationUnit,
-					interestRate: fromDebtOrder.interestRate,
-					repaidAmount: new BigNumber(0),
-					status: ''
-				};
-
-				try {
-					const repaidAmount = await dharma.servicing.getValueRepaid(debtOrder.issuanceHash);
-					debtOrderMoreDetail.repaidAmount = repaidAmount;
-					debtOrderMoreDetail.status = repaidAmount.lt(debtOrder.principalAmount) ? 'active' : 'inactive';
-					if (debtOrderMoreDetail.status === 'active') {
-						activeDebtOrders.push(debtOrderMoreDetail);
-					} else {
-						inactiveDebtOrders.push(debtOrderMoreDetail);
-					}
-					allDebtOrders.push(debtOrderMoreDetail);
-				} catch (ex) {
-					debtOrderMoreDetail.status = 'pending';
-					activeDebtOrders.push(debtOrderMoreDetail);
-					allDebtOrders.push(debtOrderMoreDetail);
+				const debtOrderInfo = debtOrderFromJSON(debtOrder.json);
+				const repaidAmount = await dharma.servicing.getValueRepaid(debtOrder.issuanceHash);
+				debtOrder.repaidAmount = repaidAmount;
+				debtOrder.status = repaidAmount.lt(debtOrderInfo.principalAmount) ? 'active' : 'inactive';
+				if (debtOrder.status === 'active') {
+					activeDebtOrders.push(debtOrder);
+				} else {
+					inactiveDebtOrders.push(debtOrder);
 				}
-			} catch (e) {
-				// console.log(e);
+				allDebtOrders.push(debtOrder);
+			} catch (ex) {
+				debtOrder.status = 'pending';
+				activeDebtOrders.push(debtOrder);
+				allDebtOrders.push(debtOrder);
 			}
 		}
 		this.setState({

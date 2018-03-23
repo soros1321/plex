@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { TokenEntity, DebtOrderMoreDetail } from '../../../../models';
+import { TokenEntity, DebtOrderEntity } from '../../../../models';
 import { BigNumber } from 'bignumber.js';
 import {
 	Wrapper,
@@ -8,9 +8,10 @@ import {
 	TokenWrapper,
 	Label
 } from './styledComponents';
+import { debtOrderFromJSON } from '../../../../utils';
 
 interface Props {
-	debtOrders: DebtOrderMoreDetail[];
+	debtOrders: DebtOrderEntity[];
 	tokens: TokenEntity[];
 }
 
@@ -43,7 +44,7 @@ class DebtsMetrics extends React.Component<Props, State> {
 		}
 	}
 
-	initiateTokenBalance(tokens: TokenEntity[], debtOrders: DebtOrderMoreDetail[]) {
+	initiateTokenBalance(tokens: TokenEntity[], debtOrders: DebtOrderEntity[]) {
 		let tokenBalances: any = {};
 		if (tokens.length) {
 			for (let token of tokens) {
@@ -55,9 +56,10 @@ class DebtsMetrics extends React.Component<Props, State> {
 		}
 		if (debtOrders.length) {
 			for (let debtOrder of debtOrders) {
+				const debtOrderInfo = debtOrderFromJSON(debtOrder.json);
 				if (tokenBalances[debtOrder.principalTokenSymbol]) {
 					// TODO: Should we exclude pending debt orders?
-					tokenBalances[debtOrder.principalTokenSymbol].totalRequested = tokenBalances[debtOrder.principalTokenSymbol].totalRequested.plus(debtOrder.principalAmount);
+					tokenBalances[debtOrder.principalTokenSymbol].totalRequested = tokenBalances[debtOrder.principalTokenSymbol].totalRequested.plus(debtOrderInfo.principalAmount);
 					tokenBalances[debtOrder.principalTokenSymbol].totalRepaid = tokenBalances[debtOrder.principalTokenSymbol].totalRepaid.plus(debtOrder.repaidAmount);
 				}
 			}

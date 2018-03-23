@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { InvestmentEntity, InvestmentMoreDetail } from '../../../models';
+import { InvestmentEntity } from '../../../models';
 import { Header, MainWrapper } from '../../../components';
 import { InvestmentsMetricsContainer } from './InvestmentsMetrics/InvestmentsMetricsContainer';
 import { ActiveInvestment } from './ActiveInvestment';
 import { InvestmentHistory } from './InvestmentHistory';
 import Dharma from '@dharmaprotocol/dharma.js';
-import { BigNumber } from 'bignumber.js';
+import { debtOrderFromJSON } from '../../../utils';
 
 interface Props {
 	dharma: Dharma;
@@ -13,9 +13,9 @@ interface Props {
 }
 
 interface State {
-	allInvestments: InvestmentMoreDetail[];
-	activeInvestments: InvestmentMoreDetail[];
-	inactiveInvestments: InvestmentMoreDetail[];
+	allInvestments: InvestmentEntity[];
+	activeInvestments: InvestmentEntity[];
+	inactiveInvestments: InvestmentEntity[];
 }
 
 class Investments extends React.Component<Props, State> {
@@ -44,44 +44,25 @@ class Investments extends React.Component<Props, State> {
 		if (!investments.length) {
 			return;
 		}
-		const allInvestments: InvestmentMoreDetail[] = [];
-		const activeInvestments: InvestmentMoreDetail[] = [];
-		const inactiveInvestments: InvestmentMoreDetail[] = [];
+		const allInvestments: InvestmentEntity[] = [];
+		const activeInvestments: InvestmentEntity[] = [];
+		const inactiveInvestments: InvestmentEntity[] = [];
 		for (let investment of investments) {
 			try {
-				const dharmaDebtOrder = {
-					principalAmount: investment.principalAmount,
-					principalToken: investment.principalToken,
-					termsContract: investment.termsContract,
-					termsContractParameters: investment.termsContractParameters
-				};
+				const investmentInfo = debtOrderFromJSON(investment.json);
 
-				const fromDebtOrder = await dharma.adapters.simpleInterestLoan.fromDebtOrder(dharmaDebtOrder);
-				const investmentMoreDetail = {
-					...investment,
-					termLength: fromDebtOrder.termLength,
-					amortizationUnit: fromDebtOrder.amortizationUnit,
-					interestRate: fromDebtOrder.interestRate,
-					earnedAmount: new BigNumber(0),
-					status: ''
-				};
-
-				try {
-					// The repaid value from debtor is the earned amount for creditor
-					const earnedAmount = await dharma.servicing.getValueRepaid(investment.issuanceHash);
-					investmentMoreDetail.earnedAmount = earnedAmount;
-					investmentMoreDetail.status = investment.principalAmount && earnedAmount.lt(investment.principalAmount) ? 'active' : 'inactive';
-					if (investmentMoreDetail.status === 'active') {
-						activeInvestments.push(investmentMoreDetail);
-					} else {
-						inactiveInvestments.push(investmentMoreDetail);
-					}
-					allInvestments.push(investmentMoreDetail);
-				} catch (ex) {
-					// console.log(ex);
+				// The repaid value from debtor is the earned amount for creditor
+				const earnedAmount = await dharma.servicing.getValueRepaid(investment.issuanceHash);
+				investment.earnedAmount = earnedAmount;
+				investment.status = investmentInfo.principalAmount && earnedAmount.lt(investmentInfo.principalAmount) ? 'active' : 'inactive';
+				if (investment.status === 'active') {
+					activeInvestments.push(investment);
+				} else {
+					inactiveInvestments.push(investment);
 				}
-			} catch (e) {
-				// console.log(e);
+				allInvestments.push(investment);
+			} catch (ex) {
+				// console.log(ex);
 			}
 		}
 		this.setState({

@@ -1,4 +1,4 @@
 export * from './formatDate';
-export * from './formatDebtOrder';
+export * from './debtOrder';
 export * from './webUtils';
 export * from './identicon';

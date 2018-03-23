@@ -1,29 +1,25 @@
 import { BigNumber } from 'bignumber.js';
 
 export class InvestmentEntity {
-	debtorSignature: string;
-	debtor: string | undefined;
-	creditorSignature?: string;
-	creditor: string;
-	principalAmount: BigNumber | undefined;
-	principalToken: string | undefined;
+	json: string;
 	principalTokenSymbol: string;
-	termsContract: string | undefined;
-	termsContractParameters: string | undefined;
-	description: string | undefined;
+	description: string;
 	issuanceHash: string;
+	earnedAmount: BigNumber;
+	termLength: BigNumber;
+	interestRate: BigNumber;
+	amortizationUnit: string;
+	status: string;
 
 	public constructor () {
-		this.debtorSignature = '';
-		this.debtor = '';
-		this.creditorSignature = '';
-		this.creditor = '';
-		this.principalAmount = new BigNumber(0);
-		this.principalToken = '';
+		this.json = '';
 		this.principalTokenSymbol = '';
-		this.termsContract = '';
-		this.termsContractParameters = '';
 		this.description = '';
 		this.issuanceHash = '';
+		this.earnedAmount = new BigNumber(0);
+		this.termLength = new BigNumber(0);
+		this.interestRate = new BigNumber(0);
+		this.amortizationUnit = '';
+		this.status = '';
 	}
 }

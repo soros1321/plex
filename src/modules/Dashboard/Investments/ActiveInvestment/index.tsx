@@ -1,9 +1,10 @@
 import * as React from 'react';
-import { InvestmentMoreDetail } from '../../../../models';
+import { InvestmentEntity } from '../../../../models';
 import {
 	getIdenticonImgSrc,
 	shortenString,
-	amortizationUnitToFrequency
+	amortizationUnitToFrequency,
+	debtOrderFromJSON
 } from '../../../../utils';
 import {
 	Wrapper,
@@ -27,7 +28,7 @@ import {
 import { Row, Col, Collapse } from 'reactstrap';
 
 interface Props {
-	investment: InvestmentMoreDetail;
+	investment: InvestmentEntity;
 }
 
 /*
@@ -63,6 +64,7 @@ class ActiveInvestment extends React.Component<Props, State> {
 
 	render() {
 		const { investment } = this.props;
+		const investmentInfo = debtOrderFromJSON(investment.json);
 		/*
 		const now = Math.round((new Date()).getTime() / 1000);
 		const pastIcon = require('../../../../assets/img/ok_circle.png');
@@ -164,7 +166,7 @@ class ActiveInvestment extends React.Component<Props, State> {
 					<DetailContainer>
 						<Row>
 							<Col xs="12" md="6">
-								<Amount>{investment!.principalAmount!.toNumber() + ' ' + investment.principalTokenSymbol}</Amount>
+								<Amount>{investmentInfo!.principalAmount!.toNumber() + ' ' + investment.principalTokenSymbol}</Amount>
 								<Url>
 									<DetailLink to={`/request/success/${investment.issuanceHash}`}>
 										{shortenString(investment.issuanceHash)}
@@ -194,7 +196,7 @@ class ActiveInvestment extends React.Component<Props, State> {
 										Lended
 									</InfoItemTitle>
 									<InfoItemContent>
-										{investment!.principalAmount!.toNumber() + ' ' + investment.principalTokenSymbol}
+										{investmentInfo!.principalAmount!.toNumber() + ' ' + investment.principalTokenSymbol}
 									</InfoItemContent>
 								</InfoItem>
 							</Col>

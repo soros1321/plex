@@ -1,6 +1,10 @@
 import * as React from 'react';
-import { DebtOrderMoreDetail } from '../../../../models';
-import { shortenString, amortizationUnitToFrequency } from '../../../../utils';
+import { DebtOrderEntity } from '../../../../models';
+import {
+	shortenString,
+	amortizationUnitToFrequency,
+	debtOrderFromJSON
+} from '../../../../utils';
 import { Row, Col, Collapse } from 'reactstrap';
 import {
 	StyledRow,
@@ -11,7 +15,7 @@ import {
 } from './styledComponents';
 
 interface Props {
-	debtOrder: DebtOrderMoreDetail;
+	debtOrder: DebtOrderEntity;
 }
 
 interface State {
@@ -33,17 +37,21 @@ class DebtOrderRow extends React.Component<Props, State> {
 
 	render() {
 		const { debtOrder } = this.props;
+		if (!debtOrder.json) {
+			return null;
+		}
+		const debtOrderInfo = debtOrderFromJSON(debtOrder.json);
 		return (
 			<div onClick={this.toggleDrawer}>
 				<StyledRow>
 					<Col xs="3" md="2">
-						{debtOrder.principalAmount.toNumber() + ' ' + debtOrder.principalTokenSymbol}
+						{debtOrderInfo!.principalAmount!.toNumber() + ' ' + debtOrder.principalTokenSymbol}
 					</Col>
 					<Col xs="3" md="2">
 						{shortenString(debtOrder.issuanceHash)}
 					</Col>
 					<Col xs="3" md="4">
-						{debtOrder.principalAmount.eq(debtOrder.repaidAmount) ? 'Paid' : 'Delinquent'}
+						{debtOrderInfo!.principalAmount!.eq(debtOrder.repaidAmount) ? 'Paid' : 'Delinquent'}
 					</Col>
 					<Col xs="3" md="4">
 						Simple Interest Loan (Non-Collateralized)

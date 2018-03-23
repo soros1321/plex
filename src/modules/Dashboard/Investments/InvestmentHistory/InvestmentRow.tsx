@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { InvestmentMoreDetail } from '../../../../models';
-import { shortenString, amortizationUnitToFrequency } from '../../../../utils';
+import { InvestmentEntity } from '../../../../models';
+import { shortenString, amortizationUnitToFrequency, debtOrderFromJSON } from '../../../../utils';
 import { Row, Col, Collapse } from 'reactstrap';
 import {
 	StyledRow,
@@ -11,7 +11,7 @@ import {
 } from './styledComponents';
 
 interface Props {
-	investment: InvestmentMoreDetail;
+	investment: InvestmentEntity;
 }
 
 interface State {
@@ -33,17 +33,18 @@ class InvestmentRow extends React.Component<Props, State> {
 
 	render() {
 		const { investment } = this.props;
+		const investmentInfo = debtOrderFromJSON(investment.json);
 		return (
 			<div onClick={this.toggleDrawer}>
 				<StyledRow>
 					<Col xs="3" md="2">
-						{investment!.principalAmount!.toNumber() + ' ' + investment.principalTokenSymbol}
+						{investmentInfo!.principalAmount!.toNumber() + ' ' + investment.principalTokenSymbol}
 					</Col>
 					<Col xs="3" md="2">
 						{shortenString(investment.issuanceHash)}
 					</Col>
 					<Col xs="3" md="4">
-						{investment.principalAmount && investment.principalAmount.eq(investment.earnedAmount) ? 'Paid' : 'Delinquent'}
+						{investmentInfo.principalAmount && investmentInfo.principalAmount.eq(investment.earnedAmount) ? 'Paid' : 'Delinquent'}
 					</Col>
 					<Col xs="3" md="4">
 						Simple Interest Loan (Non-Collateralized)

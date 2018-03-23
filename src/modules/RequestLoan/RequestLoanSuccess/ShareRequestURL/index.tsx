@@ -54,6 +54,10 @@ class ShareRequestURL extends React.Component<Props, State> {
 	}
 
 	render() {
+		const { shortUrl, issuanceHash } = this.props;
+		if (!shortUrl || !issuanceHash) {
+			return null;
+		}
 		const socialButtons = [
 			{name: 'twitter', imgURL: require('../../../../assets/img/logo_twitter.png')},
 			{name: 'facebook', imgURL: require('../../../../assets/img/logo_facebook.png')},
@@ -64,7 +68,7 @@ class ShareRequestURL extends React.Component<Props, State> {
 				<img src={social.imgURL} />
 			</ShareButton>
 		));
-		const identiconImgSrc = getIdenticonImgSrc(this.props.issuanceHash, 100, 0.1);
+		const identiconImgSrc = getIdenticonImgSrc(issuanceHash, 100, 0.1);
 		return (
 			<Wrapper>
 				<StyledLabel>Share your request URL</StyledLabel>
@@ -81,10 +85,10 @@ class ShareRequestURL extends React.Component<Props, State> {
 						<StyledFormGroup>
 							<Row>
 								<InputContainer>
-									<a href={this.props.shortUrl}>
+									<a href={shortUrl}>
 										<RequestInput
 											type="text"
-											value={this.props.shortUrl}
+											value={shortUrl}
 											readOnly={true}
 											innerRef={(input: HTMLInputElement) => { this.requestInput = input; }}
 										/>

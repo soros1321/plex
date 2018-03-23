@@ -16,13 +16,20 @@ import {
 } from '../modules';
 import { ParentContainer } from '../layouts';
 import * as Web3 from 'web3';
-import { web3Connected, dharmaInstantiated, setAccounts, setDebtOrders, setInvestments } from './actions';
+import {
+	web3Connected,
+	dharmaInstantiated,
+	setAccounts,
+	setDebtOrders,
+	setInvestments
+} from './actions';
 import { setError } from '../components/Error/actions';
+import { BigNumber } from 'bignumber.js';
 const promisify = require('tiny-promisify');
+import { debtOrderFromJSON } from '../utils';
 
 // Import Dharma libraries
 import Dharma from '@dharmaprotocol/dharma.js';
-import { BigNumber } from 'bignumber.js';
 
 // Import Currently Deployed Dharma contracts (should only be done in test context -- otherwise)
 import {
@@ -109,35 +116,30 @@ class AppRouter extends React.Component<Props, {}> {
 		const investments: InvestmentEntity[] = [];
 
 		for (let migratedDebtOrder of migratedDebtOrders) {
-			const debtOrder: DebtOrderEntity = {
+			const debtOrder = {
 				...migratedDebtOrder,
-				debtorSignature: JSON.stringify(migratedDebtOrder.debtorSignature),
-				principalAmount: new BigNumber(migratedDebtOrder.principalAmount)
+				repaidAmount: new BigNumber(migratedDebtOrder.repaidAmount),
+				interestRate: new BigNumber(migratedDebtOrder.interestRate),
+				termLength: new BigNumber(migratedDebtOrder.termLength)
 			};
 
-			const investment: InvestmentEntity = {
-				...migratedDebtOrder,
-				debtorSignature: JSON.stringify(migratedDebtOrder.debtorSignature),
-				creditorSignature: JSON.stringify(migratedDebtOrder.creditorSignature),
-				principalAmount: new BigNumber(migratedDebtOrder.principalAmount)
+			const investment = {
+				...debtOrder,
+				earnedAmount: debtOrder.repaidAmount
 			};
+			delete(investment.repaidAmount);
 
 			try {
 				// Check whether this debtOrder exist on current network
-				const dharmaDebtOrder = {
-					principalAmount: debtOrder.principalAmount,
-					principalToken: debtOrder.principalToken,
-					termsContract: debtOrder.termsContract,
-					termsContractParameters: debtOrder.termsContractParameters
-				};
+				const dharmaDebtOrder = debtOrderFromJSON(debtOrder.json);
 				await dharma.adapters.simpleInterestLoan.fromDebtOrder(dharmaDebtOrder);
-				if (migratedDebtOrder.debtor === defaultAccount) {
+				if (dharmaDebtOrder.debtor === defaultAccount) {
 					debtOrders.push(debtOrder);
 				}
 				try {
 					// If there is a repaid value, means this order is filled
 					await dharma.servicing.getValueRepaid(investment.issuanceHash);
-					if (migratedDebtOrder.creditor === defaultAccount) {
+					if (dharmaDebtOrder.creditor === defaultAccount) {
 						investments.push(investment);
 					}
 				} catch (ex) {

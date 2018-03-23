@@ -4,8 +4,9 @@
   "private": true,
   "dependencies": {
     "@dharmaprotocol/contracts": "^0.0.15",
-    "@dharmaprotocol/dharma.js": "^0.0.22",
+    "@dharmaprotocol/dharma.js": "^0.0.24",
     "@types/bignumber.js": "^5.0.0",
+    "@types/deep-diff": "^0.0.31",
     "@types/enzyme": "^3.1.9",
     "@types/jest": "^22.1.4",
     "@types/node": "^9.4.6",
@@ -25,6 +26,7 @@
     "bignumber.js": "^5.0.0",
     "bitly": "^5.0.12",
     "bootstrap": "^4.0.0",
+    "deep-diff": "^0.3.8",
     "dotenv": "^5.0.1",
     "identicon.js": "^2.3.1",
     "lodash.compact": "^3.0.1",

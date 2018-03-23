@@ -5,7 +5,7 @@ import {
 	Label
 } from 'reactstrap';
 import { DebtOrderEntity } from '../../../../models';
-import { amortizationUnitToFrequency } from '../../../../utils';
+import { amortizationUnitToFrequency, debtOrderFromJSON, normalizeDebtOrder } from '../../../../utils';
 import {
 	Wrapper,
 	StyledLabel,
@@ -21,9 +21,6 @@ import {
 
 interface Props {
 	debtOrder: DebtOrderEntity;
-	termLength: number | undefined;
-	interestRate: number | undefined;
-	amortizationUnit: string;
 }
 
 interface State {
@@ -31,7 +28,7 @@ interface State {
 }
 
 class RequestLoanSummary extends React.Component<Props, State> {
-	private summaryTextarea: HTMLTextAreaElement | null;
+	private summaryTextarea: HTMLTextAreaElement;
 
 	constructor (props: Props) {
 		super(props);
@@ -49,14 +46,18 @@ class RequestLoanSummary extends React.Component<Props, State> {
 	}
 
 	render() {
-		const { debtOrder, termLength, interestRate, amortizationUnit } = this.props;
+		const { debtOrder } = this.props;
+		if (!debtOrder.json) {
+			return null;
+		}
+		const debtOrderInfo = debtOrderFromJSON(debtOrder.json);
 		const leftInfoItems = [
-			{title: 'Principal', content: debtOrder.principalAmount.toNumber() + ' ' + debtOrder.principalTokenSymbol},
-			{title: 'Term Length', content: (termLength && amortizationUnit ? termLength + ' ' + amortizationUnit : '-')}
+			{title: 'Principal', content: debtOrderInfo.principalAmount.toNumber() + ' ' + debtOrder.principalTokenSymbol},
+			{title: 'Term Length', content: debtOrder.termLength.toNumber() + ' ' + debtOrder.amortizationUnit}
 		];
 		const rightInfoItems = [
-			{title: 'Interest Rate', content: (interestRate ? interestRate + '%' : '-')},
-			{title: 'Installment Frequency', content: (amortizationUnit ? amortizationUnitToFrequency(amortizationUnit) : '-')}
+			{title: 'Interest Rate', content: debtOrder.interestRate.toNumber() + '%'},
+			{title: 'Installment Frequency', content: amortizationUnitToFrequency(debtOrder.amortizationUnit)}
 		];
 		const leftInfoItemRows = leftInfoItems.map((item) => (
 			<InfoItem key={item.title}>
@@ -78,6 +79,11 @@ class RequestLoanSummary extends React.Component<Props, State> {
 				</Content>
 			</InfoItem>
 		));
+		const summaryJSON = {
+			...debtOrderInfo,
+			description: debtOrder.description,
+			principalTokenSymbol: debtOrder.principalTokenSymbol
+		};
 
 		return (
 			<Wrapper>
@@ -104,7 +110,7 @@ class RequestLoanSummary extends React.Component<Props, State> {
 					<SummaryJsonContainer>
 						<Label>JSON</Label>
 						<StyledTextarea
-							value={JSON.stringify(debtOrder)}
+							value={JSON.stringify(normalizeDebtOrder(summaryJSON))}
 							readOnly={true}
 							innerRef={(textarea: HTMLTextAreaElement) => { this.summaryTextarea = textarea; }}
 						/>

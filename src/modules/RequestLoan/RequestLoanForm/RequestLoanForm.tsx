@@ -12,8 +12,8 @@ import {
 import { DebtOrderEntity } from '../../../models';
 import * as Web3 from 'web3';
 import Dharma from '@dharmaprotocol/dharma.js';
-import { DebtOrder } from '@dharmaprotocol/dharma.js/dist/types/src/types';
 import { BigNumber } from 'bignumber.js';
+import { debtOrderFromJSON, normalizeDebtOrder } from '../../../utils';
 import { encodeUrlParams } from '../../../utils';
 const BitlyClient = require('bitly');
 
@@ -25,17 +25,14 @@ interface Props {
 	handleSetError: (errorMessage: string) => void;
 }
 
-interface DebtOrderWithDescriptionIssuanceHash extends DebtOrder.Instance {
-	description: string;
-	issuanceHash: string;
-}
-
 interface State {
 	formData: any;
 	principalAmount: number;
 	principalTokenSymbol: string;
 	interestRate: number;
 	debtOrder: string;
+	description: string;
+	issuanceHash: string;
 	confirmationModal: boolean;
 }
 
@@ -54,6 +51,8 @@ class RequestLoanForm extends React.Component<Props, State> {
 			principalTokenSymbol: '',
 			interestRate: 0,
 			debtOrder: '',
+			description: '',
+			issuanceHash: '',
 			confirmationModal: false
 		};
 	}
@@ -66,8 +65,11 @@ class RequestLoanForm extends React.Component<Props, State> {
 			if (formData.loan.principalAmount) {
 				this.setState({ principalAmount: formData.loan.principalAmount });
 			}
-			if (formData.loan.principalTokenSymbol!) {
+			if (formData.loan.principalTokenSymbol) {
 				this.setState({ principalTokenSymbol: formData.loan.principalTokenSymbol });
+			}
+			if (formData.loan.description) {
+				this.setState({ description: formData.loan.description });
 			}
 		}
 		if (formData.terms && formData.terms.interestRate) {
@@ -78,7 +80,7 @@ class RequestLoanForm extends React.Component<Props, State> {
 	async handleSubmit() {
 		try {
 			this.props.handleSetError('');
-			const { principalAmount, principalTokenSymbol, description } = this.state.formData.loan;
+			const { principalAmount, principalTokenSymbol } = this.state.formData.loan;
 			const { interestRate, amortizationUnit, termLength } = this.state.formData.terms;
 			const { dharma, accounts } = this.props;
 
@@ -95,13 +97,10 @@ class RequestLoanForm extends React.Component<Props, State> {
 			const debtOrder = await dharma.adapters.simpleInterestLoan.toDebtOrder(simpleInterestLoan);
 			debtOrder.debtor = accounts[0];
 			const issuanceHash = await dharma.order.getIssuanceHash(debtOrder);
-			const debtOrderWithDescriptionIssuanceHash: DebtOrderWithDescriptionIssuanceHash = {
-				...debtOrder,
-				description: description,
-				issuanceHash: issuanceHash
-			};
-
-			this.setState({ debtOrder: JSON.stringify(debtOrderWithDescriptionIssuanceHash) });
+			this.setState({
+				debtOrder: JSON.stringify(debtOrder),
+				issuanceHash
+			});
 			this.confirmationModalToggle();
 		} catch (e) {
 			this.props.handleSetError('Unable to generate Debt Order');
@@ -117,28 +116,20 @@ class RequestLoanForm extends React.Component<Props, State> {
 				return;
 			}
 
-			const debtOrder = JSON.parse(this.state.debtOrder);
-			debtOrder.principalAmount = new BigNumber(debtOrder.principalAmount);
+			const { description, principalTokenSymbol, issuanceHash } = this.state;
+			const debtOrder = debtOrderFromJSON(this.state.debtOrder);
 
 			// Sign as debtor
 			const debtorSignature = await this.props.dharma.sign.asDebtor(debtOrder);
-			const signedDebtOrder = Object.assign({ debtorSignature }, debtOrder);
+			debtOrder.debtorSignature = debtorSignature;
 
 			this.setState({
-				debtOrder: JSON.stringify(signedDebtOrder),
+				debtOrder: JSON.stringify(debtOrder),
 				confirmationModal: false
 			});
 
-			const urlParams = {
-				principalAmount: debtOrder.principalAmount.toNumber(),
-				principalToken: debtOrder.principalToken,
-				termsContract: debtOrder.termsContract,
-				termsContractParameters: debtOrder.termsContractParameters,
-				debtorSignature: JSON.stringify(debtorSignature),
-				debtor: debtOrder.debtor,
-				description: debtOrder.description,
-				principalTokenSymbol: this.state.formData.loan.principalTokenSymbol
-			};
+			let urlParams = normalizeDebtOrder(debtOrder);
+			urlParams = Object.assign({ description, principalTokenSymbol }, urlParams);
 
 			const bitly = BitlyClient(process.env.REACT_APP_BITLY_ACCESS_TOKEN);
 			const result = await bitly.shorten(process.env.REACT_APP_NGROK_HOSTNAME + '/fill/loan?' + encodeUrlParams(urlParams));
@@ -148,17 +139,18 @@ class RequestLoanForm extends React.Component<Props, State> {
 			}
 
 			const generatedDebtOrder = await this.props.dharma.adapters.simpleInterestLoan.fromDebtOrder(debtOrder);
+			console.log(debtOrder);
 			const storeDebtOrder: DebtOrderEntity = {
-				debtorSignature: JSON.stringify(debtorSignature),
-				debtor: debtOrder.debtor,
-				principalAmount: generatedDebtOrder.principalAmount,
-				principalToken: generatedDebtOrder.principalToken,
-				principalTokenSymbol: this.state.formData.loan.principalTokenSymbol,
-				termsContract: generatedDebtOrder.termsContract,
-				termsContractParameters: generatedDebtOrder.termsContractParameters,
-				description: debtOrder.description,
-				issuanceHash: debtOrder.issuanceHash,
-				fillLoanShortUrl: fillLoanShortUrl
+				json: JSON.stringify(debtOrder),
+				principalTokenSymbol,
+				description,
+				issuanceHash,
+				fillLoanShortUrl,
+				repaidAmount: new BigNumber(0),
+				termLength: generatedDebtOrder.termLength,
+				interestRate: generatedDebtOrder.interestRate,
+				amortizationUnit: generatedDebtOrder.amortizationUnit,
+				status: 'pending'
 			};
 			this.props.handleRequestDebtOrder(storeDebtOrder);
 			browserHistory.push(`/request/success/${storeDebtOrder.issuanceHash}`);

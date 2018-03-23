@@ -34,17 +34,7 @@ class FillLoanEmpty extends React.Component<{}, State> {
 			return;
 		}
 		loanRequest = JSON.parse(loanRequest);
-		const urlParams = {
-			principalAmount: loanRequest.principalAmount,
-			principalToken: loanRequest.principalToken,
-			termsContract: loanRequest.termsContract,
-			termsContractParameters: loanRequest.termsContractParameters,
-			debtorSignature: loanRequest.debtorSignature,
-			debtor: loanRequest.debtor,
-			description: loanRequest.description,
-			principalTokenSymbol: loanRequest.principalTokenSymbol
-		};
-		browserHistory.push(`/fill/loan?${encodeUrlParams(urlParams)}`);
+		browserHistory.push(`/fill/loan?${encodeUrlParams(loanRequest)}`);
 	}
 
 	render() {

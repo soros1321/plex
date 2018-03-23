@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DebtOrderMoreDetail } from '../../../../models';
+import { DebtOrderEntity } from '../../../../models';
 // import { formatDate } from '../../../../utils';
 import { Col } from 'reactstrap';
 import { DebtOrderRow } from './DebtOrderRow';
@@ -10,7 +10,7 @@ import {
 } from './styledComponents';
 
 interface Props {
-	debtOrders: DebtOrderMoreDetail[];
+	debtOrders: DebtOrderEntity[];
 }
 
 class DebtOrderHistory extends React.Component<Props, {}> {

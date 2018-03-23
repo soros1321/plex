@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { TokenEntity, InvestmentMoreDetail } from '../../../../models';
+import { TokenEntity, InvestmentEntity } from '../../../../models';
 import { BigNumber } from 'bignumber.js';
 import {
 	Wrapper,
@@ -8,9 +8,10 @@ import {
 	TokenWrapper,
 	Label
 } from './styledComponents';
+import { debtOrderFromJSON } from '../../../../utils';
 
 interface Props {
-	investments: InvestmentMoreDetail[];
+	investments: InvestmentEntity[];
 	tokens: TokenEntity[];
 }
 
@@ -43,7 +44,7 @@ class InvestmentsMetrics extends React.Component<Props, State> {
 		}
 	}
 
-	initiateTokenBalance(tokens: TokenEntity[], investments: InvestmentMoreDetail[]) {
+	initiateTokenBalance(tokens: TokenEntity[], investments: InvestmentEntity[]) {
 		let tokenBalances: any = {};
 		if (tokens && tokens.length) {
 			for (let token of tokens) {
@@ -55,8 +56,9 @@ class InvestmentsMetrics extends React.Component<Props, State> {
 		}
 		if (investments && investments.length) {
 			for (let investment of investments) {
+				const investmentInfo = debtOrderFromJSON(investment.json);
 				if (tokenBalances[investment.principalTokenSymbol]) {
-					tokenBalances[investment.principalTokenSymbol].totalLended = tokenBalances[investment.principalTokenSymbol].totalLended.plus(investment.principalAmount);
+					tokenBalances[investment.principalTokenSymbol].totalLended = tokenBalances[investment.principalTokenSymbol].totalLended.plus(investmentInfo.principalAmount);
 					tokenBalances[investment.principalTokenSymbol].totalEarned = tokenBalances[investment.principalTokenSymbol].totalEarned.plus(investment.earnedAmount);
 				}
 			}
