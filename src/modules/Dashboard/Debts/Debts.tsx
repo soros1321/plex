@@ -2,7 +2,7 @@ import * as React from 'react';
 import { DebtOrderEntity } from '../../../models';
 import { Header, MainWrapper } from '../../../components';
 import { DebtsMetricsContainer } from './DebtsMetrics/DebtsMetricsContainer';
-import { ActiveDebtOrder } from './ActiveDebtOrder';
+import { ActiveDebtOrderContainer } from './ActiveDebtOrder/ActiveDebtOrderContainer';
 import { DebtOrderHistory } from './DebtOrderHistory';
 import Dharma from '@dharmaprotocol/dharma.js';
 import { debtOrderFromJSON } from '../../../utils';
@@ -80,7 +80,7 @@ class Debts extends React.Component<Props, State> {
 				<Header title="Your debts" />
 				<DebtsMetricsContainer debtOrders={allDebtOrders} />
 				{ activeDebtOrders.map((debtOrder) => (
-						<ActiveDebtOrder debtOrder={debtOrder} key={debtOrder.issuanceHash} />
+						<ActiveDebtOrderContainer debtOrder={debtOrder} key={debtOrder.issuanceHash} />
 					))
 				}
 				<DebtOrderHistory debtOrders={inactiveDebtOrders} />

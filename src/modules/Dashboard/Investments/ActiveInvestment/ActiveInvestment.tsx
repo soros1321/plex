@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { InvestmentEntity } from '../../../../models';
 import {
+	formatDate,
+	formatTime,
 	getIdenticonImgSrc,
 	shortenString,
 	amortizationUnitToFrequency,
@@ -17,6 +19,12 @@ import {
 	StatusDefaulted,
 	Terms,
 	RepaymentScheduleContainer,
+	Schedule,
+	ScheduleIconContainer,
+	ScheduleIcon,
+	Strikethrough,
+	PaymentDate,
+	ShowMore,
 	Title,
 	DetailLink,
 	Drawer,
@@ -26,30 +34,51 @@ import {
 	TransferButton
 } from './styledComponents';
 import { Row, Col, Collapse } from 'reactstrap';
+import Dharma from '@dharmaprotocol/dharma.js';
 
 interface Props {
+	dharma: Dharma;
 	investment: InvestmentEntity;
 }
 
-/*
-interface RepaymentSchedule {
-	timestamp: number;
-	type: string;
-}
-*/
-
 interface State {
 	collapse: boolean;
+	repaymentSchedule: number[];
 }
 
 class ActiveInvestment extends React.Component<Props, State> {
 	constructor(props: Props) {
 		super(props);
 		this.state = {
-			collapse: false
+			collapse: false,
+			repaymentSchedule: []
 		};
 		this.handleTransfer = this.handleTransfer.bind(this);
 		this.toggleDrawer = this.toggleDrawer.bind(this);
+	}
+
+	async componentDidMount() {
+		if (this.props.dharma && this.props.investment) {
+			await this.getRepaymentSchedule(this.props.dharma, this.props.investment);
+		}
+	}
+
+	async componentWillReceiveProps(nextProps: Props) {
+		if (nextProps.dharma && nextProps.investment) {
+			await this.getRepaymentSchedule(nextProps.dharma, nextProps.investment);
+		}
+	}
+
+	async getRepaymentSchedule(dharma: Dharma, investment: InvestmentEntity) {
+		try {
+			if (investment.status === 'active') {
+				const debtRegistry = await dharma.servicing.getDebtRegistryEntry(investment.issuanceHash);
+				const repaymentSchedule = await dharma.adapters.simpleInterestLoan.getRepaymentSchedule(debtRegistry);
+				this.setState({ repaymentSchedule });
+			}
+		} catch (e) {
+			// console.log(e);
+		}
 	}
 
 	handleTransfer(event: React.MouseEvent<HTMLElement>) {
@@ -64,87 +93,34 @@ class ActiveInvestment extends React.Component<Props, State> {
 
 	render() {
 		const { investment } = this.props;
+		const { repaymentSchedule } = this.state;
 		const investmentInfo = debtOrderFromJSON(investment.json);
-		/*
 		const now = Math.round((new Date()).getTime() / 1000);
 		const pastIcon = require('../../../../assets/img/ok_circle.png');
 		const futureIcon = require('../../../../assets/img/circle_outline.png');
-		const repaymentSchedules: RepaymentSchedule[] = [];
-
-		let repaymentTimestamp = investment.createdOnTimestamp;
-		if (investment.installments) {
-			let count = 0;
-			switch (investment.collateralLockupPeriod) {
-				case '1day':
-					while (count < 4) {
-						repaymentTimestamp += (60 * 60 * 4); // per 4 hours
-						repaymentSchedules.push({timestamp: repaymentTimestamp, type: 'time'});
-						count++;
-					}
-					break;
-				case '1week':
-					while (count < 7) {
-						repaymentTimestamp += (60 * 60 * 24); // per day
-						repaymentSchedules.push({timestamp: repaymentTimestamp, type: 'date'});
-						count++;
-					}
-					break;
-				case 'custom':
-					if (investment.collateralCustomLockupPeriod) {
-						while (count < investment.collateralCustomLockupPeriod) {
-							repaymentTimestamp += (60 * 60 * 24 * 7); // per week
-							repaymentSchedules.push({timestamp: repaymentTimestamp, type: 'date'});
-							count++;
-						}
-					}
-					break;
-				default:
-					break;
-			}
-		} else {
-			switch (investment.collateralLockupPeriod) {
-				case '1day':
-					repaymentTimestamp += (60 * 60 * 24);
-					break;
-				case '1week':
-					repaymentTimestamp += (60 * 60 * 24 * 7);
-					break;
-				case 'custom':
-					if (investment.collateralCustomLockupPeriod) {
-						repaymentTimestamp += (60 * 60 * 24 * investment.collateralCustomLockupPeriod);
-					}
-					break;
-				default:
-					break;
-			}
-			repaymentSchedules.push({timestamp: repaymentTimestamp, type: 'date'});
-		}
-		*/
-
 		const repaymentScheduleItems: JSX.Element[] = [];
-		/*
 		let maxDisplay = 0;
-		repaymentSchedules.forEach((paymentSchedule) => {
+		repaymentSchedule.forEach((paymentSchedule) => {
 			if (maxDisplay < 5) {
-				if (maxDisplay === 4 && repaymentSchedules.length > 5) {
+				if (maxDisplay === 4 && repaymentSchedule.length > 5) {
 					repaymentScheduleItems.push((
-							<Schedule key={paymentSchedule.timestamp}>
+							<Schedule key={paymentSchedule}>
 								<ScheduleIconContainer>
-										<ScheduleIcon src={futureIcon} />
+									<ScheduleIcon src={futureIcon} />
 								</ScheduleIconContainer>
 								<Strikethrough />
-								<ShowMore>+ {repaymentSchedules.length - maxDisplay} more</ShowMore>
+								<ShowMore>+ {repaymentSchedule.length - maxDisplay} more</ShowMore>
 							</Schedule>
 						)
 					);
 				} else {
 					repaymentScheduleItems.push((
-							<Schedule key={paymentSchedule.timestamp}>
+							<Schedule key={paymentSchedule}>
 								<ScheduleIconContainer>
-										<ScheduleIcon src={now > paymentSchedule.timestamp ? pastIcon : futureIcon} />
+									<ScheduleIcon src={now > paymentSchedule ? pastIcon : futureIcon} />
 								</ScheduleIconContainer>
 								<Strikethrough />
-								<PaymentDate>{paymentSchedule.type === 'date' ? formatDate(paymentSchedule.timestamp) : formatTime(paymentSchedule.timestamp)}</PaymentDate>
+								<PaymentDate>{investment.amortizationUnit !== 'hours' ? formatDate(paymentSchedule) : formatTime(paymentSchedule)}</PaymentDate>
 							</Schedule>
 						)
 					);
@@ -152,7 +128,6 @@ class ActiveInvestment extends React.Component<Props, State> {
 			}
 			maxDisplay++;
 		});
-		*/
 
 		const identiconImgSrc = getIdenticonImgSrc(investment.issuanceHash, 60, 0.1);
 		return (

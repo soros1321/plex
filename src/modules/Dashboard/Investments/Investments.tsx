@@ -2,7 +2,7 @@ import * as React from 'react';
 import { InvestmentEntity } from '../../../models';
 import { Header, MainWrapper } from '../../../components';
 import { InvestmentsMetricsContainer } from './InvestmentsMetrics/InvestmentsMetricsContainer';
-import { ActiveInvestment } from './ActiveInvestment';
+import { ActiveInvestmentContainer } from './ActiveInvestment/ActiveInvestmentContainer';
 import { InvestmentHistory } from './InvestmentHistory';
 import Dharma from '@dharmaprotocol/dharma.js';
 import { debtOrderFromJSON } from '../../../utils';
@@ -80,7 +80,7 @@ class Investments extends React.Component<Props, State> {
 				<Header title="Your investments" />
 				<InvestmentsMetricsContainer investments={allInvestments} />
 				{ activeInvestments.map((investment) => (
-						<ActiveInvestment investment={investment} key={investment.issuanceHash} />
+						<ActiveInvestmentContainer investment={investment} key={investment.issuanceHash} />
 					))
 				}
 				<InvestmentHistory investments={inactiveInvestments} />
