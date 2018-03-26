@@ -29,6 +29,7 @@ import { Provider } from 'react-redux';
 import { createStore } from 'redux';
 import { fillDebtOrder } from '../../../../../src/modules/FillLoan/FillLoanEntered/actions';
 import { DebtKernel } from '@dharmaprotocol/contracts';
+import { debtOrderFromJSON } from '../../../../../src/utils';
 const compact = require('lodash.compact');
 const ABIDecoder = require('abi-decoder');
 ABIDecoder.addABI(DebtKernel.abi);
@@ -37,24 +38,41 @@ describe('<FillLoanEntered />', () => {
 	let web3;
 	let dharma;
 	let props;
+	let query;
 	beforeEach(() => {
 		web3 = new MockWeb3();
 		dharma = new MockDharma();
+		query = {
+			principalToken: '0x07e93e27ac8a1c114f1931f65e3c8b5186b9b77e',
+			principalAmount: 10,
+			termsContract: '0x1c907384489d939400fa5c6571d8aad778213d74',
+			termsContractParameters: '0x0000000000000000000000000000008500000000000000000000000000000064',
+			kernelVersion: '0x89c5b853e9e32bf47c7da1ccb02e981b74c47f2f',
+			issuanceVersion: '0x1d8e76d2022e017c6c276b44cb2e4c71bd3cc3de',
+			debtor: '0x431194c3e0f35bc7f1266ec6bb85e0c5ec554935',
+			debtorFee: 0,
+			creditor: '0x431194c3e0f35bc7f1266ec6bb85e0c5ec554935',
+			creditorFee: 0,
+			relayer: '0x0000000000000000000000000000000000000000',
+			relayerFee: 0,
+			underwriter: '0x0000000000000000000000000000000000000000',
+			underwriterFee: 0,
+			underwriterRiskRating: 0,
+			expirationTimestampInSec: 1524613355,
+			salt: 0,
+			debtorSignature: '{"v":27,"r":"0xc5c0aaf7b812cb865aef48958e2d39686a13c292f8bd4a82d7b43d833fb5047d","s":"0x2fbbe9f0b8e12ed2875905740fa010bbe710c3e0c131f1efe14fb41bb7921788"}',
+			creditorSignature: '{"v":27,"r":"0xc5c0aaf7b812cb865aef48958e2d39686a13c292f8bd4a82d7b43d833fb5047d","s":"0x2fbbe9f0b8e12ed2875905740fa010bbe710c3e0c131f1efe14fb41bb7921788"}',
+			underwriterSignature: '{"r":"","s":"","v":0}',
+			description: 'Hello, Can I borrow some MKR please?',
+			principalTokenSymbol: 'MKR'
+		};
+
 		props = {
 			location: {
-				query: {
-					principalAmount: 345,
-					principalToken: '0x07e93e27ac8a1c114f1931f65e3c8b5186b9b77e',
-					termsContract: '0x60a1779d5af15f808d91f3afbc4bcaddbf288ced',
-					termsContractParameters: '0x000000000000000000000000000006bd02000000000000000000000000000014',
-					debtorSignature: '{"v": 27,"r": "0xb90c74efb3b13bc6459f37cf1fc65f1f29a391d0d6280b15beac2a34572a3d9a","s": "0x66358c759588ba845ec0d3bded452c5dcef638f3fae6489a709ed26c75da138b"}',
-					debtor: '0x431194c3e0f35bc7f1266ec6bb85e0c5ec554935',
-					description: 'Hello, Can I borrow some MKR please?',
-					principalTokenSymbol: 'MKR'
-				}
+				query
 			},
 			web3,
-			accounts: ['0x12345'],
+			accounts: ['0x431194c3e0f35bc7f1266ec6bb85e0c5ec554935'],
 			dharma,
 			tokens: [],
 			handleSetError: jest.fn(),
@@ -190,16 +208,7 @@ describe('<FillLoanEntered />', () => {
 			props.dharma = null;
 			const spy = jest.spyOn(FillLoanEntered.prototype, 'getDebtOrderDetail');
 			const wrapper = shallow(<FillLoanEntered {... props} />);
-			props.location.query = {
-				principalAmount: 345,
-				principalToken: '0x07e93e27ac8a1c114f1931f65e3c8b5186b9b77e',
-				termsContract: '0x60a1779d5af15f808d91f3afbc4bcaddbf288ced',
-				termsContractParameters: '0x000000000000000000000000000006bd02000000000000000000000000000014',
-				debtorSignature: '{"v": 27,"r": "0xb90c74efb3b13bc6459f37cf1fc65f1f29a391d0d6280b15beac2a34572a3d9a","s": "0x66358c759588ba845ec0d3bded452c5dcef638f3fae6489a709ed26c75da138b"}',
-				debtor: '0x431194c3e0f35bc7f1266ec6bb85e0c5ec554935',
-				description: 'Hello, Can I borrow some MKR please?',
-				principalTokenSymbol: 'MKR'
-			};
+			props.location.query = query;
 			props.dharma = dharma;
 			wrapper.setProps(props);
 			expect(spy).toHaveBeenCalledWith(props.dharma, props.location.query);
@@ -247,39 +256,33 @@ describe('<FillLoanEntered />', () => {
 			const spy = jest.spyOn(wrapper.instance(), 'setState');
 			await wrapper.instance().getDebtOrderDetail(props.dharma, props.location.query);
 			await expect(spy).toHaveBeenCalled();
-			const expectedDebtOrderWithDescription = {
-				...props.location.query,
-				principalAmount: new BigNumber(props.location.query.principalAmount),
-				debtorSignature: JSON.parse(props.location.query.debtorSignature)
-			};
-			delete(expectedDebtOrderWithDescription.principalTokenSymbol);
-			expect(wrapper.state('debtOrderWithDescription')).toEqual(expectedDebtOrderWithDescription);
-			expect(wrapper.state('principalTokenSymbol')).toEqual(props.location.query.principalTokenSymbol);
+			const expectedDebtOrder = debtOrderFromJSON(JSON.stringify(props.location.query));
+			const expectedDescription = expectedDebtOrder.description;
+			const expectedPrincipalTokenSymbol = expectedDebtOrder.principalTokenSymbol;
+			delete(expectedDebtOrder.description);
+			delete(expectedDebtOrder.principalTokenSymbol);
+			expect(wrapper.state('debtOrder')).toEqual(expectedDebtOrder);
+			expect(wrapper.state('description')).toEqual(expectedDescription);
+			expect(wrapper.state('principalTokenSymbol')).toEqual(expectedPrincipalTokenSymbol);
 			spy.mockRestore();
 		});
 
 		it('calls Dharma#fromDebtOrder', async() {
 			const wrapper = shallow(<FillLoanEntered {... props} />);
-			const debtOrderWithDescription = {
-				...props.location.query,
-				principalAmount: new BigNumber(props.location.query.principalAmount),
-				debtorSignature: JSON.parse(props.location.query.debtorSignature)
-			};
-			delete(debtOrderWithDescription.principalTokenSymbol);
+			const expectedDebtOrder = debtOrderFromJSON(JSON.stringify(props.location.query));
+			delete(expectedDebtOrder.description);
+			delete(expectedDebtOrder.principalTokenSymbol);
 			await wrapper.instance().getDebtOrderDetail(props.dharma, props.location.query);
-			await expect(dharma.adapters.simpleInterestLoan.fromDebtOrder).toHaveBeenCalledWith(debtOrderWithDescription);
+			await expect(dharma.adapters.simpleInterestLoan.fromDebtOrder).toHaveBeenCalledWith(expectedDebtOrder);
 		});
 
 		it('calls Dharma#getIssuanceHash', async() {
 			const wrapper = shallow(<FillLoanEntered {... props} />);
-			const debtOrderWithDescription = {
-				...props.location.query,
-				principalAmount: new BigNumber(props.location.query.principalAmount),
-				debtorSignature: JSON.parse(props.location.query.debtorSignature)
-			};
-			delete(debtOrderWithDescription.principalTokenSymbol);
+			const expectedDebtOrder = debtOrderFromJSON(JSON.stringify(props.location.query));
+			delete(expectedDebtOrder.description);
+			delete(expectedDebtOrder.principalTokenSymbol);
 			await wrapper.instance().getDebtOrderDetail(props.dharma, props.location.query);
-			await expect(dharma.order.getIssuanceHash).toHaveBeenCalledWith(debtOrderWithDescription);
+			await expect(dharma.order.getIssuanceHash).toHaveBeenCalledWith(expectedDebtOrder);
 		});
 
 		describe('no termsContract or no termsContractParameters', () => {
@@ -298,15 +301,11 @@ describe('<FillLoanEntered />', () => {
 
 	describe('#handleFillOrder', () => {
 		describe('no error', () => {
-			let debtOrderWithDescription;
+			let debtOrder;
 			beforeEach(() => {
-				debtOrderWithDescription = {
-					...props.location.query,
-					principalAmount: new BigNumber(props.location.query.principalAmount),
-					debtorSignature: JSON.parse(props.location.query.debtorSignature),
-					creditor: props.accounts[0]
-				};
-				delete(debtOrderWithDescription.principalTokenSymbol);
+				debtOrder = debtOrderFromJSON(JSON.stringify(props.location.query));
+				delete(debtOrder.description);
+				delete(debtOrder.principalTokenSymbol);
 				ABIDecoder.decodeLogs = jest.fn((logs) => [{name: 'LogDebtOrderFilled'}]);
 			});
 
@@ -323,20 +322,20 @@ describe('<FillLoanEntered />', () => {
 			it('calls Dharma#fillAsync', async () => {
 				const wrapper = shallow(<FillLoanEntered {... props} />);
 				await wrapper.instance().handleFillOrder();
-				await expect(dharma.order.fillAsync).toHaveBeenCalledWith(debtOrderWithDescription, {from: props.accounts[0]});
+				await expect(dharma.order.fillAsync).toHaveBeenCalledWith(debtOrder, {from: props.accounts[0]});
 			});
 
 			it('calls Dharma#awaitTransactionMinedAsync', async () => {
 				const wrapper = shallow(<FillLoanEntered {... props} />);
 				await wrapper.instance().handleFillOrder();
-				const expectedTxHash = await dharma.order.fillAsync(debtOrderWithDescription);
+				const expectedTxHash = await dharma.order.fillAsync(debtOrder);
 				await expect(dharma.blockchain.awaitTransactionMinedAsync).toHaveBeenCalledWith(expectedTxHash, 1000, 10000);
 			});
 
 			it('calls Dharma#getErrorLogs', async () => {
 				const wrapper = shallow(<FillLoanEntered {... props} />);
 				await wrapper.instance().handleFillOrder();
-				const expectedTxHash = await dharma.order.fillAsync(debtOrderWithDescription);
+				const expectedTxHash = await dharma.order.fillAsync(debtOrder);
 				const expectedErrorLogs = await dharma.blockchain.getErrorLogs(expectedTxHash);
 				await expect(dharma.blockchain.getErrorLogs).toHaveBeenCalledWith(expectedTxHash);
 			});
@@ -511,17 +510,16 @@ describe('<FillLoanEnteredContainer />', () => {
 
 	it('should dispatch an action', () => {
 		const investment = {
-			debtorSignature: '{v: 27,r: "0xb90c74efb3b13bc6459f37cf1fc65f1f29a391d0d6280b15beac2a34572a3d9a",s: "0x66358c759588ba845ec0d3bded452c5dcef638f3fae6489a709ed26c75da138b"}',
-			debtor: '0x431194c3e0f35bc7f1266ec6bb85e0c5ec554935',
-			creditorSignature: '{v: 27,r: "0xb90c74efb3b13bc6459f37cf1fc65f1f29a391d0d6280b15beac2a34572a3d9a",s: "0x66358c759588ba845ec0d3bded452c5dcef638f3fae6489a709ed26c75da138b"}',
-			creditor: '0x431194c3e0f35bc7f1266ec6bb85e0c5ec554935',
-			principalAmount: new BigNumber(345),
-			principalToken: '0x07e93e27ac8a1c114f1931f65e3c8b5186b9b77e',
+			json: "{\"principalToken\":\"0x07e93e27ac8a1c114f1931f65e3c8b5186b9b77e\",\"principalAmount\":\"10\",\"termsContract\":\"0x1c907384489d939400fa5c6571d8aad778213d74\",\"termsContractParameters\":\"0x0000000000000000000000000000008500000000000000000000000000000064\",\"kernelVersion\":\"0x89c5b853e9e32bf47c7da1ccb02e981b74c47f2f\",\"issuanceVersion\":\"0x1d8e76d2022e017c6c276b44cb2e4c71bd3cc3de\",\"debtor\":\"0x431194c3e0f35bc7f1266ec6bb85e0c5ec554935\",\"debtorFee\":\"0\",\"creditor\":\"0x431194c3e0f35bc7f1266ec6bb85e0c5ec554935\",\"creditorFee\":\"0\",\"relayer\":\"0x0000000000000000000000000000000000000000\",\"relayerFee\":\"0\",\"underwriter\":\"0x0000000000000000000000000000000000000000\",\"underwriterFee\":\"0\",\"underwriterRiskRating\":\"0\",\"expirationTimestampInSec\":\"1524613355\",\"salt\":\"0\",\"debtorSignature\":{\"v\":27,\"r\":\"0xc5c0aaf7b812cb865aef48958e2d39686a13c292f8bd4a82d7b43d833fb5047d\",\"s\":\"0x2fbbe9f0b8e12ed2875905740fa010bbe710c3e0c131f1efe14fb41bb7921788\"},\"creditorSignature\":{\"v\":27,\"r\":\"0xc5c0aaf7b812cb865aef48958e2d39686a13c292f8bd4a82d7b43d833fb5047d\",\"s\":\"0x2fbbe9f0b8e12ed2875905740fa010bbe710c3e0c131f1efe14fb41bb7921788\"},\"underwriterSignature\":{\"r\":\"\",\"s\":\"\",\"v\":0}}",
 			principalTokenSymbol: 'MKR',
-			termsContract: '0x60a1779d5af15f808d91f3afbc4bcaddbf288ced',
-			termsContractParameters: '0x000000000000000000000000000006bd02000000000000000000000000000014',
 			description: 'Hello, Can I borrow some MKR please?',
-			issuanceHash: 'active'
+			issuanceHash: 'active',
+			fillLoanShortUrl: 'http://bit.ly/2I4bahM',
+			repaidAmount: new BigNumber(4),
+			termLength: new BigNumber(100),
+			interestRate: new BigNumber(12.3),
+			amortizationUnit: 'hours',
+			status: 'active'
 		};
 		store.dispatch(fillDebtOrder(investment));
 		const actions = store.getActions();
