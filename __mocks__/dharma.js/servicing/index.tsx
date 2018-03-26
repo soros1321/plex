@@ -10,3 +10,7 @@ export const mockGetValueRepaid = jest.fn(async (issuanceHash) => {
 			return new Error('error');
 	}
 });
+
+export const mockGetDebtRegistryEntry = jest.fn(async (issuanceHash) => {
+	return {};
+});

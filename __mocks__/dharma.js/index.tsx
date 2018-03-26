@@ -5,8 +5,8 @@ import {
   mockSetUnlimitedProxyAllowanceAsync,
 	mockGetBalanceAsync
 } from './token';
-import { mockFromDebtOrder } from './adapters/simpleInterestLoan';
-import { mockGetValueRepaid } from './servicing';
+import { mockFromDebtOrder, mockGetRepaymentSchedule } from './adapters/simpleInterestLoan';
+import { mockGetValueRepaid, mockGetDebtRegistryEntry } from './servicing';
 import {
 	mockAwaitTransactionMinedAsync,
 	mockGetErrorLogs
@@ -29,12 +29,14 @@ const token = {
 
 const adapters = {
 	simpleInterestLoan: {
-		fromDebtOrder: mockFromDebtOrder
+		fromDebtOrder: mockFromDebtOrder,
+		getRepaymentSchedule: mockGetRepaymentSchedule
 	}
 };
 
 const servicing = {
-	getValueRepaid: mockGetValueRepaid
+	getValueRepaid: mockGetValueRepaid,
+	getDebtRegistryEntry: mockGetDebtRegistryEntry
 };
 
 const blockchain = {

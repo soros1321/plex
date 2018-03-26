@@ -94,6 +94,9 @@ class ActiveDebtOrder extends React.Component<Props, State> {
 	render() {
 		const { debtOrder } = this.props;
 		const { repaymentSchedule } = this.state;
+		if (!debtOrder) {
+			return null;
+		}
 		const debtOrderInfo = debtOrderFromJSON(debtOrder.json);
 
 		const now = Math.round((new Date()).getTime() / 1000);
