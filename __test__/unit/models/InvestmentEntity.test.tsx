@@ -6,17 +6,15 @@ describe('InvestmentEntity', () => {
 	it('should have the correct properties', () => {
 		const investmentEntity = new InvestmentEntity();
 		const testInvestmentEntity = {
-			debtorSignature: '',
-			debtor: '',
-			creditorSignature: '',
-			creditor: '',
-			principalAmount: new BigNumber(0),
-			principalToken: '',
+			json: '',
 			principalTokenSymbol: '',
-			termsContract: '',
-			termsContractParameters: '',
 			description: '',
 			issuanceHash: '',
+			earnedAmount: new BigNumber(0),
+			termLength: new BigNumber(0),
+			interestRate: new BigNumber(0),
+			amortizationUnit: '',
+			status: ''
 		};
 		expect(investmentEntity).toEqual(testInvestmentEntity);
 	});
