@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { shallow } from 'enzyme';
 import { DebtOrderRow } from '../../../../../../src/modules/Dashboard/Debts/DebtOrderHistory/DebtOrderRow';
-import { shortenString, amortizationUnitToFrequency } from '../../../../../../src/utils';
+import { shortenString, amortizationUnitToFrequency, debtOrderFromJSON } from '../../../../../../src/utils';
 import {
 	StyledRow,
 	Drawer,
@@ -14,33 +14,35 @@ import { Col, Collapse } from 'reactstrap';
 
 describe('<DebtOrderRow />', () => {
 	const debtOrder = {
-		debtorSignature: '{"v": 27,"r": "0xfe481d58d09ac4bf3057a02afe1ef155ef08d3a44a707d98309d305b1a3120a0","s": "0x7fdd34c625a73e543465b38506358a659c221897b1fcfc5c94b3bb74b2e1f246"}',
-		debtor: '0x431194c3e0f35bc7f1266ec6bb85e0c5ec554935',
-		principalAmount: new BigNumber(123),
-		principalToken: '0x9b62bd396837417ce319e2e5c8845a5a960010ea',
+		json: "{\"principalToken\":\"0x9b62bd396837417ce319e2e5c8845a5a960010ea\",\"principalAmount\":\"10\",\"termsContract\":\"0x1c907384489d939400fa5c6571d8aad778213d74\",\"termsContractParameters\":\"0x0000000000000000000000000000008500000000000000000000000000000064\",\"kernelVersion\":\"0x89c5b853e9e32bf47c7da1ccb02e981b74c47f2f\",\"issuanceVersion\":\"0x1d8e76d2022e017c6c276b44cb2e4c71bd3cc3de\",\"debtor\":\"0x431194c3e0f35bc7f1266ec6bb85e0c5ec554935\",\"debtorFee\":\"0\",\"creditor\":\"0x431194c3e0f35bc7f1266ec6bb85e0c5ec554935\",\"creditorFee\":\"0\",\"relayer\":\"0x0000000000000000000000000000000000000000\",\"relayerFee\":\"0\",\"underwriter\":\"0x0000000000000000000000000000000000000000\",\"underwriterFee\":\"0\",\"underwriterRiskRating\":\"0\",\"expirationTimestampInSec\":\"1524613355\",\"salt\":\"0\",\"debtorSignature\":{\"v\":27,\"r\":\"0xc5c0aaf7b812cb865aef48958e2d39686a13c292f8bd4a82d7b43d833fb5047d\",\"s\":\"0x2fbbe9f0b8e12ed2875905740fa010bbe710c3e0c131f1efe14fb41bb7921788\"},\"creditorSignature\":{\"v\":27,\"r\":\"0xc5c0aaf7b812cb865aef48958e2d39686a13c292f8bd4a82d7b43d833fb5047d\",\"s\":\"0x2fbbe9f0b8e12ed2875905740fa010bbe710c3e0c131f1efe14fb41bb7921788\"},\"underwriterSignature\":{\"r\":\"\",\"s\":\"\",\"v\":0}}",
 		principalTokenSymbol: 'REP',
-		termsContract: '0x1c907384489d939400fa5c6571d8aad778213d74',
-		termsContractParameters: '0x0000000000000000000000000000008500000000000000000000000000000064',
 		description: 'Hello, Can I borrow some REP please?',
 		issuanceHash: '0x89e9eac37c5f14b657c69ccd891704b3236b84b9ca1d449bd09c5fbaa24afebf',
-		fillLoanShortUrl: 'http://bit.ly/2HDpT2P',
-		repaidAmount: new BigNumber(10),
-		termLength: new BigNumber(20),
-		interestRate: new BigNumber(3.24),
-		amortizationUnit: 'days',
+		fillLoanShortUrl: 'http://bit.ly/2I4bahM',
+		repaidAmount: new BigNumber(4),
+		termLength: new BigNumber(100),
+		interestRate: new BigNumber(12.3),
+		amortizationUnit: 'hours',
 		status: 'active'
 	};
 
 	describe('#render', () => {
 		let wrapper;
 		let props;
+		let debtOrderInfo;
 		beforeEach(() => {
 			props = { debtOrder };
+			debtOrderInfo = debtOrderFromJSON(props.debtOrder.json);
 			wrapper = shallow(<DebtOrderRow {... props} />);
 		});
 
 		it('should render successfully', () => {
 			expect(wrapper.length).toEqual(1);
+		});
+
+		it('should not render when there is no debtOrder', () => {
+			wrapper.setProps({ debtOrder: null });
+			expect(wrapper.find(StyledRow).length).toEqual(0);
 		});
 
 		describe('<StyledRow />', () => {
@@ -57,7 +59,7 @@ describe('<DebtOrderRow />', () => {
 			});
 
 			it('1st <Col /> should render principal info', () => {
-				const content = props.debtOrder.principalAmount.toNumber() + ' ' + props.debtOrder.principalTokenSymbol;
+				const content = debtOrderInfo.principalAmount.toNumber() + ' ' + props.debtOrder.principalTokenSymbol;
 				expect(styledRow.find(Col).at(0).get(0).props.children).toEqual(content);
 			});
 
@@ -68,7 +70,7 @@ describe('<DebtOrderRow />', () => {
 
 			it('3rd <Col /> should render status info', () => {
 				expect(styledRow.find(Col).at(2).get(0).props.children).toEqual('Delinquent');
-				props.debtOrder.repaidAmount = props.debtOrder.principalAmount;
+				props.debtOrder.repaidAmount = debtOrderInfo.principalAmount;
 				wrapper.setProps(props);
 				styledRow = wrapper.find(StyledRow);
 				expect(styledRow.find(Col).at(2).get(0).props.children).toEqual('Paid');

@@ -37,7 +37,7 @@ class DebtOrderRow extends React.Component<Props, State> {
 
 	render() {
 		const { debtOrder } = this.props;
-		if (!debtOrder.json) {
+		if (!debtOrder) {
 			return null;
 		}
 		const debtOrderInfo = debtOrderFromJSON(debtOrder.json);
