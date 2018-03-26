@@ -111,7 +111,7 @@ class TradingPermissions extends React.Component<Props, State> {
 			handleSetAllTokensTradingPermission(allTokens);
 		} catch (e) {
 			this.props.handleSetError('Unable to get token data');
-			console.log(e);
+			// console.log(e);
 		}
 	}
 
@@ -142,7 +142,7 @@ class TradingPermissions extends React.Component<Props, State> {
 			}
 		} catch (e) {
 			this.props.handleSetError('Unable to update token trading permission');
-			console.log(e);
+			// console.log(e);
 			// throw new Error(e);
 		}
 	}

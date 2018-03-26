@@ -247,6 +247,13 @@ describe('TradingPermissions (Unit)', () => {
 
 			await expect(props.handleSetAllTokensTradingPermission).toHaveBeenCalledWith(tokens);
     });
+
+		it('calls props.handleSetError when there is an error', async() => {
+			const tradingPermissions = shallow(<TradingPermissions {...props} />);
+			dharma.contracts.loadTokenRegistry = jest.fn(async () => throw new Error());
+      await tradingPermissions.instance().getTokenData(props.dharma);
+			await expect(props.handleSetError).toHaveBeenCalledWith('Unable to get token data');
+		});
   });
 
   describe('#isAllowanceUnlimited', () => {
@@ -309,6 +316,13 @@ describe('TradingPermissions (Unit)', () => {
 				const tradingPermissions = shallow(<TradingPermissions {...props} />);
 				await tradingPermissions.instance().updateProxyAllowanceAsync(true, props.tokens[0].tokenSymbol);
 				await expect(props.handleToggleTokenTradingPermission).toHaveBeenCalledWith(props.tokens[0].tokenSymbol, false);
+			});
+
+			it('calls props.handleSetError when there is an error', async() => {
+				const tradingPermissions = shallow(<TradingPermissions {...props} />);
+				dharma.token.setProxyAllowanceAsync = jest.fn(async (tokenAddress, value) => throw new Error());
+				await tradingPermissions.instance().updateProxyAllowanceAsync(true, props.tokens[0].tokenSymbol);
+				await expect(props.handleSetError).toHaveBeenCalledWith('Unable to update token trading permission');
 			});
 		});
 
