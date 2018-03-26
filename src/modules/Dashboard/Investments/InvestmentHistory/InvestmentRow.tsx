@@ -33,6 +33,9 @@ class InvestmentRow extends React.Component<Props, State> {
 
 	render() {
 		const { investment } = this.props;
+		if (!investment) {
+			return null;
+		}
 		const investmentInfo = debtOrderFromJSON(investment.json);
 		return (
 			<div onClick={this.toggleDrawer}>
