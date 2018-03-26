@@ -3,10 +3,11 @@ import { shallow, mount } from 'enzyme';
 import { Investments } from '../../../../../src/modules/Dashboard/Investments/Investments';
 import { Header, MainWrapper } from '../../../../../src/components';
 import { InvestmentsMetricsContainer } from '../../../../../src/modules/Dashboard/Investments/InvestmentsMetrics/InvestmentsMetricsContainer';
-import { ActiveInvestment } from '../../../../../src/modules/Dashboard/Investments/ActiveInvestment';
+import { ActiveInvestmentContainer } from '../../../../../src/modules/Dashboard/Investments/ActiveInvestment/ActiveInvestmentContainer';
 import { InvestmentHistory } from '../../../../../src/modules/Dashboard/Investments/InvestmentHistory';
 import MockDharma from '../../../../../__mocks__/dharma.js';
 import { BigNumber } from 'bignumber.js';
+import { debtOrderFromJSON } from '../../../../../src/utils';
 
 describe('<Investments />', () => {
 	describe('#render', () => {
@@ -35,8 +36,8 @@ describe('<Investments />', () => {
 			expect(wrapper.find(MainWrapper).find(InvestmentsMetricsContainer).length).toEqual(1);
 		});
 
-		it('should render 0 <ActiveInvestment />', () => {
-			expect(wrapper.find(MainWrapper).find(ActiveInvestment).length).toEqual(0);
+		it('should render 0 <ActiveInvestmentContainer />', () => {
+			expect(wrapper.find(MainWrapper).find(ActiveInvestmentContainer).length).toEqual(0);
 		});
 
 		it('should render a <InvestmentHistory />', () => {
@@ -80,17 +81,15 @@ describe('<Investments />', () => {
 			const dharma = new MockDharma();
 			const investments = [
 				{
-					debtorSignature: '{v: 27,r: "0xb90c74efb3b13bc6459f37cf1fc65f1f29a391d0d6280b15beac2a34572a3d9a",s: "0x66358c759588ba845ec0d3bded452c5dcef638f3fae6489a709ed26c75da138b"}',
-					debtor: '0x431194c3e0f35bc7f1266ec6bb85e0c5ec554935',
-					creditorSignature: '{v: 27,r: "0xb90c74efb3b13bc6459f37cf1fc65f1f29a391d0d6280b15beac2a34572a3d9a",s: "0x66358c759588ba845ec0d3bded452c5dcef638f3fae6489a709ed26c75da138b"}',
-					creditor: '0x431194c3e0f35bc7f1266ec6bb85e0c5ec554935',
-					principalAmount: new BigNumber(345),
-					principalToken: '0x07e93e27ac8a1c114f1931f65e3c8b5186b9b77e',
-					principalTokenSymbol: 'MKR',
-					termsContract: '0x60a1779d5af15f808d91f3afbc4bcaddbf288ced',
-					termsContractParameters: '0x000000000000000000000000000006bd02000000000000000000000000000014',
-					description: 'Hello, Can I borrow some MKR please?',
-					issuanceHash: 'active'
+					json: "{\"principalToken\":\"0x9b62bd396837417ce319e2e5c8845a5a960010ea\",\"principalAmount\":\"10\",\"termsContract\":\"0x1c907384489d939400fa5c6571d8aad778213d74\",\"termsContractParameters\":\"0x0000000000000000000000000000008500000000000000000000000000000064\",\"kernelVersion\":\"0x89c5b853e9e32bf47c7da1ccb02e981b74c47f2f\",\"issuanceVersion\":\"0x1d8e76d2022e017c6c276b44cb2e4c71bd3cc3de\",\"debtor\":\"0x431194c3e0f35bc7f1266ec6bb85e0c5ec554935\",\"debtorFee\":\"0\",\"creditor\":\"0x431194c3e0f35bc7f1266ec6bb85e0c5ec554935\",\"creditorFee\":\"0\",\"relayer\":\"0x0000000000000000000000000000000000000000\",\"relayerFee\":\"0\",\"underwriter\":\"0x0000000000000000000000000000000000000000\",\"underwriterFee\":\"0\",\"underwriterRiskRating\":\"0\",\"expirationTimestampInSec\":\"1524613355\",\"salt\":\"0\",\"debtorSignature\":{\"v\":27,\"r\":\"0xc5c0aaf7b812cb865aef48958e2d39686a13c292f8bd4a82d7b43d833fb5047d\",\"s\":\"0x2fbbe9f0b8e12ed2875905740fa010bbe710c3e0c131f1efe14fb41bb7921788\"},\"creditorSignature\":{\"v\":27,\"r\":\"0xc5c0aaf7b812cb865aef48958e2d39686a13c292f8bd4a82d7b43d833fb5047d\",\"s\":\"0x2fbbe9f0b8e12ed2875905740fa010bbe710c3e0c131f1efe14fb41bb7921788\"},\"underwriterSignature\":{\"r\":\"\",\"s\":\"\",\"v\":0}}",
+					principalTokenSymbol: 'REP',
+					description: 'Hello, Can I borrow some REP please?',
+					issuanceHash: 'active',
+					earnedAmount: new BigNumber(4),
+					termLength: new BigNumber(100),
+					interestRate: new BigNumber(12.3),
+					amortizationUnit: 'hours',
+					status: 'active'
 				}
 			];
 			wrapper.setProps({ dharma: dharma, investments: investments });
@@ -105,38 +104,18 @@ describe('<Investments />', () => {
 			const inactiveInvestments = [];
 			for (let investment of investments) {
 				try {
-					const dharmaDebtOrder = {
-						principalAmount: investment.principalAmount,
-						principalToken: investment.principalToken,
-						termsContract: investment.termsContract,
-						termsContractParameters: investment.termsContractParameters
-					};
-
-					const fromDebtOrder = await dharma.adapters.simpleInterestLoan.fromDebtOrder(dharmaDebtOrder);
-					const investmentMoreDetail = {
-						...investment,
-						termLength: fromDebtOrder.termLength,
-						amortizationUnit: fromDebtOrder.amortizationUnit,
-						interestRate: fromDebtOrder.interestRate,
-						earnedAmount: new BigNumber(0),
-						status: ''
-					};
-
-					try {
-						const earnedAmount = await dharma.servicing.getValueRepaid(investment.issuanceHash);
-						investmentMoreDetail.earnedAmount = earnedAmount;
-						investmentMoreDetail.status = investment.principalAmount && earnedAmount.lt(investment.principalAmount) ? 'active' : 'inactive';
-						if (investmentMoreDetail.status === 'active') {
-							activeInvestments.push(investmentMoreDetail);
-						} else {
-							inactiveInvestments.push(investmentMoreDetail);
-						}
-						allInvestments.push(investmentMoreDetail);
-					} catch (ex) {
-						// console.log(ex);
+					const investmentInfo = debtOrderFromJSON(investment.json);
+					const earnedAmount = await dharma.servicing.getValueRepaid(investment.issuanceHash);
+					investment.earnedAmount = earnedAmount;
+					investment.status = investmentInfo.principalAmount && earnedAmount.lt(investmentInfo.principalAmount) ? 'active' : 'inactive';
+					if (investment.status === 'active') {
+						activeInvestments.push(investment);
+					} else {
+						inactiveInvestments.push(investment);
 					}
-				} catch (e) {
-					// console.log(e);
+					allInvestments.push(investment);
+				} catch (ex) {
+					// console.log(ex);
 				}
 			}
 			const expectedState = {
@@ -149,17 +128,15 @@ describe('<Investments />', () => {
 
 		const investments = [
 			{
-				debtorSignature: '{v: 27,r: "0xb90c74efb3b13bc6459f37cf1fc65f1f29a391d0d6280b15beac2a34572a3d9a",s: "0x66358c759588ba845ec0d3bded452c5dcef638f3fae6489a709ed26c75da138b"}',
-				debtor: '0x431194c3e0f35bc7f1266ec6bb85e0c5ec554935',
-				creditorSignature: '{v: 27,r: "0xb90c74efb3b13bc6459f37cf1fc65f1f29a391d0d6280b15beac2a34572a3d9a",s: "0x66358c759588ba845ec0d3bded452c5dcef638f3fae6489a709ed26c75da138b"}',
-				creditor: '0x431194c3e0f35bc7f1266ec6bb85e0c5ec554935',
-				principalAmount: new BigNumber(345),
-				principalToken: '0x07e93e27ac8a1c114f1931f65e3c8b5186b9b77e',
-				principalTokenSymbol: 'MKR',
-				termsContract: '0x60a1779d5af15f808d91f3afbc4bcaddbf288ced',
-				termsContractParameters: '0x000000000000000000000000000006bd02000000000000000000000000000014',
-				description: 'Hello, Can I borrow some MKR please?',
-				issuanceHash: 'active'
+				json: "{\"principalToken\":\"0x9b62bd396837417ce319e2e5c8845a5a960010ea\",\"principalAmount\":\"10\",\"termsContract\":\"0x1c907384489d939400fa5c6571d8aad778213d74\",\"termsContractParameters\":\"0x0000000000000000000000000000008500000000000000000000000000000064\",\"kernelVersion\":\"0x89c5b853e9e32bf47c7da1ccb02e981b74c47f2f\",\"issuanceVersion\":\"0x1d8e76d2022e017c6c276b44cb2e4c71bd3cc3de\",\"debtor\":\"0x431194c3e0f35bc7f1266ec6bb85e0c5ec554935\",\"debtorFee\":\"0\",\"creditor\":\"0x431194c3e0f35bc7f1266ec6bb85e0c5ec554935\",\"creditorFee\":\"0\",\"relayer\":\"0x0000000000000000000000000000000000000000\",\"relayerFee\":\"0\",\"underwriter\":\"0x0000000000000000000000000000000000000000\",\"underwriterFee\":\"0\",\"underwriterRiskRating\":\"0\",\"expirationTimestampInSec\":\"1524613355\",\"salt\":\"0\",\"debtorSignature\":{\"v\":27,\"r\":\"0xc5c0aaf7b812cb865aef48958e2d39686a13c292f8bd4a82d7b43d833fb5047d\",\"s\":\"0x2fbbe9f0b8e12ed2875905740fa010bbe710c3e0c131f1efe14fb41bb7921788\"},\"creditorSignature\":{\"v\":27,\"r\":\"0xc5c0aaf7b812cb865aef48958e2d39686a13c292f8bd4a82d7b43d833fb5047d\",\"s\":\"0x2fbbe9f0b8e12ed2875905740fa010bbe710c3e0c131f1efe14fb41bb7921788\"},\"underwriterSignature\":{\"r\":\"\",\"s\":\"\",\"v\":0}}",
+				principalTokenSymbol: 'REP',
+				description: 'Hello, Can I borrow some REP please?',
+				issuanceHash: 'active',
+				earnedAmount: new BigNumber(4),
+				termLength: new BigNumber(100),
+				interestRate: new BigNumber(12.3),
+				amortizationUnit: 'hours',
+				status: 'active'
 			}
 		];
 
