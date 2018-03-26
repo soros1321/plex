@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { amortizationUnitToFrequency } from '../../../src/utils/formatDebtOrder';
+import { amortizationUnitToFrequency } from '../../../src/utils/debtOrder';
 
 describe('amortizationUnitToFrequency', () => {
 	it('should return the right frequency: hours => Hourly', () => {
