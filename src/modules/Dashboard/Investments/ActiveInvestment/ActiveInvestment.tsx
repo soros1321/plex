@@ -93,6 +93,9 @@ class ActiveInvestment extends React.Component<Props, State> {
 
 	render() {
 		const { investment } = this.props;
+		if (!investment) {
+			return null;
+		}
 		const { repaymentSchedule } = this.state;
 		const investmentInfo = debtOrderFromJSON(investment.json);
 		const now = Math.round((new Date()).getTime() / 1000);
