@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { shallow } from 'enzyme';
-import { RequestLoanForm } from '../../../../src/modules/RequestLoan/RequestLoanForm/RequestLoanForm';
-import { PaperLayout } from '../../../../src/layouts';
+import { RequestLoanForm } from '../../../../../src/modules/RequestLoan/RequestLoanForm/RequestLoanForm';
+import { PaperLayout } from '../../../../../src/layouts';
 import { browserHistory } from 'react-router';
 import {
 	Header,
@@ -9,16 +9,16 @@ import {
 	MainWrapper,
 	Bold,
 	ConfirmationModal
-} from '../../../../src/components';
-import MockWeb3 from '../../../../__mocks__/web3';
-import MockDharma from '../../../../__mocks__/dharma.js';
+} from '../../../../../src/components';
+import MockWeb3 from '../../../../../__mocks__/web3';
+import MockDharma from '../../../../../__mocks__/dharma.js';
 import { BigNumber } from 'bignumber.js';
 import {
 	encodeUrlParams,
 	debtOrderFromJSON,
 	normalizeDebtOrder
-} from '../../../../src/utils';
-import MockBitlyClient from '../../../../__mocks__/BitlyClient';
+} from '../../../../../src/utils';
+import MockBitlyClient from '../../../../../__mocks__/BitlyClient';
 
 describe('<RequestLoanForm />', () => {
 	let web3;
