@@ -38,8 +38,7 @@ import {
 	RepaymentRouter,
 	TokenTransferProxy,
 	TokenRegistry,
-	DebtToken,
-	TermsContractRegistry
+	DebtToken
 } from '@dharmaprotocol/contracts';
 
 // Import testing Debt Orders (if exist)
@@ -86,18 +85,17 @@ class AppRouter extends React.Component<Props, {}> {
 			networkId in TokenTransferProxy.networks &&
 			networkId in TokenRegistry.networks &&
 			networkId in DebtToken.networks &&
-			networkId in TermsContractRegistry.networks &&
 			networkId in DebtRegistry.networks)) {
 			dispatch(setError('Unable to connect to the blockchain'));
 			return;
 		}
+
 		const dharmaConfig = {
 			kernelAddress: DebtKernel.networks[networkId].address,
 			repaymentRouterAddress: RepaymentRouter.networks[networkId].address,
 			tokenTransferProxyAddress: TokenTransferProxy.networks[networkId].address,
 			tokenRegistryAddress: TokenRegistry.networks[networkId].address,
 			debtTokenAddress: DebtToken.networks[networkId].address,
-			termsContractRegistry: TermsContractRegistry.networks[networkId].address,
 			debtRegistryAddress: DebtRegistry.networks[networkId].address
 		};
 
