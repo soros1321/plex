@@ -3,8 +3,8 @@ import { shallow } from 'enzyme';
 import configureStore from 'redux-mock-store';
 import { Provider } from 'react-redux';
 import { createStore } from 'redux';
-import { RequestLoanFormContainer } from '../../../../src/modules/RequestLoan/RequestLoanForm/RequestLoanFormContainer';
-import { userRequestDebtOrder } from '../../../../src/modules/RequestLoan/RequestLoanForm/actions';
+import { RequestLoanFormContainer } from '../../../../../src/modules/RequestLoan/RequestLoanForm/RequestLoanFormContainer';
+import { userRequestDebtOrder } from '../../../../../src/modules/RequestLoan/RequestLoanForm/actions';
 import { BigNumber } from 'bignumber.js';
 
 describe('<RequestLoanFormContainer />', () => {
