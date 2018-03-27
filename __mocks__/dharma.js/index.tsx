@@ -5,7 +5,11 @@ import {
   mockSetUnlimitedProxyAllowanceAsync,
 	mockGetBalanceAsync
 } from './token';
-import { mockFromDebtOrder, mockGetRepaymentSchedule } from './adapters/simpleInterestLoan';
+import {
+	mockFromDebtOrder,
+	mockGetRepaymentSchedule,
+	mockToDebtOrder
+} from './adapters/simpleInterestLoan';
 import { mockGetValueRepaid, mockGetDebtRegistryEntry } from './servicing';
 import {
 	mockAwaitTransactionMinedAsync,
@@ -15,6 +19,9 @@ import {
 	mockGetIssuanceHash,
 	mockFillAsync
 } from './order';
+import {
+	mockAsDebtor
+} from './sign';
 
 const contracts = {
   loadTokenRegistry: mockTokenRegistry
@@ -30,7 +37,8 @@ const token = {
 const adapters = {
 	simpleInterestLoan: {
 		fromDebtOrder: mockFromDebtOrder,
-		getRepaymentSchedule: mockGetRepaymentSchedule
+		getRepaymentSchedule: mockGetRepaymentSchedule,
+		toDebtOrder: mockToDebtOrder
 	}
 };
 
@@ -49,6 +57,10 @@ const order = {
 	fillAsync: mockFillAsync
 };
 
+const sign = {
+	asDebtor: mockAsDebtor
+};
+
 const mockDharma = jest.fn().mockImplementation(() => {
   return {
     contracts,
@@ -56,7 +68,8 @@ const mockDharma = jest.fn().mockImplementation(() => {
 		adapters,
 		servicing,
 		blockchain,
-		order
+		order,
+		sign
   };
 });
 
