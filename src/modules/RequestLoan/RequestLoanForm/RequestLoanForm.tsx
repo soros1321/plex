@@ -13,8 +13,7 @@ import { DebtOrderEntity } from '../../../models';
 import * as Web3 from 'web3';
 import Dharma from '@dharmaprotocol/dharma.js';
 import { BigNumber } from 'bignumber.js';
-import { debtOrderFromJSON, normalizeDebtOrder } from '../../../utils';
-import { encodeUrlParams } from '../../../utils';
+import { encodeUrlParams, debtOrderFromJSON, normalizeDebtOrder } from '../../../utils';
 const BitlyClient = require('bitly');
 
 interface Props {
@@ -34,6 +33,7 @@ interface State {
 	description: string;
 	issuanceHash: string;
 	confirmationModal: boolean;
+	bitly: any;
 }
 
 class RequestLoanForm extends React.Component<Props, State> {
@@ -53,8 +53,14 @@ class RequestLoanForm extends React.Component<Props, State> {
 			debtOrder: '',
 			description: '',
 			issuanceHash: '',
-			confirmationModal: false
+			confirmationModal: false,
+			bitly: null
 		};
+	}
+
+	componentDidMount() {
+		const bitly = BitlyClient(process.env.REACT_APP_BITLY_ACCESS_TOKEN);
+		this.setState({ bitly });
 	}
 
 	handleChange(formData: any) {
@@ -115,7 +121,7 @@ class RequestLoanForm extends React.Component<Props, State> {
 				return;
 			}
 
-			const { description, principalTokenSymbol, issuanceHash } = this.state;
+			const { description, principalTokenSymbol, issuanceHash, bitly } = this.state;
 			const debtOrder = debtOrderFromJSON(this.state.debtOrder);
 
 			// Sign as debtor
@@ -130,11 +136,13 @@ class RequestLoanForm extends React.Component<Props, State> {
 			let urlParams = normalizeDebtOrder(debtOrder);
 			urlParams = Object.assign({ description, principalTokenSymbol }, urlParams);
 
-			const bitly = BitlyClient(process.env.REACT_APP_BITLY_ACCESS_TOKEN);
 			const result = await bitly.shorten(process.env.REACT_APP_NGROK_HOSTNAME + '/fill/loan?' + encodeUrlParams(urlParams));
 			let fillLoanShortUrl: string = '';
 			if (result.status_code === 200) {
 				fillLoanShortUrl = result.data.url;
+			} else {
+				this.props.handleSetError('Unable to shorten the url');
+				return;
 			}
 
 			const generatedDebtOrder = await this.props.dharma.adapters.simpleInterestLoan.fromDebtOrder(debtOrder);
