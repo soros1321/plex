@@ -118,7 +118,7 @@ class TradingPermissions extends React.Component<Props, State> {
 	async updateProxyAllowanceAsync(tradingPermitted: boolean, tokenSymbol: string) {
 		try {
 			const { tokens, dharma } = this.props;
-			let selectedToken: TokenEntity | undefined = undefined;
+			let selectedToken: TokenEntity | null = null;
 			for (let token of tokens) {
 				if (token.tokenSymbol === tokenSymbol) {
 					selectedToken = token;

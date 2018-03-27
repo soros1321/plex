@@ -184,6 +184,16 @@ describe('TradingPermissions (Unit)', () => {
 
       await expect(receivedTokenAllowance).toEqual(new BigNumber(await props.dharma.token.getProxyAllowanceAsync(tokenAddress, ownerAddress)));
     });
+
+    it('returns -1 when there is no account', async () => {
+			props.web3.eth.getAccounts = jest.fn((callback) => { callback(null, []) });
+      const tradingPermissions = shallow(<TradingPermissions {...props} />);
+      const tokenAddress = '0x000000000';
+      const ownerAddress = (await promisify(props.web3.eth.getAccounts)())[0];
+      const receivedTokenAllowance = await tradingPermissions.instance().getTokenAllowance(tokenAddress);
+      await expect(receivedTokenAllowance).toEqual(new BigNumber(-1));
+			props.web3.eth.getAccounts = jest.fn((callback) => { callback(null, ['account0']) });
+    });
   });
 
   describe('#getTokenBalance', () => {
@@ -276,13 +286,14 @@ describe('TradingPermissions (Unit)', () => {
 		describe('trading is permitted', () => {
 			beforeEach(() => {
 				props.tokens = [
-						{
-							address: 'address1',
-							tokenSymbol: 'REP',
-							tradingPermitted: true,
-							balance: new BigNumber(0)
-						}
-					];
+					{
+						address: 'address1',
+						tokenSymbol: 'REP',
+						tradingPermitted: true,
+						balance: new BigNumber(0)
+					}
+				];
+				dharma.token.setProxyAllowanceAsync.mockReset();
 			});
 
 			it('calls Dharma#setProxyAllowanceAsync', async () => {
@@ -329,13 +340,14 @@ describe('TradingPermissions (Unit)', () => {
 		describe('trading is not permitted', () => {
 			beforeEach(() => {
 				props.tokens = [
-						{
-							address: 'address1',
-							tokenSymbol: 'REP',
-							tradingPermitted: false,
-							balance: new BigNumber(0)
-						}
-					];
+					{
+						address: 'address1',
+						tokenSymbol: 'REP',
+						tradingPermitted: false,
+						balance: new BigNumber(0)
+					}
+				];
+				dharma.token.setProxyAllowanceAsync.mockReset();
 			});
 
 			it('calls Dharma#setUnlimitedProxyAllowanceAsync', async () => {
@@ -369,6 +381,30 @@ describe('TradingPermissions (Unit)', () => {
 				const tradingPermissions = shallow(<TradingPermissions {...props} />);
 				await tradingPermissions.instance().updateProxyAllowanceAsync(false, props.tokens[0].tokenSymbol);
 				await expect(props.handleToggleTokenTradingPermission).toHaveBeenCalledWith(props.tokens[0].tokenSymbol, true);
+			});
+		});
+
+		describe('there is no matching token', () => {
+			beforeEach(() => {
+				props.tokens = [
+					{
+						address: 'address3',
+						tokenSymbol: 'MKR',
+						tradingPermitted: true,
+						balance: new BigNumber(0)
+					}
+				];
+				dharma.token.setProxyAllowanceAsync.mockReset();
+				dharma.token.setUnlimitedProxyAllowanceAsync.mockReset();
+				dharma.blockchain.awaitTransactionMinedAsync.mockReset()
+			});
+
+			it('should not call dharma functions', async () => {
+				const tradingPermissions = shallow(<TradingPermissions {...props} />);
+				await tradingPermissions.instance().updateProxyAllowanceAsync(true, 'BLAH');
+				await expect(dharma.token.setProxyAllowanceAsync).not.toHaveBeenCalled();
+				await expect(dharma.token.setUnlimitedProxyAllowanceAsync).not.toHaveBeenCalled();
+				await expect(dharma.blockchain.awaitTransactionMinedAsync).not.toHaveBeenCalled();
 			});
 		});
   });
