@@ -167,7 +167,6 @@ class FillLoanEntered extends React.Component<Props, States> {
 			} = this.state;
 
 			debtOrder.creditor = accounts[0];
-			// console.log(debtOrder);
 			const txHash = await dharma.order.fillAsync(debtOrder, {from: accounts[0]});
 			const receipt = await dharma.blockchain.awaitTransactionMinedAsync(txHash, 1000, 10000);
 			const errorLogs = await dharma.blockchain.getErrorLogs(txHash);

@@ -9,7 +9,7 @@ const {
 	TokenTransferProxy,
 	TokenRegistry,
 	DebtToken,
-	TermsContractRegistry
+	SimpleInterestTermsContract
 } = require('@dharmaprotocol/contracts');
 const promisify = require('tiny-promisify');
 const BigNumber = require('bignumber.js');
@@ -66,8 +66,8 @@ async function instantiateDharma() {
 			networkId in TokenTransferProxy.networks &&
 			networkId in TokenRegistry.networks &&
 			networkId in DebtToken.networks &&
-			networkId in TermsContractRegistry.networks &&
-			networkId in DebtRegistry.networks)) {
+			networkId in DebtRegistry.networks &&
+			networkId in SimpleInterestTermsContract.networks)) {
 			throw new Error('Unable to connect to the blockchain');
 		}
 
@@ -77,8 +77,8 @@ async function instantiateDharma() {
 			tokenTransferProxyAddress: TokenTransferProxy.networks[networkId].address,
 			tokenRegistryAddress: TokenRegistry.networks[networkId].address,
 			debtTokenAddress: DebtToken.networks[networkId].address,
-			termsContractRegistry: TermsContractRegistry.networks[networkId].address,
-			debtRegistryAddress: DebtRegistry.networks[networkId].address
+			debtRegistryAddress: DebtRegistry.networks[networkId].address,
+			simpleInterestTermsContractAddress: SimpleInterestTermsContract.networks[networkId].address
 		};
 
 		dharma = new Dharma.default(web3.currentProvider, dharmaConfig);
@@ -97,13 +97,10 @@ async function fillDebtOrders() {
 			throw new Error('Unable to find sample debt order data');
 		}
 
-		const tokenRegistry = await dharma.contracts.loadTokenRegistry();
 		let migratedDebtOrders: any[] = [];
 		for (let debtOrder of sampleDebtOrders) {
-			const principalToken = await tokenRegistry.getTokenAddressBySymbol.callAsync(debtOrder.principalTokenSymbol);
-
 			const simpleInterestLoan = {
-				principalToken,
+				principalTokenSymbol: debtOrder.principalTokenSymbol,
 				principalAmount: new BigNumber(debtOrder.principalAmount),
 				interestRate: new BigNumber(debtOrder.interestRate),
 				amortizationUnit: debtOrder.amortizationUnit,
@@ -113,7 +110,7 @@ async function fillDebtOrders() {
 			dharmaDebtOrder.debtor = defaultAccount;
 
 			// Set the token allowance to unlimited
-			await dharma.token.setUnlimitedProxyAllowanceAsync(principalToken);
+			await dharma.token.setUnlimitedProxyAllowanceAsync(dharmaDebtOrder.principalToken);
 			dharmaDebtOrder.debtorSignature = await dharma.sign.asDebtor(dharmaDebtOrder);
 
 			// Get issuance hash for this debt order

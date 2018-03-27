@@ -138,7 +138,6 @@ class RequestLoanForm extends React.Component<Props, State> {
 			}
 
 			const generatedDebtOrder = await this.props.dharma.adapters.simpleInterestLoan.fromDebtOrder(debtOrder);
-			console.log(debtOrder);
 			const storeDebtOrder: DebtOrderEntity = {
 				json: JSON.stringify(debtOrder),
 				principalTokenSymbol,
