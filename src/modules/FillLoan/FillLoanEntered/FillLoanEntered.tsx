@@ -22,15 +22,9 @@ import {
 } from './styledComponents';
 import * as Web3 from 'web3';
 import Dharma from '@dharmaprotocol/dharma.js';
-import { DebtKernel } from '@dharmaprotocol/contracts';
 import { DebtOrder } from '@dharmaprotocol/dharma.js/dist/types/src/types';
 import { BigNumber } from 'bignumber.js';
 import { TokenEntity } from '../../../models';
-const compact = require('lodash.compact');
-const ABIDecoder = require('abi-decoder');
-
-// Set up ABIDecoder
-ABIDecoder.addABI(DebtKernel.abi);
 
 interface Props {
 	location?: any;
@@ -160,24 +154,19 @@ class FillLoanEntered extends React.Component<Props, States> {
 
 			debtOrder.creditor = accounts[0];
 			const txHash = await dharma.order.fillAsync(debtOrder, {from: accounts[0]});
-			const receipt = await dharma.blockchain.awaitTransactionMinedAsync(txHash, 1000, 10000);
+
+			await dharma.blockchain.awaitTransactionMinedAsync(txHash, 1000, 10000);
+
 			const errorLogs = await dharma.blockchain.getErrorLogs(txHash);
+
 			if (errorLogs.length) {
 				this.props.handleSetError(errorLogs[0]);
 				this.setState({
 					confirmationModal: false
 				});
 			} else {
-				const [debtOrderFilledLog] = compact(ABIDecoder.decodeLogs(receipt.logs));
-				if (debtOrderFilledLog.name === 'LogDebtOrderFilled') {
-					this.props.handleFillDebtOrder(issuanceHash);
-					this.successModalToggle();
-				} else {
-					this.props.handleSetError('Unable to fill this Debt Order');
-					this.setState({
-						confirmationModal: false
-					});
-				}
+				this.props.handleFillDebtOrder(issuanceHash);
+				this.successModalToggle();
 			}
 		} catch (e) {
 			this.props.handleSetError('Unable to fill this Debt Order');
