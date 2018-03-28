@@ -105,7 +105,7 @@ class AppRouter extends React.Component<Props, {}> {
 			<Router history={history}>
 				<Route path="/" component={AppContainer} >
 					<IndexRoute component={WelcomeContainer} />
-					<Route path="/bazaar" component={DefaultContent} />
+					<Route path="/plex" component={DefaultContent} />
 					<Route path="/whitepaper" component={DefaultContent} />
 					<Route path="/blog" component={DefaultContent} />
 					<Route path="/github" component={DefaultContent} />

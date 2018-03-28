@@ -54,7 +54,7 @@ class Welcome extends React.Component<Props, State> {
 			<PaperLayout>
 				<BannerContainer />
 				<MainWrapper>
-					<Header>Welcome to Dharma Bazaar</Header>
+					<Header>Welcome to Dharma Plex</Header>
 					<Description>
 						The Dharma Protocol enables users to interact on the Ethereum blockchain using tokenized debt agreements. However, Dharma Labs Inc. is not a party to any contract entered into between users of the Dharma Protocol, does not act as a lender or give loans using the Dharma Protocol, and does not otherwise enter into any agreements with or commit to any obligations to any user of the Dharma Protocol. Further, you acknowledge that the Dharma Protocol is in beta form, may have limited functionality, and may contain errors.
 					</Description>
