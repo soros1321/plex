@@ -2,8 +2,7 @@ import * as React from 'react';
 import { DebtOrderEntity } from '../../../../models';
 import {
 	shortenString,
-	amortizationUnitToFrequency,
-	debtOrderFromJSON
+	amortizationUnitToFrequency
 } from '../../../../utils';
 import { Row, Col, Collapse } from 'reactstrap';
 import {
@@ -40,18 +39,17 @@ class DebtOrderRow extends React.Component<Props, State> {
 		if (!debtOrder) {
 			return null;
 		}
-		const debtOrderInfo = debtOrderFromJSON(debtOrder.json);
 		return (
 			<div onClick={this.toggleDrawer}>
 				<StyledRow>
 					<Col xs="3" md="2">
-						{debtOrderInfo!.principalAmount!.toNumber() + ' ' + debtOrder.principalTokenSymbol}
+						{debtOrder.principalAmount.toNumber() + ' ' + debtOrder.principalTokenSymbol}
 					</Col>
 					<Col xs="3" md="2">
 						{shortenString(debtOrder.issuanceHash)}
 					</Col>
 					<Col xs="3" md="4">
-						{debtOrderInfo!.principalAmount!.eq(debtOrder.repaidAmount) ? 'Paid' : 'Delinquent'}
+						{debtOrder.principalAmount.eq(debtOrder.repaidAmount) ? 'Paid' : 'Delinquent'}
 					</Col>
 					<Col xs="3" md="4">
 						Simple Interest Loan (Non-Collateralized)

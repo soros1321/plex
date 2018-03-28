@@ -9,13 +9,17 @@ import {
 import { DebtsContainer } from './Debts/DebtsContainer';
 import { InvestmentsContainer } from './Investments/InvestmentsContainer';
 import { StyledNavItem, TitleFirstWord, TitleRest } from './styledComponents';
+import Dharma from '@dharmaprotocol/dharma.js';
 
 interface Props {
-	debtOrders: DebtOrderEntity[];
-	investments: InvestmentEntity[];
+	dharma: Dharma;
+	accounts: string[];
+	handleSetError: (errorMessage: string) => void;
 }
 
 interface States {
+	debtOrders: DebtOrderEntity[];
+	investments: InvestmentEntity[];
 	activeTab: string;
 }
 
@@ -25,8 +29,67 @@ class Dashboard extends React.Component<Props, States> {
 
 		this.toggle = this.toggle.bind(this);
 		this.state = {
-			activeTab: '1'
+			activeTab: '1',
+			debtOrders: [],
+			investments: []
 		};
+	}
+
+	async componentDidMount() {
+		if (this.props.dharma && this.props.accounts) {
+			await this.getDebtsAsync(this.props.dharma, this.props.accounts);
+			await this.getInvestmentsAsync(this.props.dharma, this.props.accounts);
+		}
+	}
+
+	async componentWillReceiveProps(nextProps: Props) {
+		if (nextProps.dharma && nextProps.accounts) {
+			await this.getDebtsAsync(nextProps.dharma, nextProps.accounts);
+			await this.getInvestmentsAsync(nextProps.dharma, nextProps.accounts);
+		}
+	}
+
+	async getDebtsAsync(dharma: Dharma, accounts: string[]) {
+		try {
+			if (!accounts.length) {
+				return;
+			}
+			const issuanceHashes = await dharma.servicing.getDebtsAsync(accounts[0]);
+			let debtOrders: DebtOrderEntity[] = [];
+			for (let issuanceHash of issuanceHashes) {
+
+				const debtRegistry = await dharma.servicing.getDebtRegistryEntry(issuanceHash);
+				const dharmaDebtOrder = await dharma.adapters.simpleInterestLoan.fromDebtRegistryEntry(debtRegistry);
+				const repaidAmount = await dharma.servicing.getValueRepaid(issuanceHash);
+				const repaymentSchedule = await dharma.adapters.simpleInterestLoan.getRepaymentSchedule(debtRegistry);
+				const status = repaidAmount.lt(dharmaDebtOrder.principalAmount) ? 'active' : 'inactive';
+				const debtOrder = {
+					debtor: accounts[0],
+					termsContract: debtRegistry.termsContract,
+					termsContractParameters: debtRegistry.termsContractParameters,
+					underwriter: debtRegistry.underwriter,
+					underwriterRiskRating: debtRegistry.underwriterRiskRating,
+					amortizationUnit: dharmaDebtOrder.amortizationUnit,
+					interestRate: dharmaDebtOrder.interestRate,
+					principalAmount: dharmaDebtOrder.principalAmount,
+					principalTokenSymbol: dharmaDebtOrder.principalTokenSymbol,
+					termLength: dharmaDebtOrder.termLength,
+					issuanceHash,
+					repaidAmount,
+					repaymentSchedule,
+					status,
+					creditor: debtRegistry.beneficiary
+				};
+				debtOrders.push(debtOrder);
+			}
+			this.setState({ debtOrders });
+		} catch (e) {
+			this.props.handleSetError('Unable to get debts info');
+		}
+	}
+
+	async getInvestmentsAsync(dharma: Dharma, accounts: string[]) {
+		console.log('get investments');
 	}
 
 	toggle(tab: string) {
@@ -38,24 +101,25 @@ class Dashboard extends React.Component<Props, States> {
 	}
 
 	render() {
+		const { debtOrders, investments, activeTab } = this.state;
 		const tabs = [
 			{
 				id: '1',
 				titleFirstWord: 'Your ',
-				titleRest: 'Debts (' + (this.props.debtOrders && this.props.debtOrders.length) + ')',
-				content: <DebtsContainer debtOrders={this.props.debtOrders} />
+				titleRest: 'Debts (' + (debtOrders && debtOrders.length) + ')',
+				content: <DebtsContainer debtOrders={debtOrders} />
 			},
 			{
 				id: '2',
 				titleFirstWord: 'Your ',
-				titleRest: 'Investments (' + (this.props.investments && this.props.investments.length) + ')',
-				content: <InvestmentsContainer investments={this.props.investments} />
+				titleRest: 'Investments (' + (investments && investments.length) + ')',
+				content: <InvestmentsContainer investments={investments} />
 			}
 		];
 		const tabNavs = tabs.map((tab) => (
 			<StyledNavItem key={tab.id}>
 				<NavLink
-					className={this.state.activeTab === tab.id ? 'active' : ''}
+					className={activeTab === tab.id ? 'active' : ''}
 					onClick={() => { this.toggle(tab.id); }}
 				>
 					<TitleFirstWord>
@@ -78,7 +142,7 @@ class Dashboard extends React.Component<Props, States> {
 				<Nav tabs={true}>
 					{tabNavs}
 				</Nav>
-				<TabContent activeTab={this.state.activeTab}>
+				<TabContent activeTab={activeTab}>
 					{tabContents}
 				</TabContent>
 			</div>
