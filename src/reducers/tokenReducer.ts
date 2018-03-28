@@ -2,67 +2,76 @@ import { actionsEnums } from '../common/actionsEnums';
 import { TokenEntity } from '../models';
 
 class TokenReducerState {
-	tokens: TokenEntity[];
+    tokens: TokenEntity[];
 
-	constructor() {
-		this.tokens = [];
-	}
+    constructor() {
+        this.tokens = [];
+    }
 }
 
+const handleToggleTokenLoadingSpinner = (state: TokenReducerState, action: any) => {
+    return {
+        ...state,
+        tokens: state.tokens.map(token => {
+            if (token.tokenSymbol === action.tokenSymbol) {
+                return {
+                    ...token,
+                    awaitingTransaction: action.loading
+                };
+            }
+            return token;
+        })
+    };
+};
+
 const handleSetAllTokensTradingPermission = (state: TokenReducerState, action: any) => {
-	return {
-		...state,
-		tokens: action.tokens
-	};
+    return {
+        ...state,
+        tokens: action.tokens
+    };
 };
 
 const handleToggleTokenTradingPermission = (state: TokenReducerState, action: any) => {
-	return {
-		...state,
-		tokens: state.tokens.map(token => {
-			if (token.tokenSymbol === action.tokenSymbol) {
-				return {
-					...token,
-					tradingPermitted: action.permission
-				};
-			}
-			return token;
-		})
-	};
+    return {
+        ...state,
+        tokens: state.tokens.map(token => {
+            if (token.tokenSymbol === action.tokenSymbol) {
+                return {
+                    ...token,
+                    tradingPermitted: action.permission
+                };
+            }
+            return token;
+        })
+    };
 };
 
-const handleFaucetTokenRequest = (state: TokenReducerState, action: any) => {
-	const { tokenSymbol, userAddress } = action;
-	const balance = Math.pow(10, 18);
-
-	const faucetUrl = `https://faucet.dharma.io/dummy-tokens/${tokenSymbol}/balance/${userAddress}`;
-	const postData = {
-        method: 'post',
-        headers: {
-            'Content-type': 'application/json; charset=UTF-8'
-        },
-        body: JSON.stringify({ balance: balance })
+const handleSetTokenBalance = (state: TokenReducerState, action: any) => {
+    return {
+        ...state,
+        tokens: state.tokens.map(token => {
+            if (token.tokenSymbol === action.tokenSymbol) {
+                return {
+                    ...token,
+                    balance: action.balance
+                };
+            }
+            return token;
+        })
     };
-
-	fetch(
-		faucetUrl,
-		postData
-	);
-
-	return {
-		...state,
-	};
 };
 
 export const tokenReducer = (state: TokenReducerState = new TokenReducerState(), action: any) => {
-	switch (action.type) {
-		case actionsEnums.SET_ALL_TOKENS_TRADING_PERMISSION:
-			return handleSetAllTokensTradingPermission(state, action);
-		case actionsEnums.TOGGLE_TOKEN_TRADING_PERMISSION:
-			return handleToggleTokenTradingPermission(state, action);
-		case actionsEnums.FAUCET_TOKEN_REQUEST:
-			return handleFaucetTokenRequest(state, action);
-		default:
-			return state;
-	}
+    switch (action.type) {
+        case actionsEnums.SET_ALL_TOKENS_TRADING_PERMISSION:
+            return handleSetAllTokensTradingPermission(state, action);
+        case actionsEnums.TOGGLE_TOKEN_LOADING_SPINNER:
+            return handleToggleTokenLoadingSpinner(state, action);
+        case actionsEnums.TOGGLE_TOKEN_TRADING_PERMISSION:
+            return handleToggleTokenTradingPermission(state, action);
+        case actionsEnums.SET_TOKEN_BALANCE:
+            return handleSetTokenBalance(state, action);
+        default:
+            return state;
+    }
 };

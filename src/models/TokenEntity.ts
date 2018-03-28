@@ -4,6 +4,7 @@ export class TokenEntity {
 	address: string;
 	tokenSymbol: string;
 	tradingPermitted: boolean;
+	awaitingTransaction: boolean;
 	balance: BigNumber;
 
 	public constructor () {
