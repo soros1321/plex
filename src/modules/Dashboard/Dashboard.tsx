@@ -14,6 +14,7 @@ import Dharma from '@dharmaprotocol/dharma.js';
 interface Props {
 	dharma: Dharma;
 	accounts: string[];
+	pendingDebtOrders: DebtOrderEntity[];
 	handleSetError: (errorMessage: string) => void;
 }
 
@@ -36,20 +37,20 @@ class Dashboard extends React.Component<Props, States> {
 	}
 
 	async componentDidMount() {
-		if (this.props.dharma && this.props.accounts) {
-			await this.getDebtsAsync(this.props.dharma, this.props.accounts);
+		if (this.props.dharma && this.props.accounts && this.props.pendingDebtOrders) {
+			await this.getDebtsAsync(this.props.dharma, this.props.accounts, this.props.pendingDebtOrders);
 			await this.getInvestmentsAsync(this.props.dharma, this.props.accounts);
 		}
 	}
 
 	async componentWillReceiveProps(nextProps: Props) {
-		if (nextProps.dharma && nextProps.accounts) {
-			await this.getDebtsAsync(nextProps.dharma, nextProps.accounts);
+		if (nextProps.dharma && nextProps.accounts && nextProps.pendingDebtOrders) {
+			await this.getDebtsAsync(nextProps.dharma, nextProps.accounts, nextProps.pendingDebtOrders);
 			await this.getInvestmentsAsync(nextProps.dharma, nextProps.accounts);
 		}
 	}
 
-	async getDebtsAsync(dharma: Dharma, accounts: string[]) {
+	async getDebtsAsync(dharma: Dharma, accounts: string[], pendingDebtOrders: DebtOrderEntity[]) {
 		try {
 			if (!accounts.length) {
 				return;
@@ -81,6 +82,9 @@ class Dashboard extends React.Component<Props, States> {
 					creditor: debtRegistry.beneficiary
 				};
 				debtOrders.push(debtOrder);
+			}
+			if (pendingDebtOrders.length) {
+				debtOrders = debtOrders.concat(pendingDebtOrders);
 			}
 			this.setState({ debtOrders });
 		} catch (e) {

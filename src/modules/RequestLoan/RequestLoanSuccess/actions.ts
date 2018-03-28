@@ -1,8 +1,8 @@
 import { actionsEnums } from '../../../common/actionsEnums';
 
-export const getDebtOrder = (issuanceHash: string) => {
+export const getPendingDebtOrder = (issuanceHash: string) => {
 	return {
-		type: actionsEnums.GET_DEBT_ORDER,
+		type: actionsEnums.GET_PENDING_DEBT_ORDER,
 		payload: issuanceHash
 	};
 };
