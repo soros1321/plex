@@ -15,3 +15,11 @@ export const toggleTokenTradingPermission = (tokenSymbol: string, permission: bo
 		permission: permission
 	};
 };
+
+export const faucetTokenRequest = (tokenSymbol: string, userAddress: string) => {
+    return {
+        type: actionsEnums.FAUCET_TOKEN_REQUEST,
+        tokenSymbol,
+		userAddress
+    };
+};

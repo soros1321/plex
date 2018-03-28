@@ -31,12 +31,37 @@ const handleToggleTokenTradingPermission = (state: TokenReducerState, action: an
 	};
 };
 
+const handleFaucetTokenRequest = (state: TokenReducerState, action: any) => {
+	const { tokenSymbol, userAddress } = action;
+	const balance = Math.pow(10, 18);
+
+	const faucetUrl = `https://faucet.dharma.io/dummy-tokens/${tokenSymbol}/balance/${userAddress}`;
+	const postData = {
+        method: 'post',
+        headers: {
+            'Content-type': 'application/json; charset=UTF-8'
+        },
+        body: JSON.stringify({ balance: balance })
+    };
+
+	fetch(
+		faucetUrl,
+		postData
+	);
+
+	return {
+		...state,
+	};
+};
+
 export const tokenReducer = (state: TokenReducerState = new TokenReducerState(), action: any) => {
 	switch (action.type) {
 		case actionsEnums.SET_ALL_TOKENS_TRADING_PERMISSION:
 			return handleSetAllTokensTradingPermission(state, action);
 		case actionsEnums.TOGGLE_TOKEN_TRADING_PERMISSION:
 			return handleToggleTokenTradingPermission(state, action);
+		case actionsEnums.FAUCET_TOKEN_REQUEST:
+			return handleFaucetTokenRequest(state, action);
 		default:
 			return state;
 	}
