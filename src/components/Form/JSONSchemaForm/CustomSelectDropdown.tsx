@@ -20,9 +20,7 @@ export const CustomSelectDropdown = (props: any) => {
 	props.options.enumOptions.map((opt: any) => {
 		// TODO: Remove once we enable more loan types.  This is a hacky way of disabling the
 		// 	options, but is also temporary.
-		if (opt.label === 'Compound Interest Loan (Non-Collateralized)' ||
-			opt.label === 'Simple Interest Loan (Collateralized)' ||
-			opt.label === 'Compound Interest Loan (Collateralized)') {
+		if (opt.label.includes('Coming Soon')) {
 			selectOptions.push({value: opt.value, label: opt.label, disabled: true});
 		} else {
 			selectOptions.push({value: opt.value, label: opt.label});
