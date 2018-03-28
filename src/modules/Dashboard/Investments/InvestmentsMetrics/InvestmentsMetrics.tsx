@@ -8,7 +8,6 @@ import {
 	TokenWrapper,
 	Label
 } from './styledComponents';
-import { debtOrderFromJSON } from '../../../../utils';
 
 interface Props {
 	investments: InvestmentEntity[];
@@ -56,9 +55,8 @@ class InvestmentsMetrics extends React.Component<Props, State> {
 		}
 		if (investments && investments.length) {
 			for (let investment of investments) {
-				const investmentInfo = debtOrderFromJSON(investment.json);
 				if (tokenBalances[investment.principalTokenSymbol]) {
-					tokenBalances[investment.principalTokenSymbol].totalLended = tokenBalances[investment.principalTokenSymbol].totalLended.plus(investmentInfo.principalAmount);
+					tokenBalances[investment.principalTokenSymbol].totalLended = tokenBalances[investment.principalTokenSymbol].totalLended.plus(investment.principalAmount);
 					tokenBalances[investment.principalTokenSymbol].totalEarned = tokenBalances[investment.principalTokenSymbol].totalEarned.plus(investment.earnedAmount);
 				}
 			}

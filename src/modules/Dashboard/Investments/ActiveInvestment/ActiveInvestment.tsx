@@ -5,8 +5,7 @@ import {
 	formatTime,
 	getIdenticonImgSrc,
 	shortenString,
-	amortizationUnitToFrequency,
-	debtOrderFromJSON
+	amortizationUnitToFrequency
 } from '../../../../utils';
 import {
 	Wrapper,
@@ -34,10 +33,8 @@ import {
 	TransferButton
 } from './styledComponents';
 import { Row, Col, Collapse } from 'reactstrap';
-import Dharma from '@dharmaprotocol/dharma.js';
 
 interface Props {
-	dharma: Dharma;
 	investment: InvestmentEntity;
 }
 
@@ -57,30 +54,6 @@ class ActiveInvestment extends React.Component<Props, State> {
 		this.toggleDrawer = this.toggleDrawer.bind(this);
 	}
 
-	async componentDidMount() {
-		if (this.props.dharma && this.props.investment) {
-			await this.getRepaymentSchedule(this.props.dharma, this.props.investment);
-		}
-	}
-
-	async componentWillReceiveProps(nextProps: Props) {
-		if (nextProps.dharma && nextProps.investment) {
-			await this.getRepaymentSchedule(nextProps.dharma, nextProps.investment);
-		}
-	}
-
-	async getRepaymentSchedule(dharma: Dharma, investment: InvestmentEntity) {
-		try {
-			if (investment.status === 'active') {
-				const debtRegistry = await dharma.servicing.getDebtRegistryEntry(investment.issuanceHash);
-				const repaymentSchedule = await dharma.adapters.simpleInterestLoan.getRepaymentSchedule(debtRegistry);
-				this.setState({ repaymentSchedule });
-			}
-		} catch (e) {
-			// console.log(e);
-		}
-	}
-
 	handleTransfer(event: React.MouseEvent<HTMLElement>) {
 		event.stopPropagation();
 		const { investment } = this.props;
@@ -96,8 +69,7 @@ class ActiveInvestment extends React.Component<Props, State> {
 		if (!investment) {
 			return null;
 		}
-		const { repaymentSchedule } = this.state;
-		const investmentInfo = debtOrderFromJSON(investment.json);
+		const repaymentSchedule = investment.repaymentSchedule;
 		const now = Math.round((new Date()).getTime() / 1000);
 		const pastIcon = require('../../../../assets/img/ok_circle.png');
 		const futureIcon = require('../../../../assets/img/circle_outline.png');
@@ -150,7 +122,7 @@ class ActiveInvestment extends React.Component<Props, State> {
 					<DetailContainer>
 						<Row>
 							<Col xs="12" md="6">
-								<Amount>{investmentInfo!.principalAmount!.toNumber() + ' ' + investment.principalTokenSymbol}</Amount>
+								<Amount>{investment.principalAmount.toNumber() + ' ' + investment.principalTokenSymbol}</Amount>
 								<Url>
 									<DetailLink to={`/request/success/${investment.issuanceHash}`}>
 										{shortenString(investment.issuanceHash)}
@@ -180,7 +152,7 @@ class ActiveInvestment extends React.Component<Props, State> {
 										Lended
 									</InfoItemTitle>
 									<InfoItemContent>
-										{investmentInfo!.principalAmount!.toNumber() + ' ' + investment.principalTokenSymbol}
+										{investment.principalAmount.toNumber() + ' ' + investment.principalTokenSymbol}
 									</InfoItemContent>
 								</InfoItem>
 							</Col>
@@ -221,16 +193,6 @@ class ActiveInvestment extends React.Component<Props, State> {
 									</InfoItemTitle>
 									<InfoItemContent>
 										{amortizationUnitToFrequency(investment.amortizationUnit)}
-									</InfoItemContent>
-								</InfoItem>
-							</Col>
-							<Col xs="12" md="2">
-								<InfoItem>
-									<InfoItemTitle>
-										Description
-									</InfoItemTitle>
-									<InfoItemContent>
-										{investment.description}
 									</InfoItemContent>
 								</InfoItem>
 							</Col>

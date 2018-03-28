@@ -58,7 +58,6 @@ class Dashboard extends React.Component<Props, States> {
 			const issuanceHashes = await dharma.servicing.getDebtsAsync(accounts[0]);
 			let debtOrders: DebtOrderEntity[] = [];
 			for (let issuanceHash of issuanceHashes) {
-
 				const debtRegistry = await dharma.servicing.getDebtRegistryEntry(issuanceHash);
 				const dharmaDebtOrder = await dharma.adapters.simpleInterestLoan.fromDebtRegistryEntry(debtRegistry);
 				const repaidAmount = await dharma.servicing.getValueRepaid(issuanceHash);
@@ -88,12 +87,45 @@ class Dashboard extends React.Component<Props, States> {
 			}
 			this.setState({ debtOrders });
 		} catch (e) {
-			this.props.handleSetError('Unable to get debts info');
+			this.props.handleSetError('Unable to get debt orders info');
 		}
 	}
 
 	async getInvestmentsAsync(dharma: Dharma, accounts: string[]) {
-		console.log('get investments');
+		try {
+			if (!accounts.length) {
+				return;
+			}
+			const issuanceHashes = await dharma.servicing.getInvestmentsAsync(accounts[0]);
+			let investments: InvestmentEntity[] = [];
+			for (let issuanceHash of issuanceHashes) {
+				const debtRegistry = await dharma.servicing.getDebtRegistryEntry(issuanceHash);
+				const dharmaDebtOrder = await dharma.adapters.simpleInterestLoan.fromDebtRegistryEntry(debtRegistry);
+				const earnedAmount = await dharma.servicing.getValueRepaid(issuanceHash);
+				const repaymentSchedule = await dharma.adapters.simpleInterestLoan.getRepaymentSchedule(debtRegistry);
+				const status = earnedAmount.lt(dharmaDebtOrder.principalAmount) ? 'active' : 'inactive';
+				const investment = {
+					creditor: debtRegistry.beneficiary,
+					termsContract: debtRegistry.termsContract,
+					termsContractParameters: debtRegistry.termsContractParameters,
+					underwriter: debtRegistry.underwriter,
+					underwriterRiskRating: debtRegistry.underwriterRiskRating,
+					amortizationUnit: dharmaDebtOrder.amortizationUnit,
+					interestRate: dharmaDebtOrder.interestRate,
+					principalAmount: dharmaDebtOrder.principalAmount,
+					principalTokenSymbol: dharmaDebtOrder.principalTokenSymbol,
+					termLength: dharmaDebtOrder.termLength,
+					issuanceHash,
+					earnedAmount,
+					repaymentSchedule,
+					status
+				};
+				investments.push(investment);
+			}
+			this.setState({ investments });
+		} catch (e) {
+			this.props.handleSetError('Unable to get investments info');
+		}
 	}
 
 	toggle(tab: string) {
