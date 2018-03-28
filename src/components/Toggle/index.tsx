@@ -13,22 +13,21 @@ interface Props {
 }
 
 interface State {
-  disabled: boolean;
+  transactionUnderway: boolean;
 }
 
 class Toggle extends React.Component<Props, State> {
   constructor (props: Props) {
     super(props);
     this.handleChange = this.handleChange.bind(this);
-    this.state = {
-      disabled: props.disabled ? props.disabled : false
-    };
+
+    this.state = { transactionUnderway: false };
   }
 
   handleChange(e: React.FormEvent<HTMLInputElement>) {
-    this.setState({ disabled: true });
+    this.setState({ transactionUnderway: true });
     this.props.onChange(e.currentTarget.checked);
-    this.setState({ disabled: false });
+    this.setState({ transactionUnderway: false });
   }
 
   render() {
@@ -36,7 +35,7 @@ class Toggle extends React.Component<Props, State> {
       <div>
 				<ReactToggle
 					checked={this.props.checked}
-					disabled={this.state.disabled}
+					disabled={this.state.transactionUnderway || this.props.disabled}
 					icons={false}
 					id={this.props.prepend ? this.props.prepend + '-' + this.props.name : this.props.name}
 					name={this.props.name}

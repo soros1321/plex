@@ -8,6 +8,13 @@
   dependencies:
     "@babel/highlight" "7.0.0-beta.40"
 
+"@babel/helper-module-imports@7.0.0-beta.32":
+  version "7.0.0-beta.32"
+  resolved "https://registry.yarnpkg.com/@babel/helper-module-imports/-/helper-module-imports-7.0.0-beta.32.tgz#8126fc024107c226879841b973677a4f4e510a03"
+  dependencies:
+    "@babel/types" "7.0.0-beta.32"
+    lodash "^4.2.0"
+
 "@babel/highlight@7.0.0-beta.40":
   version "7.0.0-beta.40"
   resolved "https://registry.yarnpkg.com/@babel/highlight/-/highlight-7.0.0-beta.40.tgz#b43d67d76bf46e1d10d227f68cddcd263786b255"
@@ -16,18 +23,26 @@
     esutils "^2.0.2"
     js-tokens "^3.0.0"
 
-"@dharmaprotocol/contracts@0.0.20":
-  version "0.0.20"
-  resolved "https://registry.yarnpkg.com/@dharmaprotocol/contracts/-/contracts-0.0.20.tgz#0767e08ab95dfc4b345f08b225f7a088764bdcd0"
+"@babel/types@7.0.0-beta.32":
+  version "7.0.0-beta.32"
+  resolved "https://registry.yarnpkg.com/@babel/types/-/types-7.0.0-beta.32.tgz#c317d0ecc89297b80bbcb2f50608e31f6452a5ff"
+  dependencies:
+    esutils "^2.0.2"
+    lodash "^4.2.0"
+    to-fast-properties "^2.0.0"
+
+"@dharmaprotocol/contracts@0.0.23":
+  version "0.0.23"
+  resolved "https://registry.yarnpkg.com/@dharmaprotocol/contracts/-/contracts-0.0.23.tgz#dcdd25919b844de40a8dce9e85598642b89bfd7b"
   dependencies:
     NonFungibleToken "https://github.com/dharmaprotocol/NonFungibleToken.git"
     zeppelin-solidity "^1.6.0"
 
-"@dharmaprotocol/dharma.js@0.0.26":
-  version "0.0.26"
-  resolved "https://registry.yarnpkg.com/@dharmaprotocol/dharma.js/-/dharma.js-0.0.26.tgz#422f242f855d19878966ae5e4e1d7d0683f2e512"
+"@dharmaprotocol/dharma.js@0.0.28":
+  version "0.0.28"
+  resolved "https://registry.yarnpkg.com/@dharmaprotocol/dharma.js/-/dharma.js-0.0.28.tgz#a61062a248a3b3ecd9dc3a6b837a7875606446ff"
   dependencies:
-    "@dharmaprotocol/contracts" "0.0.20"
+    "@dharmaprotocol/contracts" "0.0.23"
     "@types/lodash" "^4.14.104"
     bignumber.js "^5.0.0"
     ethereumjs-util "^5.1.4"
@@ -166,7 +181,7 @@
 
 "NonFungibleToken@https://github.com/dharmaprotocol/NonFungibleToken.git":
   version "0.0.1"
-  resolved "https://github.com/dharmaprotocol/NonFungibleToken.git#0044be43b2cb19e701a230e826ef5dd6a701215a"
+  resolved "https://github.com/dharmaprotocol/NonFungibleToken.git#162e8609569654630a5a5ef3bbbe5e0ebbe90f1d"
   dependencies:
     abi-decoder "^1.0.9"
     zeppelin-solidity "^1.4.0"
@@ -652,6 +667,12 @@ babel-loader@^6.3.2:
     mkdirp "^0.5.1"
     object-assign "^4.0.1"
 
+babel-macros@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/babel-macros/-/babel-macros-1.2.0.tgz#39e47ed6d286d4a98f1948d8bab45dac17e4e2d4"
+  dependencies:
+    cosmiconfig "3.1.0"
+
 babel-messages@^6.23.0:
   version "6.23.0"
   resolved "https://registry.yarnpkg.com/babel-messages/-/babel-messages-6.23.0.tgz#f3cdf4703858035b2a2951c6ec5edf6c62f2630e"
@@ -668,6 +689,19 @@ babel-plugin-check-es2015-constants@^6.22.0:
   dependencies:
     babel-runtime "^6.22.0"
 
+babel-plugin-emotion@^8.0.12, babel-plugin-emotion@^8.0.6:
+  version "8.0.12"
+  resolved "https://registry.yarnpkg.com/babel-plugin-emotion/-/babel-plugin-emotion-8.0.12.tgz#2ed844001416b0ae2ff787a06b1804ec5f531c89"
+  dependencies:
+    "@babel/helper-module-imports" "7.0.0-beta.32"
+    babel-macros "^1.2.0"
+    babel-plugin-syntax-jsx "^6.18.0"
+    convert-source-map "^1.5.0"
+    emotion-utils "^8.0.12"
+    find-root "^1.1.0"
+    source-map "^0.5.7"
+    touch "^1.0.0"
+
 babel-plugin-istanbul@^4.0.0, babel-plugin-istanbul@^4.1.4:
   version "4.1.5"
   resolved "https://registry.yarnpkg.com/babel-plugin-istanbul/-/babel-plugin-istanbul-4.1.5.tgz#6760cdd977f411d3e175bb064f2bc327d99b2b6e"
@@ -683,6 +717,10 @@ babel-plugin-jest-hoist@^20.0.3:
 babel-plugin-jest-hoist@^22.4.1:
   version "22.4.1"
   resolved "https://registry.yarnpkg.com/babel-plugin-jest-hoist/-/babel-plugin-jest-hoist-22.4.1.tgz#d712fe5da8b6965f3191dacddbefdbdf4fb66d63"
+
+babel-plugin-syntax-jsx@^6.18.0:
+  version "6.18.0"
+  resolved "https://registry.yarnpkg.com/babel-plugin-syntax-jsx/-/babel-plugin-syntax-jsx-6.18.0.tgz#0af32a9a6e13ca7a3fd5069e62d7b0f58d0d8946"
 
 babel-plugin-syntax-object-rest-spread@^6.13.0:
   version "6.13.0"
@@ -1446,6 +1484,10 @@ chalk@^2.0.0, chalk@^2.0.1, chalk@^2.3.0, chalk@^2.3.1:
     escape-string-regexp "^1.0.5"
     supports-color "^5.2.0"
 
+change-emitter@^0.1.2:
+  version "0.1.6"
+  resolved "https://registry.yarnpkg.com/change-emitter/-/change-emitter-0.1.6.tgz#e8b2fe3d7f1ab7d69a32199aff91ea6931409515"
+
 chardet@^0.4.0:
   version "0.4.2"
   resolved "https://registry.yarnpkg.com/chardet/-/chardet-0.4.2.tgz#b5473b33dc97c424e5d98dc87d55d4d8a29c8bf2"
@@ -1765,6 +1807,15 @@ cors@^2.8.1:
   dependencies:
     object-assign "^4"
     vary "^1"
+
+cosmiconfig@3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/cosmiconfig/-/cosmiconfig-3.1.0.tgz#640a94bf9847f321800403cd273af60665c73397"
+  dependencies:
+    is-directory "^0.3.1"
+    js-yaml "^3.9.0"
+    parse-json "^3.0.0"
+    require-from-string "^2.0.1"
 
 cosmiconfig@^2.1.0, cosmiconfig@^2.1.1:
   version "2.2.2"
@@ -2372,6 +2423,19 @@ emojis-list@^2.0.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/emojis-list/-/emojis-list-2.1.0.tgz#4daa4d9db00f9819880c79fa457ae5b09a1fd389"
 
+emotion-utils@^8.0.12:
+  version "8.0.12"
+  resolved "https://registry.yarnpkg.com/emotion-utils/-/emotion-utils-8.0.12.tgz#5e0fd72db3008f26ce4f80b1972df08841df2168"
+
+emotion@^8.0.8:
+  version "8.0.12"
+  resolved "https://registry.yarnpkg.com/emotion/-/emotion-8.0.12.tgz#03de11ce26b1b2401c334b94d438652124c514c6"
+  dependencies:
+    babel-plugin-emotion "^8.0.12"
+    emotion-utils "^8.0.12"
+    stylis "^3.3.2"
+    stylis-rule-sheet "^0.0.5"
+
 encodeurl@~1.0.1, encodeurl@~1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/encodeurl/-/encodeurl-1.0.2.tgz#ad3ff4c86ec2d029322f5a02c3a9a606c95b3f59"
@@ -2455,7 +2519,7 @@ errno@^0.1.3, errno@~0.1.7:
   dependencies:
     prr "~1.0.1"
 
-error-ex@^1.2.0:
+error-ex@^1.2.0, error-ex@^1.3.1:
   version "1.3.1"
   resolved "https://registry.yarnpkg.com/error-ex/-/error-ex-1.3.1.tgz#f855a86ce61adc4e8621c3cda21e7a7612c3a8dc"
   dependencies:
@@ -2897,7 +2961,7 @@ fb-watchman@^2.0.0:
   dependencies:
     bser "^2.0.0"
 
-fbjs@^0.8.16, fbjs@^0.8.5, fbjs@^0.8.9:
+fbjs@^0.8.1, fbjs@^0.8.16, fbjs@^0.8.5, fbjs@^0.8.9:
   version "0.8.16"
   resolved "https://registry.yarnpkg.com/fbjs/-/fbjs-0.8.16.tgz#5e67432f550dc41b572bf55847b8aca64e5337db"
   dependencies:
@@ -2990,6 +3054,10 @@ find-cache-dir@^0.1.1:
 find-index@^0.1.1:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/find-index/-/find-index-0.1.1.tgz#675d358b2ca3892d795a1ab47232f8b6e2e0dde4"
+
+find-root@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/find-root/-/find-root-1.1.0.tgz#abcfc8ba76f708c42a97b3d685b7e9450bfb9ce4"
 
 find-up@^1.0.0:
   version "1.1.2"
@@ -3491,7 +3559,7 @@ hoist-non-react-statics@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/hoist-non-react-statics/-/hoist-non-react-statics-1.2.0.tgz#aa448cf0986d55cc40773b17174b7dd066cb7cfb"
 
-hoist-non-react-statics@^2.5.0:
+hoist-non-react-statics@^2.3.1, hoist-non-react-statics@^2.5.0:
   version "2.5.0"
   resolved "https://registry.yarnpkg.com/hoist-non-react-statics/-/hoist-non-react-statics-2.5.0.tgz#d2ca2dfc19c5a91c5a6615ce8e564ef0347e2a40"
 
@@ -4507,6 +4575,13 @@ js-yaml@^3.4.3, js-yaml@^3.7.0:
     argparse "^1.0.7"
     esprima "^4.0.0"
 
+js-yaml@^3.9.0:
+  version "3.11.0"
+  resolved "https://registry.yarnpkg.com/js-yaml/-/js-yaml-3.11.0.tgz#597c1a8bd57152f26d622ce4117851a51f5ebaef"
+  dependencies:
+    argparse "^1.0.7"
+    esprima "^4.0.0"
+
 js-yaml@~3.7.0:
   version "3.7.0"
   resolved "https://registry.yarnpkg.com/js-yaml/-/js-yaml-3.7.0.tgz#5c967ddd837a9bfdca5f2de84253abe8a1c03b80"
@@ -4963,7 +5038,7 @@ lodash.values@^4.3.0:
   version "4.3.0"
   resolved "https://registry.yarnpkg.com/lodash.values/-/lodash.values-4.3.0.tgz#a3a6c2b0ebecc5c2cba1c17e6e620fe81b53d347"
 
-"lodash@>=3.5 <5", lodash@^4.13.1, lodash@^4.14.0, lodash@^4.15.0, lodash@^4.17.2, lodash@^4.17.3, lodash@^4.17.4, lodash@^4.17.5, lodash@^4.2.1, lodash@^4.3.0:
+"lodash@>=3.5 <5", lodash@^4.13.1, lodash@^4.14.0, lodash@^4.15.0, lodash@^4.17.2, lodash@^4.17.3, lodash@^4.17.4, lodash@^4.17.5, lodash@^4.2.0, lodash@^4.2.1, lodash@^4.3.0:
   version "4.17.5"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.5.tgz#99a92d65c0272debe8c96b6057bc8fbfa3bed511"
 
@@ -5735,6 +5810,12 @@ parse-json@^2.2.0:
   dependencies:
     error-ex "^1.2.0"
 
+parse-json@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/parse-json/-/parse-json-3.0.0.tgz#fa6f47b18e23826ead32f263e744d0e1e847fb13"
+  dependencies:
+    error-ex "^1.3.1"
+
 parse-passwd@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/parse-passwd/-/parse-passwd-1.0.0.tgz#6d5b934a456993b23d37f40a382d6f1666a8e5c6"
@@ -6419,6 +6500,13 @@ react-dom@^16.2.0:
     object-assign "^4.1.1"
     prop-types "^15.6.0"
 
+react-emotion@^8.0.6:
+  version "8.0.12"
+  resolved "https://registry.yarnpkg.com/react-emotion/-/react-emotion-8.0.12.tgz#3dd94c151197e2e3399e34e3e118df141b5ebb7b"
+  dependencies:
+    babel-plugin-emotion "^8.0.12"
+    emotion-utils "^8.0.12"
+
 react-error-overlay@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/react-error-overlay/-/react-error-overlay-3.0.0.tgz#c2bc8f4d91f1375b3dad6d75265d51cd5eeaf655"
@@ -6532,6 +6620,16 @@ react-select@^1.2.1:
     classnames "^2.2.4"
     prop-types "^15.5.8"
     react-input-autosize "^2.1.2"
+
+react-spinners@^0.2.6:
+  version "0.2.6"
+  resolved "https://registry.yarnpkg.com/react-spinners/-/react-spinners-0.2.6.tgz#15ba678d07636c3cf760563b0efb7b2566f465cb"
+  dependencies:
+    babel-plugin-emotion "^8.0.6"
+    emotion "^8.0.8"
+    prop-types "^15.5.10"
+    react-emotion "^8.0.6"
+    recompose "0.26.0"
 
 react-test-renderer@^16.0.0-0:
   version "16.2.0"
@@ -6647,6 +6745,15 @@ readdirp@^2.0.0:
     minimatch "^3.0.2"
     readable-stream "^2.0.2"
     set-immediate-shim "^1.0.1"
+
+recompose@0.26.0:
+  version "0.26.0"
+  resolved "https://registry.yarnpkg.com/recompose/-/recompose-0.26.0.tgz#9babff039cb72ba5bd17366d55d7232fbdfb2d30"
+  dependencies:
+    change-emitter "^0.1.2"
+    fbjs "^0.8.1"
+    hoist-non-react-statics "^2.3.1"
+    symbol-observable "^1.0.4"
 
 recursive-readdir@2.2.1:
   version "2.2.1"
@@ -6882,6 +6989,10 @@ require-directory@^2.1.1:
 require-from-string@^1.1.0:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/require-from-string/-/require-from-string-1.2.1.tgz#529c9ccef27380adfec9a2f965b649bbee636418"
+
+require-from-string@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/require-from-string/-/require-from-string-2.0.1.tgz#c545233e9d7da6616e9d59adfb39fc9f588676ff"
 
 require-main-filename@^1.0.1:
   version "1.0.1"
@@ -7564,9 +7675,17 @@ styled-components@^3.1.6:
     stylis-rule-sheet "^0.0.7"
     supports-color "^3.2.3"
 
+stylis-rule-sheet@^0.0.5:
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/stylis-rule-sheet/-/stylis-rule-sheet-0.0.5.tgz#ebae935cc1f6fb31b9b62dba47f2ea8b833dad9f"
+
 stylis-rule-sheet@^0.0.7:
   version "0.0.7"
   resolved "https://registry.yarnpkg.com/stylis-rule-sheet/-/stylis-rule-sheet-0.0.7.tgz#5c51dc879141a61821c2094ba91d2cbcf2469c6c"
+
+stylis@^3.3.2:
+  version "3.5.0"
+  resolved "https://registry.yarnpkg.com/stylis/-/stylis-3.5.0.tgz#016fa239663d77f868fef5b67cf201c4b7c701e1"
 
 stylis@^3.4.0:
   version "3.4.10"
@@ -7648,7 +7767,7 @@ sw-toolbox@^3.4.0:
     path-to-regexp "^1.0.1"
     serviceworker-cache-polyfill "^4.0.0"
 
-symbol-observable@^1.0.3:
+symbol-observable@^1.0.3, symbol-observable@^1.0.4:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/symbol-observable/-/symbol-observable-1.2.0.tgz#c22688aed4eab3cdc2dfeacbb561660560a00804"
 
@@ -7751,6 +7870,10 @@ to-fast-properties@^1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/to-fast-properties/-/to-fast-properties-1.0.3.tgz#b83571fa4d8c25b82e231b06e3a3055de4ca1a47"
 
+to-fast-properties@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/to-fast-properties/-/to-fast-properties-2.0.0.tgz#dc5e698cbd079265bc73e0377681a4e4e83f616e"
+
 to-markdown@^3.1.1:
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/to-markdown/-/to-markdown-3.1.1.tgz#251e241b8c74c7ad177292e6c52cc195c9268c11"
@@ -7787,6 +7910,12 @@ toposort@^1.0.0:
 touch@0.0.3:
   version "0.0.3"
   resolved "https://registry.yarnpkg.com/touch/-/touch-0.0.3.tgz#51aef3d449571d4f287a5d87c9c8b49181a0db1d"
+  dependencies:
+    nopt "~1.0.10"
+
+touch@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/touch/-/touch-1.0.0.tgz#449cbe2dbae5a8c8038e30d71fa0ff464947c4de"
   dependencies:
     nopt "~1.0.10"
 

@@ -52,3 +52,8 @@ export const ShowMoreButton = TradingPermissionsTitle.extend`
 export const Arrow = styled.img`
 	width: 10px;
 `;
+
+export const LoaderContainer = styled.div`
+	display: inline-block;
+	margin-left: 10px;
+`;
