@@ -21,7 +21,7 @@ export const schema: JSONSchema4 = {
 	properties: {
 		debtOrderType: {
 			type: 'string',
-			title: 'Which type of debt would you like?',
+			title: 'Which type of loan would you like?',
 			enum: [
 				'simpleInterestLoanNonCollateralized',
 				'compoundInterestLoanNonCollateralized',
@@ -30,9 +30,9 @@ export const schema: JSONSchema4 = {
 			],
 			enumNames: [
 				'Simple Interest Loan (Non-Collateralized)',
-				'Compound Interest Loan (Non-Collateralized)',
-				'Simple Interest Loan (Collateralized)',
-				'Compound Interest Loan (Collateralized)'
+				'Compound Interest Loan (Non-Collateralized) (Coming Soon)',
+				'Simple Interest Loan (Collateralized) (Coming Soon)',
+				'Compound Interest Loan (Collateralized) (Coming Soon)'
 			],
 			default: 'simpleInterestLoanNonCollateralized'
 		}

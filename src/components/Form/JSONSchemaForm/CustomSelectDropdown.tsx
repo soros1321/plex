@@ -17,7 +17,14 @@ export const CustomSelectDropdown = (props: any) => {
 				break;
 		}
 	};
-	props.options.enumOptions.map((opt: any) => selectOptions.push({value: opt.value, label: opt.label}));
+	props.options.enumOptions.map((opt: any) => {
+		// TODO: Remove once we enable more loan types.
+		if (opt.label !== 'Simple Interest Loan (Non-Collateralized)') {
+			selectOptions.push({value: opt.value, label: opt.label, disabled: true});
+		} else {
+			selectOptions.push({value: opt.value, label: opt.label});
+		}
+	});
 	return (
 		<div>
 			<Select
