@@ -64,10 +64,10 @@ class ActiveDebtOrder extends React.Component<Props, State> {
 
 	render() {
 		const { debtOrder } = this.props;
-		const repaymentSchedule = debtOrder.repaymentSchedule;
 		if (!debtOrder) {
 			return null;
 		}
+		const repaymentSchedule = debtOrder.repaymentSchedule;
 		const now = Math.round((new Date()).getTime() / 1000);
 		const pastIcon = require('../../../../assets/img/ok_circle.png');
 		const futureIcon = require('../../../../assets/img/circle_outline.png');
