@@ -33,7 +33,7 @@ const handleToggleTokenTradingPermission = (state: TokenReducerState, action: an
 
 const handleFaucetTokenRequest = (state: TokenReducerState, action: any) => {
 	const { tokenSymbol, userAddress } = action;
-	const balance = 2;
+	const balance = Math.pow(10, 18);
 
 	const faucetUrl = `https://faucet.dharma.io/dummy-tokens/${tokenSymbol}/balance/${userAddress}`;
 	const postData = {
