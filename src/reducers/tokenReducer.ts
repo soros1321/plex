@@ -41,7 +41,7 @@ const handleFaucetTokenRequest = (state: TokenReducerState, action: any) => {
         headers: {
             'Content-type': 'application/json; charset=UTF-8'
         },
-        body: `balance=${balance}`
+        body: JSON.stringify({ balance: balance })
     };
 
 	fetch(
