@@ -147,16 +147,24 @@ class RequestLoanForm extends React.Component<Props, State> {
 
 			const generatedDebtOrder = await this.props.dharma.adapters.simpleInterestLoan.fromDebtOrder(debtOrder);
 			const storeDebtOrder: DebtOrderEntity = {
-				json: JSON.stringify(debtOrder),
-				principalTokenSymbol,
-				description,
-				issuanceHash,
-				fillLoanShortUrl,
-				repaidAmount: new BigNumber(0),
-				termLength: generatedDebtOrder.termLength,
-				interestRate: generatedDebtOrder.interestRate,
+				debtor: debtOrder.debtor,
+				termsContract: debtOrder.termsContract,
+				termsContractParameters: debtOrder.termsContractParameters,
+				underwriter: debtOrder.underwriter,
+				underwriterRiskRating: debtOrder.underwriteRiskRating,
 				amortizationUnit: generatedDebtOrder.amortizationUnit,
-				status: 'pending'
+				interestRate: generatedDebtOrder.interestRate,
+				principalAmount: debtOrder.principalAmount,
+				principalTokenSymbol,
+				termLength: generatedDebtOrder.termLength,
+				issuanceHash,
+				repaidAmount: new BigNumber(0),
+				repaymentSchedule: [],
+				status: 'pending',
+				json: JSON.stringify(debtOrder),
+				creditor: '',
+				description,
+				fillLoanShortUrl
 			};
 			this.props.handleRequestDebtOrder(storeDebtOrder);
 			browserHistory.push(`/request/success/${storeDebtOrder.issuanceHash}`);
