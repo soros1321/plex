@@ -15,9 +15,6 @@ const promisify = require('tiny-promisify');
 const BigNumber = require('bignumber.js');
 const ABIDecoder = require('abi-decoder');
 const compact = require('lodash.compact');
-const fs = require('fs');
-const BitlyClient = require('bitly');
-const bitly = new BitlyClient(process.env.REACT_APP_BITLY_ACCESS_TOKEN);
 
 // Sample data
 const sampleDebtOrders = require(ROOT_DIR + 'src/migrations/sampleDebtOrders.json');
@@ -97,7 +94,6 @@ async function fillDebtOrders() {
 			throw new Error('Unable to find sample debt order data');
 		}
 
-		let migratedDebtOrders: any[] = [];
 		for (let debtOrder of sampleDebtOrders) {
 			const simpleInterestLoan = {
 				principalTokenSymbol: debtOrder.principalTokenSymbol,
@@ -117,38 +113,10 @@ async function fillDebtOrders() {
 			const issuanceHash = await dharma.order.getIssuanceHash(dharmaDebtOrder);
 
 			console.log('Issuance Hash: ' + issuanceHash);
-
-			// Generate the shortUrl for this debtOrder
-			const urlParams = normalizeDebtOrder(Object.assign({ description: debtOrder.description, principalTokenSymbol: debtOrder.principalTokenSymbol }, dharmaDebtOrder));
-			const bitlyResult = await bitly.shorten(process.env.REACT_APP_NGROK_HOSTNAME + '/fill/loan?' + encodeUrlParams(urlParams));
-			let fillLoanShortUrl: string = '';
-			if (bitlyResult.status_code === 200) {
-				fillLoanShortUrl = bitlyResult.data.url;
-				console.log('- Short Url generated');
-			} else {
-				console.log('- Unable to generate short url');
-			}
-
-			// Get terms length / interest rate / amortization unit info
-			const generatedDebtOrder = await dharma.adapters.simpleInterestLoan.fromDebtOrder(dharmaDebtOrder);
-			let storeDebtOrder = {
-				json: JSON.stringify(dharmaDebtOrder),
-				principalTokenSymbol: debtOrder.principalTokenSymbol,
-				description: debtOrder.description,
-				issuanceHash,
-				fillLoanShortUrl,
-				repaidAmount: new BigNumber(0),
-				termLength: generatedDebtOrder.termLength,
-				interestRate: generatedDebtOrder.interestRate,
-				amortizationUnit: generatedDebtOrder.amortizationUnit,
-				status: 'pending'
-			};
-
 			if (debtOrder.fill) {
 				// Sign as creditor
 				dharmaDebtOrder.creditor = defaultAccount;
 				dharmaDebtOrder.creditorSignature = await dharma.sign.asCreditor(dharmaDebtOrder);
-				storeDebtOrder.json = JSON.stringify(dharmaDebtOrder);
 
 				const txHash = await dharma.order.fillAsync(dharmaDebtOrder, {from: dharmaDebtOrder.creditor});
 				const receipt = await promisify(web3.eth.getTransactionReceipt)(txHash);
@@ -159,16 +127,13 @@ async function fillDebtOrders() {
 					// Pay the debt order
 					const repaymentAmount = new BigNumber(debtOrder.repaymentAmount);
 					const repaymentSuccess = await makeRepayment(
-						storeDebtOrder.issuanceHash,
+						issuanceHash,
 						repaymentAmount,
 						dharmaDebtOrder.principalToken,
 						{from: dharmaDebtOrder.debtor}
 					);
 					if (repaymentSuccess) {
 						console.log('- Repayment success');
-						storeDebtOrder.repaidAmount = repaymentAmount;
-						storeDebtOrder.status = repaymentAmount.lt(dharmaDebtOrder.principalAmount) ? 'active' : 'inactive';
-						migratedDebtOrders.push(storeDebtOrder);
 					} else {
 						console.log('- Repayment failed');
 					}
@@ -177,16 +142,9 @@ async function fillDebtOrders() {
 				}
 			} else {
 				console.log('- Skipping filling debt order');
-				migratedDebtOrders.push(storeDebtOrder);
 			}
 			console.log('\n');
 		}
-		fs.writeFile(ROOT_DIR + 'src/migrations/migratedDebtOrders.json', JSON.stringify(migratedDebtOrders, null, 2), (err: any) => {
-			if (err) {
-				throw err;
-			}
-			console.log('src/migrations/migratedDebtOrders.json updated!');
-		});
 	} catch (e) {
 		throw new Error(e);
 	}
