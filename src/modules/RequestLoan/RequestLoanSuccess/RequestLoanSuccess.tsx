@@ -59,7 +59,7 @@ class RequestLoanSuccess extends React.Component<Props, States> {
 					<Header title={'Next, share your loan request with lenders'} description={descriptionContent} />
 					<ShareRequestURL
 						issuanceHash={debtOrder.issuanceHash}
-						shortUrl={debtOrder.fillLoanShortUrl}
+						shortUrl={debtOrder.fillLoanShortUrl || ''}
 						onShareSocial={this.handleShareSocial}
 					/>
 					<RequestLoanSummary debtOrder={debtOrder} />
