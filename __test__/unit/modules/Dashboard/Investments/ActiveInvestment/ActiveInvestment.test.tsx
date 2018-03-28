@@ -32,29 +32,30 @@ import {
 	formatTime,
 	getIdenticonImgSrc,
 	shortenString,
-	amortizationUnitToFrequency,
-	debtOrderFromJSON
+	amortizationUnitToFrequency
 } from '../../../../../../src/utils';
 import { BigNumber } from 'bignumber.js';
-import MockDharma from '../../../../../../__mocks__/dharma.js';
 const pastIcon = require('../../../../../../src/assets/img/ok_circle.png');
 const futureIcon = require('../../../../../../src/assets/img/circle_outline.png');
 
 describe('<ActiveInvestment />', () => {
-	let dharma;
 	let investment;
 
 	beforeEach(() => {
-		dharma = new MockDharma();
 		investment = {
-			json: "{\"principalToken\":\"0x9b62bd396837417ce319e2e5c8845a5a960010ea\",\"principalAmount\":\"10\",\"termsContract\":\"0x1c907384489d939400fa5c6571d8aad778213d74\",\"termsContractParameters\":\"0x0000000000000000000000000000008500000000000000000000000000000064\",\"kernelVersion\":\"0x89c5b853e9e32bf47c7da1ccb02e981b74c47f2f\",\"issuanceVersion\":\"0x1d8e76d2022e017c6c276b44cb2e4c71bd3cc3de\",\"debtor\":\"0x431194c3e0f35bc7f1266ec6bb85e0c5ec554935\",\"debtorFee\":\"0\",\"creditor\":\"0x431194c3e0f35bc7f1266ec6bb85e0c5ec554935\",\"creditorFee\":\"0\",\"relayer\":\"0x0000000000000000000000000000000000000000\",\"relayerFee\":\"0\",\"underwriter\":\"0x0000000000000000000000000000000000000000\",\"underwriterFee\":\"0\",\"underwriterRiskRating\":\"0\",\"expirationTimestampInSec\":\"1524613355\",\"salt\":\"0\",\"debtorSignature\":{\"v\":27,\"r\":\"0xc5c0aaf7b812cb865aef48958e2d39686a13c292f8bd4a82d7b43d833fb5047d\",\"s\":\"0x2fbbe9f0b8e12ed2875905740fa010bbe710c3e0c131f1efe14fb41bb7921788\"},\"creditorSignature\":{\"v\":27,\"r\":\"0xc5c0aaf7b812cb865aef48958e2d39686a13c292f8bd4a82d7b43d833fb5047d\",\"s\":\"0x2fbbe9f0b8e12ed2875905740fa010bbe710c3e0c131f1efe14fb41bb7921788\"},\"underwriterSignature\":{\"r\":\"\",\"s\":\"\",\"v\":0}}",
+			creditor: '0x431194c3e0f35bc7f1266ec6bb85e0c5ec554935',
+			termsContract: '0x1c907384489d939400fa5c6571d8aad778213d74',
+			termsContractParameters: '0x0000000000000000000000000000008500000000000000000000000000000064',
+			underwriter: '0x0000000000000000000000000000000000000000',
+			underwriterRiskRating: new BigNumber(0),
+			amortizationUnit: 'hours',
+			interestRate: new BigNumber(3.12),
+			principalAmount: new BigNumber(100),
 			principalTokenSymbol: 'REP',
-			description: 'Hello, Can I borrow some REP please?',
+			termLength: new BigNumber(6),
 			issuanceHash: '0x89e9eac37c5f14b657c69ccd891704b3236b84b9ca1d449bd09c5fbaa24afebf',
 			earnedAmount: new BigNumber(4),
-			termLength: new BigNumber(100),
-			interestRate: new BigNumber(12.3),
-			amortizationUnit: 'hours',
+			repaymentSchedule: [1553557371],
 			status: 'active'
 		};
 	});
@@ -63,12 +64,17 @@ describe('<ActiveInvestment />', () => {
 		let wrapper;
 		let props;
 		beforeEach(() => {
-			props = { dharma, investment };
+			props = { investment };
 			wrapper = shallow(<ActiveInvestment {... props} />);
 		});
 
 		it('should render successfully', () => {
 			expect(wrapper.length).toEqual(1);
+		});
+
+		it('should not render when there is no investment', () => {
+			wrapper.setProps({ investment: null });
+			expect(wrapper.find(Wrapper).length).toEqual(0);
 		});
 
 		describe('<ImageContainer />', () => {
@@ -94,8 +100,7 @@ describe('<ActiveInvestment />', () => {
 			});
 
 			it('should render correct <Amount />', () => {
-				const investmentInfo = debtOrderFromJSON(props.investment.json);
-				const amount = investmentInfo.principalAmount.toNumber() + ' ' + props.investment.principalTokenSymbol;
+				const amount = investment.principalAmount.toNumber() + ' ' + props.investment.principalTokenSymbol;
 				expect(detailContainer.find(Amount).length).toEqual(1);
 				expect(detailContainer.find(Amount).get(0).props.children).toEqual(amount);
 			});
@@ -144,43 +149,49 @@ describe('<ActiveInvestment />', () => {
 
 			describe('<Schedule />', () => {
 				it('should render', () => {
-					wrapper.setState({ repaymentSchedule: [1553557371] });
 					expect(wrapper.find(Schedule).length).toEqual(1);
 				});
 
 				it('should render a <ScheduleContainer />', () => {
-					wrapper.setState({ repaymentSchedule: [1553557371] });
 					expect(wrapper.find(Schedule).first().find(ScheduleIconContainer).length).toEqual(1);
 				});
 
 				it('should render pastIcon <ScheduleIcon />', () => {
-					wrapper.setState({ repaymentSchedule: [0] });
+					props.investment.repaymentSchedule = [0];
+					wrapper.setProps({ investment: props.investment });
 					expect(wrapper.find(Schedule).first().find(ScheduleIconContainer).find(ScheduleIcon).length).toEqual(1);
 					expect(wrapper.find(Schedule).first().find(ScheduleIconContainer).find(ScheduleIcon).prop('src')).toEqual(pastIcon);
 				});
 
 				it('should render futureIcon <ScheduleIcon />', () => {
-					wrapper.setState({ repaymentSchedule: [2553557371] });
+					props.investment.repaymentSchedule = [2553557371];
+					wrapper.setProps({ investment: props.investment });
 					expect(wrapper.find(Schedule).first().find(ScheduleIconContainer).find(ScheduleIcon).length).toEqual(1);
 					expect(wrapper.find(Schedule).first().find(ScheduleIconContainer).find(ScheduleIcon).prop('src')).toEqual(futureIcon);
 				});
 
 				it('should render time in <PaymentDate />', () => {
-					wrapper.setState({ repaymentSchedule: [2553557371] });
-					investment.amortizationUnit = 'hours';
-					wrapper.setProps({ investment });
+					props.investment.repaymentSchedule = [2553557371];
+					props.investment.amortizationUnit = 'hours';
+					wrapper.setProps({ investment: props.investment });
 					const expectedValue = formatTime(2553557371);
 					expect(wrapper.find(Schedule).first().find(PaymentDate).length).toEqual(1);
 					expect(wrapper.find(Schedule).first().find(PaymentDate).get(0).props.children).toEqual(expectedValue);
 				});
 
 				it('should render date in <PaymentDate />', () => {
-					wrapper.setState({ repaymentSchedule: [2553557371] });
-					investment.amortizationUnit = 'days';
-					wrapper.setProps({ investment });
+					props.investment.repaymentSchedule = [2553557371];
+					props.investment.amortizationUnit = 'days';
+					wrapper.setProps({ investment: props.investment });
 					const expectedValue = formatDate(2553557371);
 					expect(wrapper.find(Schedule).first().find(PaymentDate).length).toEqual(1);
 					expect(wrapper.find(Schedule).first().find(PaymentDate).get(0).props.children).toEqual(expectedValue);
+				});
+
+				it('last <Schedule /> should render <ShowMore /> when there is more than 5 repayment schedules', () => {
+					props.investment.repaymentSchedule = [1553557371, 1553657371, 1553757371, 1553857371, 1553957371, 1554-57371];
+					wrapper.setProps({ investment: props.investment });
+					expect(wrapper.find(Schedule).last().find(ShowMore).length).toEqual(1);
 				});
 			});
 		});
@@ -195,15 +206,14 @@ describe('<ActiveInvestment />', () => {
 				expect(collapse.length).toEqual(1);
 			});
 
-			it('should render 6 <InfoItem />', () => {
-				expect(collapse.find(InfoItem).length).toEqual(6);
+			it('should render 5 <InfoItem />', () => {
+				expect(collapse.find(InfoItem).length).toEqual(5);
 			});
 
 			it('1st <InfoItem /> should render Lended info', () => {
-				const investmentInfo = debtOrderFromJSON(props.investment.json);
 				const elm = collapse.find(InfoItem).at(0);
 				expect(elm.find(InfoItemTitle).get(0).props.children).toEqual('Lended');
-				const content = investmentInfo.principalAmount.toNumber() + ' ' + props.investment.principalTokenSymbol;
+				const content = investment.principalAmount.toNumber() + ' ' + props.investment.principalTokenSymbol;
 				expect(elm.find(InfoItemContent).get(0).props.children).toEqual(content);
 			});
 
@@ -234,77 +244,6 @@ describe('<ActiveInvestment />', () => {
 				const content = amortizationUnitToFrequency(props.investment.amortizationUnit);
 				expect(elm.find(InfoItemContent).get(0).props.children).toEqual(content);
 			});
-
-			it('6th <InfoItem /> should render Description info', () => {
-				const elm = collapse.find(InfoItem).at(5);
-				expect(elm.find(InfoItemTitle).get(0).props.children).toEqual('Description');
-				const content = props.investment.description;
-				expect(elm.find(InfoItemContent).get(0).props.children).toEqual(content);
-			});
-		});
-	});
-
-	describe('#componentDidMount', () => {
-		it('should not call getRepaymentSchedule when there is no dharma and investment', async () => {
-			const props = {};
-			const spy = jest.spyOn(ActiveInvestment.prototype, 'getRepaymentSchedule');
-			const wrapper = shallow(<ActiveInvestment {... props} />);
-			await expect(spy).not.toHaveBeenCalled();
-			spy.mockRestore();
-		});
-
-		it('should call getRepaymentSchedule when there is dharma and investment', async () => {
-			const props = { dharma, investment };
-			const spy = jest.spyOn(ActiveInvestment.prototype, 'getRepaymentSchedule');
-			const wrapper = shallow(<ActiveInvestment {... props} />);
-			await expect(spy).toHaveBeenCalledWith(dharma, investment);
-			spy.mockRestore();
-		});
-	});
-
-	describe('#componentWillReceiveProps', () => {
-		it('should not call getRepaymentSchedule when there is no dharma and investment', async () => {
-			const props = {};
-			const spy = jest.spyOn(ActiveInvestment.prototype, 'getRepaymentSchedule');
-			const wrapper = shallow(<ActiveInvestment {... props} />);
-			wrapper.setProps({ dharma: null, investment: null });
-			await expect(spy).not.toHaveBeenCalled();
-			spy.mockRestore();
-		});
-
-		it('should not call getRepaymentSchedule when there is no dharma and investment', async () => {
-			const props = {};
-			const spy = jest.spyOn(ActiveInvestment.prototype, 'getRepaymentSchedule');
-			const wrapper = shallow(<ActiveInvestment {... props} />);
-			wrapper.setProps({ dharma, investment });
-			await expect(spy).toHaveBeenCalledWith(dharma, investment);
-			spy.mockRestore();
-		});
-	});
-
-	describe('#getRepaymentSchedule', () => {
-		it('should call Dharma#getDebtRegistryEntry', async () => {
-			const props = { dharma, investment };
-			const wrapper = shallow(<ActiveInvestment {... props} />);
-			await wrapper.instance().getRepaymentSchedule(props.dharma, props.investment);
-			await expect(dharma.servicing.getDebtRegistryEntry).toHaveBeenCalledWith(props.investment.issuanceHash);
-		});
-
-		it('should call Dharma#getRepaymentSchedule', async () => {
-			const props = { dharma, investment };
-			const wrapper = shallow(<ActiveInvestment {... props} />);
-			await wrapper.instance().getRepaymentSchedule(props.dharma, props.investment);
-			await expect(dharma.adapters.simpleInterestLoan.getRepaymentSchedule).toHaveBeenCalled();
-		});
-
-		it('should call setState', async () => {
-			const props = { dharma, investment };
-			const spy = jest.spyOn(ActiveInvestment.prototype, 'setState');
-			const wrapper = shallow(<ActiveInvestment {... props} />);
-			const expectedRepaymentSchedule = await dharma.adapters.simpleInterestLoan.getRepaymentSchedule({});
-			await wrapper.instance().getRepaymentSchedule(props.dharma, props.investment);
-			await expect(spy).toHaveBeenCalledWith({ repaymentSchedule: expectedRepaymentSchedule });
-			spy.mockRestore();
 		});
 	});
 

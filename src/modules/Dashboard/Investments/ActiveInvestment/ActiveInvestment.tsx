@@ -40,15 +40,13 @@ interface Props {
 
 interface State {
 	collapse: boolean;
-	repaymentSchedule: number[];
 }
 
 class ActiveInvestment extends React.Component<Props, State> {
 	constructor(props: Props) {
 		super(props);
 		this.state = {
-			collapse: false,
-			repaymentSchedule: []
+			collapse: false
 		};
 		this.handleTransfer = this.handleTransfer.bind(this);
 		this.toggleDrawer = this.toggleDrawer.bind(this);

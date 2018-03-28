@@ -35,12 +35,10 @@ import {
 	amortizationUnitToFrequency
 } from '../../../../../../src/utils';
 import { BigNumber } from 'bignumber.js';
-import MockDharma from '../../../../../../__mocks__/dharma.js';
 const pastIcon = require('../../../../../../src/assets/img/ok_circle.png');
 const futureIcon = require('../../../../../../src/assets/img/circle_outline.png');
 
 describe('<ActiveDebtOrder />', () => {
-	let dharma;
 	const debtOrder = {
 		debtor: '0x431194c3e0f35bc7f1266ec6bb85e0c5ec554935',
 		termsContract: '0x1c907384489d939400fa5c6571d8aad778213d74',
@@ -62,15 +60,11 @@ describe('<ActiveDebtOrder />', () => {
 		fillLoanShortUrl: 'http://bit.ly/2I4bahM'
 	};
 
-	beforeEach(() => {
-		dharma = new MockDharma();
-	});
-
 	describe('#render', () => {
 		let wrapper;
 		let props;
 		beforeEach(() => {
-			props = { dharma, debtOrder };
+			props = { debtOrder };
 			wrapper = shallow(<ActiveDebtOrder {... props} />);
 		});
 
@@ -289,7 +283,7 @@ describe('<ActiveDebtOrder />', () => {
 
 	describe('#onClick Wrapper', () => {
 		it('should call toggleDrawer on click', () => {
-			const props = { dharma, debtOrder };
+			const props = { debtOrder };
 			const spy = jest.spyOn(ActiveDebtOrder.prototype, 'toggleDrawer');
 			const wrapper = shallow(<ActiveDebtOrder {... props} />);
 			wrapper.simulate('click');
@@ -298,7 +292,7 @@ describe('<ActiveDebtOrder />', () => {
 		});
 
 		it('toggleDrawer should call setState', () => {
-			const props = { dharma, debtOrder };
+			const props = { debtOrder };
 			const spy = jest.spyOn(ActiveDebtOrder.prototype, 'setState');
 			const wrapper = shallow(<ActiveDebtOrder {... props} />);
 			const collapse = wrapper.state('collapse');
@@ -310,7 +304,7 @@ describe('<ActiveDebtOrder />', () => {
 
 	describe('#onClick <MakeRepaymentButton />', () => {
 		it('should call makeRepayment', () => {
-			const props = { dharma, debtOrder };
+			const props = { debtOrder };
 			const spy = jest.spyOn(ActiveDebtOrder.prototype, 'makeRepayment');
 			const wrapper = shallow(<ActiveDebtOrder {... props} />);
 			const event = {
