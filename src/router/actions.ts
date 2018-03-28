@@ -1,5 +1,5 @@
 import { actionsEnums } from '../common/actionsEnums';
-import { DebtOrderEntity, InvestmentEntity } from '../models';
+import { InvestmentEntity } from '../models';
 
 export const web3Connected = (web3: any) => {
 	return {
@@ -19,13 +19,6 @@ export const setAccounts = (accounts: string[]) => {
 	return {
 		type: actionsEnums.SET_ACCOUNTS,
 		accounts: accounts
-	};
-};
-
-export const setDebtOrders = (debtOrders: DebtOrderEntity[]) => {
-	return {
-		type: actionsEnums.SET_DEBT_ORDERS,
-		debtOrders: debtOrders
 	};
 };
 

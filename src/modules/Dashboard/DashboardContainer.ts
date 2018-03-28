@@ -5,7 +5,8 @@ import { setError } from '../../components/Error/actions';
 const mapStateToProps = (state: any) => {
 	return {
 		dharma: state.dharmaReducer.dharma,
-		accounts: state.web3Reducer.accounts
+		accounts: state.web3Reducer.accounts,
+		pendingDebtOrders: state.debtOrderReducer.pendingDebtOrders
 	};
 };
 
