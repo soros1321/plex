@@ -29,12 +29,21 @@ const handleGetPendingDebtOrder = (state: DebtOrderReducerState, payload: string
 	};
 };
 
+const handleRemovePendingDebtOrder = (state: DebtOrderReducerState, payload: string) => {
+	return {
+		...state,
+		pendingDebtOrders: state.pendingDebtOrders.filter(_pendingDebtOrder => _pendingDebtOrder.issuanceHash !== payload)
+	};
+};
+
 export const debtOrderReducer = (state: DebtOrderReducerState = new DebtOrderReducerState(), action: any) => {
 	switch (action.type) {
 		case actionsEnums.REQUEST_DEBT_ORDER:
 			return handleRequestDebtOrder(state, action.payload);
 		case actionsEnums.GET_PENDING_DEBT_ORDER:
 			return handleGetPendingDebtOrder(state, action.payload);
+		case actionsEnums.FILL_DEBT_ORDER:
+			return handleRemovePendingDebtOrder(state, action.payload);
 		default:
 			return state;
 	}

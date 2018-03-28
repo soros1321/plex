@@ -4,11 +4,8 @@ import { Header, MainWrapper } from '../../../components';
 import { InvestmentsMetricsContainer } from './InvestmentsMetrics/InvestmentsMetricsContainer';
 import { ActiveInvestmentContainer } from './ActiveInvestment/ActiveInvestmentContainer';
 import { InvestmentHistory } from './InvestmentHistory';
-import Dharma from '@dharmaprotocol/dharma.js';
-import { debtOrderFromJSON } from '../../../utils';
 
 interface Props {
-	dharma: Dharma;
 	investments: InvestmentEntity[];
 }
 
@@ -29,18 +26,14 @@ class Investments extends React.Component<Props, State> {
 	}
 
 	componentDidMount() {
-		if (this.props.dharma && this.props.investments) {
-			this.getInvestmentsDetails(this.props.dharma, this.props.investments);
-		}
+		this.getInvestmentsDetails(this.props.investments);
 	}
 
 	componentWillReceiveProps(nextProps: Props) {
-		if (nextProps.dharma && nextProps.investments) {
-			this.getInvestmentsDetails(nextProps.dharma, nextProps.investments);
-		}
+		this.getInvestmentsDetails(nextProps.investments);
 	}
 
-	async getInvestmentsDetails(dharma: Dharma, investments: InvestmentEntity[]) {
+	async getInvestmentsDetails(investments: InvestmentEntity[]) {
 		if (!investments.length) {
 			return;
 		}
@@ -48,22 +41,12 @@ class Investments extends React.Component<Props, State> {
 		const activeInvestments: InvestmentEntity[] = [];
 		const inactiveInvestments: InvestmentEntity[] = [];
 		for (let investment of investments) {
-			try {
-				const investmentInfo = debtOrderFromJSON(investment.json);
-
-				// The repaid value from debtor is the earned amount for creditor
-				const earnedAmount = await dharma.servicing.getValueRepaid(investment.issuanceHash);
-				investment.earnedAmount = earnedAmount;
-				investment.status = investmentInfo.principalAmount && earnedAmount.lt(investmentInfo.principalAmount) ? 'active' : 'inactive';
-				if (investment.status === 'active') {
-					activeInvestments.push(investment);
-				} else {
-					inactiveInvestments.push(investment);
-				}
-				allInvestments.push(investment);
-			} catch (ex) {
-				// console.log(ex);
+			if (investment.status === 'active') {
+				activeInvestments.push(investment);
+			} else {
+				inactiveInvestments.push(investment);
 			}
+			allInvestments.push(investment);
 		}
 		this.setState({
 			allInvestments,
