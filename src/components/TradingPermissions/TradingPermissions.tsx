@@ -24,6 +24,7 @@ interface Props {
 	handleSetAllTokensTradingPermission: (tokens: TokenEntity[]) => void;
 	handleToggleTokenTradingPermission: (tokenSymbol: string, permission: boolean) => void;
 	handleSetError: (errorMessage: string) => void;
+	handleFaucetRequest: (tokenSymbol: string, userAddress: string) => void;
 }
 
 interface State {
@@ -151,8 +152,12 @@ class TradingPermissions extends React.Component<Props, State> {
 		return tokenAllowance.equals((new BigNumber(2)).pow(256).minus(new BigNumber(1)));
 	}
 
-	handleFaucet(tokenAddress: string) {
-		console.log(tokenAddress);
+	async handleFaucet(tokenSymbol: string) {
+		const accounts = await promisify(this.props.web3.eth.getAccounts)();
+
+		return this.props.handleFaucetRequest(
+			tokenSymbol, accounts[0]
+		);
 	}
 
 	showMore() {
@@ -174,7 +179,7 @@ class TradingPermissions extends React.Component<Props, State> {
 					<TokenSymbol>{token.tokenSymbol}</TokenSymbol>
 					{token.balance.gt(0)
 						? <TokenBalance>({web3.fromWei(token.balance.toString(), 'ether')})</TokenBalance>
-						: <FaucetButton onClick={(e) => this.handleFaucet(token.address)}>Faucet</FaucetButton>
+						: <FaucetButton onClick={(e) => this.handleFaucet(token.tokenSymbol)}>Faucet</FaucetButton>
 					}
 				</div>
 			);
