@@ -19,14 +19,10 @@ import * as Web3 from 'web3';
 import {
 	web3Connected,
 	dharmaInstantiated,
-	setAccounts,
-	setDebtOrders,
-	setInvestments
+	setAccounts
 } from './actions';
 import { setError } from '../components/Error/actions';
-import { BigNumber } from 'bignumber.js';
 const promisify = require('tiny-promisify');
-import { debtOrderFromJSON } from '../utils';
 
 // Import Dharma libraries
 import Dharma from '@dharmaprotocol/dharma.js';
@@ -38,12 +34,9 @@ import {
 	RepaymentRouter,
 	TokenTransferProxy,
 	TokenRegistry,
-	DebtToken
+	DebtToken,
+	SimpleInterestTermsContract
 } from '@dharmaprotocol/contracts';
-
-// Import testing Debt Orders (if exist)
-import { DebtOrderEntity, InvestmentEntity } from '../models';
-const migratedDebtOrders = require('../migrations/migratedDebtOrders.json');
 
 interface Props {
 	store: any;
@@ -85,7 +78,8 @@ class AppRouter extends React.Component<Props, {}> {
 			networkId in TokenTransferProxy.networks &&
 			networkId in TokenRegistry.networks &&
 			networkId in DebtToken.networks &&
-			networkId in DebtRegistry.networks)) {
+			networkId in DebtRegistry.networks &&
+			networkId in SimpleInterestTermsContract.networks)) {
 			dispatch(setError('Unable to connect to the blockchain'));
 			return;
 		}
@@ -96,60 +90,13 @@ class AppRouter extends React.Component<Props, {}> {
 			tokenTransferProxyAddress: TokenTransferProxy.networks[networkId].address,
 			tokenRegistryAddress: TokenRegistry.networks[networkId].address,
 			debtTokenAddress: DebtToken.networks[networkId].address,
-			debtRegistryAddress: DebtRegistry.networks[networkId].address
+			debtRegistryAddress: DebtRegistry.networks[networkId].address,
+			simpleInterestTermsContractAddress: SimpleInterestTermsContract.networks[networkId].address
 		};
 		console.log(dharmaConfig.tokenRegistryAddress);
 
 		const dharma = new Dharma(web3.currentProvider, dharmaConfig);
 		dispatch(dharmaInstantiated(dharma));
-		await this.migrateDebtOrders(dharma, accounts[0]);
-	}
-
-	async migrateDebtOrders(dharma: Dharma, defaultAccount: string) {
-		const { dispatch } = this.props.store;
-		if (!migratedDebtOrders.length) {
-			return;
-		}
-
-		const debtOrders: DebtOrderEntity[] = [];
-		const investments: InvestmentEntity[] = [];
-
-		for (let migratedDebtOrder of migratedDebtOrders) {
-			const debtOrder = {
-				...migratedDebtOrder,
-				repaidAmount: new BigNumber(migratedDebtOrder.repaidAmount),
-				interestRate: new BigNumber(migratedDebtOrder.interestRate),
-				termLength: new BigNumber(migratedDebtOrder.termLength)
-			};
-
-			const investment = {
-				...debtOrder,
-				earnedAmount: debtOrder.repaidAmount
-			};
-			delete(investment.repaidAmount);
-
-			try {
-				// Check whether this debtOrder exist on current network
-				const dharmaDebtOrder = debtOrderFromJSON(debtOrder.json);
-				await dharma.adapters.simpleInterestLoan.fromDebtOrder(dharmaDebtOrder);
-				if (dharmaDebtOrder.debtor === defaultAccount) {
-					debtOrders.push(debtOrder);
-				}
-				try {
-					// If there is a repaid value, means this order is filled
-					await dharma.servicing.getValueRepaid(investment.issuanceHash);
-					if (dharmaDebtOrder.creditor === defaultAccount) {
-						investments.push(investment);
-					}
-				} catch (ex) {
-					// console.log(ex);
-				}
-			} catch (e) {
-				// console.log(e);
-			}
-		}
-		dispatch(setDebtOrders(debtOrders));
-		dispatch(setInvestments(investments));
 	}
 
 	render() {

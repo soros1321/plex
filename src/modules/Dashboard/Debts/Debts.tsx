@@ -4,11 +4,8 @@ import { Header, MainWrapper } from '../../../components';
 import { DebtsMetricsContainer } from './DebtsMetrics/DebtsMetricsContainer';
 import { ActiveDebtOrderContainer } from './ActiveDebtOrder/ActiveDebtOrderContainer';
 import { DebtOrderHistory } from './DebtOrderHistory';
-import Dharma from '@dharmaprotocol/dharma.js';
-import { debtOrderFromJSON } from '../../../utils';
 
 interface Props {
-	dharma: Dharma;
 	debtOrders: DebtOrderEntity[];
 }
 
@@ -29,18 +26,14 @@ class Debts extends React.Component<Props, State> {
 	}
 
 	componentDidMount() {
-		if (this.props.dharma && this.props.debtOrders) {
-			this.getDebtOrdersDetails(this.props.dharma, this.props.debtOrders);
-		}
+		this.getDebtOrdersDetails(this.props.debtOrders);
 	}
 
 	componentWillReceiveProps(nextProps: Props) {
-		if (nextProps.dharma && nextProps.debtOrders) {
-			this.getDebtOrdersDetails(nextProps.dharma, nextProps.debtOrders);
-		}
+		this.getDebtOrdersDetails(nextProps.debtOrders);
 	}
 
-	async getDebtOrdersDetails(dharma: Dharma, debtOrders: DebtOrderEntity[]) {
+	getDebtOrdersDetails(debtOrders: DebtOrderEntity[]) {
 		if (!debtOrders.length) {
 			return;
 		}
@@ -48,22 +41,12 @@ class Debts extends React.Component<Props, State> {
 		const activeDebtOrders: DebtOrderEntity[] = [];
 		const inactiveDebtOrders: DebtOrderEntity[] = [];
 		for (let debtOrder of debtOrders) {
-			try {
-				const debtOrderInfo = debtOrderFromJSON(debtOrder.json);
-				const repaidAmount = await dharma.servicing.getValueRepaid(debtOrder.issuanceHash);
-				debtOrder.repaidAmount = repaidAmount;
-				debtOrder.status = repaidAmount.lt(debtOrderInfo.principalAmount) ? 'active' : 'inactive';
-				if (debtOrder.status === 'active') {
-					activeDebtOrders.push(debtOrder);
-				} else {
-					inactiveDebtOrders.push(debtOrder);
-				}
-				allDebtOrders.push(debtOrder);
-			} catch (ex) {
-				debtOrder.status = 'pending';
+			if (debtOrder.status === 'inactive') {
+				inactiveDebtOrders.push(debtOrder);
+			} else {
 				activeDebtOrders.push(debtOrder);
-				allDebtOrders.push(debtOrder);
 			}
+			allDebtOrders.push(debtOrder);
 		}
 		this.setState({
 			allDebtOrders,

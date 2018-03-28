@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { InvestmentEntity } from '../../../../models';
-import { shortenString, amortizationUnitToFrequency, debtOrderFromJSON } from '../../../../utils';
+import { shortenString, amortizationUnitToFrequency } from '../../../../utils';
 import { Row, Col, Collapse } from 'reactstrap';
 import {
 	StyledRow,
@@ -36,18 +36,17 @@ class InvestmentRow extends React.Component<Props, State> {
 		if (!investment) {
 			return null;
 		}
-		const investmentInfo = debtOrderFromJSON(investment.json);
 		return (
 			<div onClick={this.toggleDrawer}>
 				<StyledRow>
 					<Col xs="3" md="2">
-						{investmentInfo!.principalAmount!.toNumber() + ' ' + investment.principalTokenSymbol}
+						{investment.principalAmount.toNumber() + ' ' + investment.principalTokenSymbol}
 					</Col>
 					<Col xs="3" md="2">
 						{shortenString(investment.issuanceHash)}
 					</Col>
 					<Col xs="3" md="4">
-						{investmentInfo.principalAmount && investmentInfo.principalAmount.eq(investment.earnedAmount) ? 'Paid' : 'Delinquent'}
+						{investment.principalAmount.eq(investment.earnedAmount) ? 'Paid' : 'Delinquent'}
 					</Col>
 					<Col xs="3" md="4">
 						Simple Interest Loan (Non-Collateralized)
@@ -83,16 +82,6 @@ class InvestmentRow extends React.Component<Props, State> {
 									</InfoItemTitle>
 									<InfoItemContent>
 										{amortizationUnitToFrequency(investment.amortizationUnit)}
-									</InfoItemContent>
-								</InfoItem>
-							</Col>
-							<Col xs="12" md="5">
-								<InfoItem>
-									<InfoItemTitle>
-										Description
-									</InfoItemTitle>
-									<InfoItemContent>
-										{investment.description}
 									</InfoItemContent>
 								</InfoItem>
 							</Col>

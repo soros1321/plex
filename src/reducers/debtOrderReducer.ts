@@ -2,11 +2,11 @@ import { actionsEnums } from '../common/actionsEnums';
 import { DebtOrderEntity } from '../models';
 
 class DebtOrderReducerState {
-	debtOrders: DebtOrderEntity[];
+	pendingDebtOrders: DebtOrderEntity[];
 	singleDebtOrder: DebtOrderEntity;
 
 	constructor() {
-		this.debtOrders = [];
+		this.pendingDebtOrders = [];
 		this.singleDebtOrder = new DebtOrderEntity();
 	}
 }
@@ -14,25 +14,25 @@ class DebtOrderReducerState {
 const handleRequestDebtOrder = (state: DebtOrderReducerState, payload: DebtOrderEntity[]) => {
 	return {
 		...state,
-		debtOrders: [
-			...state.debtOrders,
+		pendingDebtOrders: [
+			...state.pendingDebtOrders,
 			payload
 		]
 	};
 };
 
-const handleGetDebtOrder = (state: DebtOrderReducerState, payload: string) => {
-	const debtOrder = state.debtOrders.find(_debtOrder => _debtOrder.issuanceHash === payload);
+const handleGetPendingDebtOrder = (state: DebtOrderReducerState, payload: string) => {
+	const pendingDebtOrder = state.pendingDebtOrders.find(_pendingDebtOrder => _pendingDebtOrder.issuanceHash === payload);
 	return {
 		...state,
-		singleDebtOrder: debtOrder
+		singleDebtOrder: pendingDebtOrder
 	};
 };
 
-const handleSetDebtOrders = (state: DebtOrderReducerState, payload: any) => {
+const handleRemovePendingDebtOrder = (state: DebtOrderReducerState, payload: string) => {
 	return {
 		...state,
-		debtOrders: payload.debtOrders
+		pendingDebtOrders: state.pendingDebtOrders.filter(_pendingDebtOrder => _pendingDebtOrder.issuanceHash !== payload)
 	};
 };
 
@@ -40,10 +40,10 @@ export const debtOrderReducer = (state: DebtOrderReducerState = new DebtOrderRed
 	switch (action.type) {
 		case actionsEnums.REQUEST_DEBT_ORDER:
 			return handleRequestDebtOrder(state, action.payload);
-		case actionsEnums.GET_DEBT_ORDER:
-			return handleGetDebtOrder(state, action.payload);
-		case actionsEnums.SET_DEBT_ORDERS:
-			return handleSetDebtOrders(state, action);
+		case actionsEnums.GET_PENDING_DEBT_ORDER:
+			return handleGetPendingDebtOrder(state, action.payload);
+		case actionsEnums.FILL_DEBT_ORDER:
+			return handleRemovePendingDebtOrder(state, action.payload);
 		default:
 			return state;
 	}

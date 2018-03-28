@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import { RequestLoanSuccess } from './RequestLoanSuccess';
-import { getDebtOrder } from './actions';
+import { getPendingDebtOrder } from './actions';
 
 const mapStateToProps = (state: any) => {
 	return {
@@ -10,7 +10,7 @@ const mapStateToProps = (state: any) => {
 
 const mapDispatchToProps = (dispatch: any) => {
 	return {
-		getDebtOrder: (issuanceHash: string) => dispatch(getDebtOrder(issuanceHash))
+		getPendingDebtOrder: (issuanceHash: string) => dispatch(getPendingDebtOrder(issuanceHash))
 	};
 };
 

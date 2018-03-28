@@ -3,7 +3,6 @@ import { ActiveInvestment } from './ActiveInvestment';
 
 const mapStateToProps = (state: any) => {
 	return {
-		dharma: state.dharmaReducer.dharma
 	};
 };
 

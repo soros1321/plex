@@ -9,7 +9,7 @@ import { DebtOrderEntity } from '../../../models';
 interface Props {
 	params?: any;
 	debtOrder: DebtOrderEntity;
-	getDebtOrder: (issuanceHash: string) => void;
+	getPendingDebtOrder: (issuanceHash: string) => void;
 }
 
 interface States {
@@ -29,7 +29,7 @@ class RequestLoanSuccess extends React.Component<Props, States> {
 
 	componentDidMount() {
 		const issuanceHash = this.props.params.issuanceHash;
-		this.props.getDebtOrder(issuanceHash);
+		this.props.getPendingDebtOrder(issuanceHash);
 	}
 
 	handleEmailChange(email: string) {
@@ -59,7 +59,7 @@ class RequestLoanSuccess extends React.Component<Props, States> {
 					<Header title={'Next, share your loan request with lenders'} description={descriptionContent} />
 					<ShareRequestURL
 						issuanceHash={debtOrder.issuanceHash}
-						shortUrl={debtOrder.fillLoanShortUrl}
+						shortUrl={debtOrder.fillLoanShortUrl || ''}
 						onShareSocial={this.handleShareSocial}
 					/>
 					<RequestLoanSummary debtOrder={debtOrder} />

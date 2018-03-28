@@ -25,7 +25,7 @@ import Dharma from '@dharmaprotocol/dharma.js';
 import { DebtKernel } from '@dharmaprotocol/contracts';
 import { DebtOrder } from '@dharmaprotocol/dharma.js/dist/types/src/types';
 import { BigNumber } from 'bignumber.js';
-import { TokenEntity, InvestmentEntity } from '../../../models';
+import { TokenEntity } from '../../../models';
 const compact = require('lodash.compact');
 const ABIDecoder = require('abi-decoder');
 
@@ -39,7 +39,7 @@ interface Props {
 	dharma: Dharma;
 	tokens: TokenEntity[];
 	handleSetError: (errorMessage: string) => void;
-	handleFillDebtOrder: (investment: InvestmentEntity) => void;
+	handleFillDebtOrder: (issuanceHash: string) => void;
 }
 
 interface States {
@@ -156,18 +156,9 @@ class FillLoanEntered extends React.Component<Props, States> {
 		try {
 			this.props.handleSetError('');
 			const { dharma, accounts } = this.props;
-			const {
-				debtOrder,
-				principalTokenSymbol,
-				description,
-				issuanceHash,
-				termLength,
-				interestRate,
-				amortizationUnit
-			} = this.state;
+			const { debtOrder, issuanceHash } = this.state;
 
 			debtOrder.creditor = accounts[0];
-			// console.log(debtOrder);
 			const txHash = await dharma.order.fillAsync(debtOrder, {from: accounts[0]});
 			const receipt = await dharma.blockchain.awaitTransactionMinedAsync(txHash, 1000, 10000);
 			const errorLogs = await dharma.blockchain.getErrorLogs(txHash);
@@ -179,18 +170,7 @@ class FillLoanEntered extends React.Component<Props, States> {
 			} else {
 				const [debtOrderFilledLog] = compact(ABIDecoder.decodeLogs(receipt.logs));
 				if (debtOrderFilledLog.name === 'LogDebtOrderFilled') {
-					const investment: InvestmentEntity = {
-						json: JSON.stringify(debtOrder),
-						principalTokenSymbol,
-						description,
-						issuanceHash,
-						earnedAmount: new BigNumber(0),
-						termLength,
-						interestRate,
-						amortizationUnit,
-						status: 'active'
-					};
-					this.props.handleFillDebtOrder(investment);
+					this.props.handleFillDebtOrder(issuanceHash);
 					this.successModalToggle();
 				} else {
 					this.props.handleSetError('Unable to fill this Debt Order');
