@@ -6,16 +6,24 @@ describe('DebtOrderEntity', () => {
 	it('should have the correct properties', () => {
 		const debtOrderEntity = new DebtOrderEntity();
 		const testDebtOrderEntity = {
-			json: '',
-			principalTokenSymbol: '',
-			description: '',
-			issuanceHash: '',
-			fillLoanShortUrl: '',
-			repaidAmount: new BigNumber(0),
-			termLength: new BigNumber(0),
-			interestRate: new BigNumber(0),
+			debtor: '',
+			termsContract: '',
+			termsContractParameters: '',
+			underwriter: '',
+			underwriterRiskRating: new BigNumber(0),
 			amortizationUnit: '',
-			status: ''
+			interestRate: new BigNumber(0),
+			principalAmount: new BigNumber(0),
+			principalTokenSymbol: '',
+			termLength: new BigNumber(0),
+			issuanceHash: '',
+			repaidAmount: new BigNumber(0),
+			repaymentSchedule: [],
+			status: '',
+			json: '',
+			creditor: '',
+			description: '',
+			fillLoanShortUrl: ''
 		};
 		expect(debtOrderEntity).toEqual(testDebtOrderEntity);
 	});
