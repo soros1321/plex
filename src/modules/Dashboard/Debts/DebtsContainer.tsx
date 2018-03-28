@@ -3,7 +3,6 @@ import { Debts } from './Debts';
 
 const mapStateToProps = (state: any) => {
 	return {
-		dharma: state.dharmaReducer.dharma
 	};
 };
 

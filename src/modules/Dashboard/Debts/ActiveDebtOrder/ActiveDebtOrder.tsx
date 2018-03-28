@@ -5,8 +5,7 @@ import {
 	formatTime,
 	getIdenticonImgSrc,
 	shortenString,
-	amortizationUnitToFrequency,
-	debtOrderFromJSON
+	amortizationUnitToFrequency
 } from '../../../../utils';
 import {
 	Wrapper,
@@ -34,51 +33,23 @@ import {
 	PaymentDate
 } from './styledComponents';
 import { Row, Col, Collapse } from 'reactstrap';
-import Dharma from '@dharmaprotocol/dharma.js';
 
 interface Props {
-	dharma: Dharma;
 	debtOrder: DebtOrderEntity;
 }
 
 interface State {
 	collapse: boolean;
-	repaymentSchedule: number[];
 }
 
 class ActiveDebtOrder extends React.Component<Props, State> {
 	constructor(props: Props) {
 		super(props);
 		this.state = {
-			collapse: false,
-			repaymentSchedule: []
+			collapse: false
 		};
 		this.toggleDrawer = this.toggleDrawer.bind(this);
 		this.makeRepayment = this.makeRepayment.bind(this);
-	}
-
-	async componentDidMount() {
-		if (this.props.dharma && this.props.debtOrder) {
-			await this.getRepaymentSchedule(this.props.dharma, this.props.debtOrder);
-		}
-	}
-
-	async componentWillReceiveProps(nextProps: Props) {
-		if (nextProps.dharma && nextProps.debtOrder) {
-			await this.getRepaymentSchedule(nextProps.dharma, nextProps.debtOrder);
-		}
-	}
-
-	async getRepaymentSchedule(dharma: Dharma, debtOrder: DebtOrderEntity) {
-		try {
-			if (debtOrder.status === 'active') {
-				const debtRegistry = await dharma.servicing.getDebtRegistryEntry(debtOrder.issuanceHash);
-				const repaymentSchedule = await dharma.adapters.simpleInterestLoan.getRepaymentSchedule(debtRegistry);
-				this.setState({ repaymentSchedule });
-			}
-		} catch (e) {
-			// console.log(e);
-		}
 	}
 
 	toggleDrawer() {
@@ -93,12 +64,10 @@ class ActiveDebtOrder extends React.Component<Props, State> {
 
 	render() {
 		const { debtOrder } = this.props;
-		const { repaymentSchedule } = this.state;
+		const repaymentSchedule = debtOrder.repaymentSchedule;
 		if (!debtOrder) {
 			return null;
 		}
-		const debtOrderInfo = debtOrderFromJSON(debtOrder.json);
-
 		const now = Math.round((new Date()).getTime() / 1000);
 		const pastIcon = require('../../../../assets/img/ok_circle.png');
 		const futureIcon = require('../../../../assets/img/circle_outline.png');
@@ -141,6 +110,13 @@ class ActiveDebtOrder extends React.Component<Props, State> {
 		});
 
 		const identiconImgSrc = getIdenticonImgSrc(debtOrder.issuanceHash, 60, 0.1);
+		const detailLink = debtOrder.status === 'pending' ?
+			(
+				<DetailLink to={`/request/success/${debtOrder.issuanceHash}`}>
+					{shortenString(debtOrder.issuanceHash)}
+				</DetailLink>
+			) :
+			shortenString(debtOrder.issuanceHash);
 
 		return (
 			<Wrapper onClick={this.toggleDrawer}>
@@ -153,11 +129,9 @@ class ActiveDebtOrder extends React.Component<Props, State> {
 					<DetailContainer>
 						<Row>
 							<Col xs="12" md="6">
-								<Amount>{debtOrderInfo!.principalAmount!.toNumber()} {debtOrder.principalTokenSymbol}</Amount>
+								<Amount>{debtOrder.principalAmount!.toNumber()} {debtOrder.principalTokenSymbol}</Amount>
 								<Url>
-									<DetailLink to={`/request/success/${debtOrder.issuanceHash}`}>
-										{shortenString(debtOrder.issuanceHash)}
-									</DetailLink>
+									{detailLink}
 								</Url>
 							</Col>
 							<Col xs="12" md="6">
@@ -183,7 +157,7 @@ class ActiveDebtOrder extends React.Component<Props, State> {
 										Requested
 									</InfoItemTitle>
 									<InfoItemContent>
-										{debtOrderInfo!.principalAmount!.toNumber() + ' ' + debtOrder.principalTokenSymbol}
+										{debtOrder.principalAmount!.toNumber() + ' ' + debtOrder.principalTokenSymbol}
 									</InfoItemContent>
 								</InfoItem>
 							</Col>
