@@ -38,6 +38,7 @@ export const CustomSelectDropdown = (props: any) => {
 				style={{ borderRadius: 0, height: 38, borderColor: '#000000' }}
 				disabled={props.disabled}
 				onInputKeyDown={onInputKeyDown}
+				placeholder={props.placeholder}
 			/>
 			{ (props.options.pressEnter || typeof props.options.pressEnter === 'undefined') && (
 					<PressEnter className={'press-enter ' + (props.value ? 'active' : '')}>OK, Press ENTER</PressEnter>
