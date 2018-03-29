@@ -108,7 +108,7 @@ class RequestLoanForm extends React.Component<Props, State> {
 			});
 			this.confirmationModalToggle();
 		} catch (e) {
-			this.props.handleSetError('Unable to generate Debt Order');
+			this.props.handleSetError(e.message);
 			return;
 		}
 	}
