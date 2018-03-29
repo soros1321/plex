@@ -155,7 +155,7 @@ class FillLoanEntered extends React.Component<Props, States> {
 			debtOrder.creditor = accounts[0];
 			const txHash = await dharma.order.fillAsync(debtOrder, {from: accounts[0]});
 
-			await dharma.blockchain.awaitTransactionMinedAsync(txHash, 1000, 10000);
+			await dharma.blockchain.awaitTransactionMinedAsync(txHash, 1000, 60000);
 
 			const errorLogs = await dharma.blockchain.getErrorLogs(txHash);
 
@@ -169,11 +169,10 @@ class FillLoanEntered extends React.Component<Props, States> {
 				this.successModalToggle();
 			}
 		} catch (e) {
-			this.props.handleSetError('Unable to fill this Debt Order');
+			this.props.handleSetError(e.message);
 			this.setState({
 				confirmationModal: false
 			});
-			// console.log(e);
 		}
 	}
 

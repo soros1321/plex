@@ -83,7 +83,6 @@ class AppRouter extends React.Component<Props, {}> {
 			dispatch(setError('Unable to connect to the blockchain'));
 			return;
 		}
-		console.log(networkId);
 		const dharmaConfig = {
 			kernelAddress: DebtKernel.networks[networkId].address,
 			repaymentRouterAddress: RepaymentRouter.networks[networkId].address,
@@ -93,7 +92,6 @@ class AppRouter extends React.Component<Props, {}> {
 			debtRegistryAddress: DebtRegistry.networks[networkId].address,
 			simpleInterestTermsContractAddress: SimpleInterestTermsContract.networks[networkId].address
 		};
-		console.log(dharmaConfig.tokenRegistryAddress);
 
 		const dharma = new Dharma(web3.currentProvider, dharmaConfig);
 		dispatch(dharmaInstantiated(dharma));
