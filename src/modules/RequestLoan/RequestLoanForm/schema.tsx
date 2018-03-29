@@ -48,7 +48,7 @@ export const schema: JSONSchema4 = {
 						},
 						loan: {
 							type: 'object',
-							title: 'How much do you want?',
+							title: 'How much of which token would you like to borrow?',
 							required: [
 								'principalAmount',
 								'principalTokenSymbol'
