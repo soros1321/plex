@@ -30,7 +30,7 @@ import {
 	InfoItem,
 	InfoItemTitle,
 	InfoItemContent,
-	TransferButton
+	// TransferButton
 } from './styledComponents';
 import { Row, Col, Collapse } from 'reactstrap';
 
@@ -129,11 +129,11 @@ class ActiveInvestment extends React.Component<Props, State> {
 									</DetailLink>
 								</Url>
 							</Col>
-							<Col xs="12" md="6">
-								{investment.status === 'active' && (
-									<TransferButton onClick={this.handleTransfer}>Transfer</TransferButton>
-								)}
-							</Col>
+							{/*<Col xs="12" md="6">*/}
+								{/*{investment.status === 'active' && (*/}
+									{/*<TransferButton onClick={this.handleTransfer}>Transfer</TransferButton>*/}
+								{/*)}*/}
+							{/*</Col>*/}
 						</Row>
 						{investment.status === 'active' ? <StatusActive>Active</StatusActive> : <StatusDefaulted>Defaulted</StatusDefaulted>}
 						<Terms>Simple Interest (Non-Collateralized)</Terms>
