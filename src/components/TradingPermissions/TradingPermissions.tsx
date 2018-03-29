@@ -17,6 +17,7 @@ import { TokenEntity } from '../../models';
 const promisify = require('tiny-promisify');
 import { Collapse } from 'reactstrap';
 import { ClipLoader } from 'react-spinners';
+import { truncate } from 'src/utils/webUtils';
 
 interface Props {
     web3: Web3;
@@ -188,11 +189,14 @@ class TradingPermissions extends React.Component<Props, State> {
 
         let count: number = 0;
         for (let token of tokens) {
+
+            const truncatedTokenBalance = truncate(web3.fromWei(token.balance, 'ether').toNumber(), 5);
+
             const tokenLabel = (
                 <div>
                     <TokenSymbol>{token.tokenSymbol}</TokenSymbol>
                     {token.balance.gt(0) ? (
-                        <TokenBalance>({web3.fromWei(token.balance.toString(), 'ether')})</TokenBalance>
+                        <TokenBalance>({truncatedTokenBalance})</TokenBalance>
                     ) : (
                         <FaucetButton
                             onClick={e => this.handleFaucet(token.address)}
