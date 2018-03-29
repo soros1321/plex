@@ -12,3 +12,7 @@ export const shortenString = (text: string) => {
 		return text;
 	}
 };
+
+export const withCommas = (input: number) => {
+	return input.toLocaleString();
+};

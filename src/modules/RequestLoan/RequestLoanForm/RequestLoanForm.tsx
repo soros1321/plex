@@ -13,7 +13,7 @@ import { DebtOrderEntity } from '../../../models';
 import * as Web3 from 'web3';
 import Dharma from '@dharmaprotocol/dharma.js';
 import { BigNumber } from 'bignumber.js';
-import { encodeUrlParams, debtOrderFromJSON, normalizeDebtOrder } from '../../../utils';
+import { encodeUrlParams, debtOrderFromJSON, normalizeDebtOrder, withCommas } from '../../../utils';
 const BitlyClient = require('bitly');
 
 interface Props {
@@ -193,7 +193,7 @@ class RequestLoanForm extends React.Component<Props, State> {
 	render() {
 		const confirmationModalContent = (
 			<span>
-				You are requesting a loan of <Bold>{this.state.principalAmount} {this.state.principalTokenSymbol}</Bold> at a <Bold>{this.state.interestRate}%</Bold> interest rate per the terms in the contract on the previous page. Are you sure you want to do this?
+				You are requesting a loan of <Bold>{withCommas(this.state.principalAmount)} {this.state.principalTokenSymbol}</Bold> at a <Bold>{this.state.interestRate}%</Bold> interest rate per the terms in the contract on the previous page. Are you sure you want to do this?
 			</span>
 		);
 		const descriptionContent = <span>Here's a quick description of what a debt order is and why you should request one.</span>;
