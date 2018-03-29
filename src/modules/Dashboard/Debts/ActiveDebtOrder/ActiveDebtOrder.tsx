@@ -48,6 +48,7 @@ interface Props {
 interface State {
     collapse: boolean;
     makeRepayment: boolean;
+    awaitingRepaymentTx: boolean;
 }
 
 class ActiveDebtOrder extends React.Component<Props, State> {
@@ -55,7 +56,8 @@ class ActiveDebtOrder extends React.Component<Props, State> {
         super(props);
         this.state = {
             collapse: false,
-            makeRepayment: false
+            makeRepayment: false,
+            awaitingRepaymentTx: false
         };
         this.toggleDrawer = this.toggleDrawer.bind(this);
         this.toggleRepaymentModal = this.toggleRepaymentModal.bind(this);
@@ -81,6 +83,8 @@ class ActiveDebtOrder extends React.Component<Props, State> {
 
         const tokenAddress = await dharma.contracts.getTokenAddressBySymbolAsync(tokenSymbol);
 
+        this.setState({ awaitingRepaymentTx: true });
+
         dharma.servicing
             .makeRepayment(this.props.debtOrder.issuanceHash, tokenAmount, tokenAddress)
             .then(txHash => {
@@ -90,11 +94,11 @@ class ActiveDebtOrder extends React.Component<Props, State> {
                 return dharma.blockchain.getErrorLogs(receipt.transactionHash);
             })
             .then(errors => {
+                this.setState({ makeRepayment: false, awaitingRepaymentTx: false });
+
                 if (errors.length > 0) {
-                    this.setState({ makeRepayment: false });
                     this.props.handleSetErrorToast(errors[0]);
                 } else {
-                    this.setState({ makeRepayment: false });
                     this.props.handleSuccessfulRepayment(this.props.debtOrder.issuanceHash, tokenAmount, tokenSymbol);
                     this.props.handleSetSuccessToast(
                         `Successfully made repayment of ${tokenAmount.toString()} ${tokenSymbol}`
@@ -102,9 +106,8 @@ class ActiveDebtOrder extends React.Component<Props, State> {
                 }
             })
             .catch(err => {
-                this.setState({ makeRepayment: false });
+                this.setState({ makeRepayment: false, awaitingRepaymentTx: false });
                 this.props.handleSetErrorToast(err.message);
-                console.log("great failure!");
             });
     }
 
@@ -255,10 +258,11 @@ class ActiveDebtOrder extends React.Component<Props, State> {
                 </Collapse>
                 <MakeRepaymentModal
                     modal={this.state.makeRepayment}
-                    agreementId={debtOrder.issuanceHash}
+                    debtOrder={debtOrder}
                     title="Make Repayment"
                     closeButtonText="Nevermind"
-                    submitButtonText="Make Repayment"
+                    submitButtonText={this.state.awaitingRepaymentTx ? "Making Repayment..." : "Make Repayment"}
+                    awaitingTx={this.state.awaitingRepaymentTx}
                     onToggle={this.toggleRepaymentModal}
                     onSubmit={this.handleRepaymentFormSubmission}
                 />

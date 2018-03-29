@@ -12,6 +12,11 @@
     vertical-align: top;
 }
 
+.loading-spinner {
+    display: inline-block;
+    margin-left: 10px;
+}
+
 .repayment-group {
     margin-top: 25px;
 }
