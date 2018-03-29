@@ -16,3 +16,8 @@ export const shortenString = (text: string) => {
 export const withCommas = (input: number) => {
 	return input.toLocaleString();
 };
+
+export const truncate = (input: number, numDecimals: number) => {
+	const scaledInput = Math.floor(input * 100 ** numDecimals) / 100 ** numDecimals;
+	return scaledInput.toFixed(numDecimals);
+};
