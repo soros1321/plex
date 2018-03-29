@@ -42,22 +42,34 @@ class RequestLoanSuccess extends React.Component<Props, States> {
 
 	handleShareSocial(socialMediaName: string) {
 		const { fillLoanShortUrl, description, principalAmount, principalTokenSymbol } = this.props.debtOrder;
+		let text;
+		let windowProps;
+		let url;
 
 		if (!fillLoanShortUrl) {
 			return;
 		}
 
-		let text = `I'd like to borrow ${principalAmount} ${principalTokenSymbol}`;
+		const encodedUrl = encodeURIComponent(fillLoanShortUrl);
+
+		text = `I'd like to borrow ${principalAmount} ${principalTokenSymbol}`;
 
 		if (description) {
             text += `for ${description}`;
 		}
 
-		if (socialMediaName === 'twitter') {
-			const url = `https://twitter.com/intent/tweet?url=${encodeURIComponent(fillLoanShortUrl)}&text=${text}`;
-			const windowProps = 'left=0,top=0,width=550,height=450,personalbar=0,toolbar=0,scrollbars=0,resizable=0';
-
-			window.open(url, '', windowProps);
+		switch (socialMediaName) {
+			case 'twitter':
+				url = `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${text}`;
+				windowProps = 'left=0,top=0,width=550,height=450,personalbar=0,toolbar=0,scrollbars=0,resizable=0';
+				window.open(url, '', windowProps);
+				break;
+			case 'facebook':
+                url = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`;
+                windowProps = 'left=0,top=0,width=600,height=250,personalbar=0,toolbar=0,scrollbars=0,resizable=0';
+                window.open(url, '', windowProps);
+                break;
+			default:
         }
 	}
 
