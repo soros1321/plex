@@ -77,3 +77,8 @@ export const FillLoanButton = StyledButton.extend`
 		margin-left: 0;
 	}
 `;
+
+export const LoaderContainer = styled.div`
+	display: inline-block;
+	margin-top: 15px;
+`;

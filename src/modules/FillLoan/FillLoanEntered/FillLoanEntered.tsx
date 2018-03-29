@@ -1,5 +1,7 @@
 import * as React from 'react';
 import { Link, browserHistory } from 'react-router';
+import { ClipLoader } from 'react-spinners';
+
 import { amortizationUnitToFrequency, shortenString, debtOrderFromJSON } from '../../../utils';
 import { PaperLayout } from '../../../layouts';
 import {
@@ -18,7 +20,8 @@ import {
 	Content,
 	ButtonContainer,
 	DeclineButton,
-	FillLoanButton
+	FillLoanButton,
+    LoaderContainer
 } from './styledComponents';
 import * as Web3 from 'web3';
 import Dharma from '@dharmaprotocol/dharma.js';
@@ -39,6 +42,8 @@ interface Props {
 interface States {
 	confirmationModal: boolean;
 	successModal: boolean;
+	// True if the user has confirmed the order, but the block has not been mined.
+    awaitingTransaction: boolean;
 	debtOrder: DebtOrder.Instance;
 	description: string;
 	principalTokenSymbol: string;
@@ -55,6 +60,7 @@ class FillLoanEntered extends React.Component<Props, States> {
 		this.state = {
 			confirmationModal: false,
 			successModal: false,
+			awaitingTransaction: false,
 			debtOrder: {},
 			description: '',
 			principalTokenSymbol: '',
@@ -155,7 +161,11 @@ class FillLoanEntered extends React.Component<Props, States> {
 			debtOrder.creditor = accounts[0];
 			const txHash = await dharma.order.fillAsync(debtOrder, {from: accounts[0]});
 
+			this.setState({awaitingTransaction: true});
+
 			await dharma.blockchain.awaitTransactionMinedAsync(txHash, 1000, 60000);
+
+			this.setState({ awaitingTransaction: false });
 
 			const errorLogs = await dharma.blockchain.getErrorLogs(txHash);
 
@@ -256,9 +266,19 @@ class FillLoanEntered extends React.Component<Props, States> {
 						<Link to="/fill">
 							<DeclineButton>Decline</DeclineButton>
 						</Link>
-						<FillLoanButton onClick={this.validateFillOrder}>Fill Loan</FillLoanButton>
+						<FillLoanButton onClick={this.validateFillOrder} disabled={this.state.awaitingTransaction}>Fill Loan</FillLoanButton>
 					</ButtonContainer>
-					<ConfirmationModal modal={this.state.confirmationModal} title="Please confirm" content={confirmationModalContent} onToggle={this.confirmationModalToggle} onSubmit={this.handleFillOrder} closeButtonText="Cancel" submitButtonText="Fill Order" />
+
+                    {
+                    	this.state.awaitingTransaction &&
+							<Content style={{textAlign: 'center'}}>
+								<LoaderContainer>
+									<ClipLoader size={18} color={'#1cc1cc'} loading={true}/>
+								</LoaderContainer>
+							</Content>
+                    }
+
+					<ConfirmationModal disabled={this.state.awaitingTransaction} modal={this.state.confirmationModal} title="Please confirm" content={confirmationModalContent} onToggle={this.confirmationModalToggle} onSubmit={this.handleFillOrder} closeButtonText="Cancel" submitButtonText={this.state.awaitingTransaction ? 'Filling order...' : 'Fill Order'} />
 					<SuccessModal modal={this.state.successModal} onToggle={this.successModalToggle} issuanceHash={issuanceHash} onRedirect={this.handleRedirect} />
 				</MainWrapper>
 			</PaperLayout>
