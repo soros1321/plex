@@ -105,7 +105,7 @@ class DebtsMetrics extends React.Component<Props, State> {
 							: defaultTotal
 						}
 					</Value>
-					<Label>Total Requested</Label>
+					<Label>Total Owed</Label>
 				</HalfCol>
 				<HalfCol>
 					<Value>

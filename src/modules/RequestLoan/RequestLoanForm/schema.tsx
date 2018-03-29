@@ -98,7 +98,6 @@ export const schema: JSONSchema4 = {
 						terms: {
 							type: 'object',
 							title: 'What terms would you like?',
-							description: 'The most commonly chosen options are selected by default.',
 							required: [
 								'interestRate',
 								'amortizationUnit',
@@ -107,7 +106,8 @@ export const schema: JSONSchema4 = {
 							properties: {
 								interestRate: {
 									type: 'number',
-									title: 'Interest Rate'
+									title: 'Interest Rate (Per Installment)',
+									description: 'The interest rate you specify below will be applied for each installment.',
 								},
 								amortizationUnit: {
 									type: 'string',
