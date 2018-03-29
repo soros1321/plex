@@ -50,7 +50,7 @@ const handleSetTokenBalance = (state: TokenReducerState, action: any) => {
     return {
         ...state,
         tokens: state.tokens.map(token => {
-            if (token.tokenSymbol === action.tokenSymbol) {
+            if (token.address === action.tokenAddress) {
                 return {
                     ...token,
                     balance: action.balance
