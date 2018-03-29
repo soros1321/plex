@@ -48,33 +48,33 @@ describe('<DebtsMetrics />', () => {
 			expect(wrapper.length).toEqual(1);
 		});
 
-		it('should render correct Total Requested and Total Repaid value', () => {
+		it('should render correct Total Owed and Total Repaid value', () => {
 			const wrapper = shallow(<DebtsMetrics {... props} />);
 			expect(wrapper.find(HalfCol).length).toEqual(2);
 			expect(wrapper.find(HalfCol).first().find(Value).find(TokenWrapper).get(0).props.children).toEqual('10 REP');
-			expect(wrapper.find(HalfCol).first().find(Label).get(0).props.children).toEqual('Total Requested');
+			expect(wrapper.find(HalfCol).first().find(Label).get(0).props.children).toEqual('Total Owed');
 			expect(wrapper.find(HalfCol).last().find(Value).find(TokenWrapper).get(0).props.children).toEqual('4 REP');
 			expect(wrapper.find(HalfCol).last().find(Label).get(0).props.children).toEqual('Total Repaid');
 		});
 
-		it('should render 0 ETH Total Requested and 0 ETH Total Repaid when there is no debtOrders', () => {
+		it('should render 0 ETH Total Owed and 0 ETH Total Repaid when there is no debtOrders', () => {
 			props.debtOrders = [];
 			const wrapper = shallow(<DebtsMetrics {... props} />);
 			const defaultTotal = '0 ETH';
 			expect(wrapper.find(HalfCol).length).toEqual(2);
 			expect(wrapper.find(HalfCol).first().find(Value).find(TokenWrapper).get(0).props.children).toEqual(defaultTotal);
-			expect(wrapper.find(HalfCol).first().find(Label).get(0).props.children).toEqual('Total Requested');
+			expect(wrapper.find(HalfCol).first().find(Label).get(0).props.children).toEqual('Total Owed');
 			expect(wrapper.find(HalfCol).last().find(Value).find(TokenWrapper).get(0).props.children).toEqual(defaultTotal);
 			expect(wrapper.find(HalfCol).last().find(Label).get(0).props.children).toEqual('Total Repaid');
 		});
 
-		it('should render 0 ETH Total Requested and 0 ETH Total Repaid when there is no tokens', () => {
+		it('should render 0 ETH Total Owed and 0 ETH Total Repaid when there is no tokens', () => {
 			props.tokens = [];
 			const wrapper = shallow(<DebtsMetrics {... props} />);
 			const defaultTotal = '0 ETH';
 			expect(wrapper.find(HalfCol).length).toEqual(2);
 			expect(wrapper.find(HalfCol).first().find(Value).find(TokenWrapper).get(0).props.children).toEqual(defaultTotal);
-			expect(wrapper.find(HalfCol).first().find(Label).get(0).props.children).toEqual('Total Requested');
+			expect(wrapper.find(HalfCol).first().find(Label).get(0).props.children).toEqual('Total Owed');
 			expect(wrapper.find(HalfCol).last().find(Value).find(TokenWrapper).get(0).props.children).toEqual(defaultTotal);
 			expect(wrapper.find(HalfCol).last().find(Label).get(0).props.children).toEqual('Total Repaid');
 			expect(wrapper.state('tokenBalances')).toEqual({});
@@ -239,13 +239,13 @@ describe('<DebtsMetrics />', () => {
 			});
 		});
 
-		it('should not render more than 4 Tokens in Total Requested section', () => {
+		it('should not render more than 4 Tokens in Total Owed section', () => {
 			const wrapper = shallow(<DebtsMetrics {... props} />);
 			expect(tokens.length).toEqual(5);
 			expect(wrapper.find(HalfCol).first().find(TokenWrapper).length).toBeLessThanOrEqual(4);
 		});
 
-		it('Total Requested\'s last element should render AND MORE', () => {
+		it('Total Owed\'s last element should render AND MORE', () => {
 			const wrapper = shallow(<DebtsMetrics {... props} />);
 			expect(tokens.length).toEqual(5);
 			expect(wrapper.find(HalfCol).first().find(TokenWrapper).last().get(0).props.children).toEqual('AND MORE');
@@ -325,13 +325,13 @@ describe('<DebtsMetrics />', () => {
 			});
 		});
 
-		it('should render 2 Tokens in Total Requested section', () => {
+		it('should render 2 Tokens in Total Owed section', () => {
 			const wrapper = shallow(<DebtsMetrics {... props} />);
 			expect(tokens.length).toEqual(2);
 			expect(wrapper.find(HalfCol).first().find(TokenWrapper).length).toEqual(2);
 		});
 
-		it('Total Requested\'s last element should not render AND MORE', () => {
+		it('Total Owed\'s last element should not render AND MORE', () => {
 			const wrapper = shallow(<DebtsMetrics {... props} />);
 			expect(tokens.length).toEqual(2);
 			expect(wrapper.find(HalfCol).first().find(TokenWrapper).last().get(0).props.children).not.toEqual('AND MORE');
@@ -401,7 +401,7 @@ describe('<DebtsMetrics />', () => {
 			});
 		});
 
-		it('should render 1 Token in Total Requested section', () => {
+		it('should render 1 Token in Total Owed section', () => {
 			const wrapper = shallow(<DebtsMetrics {... props} />);
 			expect(tokens.length).toEqual(1);
 			expect(debtOrders.length).toEqual(2);
@@ -409,7 +409,7 @@ describe('<DebtsMetrics />', () => {
 		});
 	});
 
-	describe('Only render Token with amount in Total Requested/Repaid section', () => {
+	describe('Only render Token with amount in Total Owed/Repaid section', () => {
 		beforeEach(() => {
 			debtOrders = [
 				{
@@ -487,7 +487,7 @@ describe('<DebtsMetrics />', () => {
 			expect(wrapper.find(HalfCol).last().find(TokenWrapper).get(0).props.children).toEqual('10 REP');
 		});
 
-		it('should render 345 MKR and 345 REP in Total Requested section', () => {
+		it('should render 345 MKR and 345 REP in Total Owed section', () => {
 			const wrapper = shallow(<DebtsMetrics {... props} />);
 			expect(tokens.length).toEqual(3);
 			expect(wrapper.find(HalfCol).first().find(TokenWrapper).length).toEqual(2);
