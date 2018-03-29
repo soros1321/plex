@@ -164,7 +164,7 @@ class TradingPermissions extends React.Component<Props, State> {
     }
 
     isAllowanceUnlimited(tokenAllowance: BigNumber) {
-        return tokenAllowance.equals(new BigNumber(2).pow(256).minus(new BigNumber(1)));
+        return tokenAllowance.greaterThanOrEqualTo(new BigNumber(2).pow(32).minus(new BigNumber(1)));
     }
 
     async handleFaucet(tokenAddress: string) {
