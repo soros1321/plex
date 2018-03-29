@@ -107,7 +107,8 @@ export const schema: JSONSchema4 = {
 							properties: {
 								interestRate: {
 									type: 'number',
-									title: 'Interest Rate'
+									title: 'Interest Rate (Per Installment)',
+									description: 'The interest rate you specify below will be applied for each installment.',
 								},
 								amortizationUnit: {
 									type: 'string',
