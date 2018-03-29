@@ -77,7 +77,7 @@
     "zeppelin-solidity": "^1.6.0"
   },
   "scripts": {
-    "contracts:migrate": "bash scripts/migrate_dharma_contracts.sh",
+    "contracts:migrate": "bash contract-scripts/migrate_dharma_contracts.sh",
     "chain": "ganache-cli -m 'pink proof foil skull tide narrow audit card rotate forget liar favorite'",
     "start": "node scripts/start.js --history-api-fallback",
     "build": "node scripts/build.js",
