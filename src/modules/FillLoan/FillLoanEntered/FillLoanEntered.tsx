@@ -226,7 +226,8 @@ class FillLoanEntered extends React.Component<Props, States> {
 		);
 		const descriptionContent = (
 			<span>
-				Here are the details of loan request <Bold>{issuanceHash}</Bold>. If the terms look fair to you, fill the loan and Dharma will //insert statement.
+				Here are the details of loan request <Bold>{issuanceHash}</Bold>.
+				If the terms look fair to you, fill the loan and your transaction will be completed.
 			</span>
 		);
 		return (
