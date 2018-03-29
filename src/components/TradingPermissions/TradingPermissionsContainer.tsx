@@ -26,12 +26,12 @@ const mapDispatchToProps = (dispatch: any) => {
         handleToggleTokenTradingPermission: (tokenSymbol: string, permission: boolean) =>
             dispatch(toggleTokenTradingPermission(tokenSymbol, permission)),
         handleSetError: (errorMessage: string) => dispatch(setError(errorMessage)),
-        handleFaucetRequest: (tokenSymbol: string, userAddress: string, dharma: Dharma) => {
-            dispatch(toggleTokenLoadingSpinner(tokenSymbol, true));
+        handleFaucetRequest: (tokenAddress: string, userAddress: string, dharma: Dharma) => {
+            dispatch(toggleTokenLoadingSpinner(tokenAddress, true));
 
             const balance = Math.pow(10, 18);
 
-            const faucetUrl = `https://faucet.dharma.io/dummy-tokens/${tokenSymbol}/balance/${userAddress}`;
+            const faucetUrl = `https://faucet.dharma.io/dummy-tokens/${tokenAddress}/balance/${userAddress}`;
             const postData = {
                 method: 'post',
                 headers: {
@@ -49,8 +49,8 @@ const mapDispatchToProps = (dispatch: any) => {
                         dispatch(setError('Unable to grant token balance via faucet'));
                     } else {
 						dharma.blockchain.awaitTransactionMinedAsync(jsonBody.txHash, 1000, 60000).then((res) => {
-							dispatch(toggleTokenLoadingSpinner(tokenSymbol, false));
-							dispatch(setTokenBalance(tokenSymbol, new BigNumber(10 ** 18)));
+							dispatch(toggleTokenLoadingSpinner(tokenAddress, false));
+							dispatch(setTokenBalance(tokenAddress, new BigNumber(10 ** 18)));
 						}).catch((err) => {
 							dispatch(setError('Unable to grant token balance via faucet'));
 						});

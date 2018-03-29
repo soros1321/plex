@@ -18,18 +18,18 @@ export const toggleTokenTradingPermission = (tokenSymbol: string, permission: bo
 	};
 };
 
-export const toggleTokenLoadingSpinner = (tokenSymbol: string, loading: boolean) => {
+export const toggleTokenLoadingSpinner = (tokenAddress: string, loading: boolean) => {
 	return {
 		type: actionsEnums.TOGGLE_TOKEN_LOADING_SPINNER,
-		tokenSymbol,
+        tokenAddress,
 		loading
 	};
 };
 
-export const setTokenBalance = (tokenSymbol: string, balance: BigNumber) => {
+export const setTokenBalance = (tokenAddress: string, balance: BigNumber) => {
 	return {
 		type: actionsEnums.SET_TOKEN_BALANCE,
-		tokenSymbol,
+		tokenAddress,
 		balance
 	};
 };
