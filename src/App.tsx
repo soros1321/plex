@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { PageLayout } from './layouts';
-import { ErrorContainer } from './components';
+import { ToastContainer } from './components';
 import * as Web3 from 'web3';
 const promisify = require('tiny-promisify');
 
@@ -53,7 +53,7 @@ class App extends React.Component<Props, State> {
 	render() {
 		return (
 			<PageLayout>
-				<ErrorContainer />
+				<ToastContainer />
 				{this.props.children}
 			</PageLayout>
 		);

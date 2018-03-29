@@ -34,6 +34,14 @@ export const StyledAlert = styled(Alert)`
 		color: #002326;
 		background-color: #E93D59;
 	}
+	&.alert-success {
+		color: #002326;
+		background-color: #1CC1CC;
+	}
+	&.alert-info {
+		color: #002326;
+		background-color: #F27550; 
+	}
 	& > .close {
 		text-shadow: none;
 	}

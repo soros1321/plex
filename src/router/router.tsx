@@ -21,7 +21,7 @@ import {
 	dharmaInstantiated,
 	setAccounts
 } from './actions';
-import { setError } from '../components/Error/actions';
+import { setError } from '../components/Toast/actions';
 const promisify = require('tiny-promisify');
 
 // Import Dharma libraries

@@ -61,6 +61,20 @@ const handleSetTokenBalance = (state: TokenReducerState, action: any) => {
     };
 };
 
+const handleSuccessfulRepayment = (state: TokenReducerState, action: any) => {
+    return {
+        tokens: state.tokens.map(token => {
+            if (token.tokenSymbol === action.repaymentTokenSymbol) {
+                return {
+                    ...token,
+                    balance: token.balance.minus(action.repaymentAmount)
+                };
+            }
+            return token;
+        })
+    };
+};
+
 export const tokenReducer = (state: TokenReducerState = new TokenReducerState(), action: any) => {
     switch (action.type) {
         case actionsEnums.SET_ALL_TOKENS_TRADING_PERMISSION:
@@ -71,6 +85,8 @@ export const tokenReducer = (state: TokenReducerState = new TokenReducerState(),
             return handleToggleTokenTradingPermission(state, action);
         case actionsEnums.SET_TOKEN_BALANCE:
             return handleSetTokenBalance(state, action);
+        case actionsEnums.SUCCESSFUL_REPAYMENT:
+            return handleSuccessfulRepayment(state, action);
         default:
             return state;
     }
