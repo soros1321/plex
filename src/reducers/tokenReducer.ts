@@ -35,7 +35,7 @@ const handleToggleTokenTradingPermission = (state: TokenReducerState, action: an
     return {
         ...state,
         tokens: state.tokens.map(token => {
-            if (token.tokenSymbol === action.tokenSymbol) {
+            if (token.address === action.tokenAddress) {
                 return {
                     ...token,
                     tradingPermitted: action.permission

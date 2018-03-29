@@ -39,11 +39,11 @@ describe('<TradingPermissionsContainer />', () => {
 	});
 
 	it('should dispatch toggle token trading permission action', () => {
-		const tokenSymbol = 'REP';
+		const tokenAddress = 'someaddress';
 		const permission = true;
-		store.dispatch(toggleTokenTradingPermission(tokenSymbol, permission));
+		store.dispatch(toggleTokenTradingPermission(tokenAddress, permission));
 		const actions = store.getActions();
-		const expectedPayload = {type: 'TOGGLE_TOKEN_TRADING_PERMISSION', tokenSymbol: tokenSymbol, permission: permission};
+		const expectedPayload = {type: 'TOGGLE_TOKEN_TRADING_PERMISSION', tokenAddress: tokenAddress, permission: permission};
 		expect(actions[0]).toEqual(expectedPayload);
 	});
 });

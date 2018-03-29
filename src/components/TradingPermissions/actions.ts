@@ -10,10 +10,10 @@ export const setAllTokensTradingPermission = (tokens: TokenEntity[]) => {
 	};
 };
 
-export const toggleTokenTradingPermission = (tokenSymbol: string, permission: boolean) => {
+export const toggleTokenTradingPermission = (tokenAddress: string, permission: boolean) => {
 	return {
 		type: actionsEnums.TOGGLE_TOKEN_TRADING_PERMISSION,
-		tokenSymbol: tokenSymbol,
+        tokenAddress: tokenAddress,
 		permission: permission
 	};
 };
