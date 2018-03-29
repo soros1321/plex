@@ -157,7 +157,7 @@ export const uiSchema = {
 			}
 		},
 		principalTokenSymbol: {
-			'ui:placeholder': 'select',
+			'ui:placeholder': 'Select token...',
 			'ui:options': {
 				label: false,
 				pressEnter: false
