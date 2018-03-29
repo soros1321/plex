@@ -53,8 +53,8 @@ class FillLoanEmpty extends React.Component<{}, State> {
 					/>
 					<Instructions>
 						<Title>Just getting started?</Title>
-						<StyledLink to="#" >FILLING DEBT ORDERS (VIDEO)</StyledLink>
-						<StyledLink to="/chat" >JOIN THE DHARMA CHAT</StyledLink>
+						{/*<StyledLink to="#" >FILLING DEBT ORDERS (VIDEO)</StyledLink>*/}
+						<StyledLink to="https://t.me/dharmalabs" >JOIN THE DHARMA CHAT</StyledLink>
 					</Instructions>
 				</MainWrapper>
 			</PaperLayout>
