@@ -24,9 +24,10 @@ interface Props {
     tokens: TokenEntity[];
     className?: string;
     handleSetAllTokensTradingPermission: (tokens: TokenEntity[]) => void;
-    handleToggleTokenTradingPermission: (tokenSymbol: string, permission: boolean) => void;
+    handleToggleTokenTradingPermission: (tokenAddress: string, permission: boolean) => void;
     handleSetError: (errorMessage: string) => void;
     handleFaucetRequest: (tokenAddress: string, userAddress: string, dharma: Dharma) => void;
+    toggleTokenLoadingSpinner: (tokenAddress: string, loading: boolean) => void;
 }
 
 interface State {
@@ -119,12 +120,14 @@ class TradingPermissions extends React.Component<Props, State> {
         }
     }
 
-    async updateProxyAllowanceAsync(tradingPermitted: boolean, tokenSymbol: string) {
+    async updateProxyAllowanceAsync(tradingPermitted: boolean, tokenAddress: string) {
+        this.props.toggleTokenLoadingSpinner(tokenAddress, true);
+
         try {
             const { tokens, dharma } = this.props;
             let selectedToken: TokenEntity | undefined = undefined;
             for (let token of tokens) {
-                if (token.tokenSymbol === tokenSymbol) {
+                if (token.address === tokenAddress) {
                     selectedToken = token;
                     break;
                 }
@@ -143,16 +146,18 @@ class TradingPermissions extends React.Component<Props, State> {
                     await this.getTokenAllowance(selectedToken.address)
                 );
 
-                this.props.handleToggleTokenTradingPermission(tokenSymbol, !tradingPermitted);
+                this.props.handleToggleTokenTradingPermission(tokenAddress, !tradingPermitted);
             }
+
+            this.props.toggleTokenLoadingSpinner(tokenAddress, false);
         } catch (e) {
             if (e.message.includes('Insufficient funds')) {
                 this.props.handleSetError('Insufficient ether in account to pay gas for transaction');
             } else {
                 this.props.handleSetError('Unable to update token trading permission');
-
             }
 
+            this.props.toggleTokenLoadingSpinner(tokenAddress, false);
             // throw new Error(e);
         }
     }
@@ -208,7 +213,7 @@ class TradingPermissions extends React.Component<Props, State> {
                         label={tokenLabel}
                         checked={token.tradingPermitted}
                         disabled={token.balance.gt(0) ? false : true}
-                        onChange={() => this.updateProxyAllowanceAsync(token.tradingPermitted, token.tokenSymbol)}
+                        onChange={() => this.updateProxyAllowanceAsync(token.tradingPermitted, token.address)}
                         key={token.tokenSymbol}
                     />
                 );
@@ -219,7 +224,7 @@ class TradingPermissions extends React.Component<Props, State> {
                         label={tokenLabel}
                         checked={token.tradingPermitted}
                         disabled={token.balance.gt(0) ? false : true}
-                        onChange={() => this.updateProxyAllowanceAsync(token.tradingPermitted, token.tokenSymbol)}
+                        onChange={() => this.updateProxyAllowanceAsync(token.tradingPermitted, token.address)}
                         key={token.tokenSymbol}
                     />
                 );

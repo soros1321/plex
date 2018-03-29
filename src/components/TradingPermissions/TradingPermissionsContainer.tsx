@@ -22,9 +22,10 @@ const mapStateToProps = (state: any) => {
 
 const mapDispatchToProps = (dispatch: any) => {
     return {
+        toggleTokenLoadingSpinner: (tokenAddress: string, loading: boolean) => dispatch(toggleTokenLoadingSpinner(tokenAddress, loading)),
         handleSetAllTokensTradingPermission: (tokens: TokenEntity[]) => dispatch(setAllTokensTradingPermission(tokens)),
-        handleToggleTokenTradingPermission: (tokenSymbol: string, permission: boolean) =>
-            dispatch(toggleTokenTradingPermission(tokenSymbol, permission)),
+        handleToggleTokenTradingPermission: (tokenAddress: string, permission: boolean) =>
+            dispatch(toggleTokenTradingPermission(tokenAddress, permission)),
         handleSetError: (errorMessage: string) => dispatch(setError(errorMessage)),
         handleFaucetRequest: (tokenAddress: string, userAddress: string, dharma: Dharma) => {
             dispatch(toggleTokenLoadingSpinner(tokenAddress, true));

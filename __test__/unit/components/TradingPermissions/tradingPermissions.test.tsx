@@ -298,20 +298,20 @@ describe('TradingPermissions (Unit)', () => {
 
 			it('calls Dharma#setProxyAllowanceAsync', async () => {
 				const tradingPermissions = shallow(<TradingPermissions {...props} />);
-				await tradingPermissions.instance().updateProxyAllowanceAsync(true, props.tokens[0].tokenSymbol);
+				await tradingPermissions.instance().updateProxyAllowanceAsync(true, props.tokens[0].address);
 				await expect(dharma.token.setProxyAllowanceAsync).toHaveBeenCalledWith(props.tokens[0].address, new BigNumber(0));
 			});
 
 			it('calls Dharma#awaitTransactionMinedAsync', async () => {
 				const tradingPermissions = shallow(<TradingPermissions {...props} />);
-				await tradingPermissions.instance().updateProxyAllowanceAsync(true, props.tokens[0].tokenSymbol);
+				await tradingPermissions.instance().updateProxyAllowanceAsync(true, props.tokens[0].address);
 				await expect(dharma.blockchain.awaitTransactionMinedAsync).toHaveBeenCalled();
 			});
 
 			it('calls getTokenAllowance', async () => {
 				const tradingPermissions = shallow(<TradingPermissions {...props} />);
 				const spy = jest.spyOn(tradingPermissions.instance(), 'getTokenAllowance');
-				await tradingPermissions.instance().updateProxyAllowanceAsync(true, props.tokens[0].tokenSymbol);
+				await tradingPermissions.instance().updateProxyAllowanceAsync(true, props.tokens[0].address);
 				await expect(spy).toHaveBeenCalledWith(props.tokens[0].address);
 			});
 
@@ -319,14 +319,14 @@ describe('TradingPermissions (Unit)', () => {
 				const tradingPermissions = shallow(<TradingPermissions {...props} />);
 				tradingPermissions.instance().getTokenAllowance = jest.fn((tokenAllowance => new BigNumber(0)));
 				const spy = jest.spyOn(tradingPermissions.instance(), 'isAllowanceUnlimited');
-				await tradingPermissions.instance().updateProxyAllowanceAsync(true, props.tokens[0].tokenSymbol);
+				await tradingPermissions.instance().updateProxyAllowanceAsync(true, props.tokens[0].address);
 				await expect(spy).toHaveBeenCalledWith(new BigNumber(0));
 			});
 
 			it('calls props.handleToggleTokenTradingPermission', async () => {
 				const tradingPermissions = shallow(<TradingPermissions {...props} />);
 				await tradingPermissions.instance().updateProxyAllowanceAsync(true, props.tokens[0].tokenSymbol);
-				await expect(props.handleToggleTokenTradingPermission).toHaveBeenCalledWith(props.tokens[0].tokenSymbol, false);
+				await expect(props.handleToggleTokenTradingPermission).toHaveBeenCalledWith(props.tokens[0].address, false);
 			});
 
 			it('calls props.handleSetError when there is an error', async() => {
@@ -380,7 +380,7 @@ describe('TradingPermissions (Unit)', () => {
 			it('calls props.handleToggleTokenTradingPermission', async () => {
 				const tradingPermissions = shallow(<TradingPermissions {...props} />);
 				await tradingPermissions.instance().updateProxyAllowanceAsync(false, props.tokens[0].tokenSymbol);
-				await expect(props.handleToggleTokenTradingPermission).toHaveBeenCalledWith(props.tokens[0].tokenSymbol, true);
+				await expect(props.handleToggleTokenTradingPermission).toHaveBeenCalledWith(props.tokens[0].address, true);
 			});
 		});
 
