@@ -41,7 +41,24 @@ class RequestLoanSuccess extends React.Component<Props, States> {
 	}
 
 	handleShareSocial(socialMediaName: string) {
-		console.log('Share social', socialMediaName);
+		const { fillLoanShortUrl, description, principalAmount, principalTokenSymbol } = this.props.debtOrder;
+
+		if (!fillLoanShortUrl) {
+			return;
+		}
+
+		let text = `I'd like to borrow ${principalAmount} ${principalTokenSymbol}`;
+
+		if (description) {
+            text += `for ${description}`;
+		}
+
+		if (socialMediaName === 'twitter') {
+			const url = `https://twitter.com/intent/tweet?url=${encodeURIComponent(fillLoanShortUrl)}&text=${text}`;
+			const windowProps = 'left=0,top=0,width=550,height=450,personalbar=0,toolbar=0,scrollbars=0,resizable=0';
+
+			window.open(url, '', windowProps);
+        }
 	}
 
 	render() {
