@@ -2,10 +2,7 @@
     "extends": ["tslint-react"],
     "rules": {
         "align": [
-            true,
-            "parameters",
-            "arguments",
-            "statements"
+            true
         ],
         "ban": false,
         "class-name": true,
