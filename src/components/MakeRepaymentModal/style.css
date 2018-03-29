@@ -1,0 +1,17 @@
+.width65 {
+    width: 64% !important;
+    margin-right: 1%;
+    display: inline-block !important;
+    vertical-align: top;
+}
+
+.width35 {
+    width: 34% !important;
+    margin-left: 1%;
+    display: inline-block !important;
+    vertical-align: top;
+}
+
+.repayment-group {
+    margin-top: 25px;
+}

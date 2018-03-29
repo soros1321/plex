@@ -14,12 +14,13 @@ import Dharma from '@dharmaprotocol/dharma.js';
 interface Props {
 	dharma: Dharma;
 	accounts: string[];
+	filledDebtOrders: DebtOrderEntity[];
 	pendingDebtOrders: DebtOrderEntity[];
 	handleSetError: (errorMessage: string) => void;
+	handleSetFilledDebtOrders: (filledDebtOrders: DebtOrderEntity[]) => void;
 }
 
 interface States {
-	debtOrders: DebtOrderEntity[];
 	investments: InvestmentEntity[];
 	activeTab: string;
 }
@@ -31,20 +32,19 @@ class Dashboard extends React.Component<Props, States> {
 		this.toggle = this.toggle.bind(this);
 		this.state = {
 			activeTab: '1',
-			debtOrders: [],
 			investments: []
 		};
 	}
 
 	async componentDidMount() {
-		if (this.props.dharma && this.props.accounts && this.props.pendingDebtOrders) {
+		if (this.props.dharma && this.props.accounts) {
 			await this.getDebtsAsync(this.props.dharma, this.props.accounts, this.props.pendingDebtOrders);
 			await this.getInvestmentsAsync(this.props.dharma, this.props.accounts);
 		}
 	}
 
 	async componentWillReceiveProps(nextProps: Props) {
-		if (nextProps.dharma && nextProps.accounts && nextProps.pendingDebtOrders) {
+		if (nextProps.dharma && nextProps.accounts) {
 			await this.getDebtsAsync(nextProps.dharma, nextProps.accounts, nextProps.pendingDebtOrders);
 			await this.getInvestmentsAsync(nextProps.dharma, nextProps.accounts);
 		}
@@ -56,7 +56,7 @@ class Dashboard extends React.Component<Props, States> {
 				return;
 			}
 			const issuanceHashes = await dharma.servicing.getDebtsAsync(accounts[0]);
-			let debtOrders: DebtOrderEntity[] = [];
+			let filledDebtOrders: DebtOrderEntity[] = [];
 			for (let issuanceHash of issuanceHashes) {
 				const debtRegistry = await dharma.servicing.getDebtRegistryEntry(issuanceHash);
 				const dharmaDebtOrder = await dharma.adapters.simpleInterestLoan.fromDebtRegistryEntry(debtRegistry);
@@ -80,12 +80,10 @@ class Dashboard extends React.Component<Props, States> {
 					status,
 					creditor: debtRegistry.beneficiary
 				};
-				debtOrders.push(debtOrder);
+				filledDebtOrders.push(debtOrder);
 			}
-			if (pendingDebtOrders.length) {
-				debtOrders = debtOrders.concat(pendingDebtOrders);
-			}
-			this.setState({ debtOrders });
+
+			this.props.handleSetFilledDebtOrders(filledDebtOrders);
 		} catch (e) {
 			this.props.handleSetError('Unable to get debt orders info');
 		}
@@ -137,13 +135,15 @@ class Dashboard extends React.Component<Props, States> {
 	}
 
 	render() {
-		const { debtOrders, investments, activeTab } = this.state;
+		const debtOrders = this.props.pendingDebtOrders.concat(this.props.filledDebtOrders);
+
+		const { investments, activeTab } = this.state;
 		const tabs = [
 			{
 				id: '1',
 				titleFirstWord: 'Your ',
 				titleRest: 'Debts (' + (debtOrders && debtOrders.length) + ')',
-				content: <DebtsContainer debtOrders={debtOrders} />
+				content: <DebtsContainer dharma={this.props.dharma} debtOrders={debtOrders} />
 			},
 			{
 				id: '2',
