@@ -6,3 +6,4 @@ export * from './ScrollToTopOnMount';
 export * from './Error';
 export * from './Toggle';
 export * from './TradingPermissions';
+export * from './TokenAmount';
