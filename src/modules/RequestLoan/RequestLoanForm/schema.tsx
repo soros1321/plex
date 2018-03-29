@@ -98,7 +98,6 @@ export const schema: JSONSchema4 = {
 						terms: {
 							type: 'object',
 							title: 'What terms would you like?',
-							description: 'The most commonly chosen options are selected by default.',
 							required: [
 								'interestRate',
 								'amortizationUnit',
