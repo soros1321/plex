@@ -8,3 +8,4 @@ export * from "./TradingPermissions";
 export * from "./TokenAmount";
 export * from "./MakeRepaymentModal";
 export * from "./Toast";
+export * from "./TokenAmount";

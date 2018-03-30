@@ -4,7 +4,7 @@ import { ClipLoader } from "react-spinners";
 
 import { amortizationUnitToFrequency, shortenString, debtOrderFromJSON } from "../../../utils";
 import { PaperLayout } from "../../../layouts";
-import { Header, ConfirmationModal, MainWrapper, Bold } from "../../../components";
+import { Header, ConfirmationModal, MainWrapper, Bold, TokenAmount } from "../../../components";
 import { SuccessModal } from "./SuccessModal";
 import { Col } from "reactstrap";
 import {
@@ -140,7 +140,7 @@ class FillLoanEntered extends React.Component<Props, States> {
                 this.successModalToggle();
             }
         } catch (e) {
-            if (e.message.includes('User denied transaction signature')) {
+            if (e.message.includes("User denied transaction signature")) {
                 this.props.handleSetError("Wallet has denied transaction.");
             } else {
                 this.props.handleSetError(e.message);
@@ -177,9 +177,14 @@ class FillLoanEntered extends React.Component<Props, States> {
         const leftInfoItems = [
             {
                 title: "Principal",
-                content: debtOrder.principalAmount
-                    ? debtOrder.principalAmount.toNumber() + " " + principalTokenSymbol
-                    : "",
+                content: debtOrder.principalAmount ? (
+                    <TokenAmount
+                        tokenAmount={debtOrder.principalAmount}
+                        tokenSymbol={principalTokenSymbol}
+                    />
+                ) : (
+                    ""
+                ),
             },
             {
                 title: "Term Length",
@@ -214,8 +219,14 @@ class FillLoanEntered extends React.Component<Props, States> {
                 You will fill this debt order <Bold>{shortenString(issuanceHash)}</Bold>. This
                 operation will debit{" "}
                 <Bold>
-                    {debtOrder.principalAmount && debtOrder.principalAmount.toNumber()}{" "}
-                    {principalTokenSymbol}
+                    {debtOrder.principalAmount ? (
+                        <TokenAmount
+                            tokenAmount={debtOrder.principalAmount}
+                            tokenSymbol={principalTokenSymbol}
+                        />
+                    ) : (
+                        ""
+                    )}
                 </Bold>{" "}
                 from your account.
             </span>

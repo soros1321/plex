@@ -7,6 +7,7 @@ import { BigNumber } from "bignumber.js";
 import { ClipLoader } from "react-spinners";
 import { shortenString } from "../../utils";
 import { DebtOrderEntity } from "../../models";
+import { TokenAmount } from "../";
 
 interface Props {
     modal: boolean;
@@ -103,12 +104,18 @@ class MakeRepaymentModal extends React.Component<Props, State> {
                             </LoanSummaryItem>. You owe
                             <LoanSummaryItem>
                                 {" "}
-                                {totalAmountOwed.toString()} {debtOrder.principalTokenSymbol}{" "}
+                                <TokenAmount
+                                    tokenAmount={totalAmountOwed}
+                                    tokenSymbol={debtOrder.principalTokenSymbol}
+                                />{" "}
                             </LoanSummaryItem>
                             in total, of which you've already repaid
                             <LoanSummaryItem>
                                 {" "}
-                                {debtOrder.repaidAmount.toString()} {debtOrder.principalTokenSymbol}
+                                <TokenAmount
+                                    tokenAmount={debtOrder.repaidAmount}
+                                    tokenSymbol={debtOrder.principalTokenSymbol}
+                                />
                             </LoanSummaryItem>.
                         </LoanSummary>
                         <h4>
