@@ -83,7 +83,8 @@
     "build": "node scripts/build.js",
     "test:watch": "jest --watch --runInBand",
     "ngrok:start": "ngrok http 3000",
-    "migrations:loans": "tsc; node build/dist/migrations/loans.js"
+    "migrations:loans": "tsc; node build/dist/migrations/loans.js",
+    "prettify": "prettier --write src/**/*.ts{,x}"
   },
   "devDependencies": {
     "enzyme": "^3.3.0",
