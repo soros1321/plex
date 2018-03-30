@@ -129,7 +129,7 @@ class ActiveDebtOrder extends React.Component<Props, State> {
         for (let i = 0; i < repaymentSchedule.length; i++) {
             paymentDate = repaymentSchedule[i];
             expectedRepaidAmount = await dharma.servicing.getExpectedValueRepaid(issuanceHash, paymentDate);
-            missedPayments[paymentDate] = repaidAmount <= expectedRepaidAmount;
+            missedPayments[paymentDate] = repaidAmount < expectedRepaidAmount;
         }
 
         this.setState({ missedPayments });
