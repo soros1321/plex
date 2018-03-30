@@ -22,6 +22,7 @@ interface Props {
 
 interface States {
 	investments: InvestmentEntity[];
+	initiallyLoading: boolean;
 	activeTab: string;
 }
 
@@ -32,7 +33,8 @@ class Dashboard extends React.Component<Props, States> {
 		this.toggle = this.toggle.bind(this);
 		this.state = {
 			activeTab: '1',
-			investments: []
+			investments: [],
+			initiallyLoading: true,
 		};
 	}
 
@@ -40,6 +42,7 @@ class Dashboard extends React.Component<Props, States> {
 		if (this.props.dharma && this.props.accounts) {
 			await this.getDebtsAsync(this.props.dharma, this.props.accounts, this.props.pendingDebtOrders);
 			await this.getInvestmentsAsync(this.props.dharma, this.props.accounts);
+			this.setState({ initiallyLoading: false });
 		}
 	}
 
@@ -47,6 +50,7 @@ class Dashboard extends React.Component<Props, States> {
 		if (nextProps.dharma && nextProps.accounts) {
 			await this.getDebtsAsync(nextProps.dharma, nextProps.accounts, nextProps.pendingDebtOrders);
 			await this.getInvestmentsAsync(nextProps.dharma, nextProps.accounts);
+			this.setState({ initiallyLoading: false });
 		}
 	}
 
@@ -137,19 +141,19 @@ class Dashboard extends React.Component<Props, States> {
 	render() {
 		const debtOrders = this.props.pendingDebtOrders.concat(this.props.filledDebtOrders);
 
-		const { investments, activeTab } = this.state;
+		const { investments, activeTab, initiallyLoading } = this.state;
 		const tabs = [
 			{
 				id: '1',
 				titleFirstWord: 'Your ',
 				titleRest: 'Debts (' + (debtOrders && debtOrders.length) + ')',
-				content: <DebtsContainer dharma={this.props.dharma} debtOrders={debtOrders} />
+				content: <DebtsContainer dharma={this.props.dharma} debtOrders={debtOrders} initializing={initiallyLoading}/>
 			},
 			{
 				id: '2',
 				titleFirstWord: 'Your ',
 				titleRest: 'Investments (' + (investments && investments.length) + ')',
-				content: <InvestmentsContainer investments={investments} />
+				content: <InvestmentsContainer investments={investments} initializing={initiallyLoading}  />
 			}
 		];
 		const tabNavs = tabs.map((tab) => (
