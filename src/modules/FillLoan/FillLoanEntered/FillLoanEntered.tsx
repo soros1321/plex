@@ -32,6 +32,7 @@ interface Props {
     tokens: TokenEntity[];
     handleSetError: (errorMessage: string) => void;
     handleFillDebtOrder: (issuanceHash: string) => void;
+    updateTokenBalance: (tokenAddress: string, balance: BigNumber) => void;
 }
 
 interface States {
@@ -103,7 +104,7 @@ class FillLoanEntered extends React.Component<Props, States> {
                 });
             }
         } catch (e) {
-            // console.log(e);
+            console.log(e);
         }
     }
 
@@ -137,6 +138,12 @@ class FillLoanEntered extends React.Component<Props, States> {
                 });
             } else {
                 this.props.handleFillDebtOrder(issuanceHash);
+
+                // HACK: Because principalToken is technically optional,
+                //      we have to provide an alternative to it if its undefined
+                //      in order to supress typescript errors.
+                await this.updateTokenBalance(debtOrder.principalToken || "");
+
                 this.successModalToggle();
             }
         } catch (e) {
@@ -150,6 +157,14 @@ class FillLoanEntered extends React.Component<Props, States> {
                 confirmationModal: false,
             });
         }
+    }
+
+    async updateTokenBalance(tokenAddress: string) {
+        const { dharma, accounts } = this.props;
+
+        const currentBalance = await dharma.token.getBalanceAsync(tokenAddress, accounts[0]);
+
+        this.props.updateTokenBalance(tokenAddress, currentBalance);
     }
 
     successModalToggle() {
