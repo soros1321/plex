@@ -9,6 +9,7 @@ import {
 	InfoItemTitle,
 	InfoItemContent
 } from './styledComponents';
+import { TokenAmount } from 'src/components';
 
 interface Props {
 	investment: InvestmentEntity;
@@ -40,7 +41,7 @@ class InvestmentRow extends React.Component<Props, State> {
 			<div onClick={this.toggleDrawer}>
 				<StyledRow>
 					<Col xs="3" md="2">
-						{investment.principalAmount.toNumber() + ' ' + investment.principalTokenSymbol}
+						<TokenAmount tokenAmount={investment.principalAmount} tokenSymbol={investment.principalTokenSymbol}/>
 					</Col>
 					<Col xs="3" md="2">
 						{shortenString(investment.issuanceHash)}
