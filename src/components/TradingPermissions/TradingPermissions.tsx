@@ -1,8 +1,8 @@
-import * as React from 'react';
-import { Toggle } from '../Toggle';
-import * as Web3 from 'web3';
-import Dharma from '@dharmaprotocol/dharma.js';
-import { BigNumber } from 'bignumber.js';
+import * as React from "react";
+import { Toggle } from "../Toggle";
+import * as Web3 from "web3";
+import Dharma from "@dharmaprotocol/dharma.js";
+import { BigNumber } from "bignumber.js";
 import {
     LoaderContainer,
     TradingPermissionsContainer,
@@ -11,13 +11,13 @@ import {
     TokenBalance,
     FaucetButton,
     ShowMoreButton,
-    Arrow
-} from './styledComponents';
-import { TokenEntity } from '../../models';
-const promisify = require('tiny-promisify');
-import { Collapse } from 'reactstrap';
-import { ClipLoader } from 'react-spinners';
-import { truncate } from 'src/utils/webUtils';
+    Arrow,
+} from "./styledComponents";
+import { TokenEntity } from "../../models";
+const promisify = require("tiny-promisify");
+import { Collapse } from "reactstrap";
+import { ClipLoader } from "react-spinners";
+import { truncate } from "src/utils/webUtils";
 
 interface Props {
     web3: Web3;
@@ -39,7 +39,7 @@ class TradingPermissions extends React.Component<Props, State> {
     constructor(props: Props) {
         super(props);
         this.state = {
-            collapse: false
+            collapse: false,
         };
         this.getTokenAllowance = this.getTokenAllowance.bind(this);
         this.updateProxyAllowanceAsync = this.updateProxyAllowanceAsync.bind(this);
@@ -65,7 +65,10 @@ class TradingPermissions extends React.Component<Props, State> {
         }
 
         const ownerAddress = accounts[0];
-        const tokenAllowance = await this.props.dharma.token.getProxyAllowanceAsync(tokenAddress, ownerAddress);
+        const tokenAllowance = await this.props.dharma.token.getProxyAllowanceAsync(
+            tokenAddress,
+            ownerAddress,
+        );
         return new BigNumber(tokenAllowance);
     }
 
@@ -96,13 +99,15 @@ class TradingPermissions extends React.Component<Props, State> {
 
             const tokenRegistry = await dharma.contracts.loadTokenRegistry();
             // TODO: get token tickers from dharma.js
-            const tokenSymbols = ['REP', 'MKR', 'ZRX'];
+            const tokenSymbols = ["REP", "MKR", "ZRX"];
 
             let allTokens: TokenEntity[] = [];
 
             for (let tokenSymbol of tokenSymbols) {
                 const address = await tokenRegistry.getTokenAddressBySymbol.callAsync(tokenSymbol);
-                const tradingPermitted = this.isAllowanceUnlimited(await this.getTokenAllowance(address));
+                const tradingPermitted = this.isAllowanceUnlimited(
+                    await this.getTokenAllowance(address),
+                );
                 let balance = await this.getTokenBalance(address);
                 // balance = tokenSymbol !== 'REP' ? new BigNumber(0) : balance;
                 allTokens.push({
@@ -110,13 +115,13 @@ class TradingPermissions extends React.Component<Props, State> {
                     tokenSymbol: tokenSymbol,
                     tradingPermitted,
                     balance,
-                    awaitingTransaction: false
+                    awaitingTransaction: false,
                 });
             }
 
             handleSetAllTokensTradingPermission(allTokens);
         } catch (e) {
-            this.props.handleSetError('Unable to get token data');
+            this.props.handleSetError("Unable to get token data");
             // console.log(e);
         }
     }
@@ -136,15 +141,20 @@ class TradingPermissions extends React.Component<Props, State> {
             if (selectedToken) {
                 let txHash;
                 if (tradingPermitted) {
-                    txHash = await dharma.token.setProxyAllowanceAsync(selectedToken.address, new BigNumber(0));
+                    txHash = await dharma.token.setProxyAllowanceAsync(
+                        selectedToken.address,
+                        new BigNumber(0),
+                    );
                 } else {
-                    txHash = await dharma.token.setUnlimitedProxyAllowanceAsync(selectedToken.address);
+                    txHash = await dharma.token.setUnlimitedProxyAllowanceAsync(
+                        selectedToken.address,
+                    );
                 }
 
                 await dharma.blockchain.awaitTransactionMinedAsync(txHash, 1000, 10000);
 
                 selectedToken.tradingPermitted = this.isAllowanceUnlimited(
-                    await this.getTokenAllowance(selectedToken.address)
+                    await this.getTokenAllowance(selectedToken.address),
                 );
 
                 this.props.handleToggleTokenTradingPermission(tokenAddress, !tradingPermitted);
@@ -166,15 +176,17 @@ class TradingPermissions extends React.Component<Props, State> {
     }
 
     isAllowanceUnlimited(tokenAllowance: BigNumber) {
-        return tokenAllowance.greaterThanOrEqualTo(new BigNumber(2).pow(32).minus(new BigNumber(1)));
+        return tokenAllowance.greaterThanOrEqualTo(
+            new BigNumber(2).pow(32).minus(new BigNumber(1)),
+        );
     }
 
-    async handleFaucet(tokenSymbol: string) {
+    async handleFaucet(tokenAddress: string) {
         const { dharma } = this.props;
 
         const accounts = await promisify(this.props.web3.eth.getAccounts)();
 
-        return this.props.handleFaucetRequest(tokenSymbol, accounts[0], dharma);
+        return this.props.handleFaucetRequest(tokenAddress, accounts[0], dharma);
     }
 
     showMore() {
@@ -191,8 +203,10 @@ class TradingPermissions extends React.Component<Props, State> {
 
         let count: number = 0;
         for (let token of tokens) {
-
-            const truncatedTokenBalance = truncate(web3.fromWei(token.balance, 'ether').toNumber(), 5);
+            const truncatedTokenBalance = truncate(
+                web3.fromWei(token.balance, "ether").toNumber(),
+                5,
+            );
 
             const tokenLabel = (
                 <div>
@@ -201,14 +215,18 @@ class TradingPermissions extends React.Component<Props, State> {
                         <TokenBalance>({truncatedTokenBalance})</TokenBalance>
                     ) : (
                         <FaucetButton
-                            onClick={e => this.handleFaucet(token.tokenSymbol)}
+                            onClick={(e) => this.handleFaucet(token.address)}
                             disabled={token.awaitingTransaction}
                         >
                             Faucet
                         </FaucetButton>
                     )}
                     <LoaderContainer>
-                        <ClipLoader size={12} color={'#1cc1cc'} loading={token.awaitingTransaction} />
+                        <ClipLoader
+                            size={12}
+                            color={"#1cc1cc"}
+                            loading={token.awaitingTransaction}
+                        />
                     </LoaderContainer>
                 </div>
             );
@@ -219,9 +237,11 @@ class TradingPermissions extends React.Component<Props, State> {
                         label={tokenLabel}
                         checked={token.tradingPermitted}
                         disabled={token.balance.gt(0) ? false : true}
-                        onChange={() => this.updateProxyAllowanceAsync(token.tradingPermitted, token.address)}
+                        onChange={() =>
+                            this.updateProxyAllowanceAsync(token.tradingPermitted, token.address)
+                        }
                         key={token.tokenSymbol}
-                    />
+                    />,
                 );
             } else {
                 tokenItemsMore.push(
@@ -230,9 +250,11 @@ class TradingPermissions extends React.Component<Props, State> {
                         label={tokenLabel}
                         checked={token.tradingPermitted}
                         disabled={token.balance.gt(0) ? false : true}
-                        onChange={() => this.updateProxyAllowanceAsync(token.tradingPermitted, token.address)}
+                        onChange={() =>
+                            this.updateProxyAllowanceAsync(token.tradingPermitted, token.address)
+                        }
                         key={token.tokenSymbol}
-                    />
+                    />,
                 );
             }
             count++;
@@ -240,16 +262,16 @@ class TradingPermissions extends React.Component<Props, State> {
 
         return (
             <TradingPermissionsContainer className={this.props.className}>
-                <TradingPermissionsTitle>{'Trading Permissions'}</TradingPermissionsTitle>
+                <TradingPermissionsTitle>{"Trading Permissions"}</TradingPermissionsTitle>
                 {tokenItems}
                 <Collapse isOpen={this.state.collapse}>{tokenItemsMore}</Collapse>
                 <ShowMoreButton onClick={this.showMore}>
-                    More{' '}
+                    More{" "}
                     <Arrow
                         src={
                             this.state.collapse
-                                ? require('../../assets/img/arrow_up_white.png')
-                                : require('../../assets/img/arrow_down_white.png')
+                                ? require("../../assets/img/arrow_up_white.png")
+                                : require("../../assets/img/arrow_down_white.png")
                         }
                     />
                 </ShowMoreButton>

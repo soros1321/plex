@@ -16,7 +16,7 @@ import {
     ButtonContainer,
     DeclineButton,
     FillLoanButton,
-    LoaderContainer
+    LoaderContainer,
 } from "./styledComponents";
 import * as Web3 from "web3";
 import Dharma from "@dharmaprotocol/dharma.js";
@@ -62,12 +62,11 @@ class FillLoanEntered extends React.Component<Props, States> {
             interestRate: new BigNumber(0),
             termLength: new BigNumber(0),
             amortizationUnit: "",
-            issuanceHash: ""
+            issuanceHash: "",
         };
         this.confirmationModalToggle = this.confirmationModalToggle.bind(this);
         this.successModalToggle = this.successModalToggle.bind(this);
         this.handleFillOrder = this.handleFillOrder.bind(this);
-        this.validateFillOrder = this.validateFillOrder.bind(this);
         this.handleRedirect = this.handleRedirect.bind(this);
     }
 
@@ -92,13 +91,15 @@ class FillLoanEntered extends React.Component<Props, States> {
             delete debtOrder.principalTokenSymbol;
             this.setState({ debtOrder, description, principalTokenSymbol });
             if (debtOrder.termsContract && debtOrder.termsContractParameters) {
-                const fromDebtOrder = await dharma.adapters.simpleInterestLoan.fromDebtOrder(debtOrder);
+                const fromDebtOrder = await dharma.adapters.simpleInterestLoan.fromDebtOrder(
+                    debtOrder,
+                );
                 const issuanceHash = await dharma.order.getIssuanceHash(debtOrder);
                 this.setState({
                     interestRate: fromDebtOrder.interestRate,
                     termLength: fromDebtOrder.termLength,
                     amortizationUnit: fromDebtOrder.amortizationUnit,
-                    issuanceHash: issuanceHash
+                    issuanceHash: issuanceHash,
                 });
             }
         } catch (e) {
@@ -108,43 +109,8 @@ class FillLoanEntered extends React.Component<Props, States> {
 
     confirmationModalToggle() {
         this.setState({
-            confirmationModal: !this.state.confirmationModal
+            confirmationModal: !this.state.confirmationModal,
         });
-    }
-
-    validateFillOrder() {
-        const { debtOrder, principalTokenSymbol } = this.state;
-        const { tokens } = this.props;
-        const principalAmount = debtOrder.principalAmount || new BigNumber(0);
-        if (principalAmount.eq(0)) {
-            this.props.handleSetError("Invalid debt order");
-            return;
-        }
-
-        this.props.handleSetError("");
-        let found: boolean = false;
-        let error: boolean = false;
-        if (debtOrder.principalToken && tokens.length) {
-            for (let token of tokens) {
-                if (debtOrder.principalToken === token.address) {
-                    found = true;
-                    if (!token.tradingPermitted || token.balance.lt(principalAmount)) {
-                        error = true;
-                        break;
-                    }
-                }
-            }
-        } else {
-            error = true;
-        }
-        if (!found) {
-            error = true;
-        }
-        if (error) {
-            this.props.handleSetError(principalTokenSymbol + " is currently disabled for trading");
-            return;
-        }
-        this.confirmationModalToggle();
     }
 
     async handleFillOrder() {
@@ -167,7 +133,7 @@ class FillLoanEntered extends React.Component<Props, States> {
             if (errorLogs.length) {
                 this.props.handleSetError(errorLogs[0]);
                 this.setState({
-                    confirmationModal: false
+                    confirmationModal: false,
                 });
             } else {
                 this.props.handleFillDebtOrder(issuanceHash);
@@ -181,7 +147,7 @@ class FillLoanEntered extends React.Component<Props, States> {
             }
 
             this.setState({
-                confirmationModal: false
+                confirmationModal: false,
             });
         }
     }
@@ -189,7 +155,7 @@ class FillLoanEntered extends React.Component<Props, States> {
     successModalToggle() {
         this.setState({
             confirmationModal: false,
-            successModal: !this.state.successModal
+            successModal: !this.state.successModal,
         });
     }
 
@@ -205,7 +171,7 @@ class FillLoanEntered extends React.Component<Props, States> {
             termLength,
             amortizationUnit,
             principalTokenSymbol,
-            issuanceHash
+            issuanceHash,
         } = this.state;
 
         const leftInfoItems = [
@@ -213,27 +179,30 @@ class FillLoanEntered extends React.Component<Props, States> {
                 title: "Principal",
                 content: debtOrder.principalAmount
                     ? debtOrder.principalAmount.toNumber() + " " + principalTokenSymbol
-                    : ""
+                    : "",
             },
             {
                 title: "Term Length",
-                content: termLength && amortizationUnit ? termLength.toNumber() + " " + amortizationUnit : "-"
-            }
+                content:
+                    termLength && amortizationUnit
+                        ? termLength.toNumber() + " " + amortizationUnit
+                        : "-",
+            },
         ];
         const rightInfoItems = [
             { title: "Interest Rate", content: interestRate.toNumber() + "%" },
             {
                 title: "Installment Frequency",
-                content: amortizationUnit ? amortizationUnitToFrequency(amortizationUnit) : "-"
-            }
+                content: amortizationUnit ? amortizationUnitToFrequency(amortizationUnit) : "-",
+            },
         ];
-        const leftInfoItemRows = leftInfoItems.map(item => (
+        const leftInfoItemRows = leftInfoItems.map((item) => (
             <InfoItem key={item.title}>
                 <Title>{item.title}</Title>
                 <Content>{item.content}</Content>
             </InfoItem>
         ));
-        const rightInfoItemRows = rightInfoItems.map(item => (
+        const rightInfoItemRows = rightInfoItems.map((item) => (
             <InfoItem key={item.title}>
                 <Title>{item.title}</Title>
                 <Content>{item.content}</Content>
@@ -242,17 +211,19 @@ class FillLoanEntered extends React.Component<Props, States> {
 
         const confirmationModalContent = (
             <span>
-                You will fill this debt order <Bold>{shortenString(issuanceHash)}</Bold>. This operation will debit{" "}
+                You will fill this debt order <Bold>{shortenString(issuanceHash)}</Bold>. This
+                operation will debit{" "}
                 <Bold>
-                    {debtOrder.principalAmount && debtOrder.principalAmount.toNumber()} {principalTokenSymbol}
+                    {debtOrder.principalAmount && debtOrder.principalAmount.toNumber()}{" "}
+                    {principalTokenSymbol}
                 </Bold>{" "}
                 from your account.
             </span>
         );
         const descriptionContent = (
             <span>
-                Here are the details of loan request <Bold>{issuanceHash}</Bold>. If the terms look fair to you, fill
-                the loan and your transaction will be completed.
+                Here are the details of loan request <Bold>{issuanceHash}</Bold>. If the terms look
+                fair to you, fill the loan and your transaction will be completed.
             </span>
         );
         return (
@@ -273,7 +244,10 @@ class FillLoanEntered extends React.Component<Props, States> {
                         <Link to="/fill">
                             <DeclineButton>Decline</DeclineButton>
                         </Link>
-                        <FillLoanButton onClick={this.validateFillOrder} disabled={this.state.awaitingTransaction}>
+                        <FillLoanButton
+                            onClick={this.confirmationModalToggle}
+                            disabled={this.state.awaitingTransaction}
+                        >
                             Fill Loan
                         </FillLoanButton>
                     </ButtonContainer>
@@ -294,7 +268,9 @@ class FillLoanEntered extends React.Component<Props, States> {
                         onToggle={this.confirmationModalToggle}
                         onSubmit={this.handleFillOrder}
                         closeButtonText="Cancel"
-                        submitButtonText={this.state.awaitingTransaction ? "Filling order..." : "Fill Order"}
+                        submitButtonText={
+                            this.state.awaitingTransaction ? "Filling order..." : "Fill Order"
+                        }
                     />
                     <SuccessModal
                         modal={this.state.successModal}
