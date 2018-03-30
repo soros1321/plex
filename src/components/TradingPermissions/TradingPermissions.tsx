@@ -154,8 +154,10 @@ class TradingPermissions extends React.Component<Props, State> {
         } catch (e) {
             if (e.message.includes('Insufficient funds')) {
                 this.props.handleSetError('Insufficient ether in account to pay gas for transaction');
+            } else if (e.message.includes('User denied transaction signature')) {
+                this.props.handleSetError("Wallet has denied transaction.");
             } else {
-                this.props.handleSetError('Unable to update token trading permission');
+                this.props.handleSetError(e.message);
             }
 
             this.props.toggleTokenLoadingSpinner(tokenAddress, false);

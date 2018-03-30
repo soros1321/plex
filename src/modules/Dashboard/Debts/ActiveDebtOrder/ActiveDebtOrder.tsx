@@ -106,8 +106,13 @@ class ActiveDebtOrder extends React.Component<Props, State> {
                 }
             })
             .catch(err => {
+                if (err.message.includes('User denied transaction signature')) {
+                    this.props.handleSetErrorToast("Wallet has denied transaction.");
+                } else {
+                    this.props.handleSetErrorToast(err.message);
+                }
+
                 this.setState({ makeRepayment: false, awaitingRepaymentTx: false });
-                this.props.handleSetErrorToast(err.message);
             });
     }
 
