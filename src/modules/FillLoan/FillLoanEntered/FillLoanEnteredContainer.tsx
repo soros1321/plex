@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import { FillLoanEntered } from './FillLoanEntered';
-import { setError } from '../../../components/Error/actions';
+import { setError } from '../../../components/Toast/actions';
 import { fillDebtOrder } from './actions';
 
 const mapStateToProps = (state: any) => {

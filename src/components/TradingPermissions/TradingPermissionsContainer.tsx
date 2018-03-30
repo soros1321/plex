@@ -7,7 +7,7 @@ import {
     toggleTokenLoadingSpinner,
 	setTokenBalance,
 } from './actions';
-import { setError } from '../../components/Error/actions';
+import { setError } from '../../components/Toast/actions';
 
 import Dharma from '@dharmaprotocol/dharma.js';
 import { BigNumber } from 'bignumber.js';

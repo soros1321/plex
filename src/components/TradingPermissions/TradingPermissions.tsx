@@ -164,15 +164,15 @@ class TradingPermissions extends React.Component<Props, State> {
     }
 
     isAllowanceUnlimited(tokenAllowance: BigNumber) {
-        return tokenAllowance.equals(new BigNumber(2).pow(256).minus(new BigNumber(1)));
+        return tokenAllowance.greaterThanOrEqualTo(new BigNumber(2).pow(32).minus(new BigNumber(1)));
     }
 
-    async handleFaucet(tokenAddress: string) {
+    async handleFaucet(tokenSymbol: string) {
         const { dharma } = this.props;
 
         const accounts = await promisify(this.props.web3.eth.getAccounts)();
 
-        return this.props.handleFaucetRequest(tokenAddress, accounts[0], dharma);
+        return this.props.handleFaucetRequest(tokenSymbol, accounts[0], dharma);
     }
 
     showMore() {
@@ -199,7 +199,7 @@ class TradingPermissions extends React.Component<Props, State> {
                         <TokenBalance>({truncatedTokenBalance})</TokenBalance>
                     ) : (
                         <FaucetButton
-                            onClick={e => this.handleFaucet(token.address)}
+                            onClick={e => this.handleFaucet(token.tokenSymbol)}
                             disabled={token.awaitingTransaction}
                         >
                             Faucet
