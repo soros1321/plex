@@ -165,7 +165,12 @@ class RequestLoanForm extends React.Component<Props, State> {
             this.props.handleRequestDebtOrder(storeDebtOrder);
             browserHistory.push(`/request/success/${storeDebtOrder.issuanceHash}`);
         } catch (e) {
-            this.props.handleSetError(e.message);
+			if (e.message.includes('User denied message signature')) {
+				this.props.handleSetError("Wallet has denied message signature.");
+			} else {
+				this.props.handleSetError(e.message);
+			}
+
             this.setState({
                 confirmationModal: false
             });

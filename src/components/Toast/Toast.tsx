@@ -38,9 +38,6 @@ class Toast extends React.Component<Props, State> {
 	}
 
 	render() {
-		console.log(this.props.message);
-		console.log(this.props.type);
-
 		return (
 			<Wrapper>
 				{this.props.message && (

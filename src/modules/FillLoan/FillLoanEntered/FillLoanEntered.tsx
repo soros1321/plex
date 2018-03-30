@@ -140,7 +140,12 @@ class FillLoanEntered extends React.Component<Props, States> {
                 this.successModalToggle();
             }
         } catch (e) {
-            this.props.handleSetError(e.message);
+            if (e.message.includes('User denied transaction signature')) {
+                this.props.handleSetError("Wallet has denied transaction.");
+            } else {
+                this.props.handleSetError(e.message);
+            }
+
             this.setState({
                 confirmationModal: false,
             });
