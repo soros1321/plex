@@ -33,6 +33,7 @@ import {
 	PaymentDate
 } from './styledComponents';
 import { Row, Col, Collapse } from 'reactstrap';
+import { TokenAmount } from 'src/components';
 
 interface Props {
 	debtOrder: DebtOrderEntity;
@@ -129,7 +130,7 @@ class ActiveDebtOrder extends React.Component<Props, State> {
 					<DetailContainer>
 						<Row>
 							<Col xs="12" md="6">
-								<Amount>{debtOrder.principalAmount!.toNumber()} {debtOrder.principalTokenSymbol}</Amount>
+								<Amount><TokenAmount tokenAmount={debtOrder.principalAmount} tokenSymbol={debtOrder.principalTokenSymbol}/></Amount>
 								<Url>
 									{detailLink}
 								</Url>
