@@ -162,9 +162,11 @@ class TradingPermissions extends React.Component<Props, State> {
 
             this.props.toggleTokenLoadingSpinner(tokenAddress, false);
         } catch (e) {
-            if (e.message.includes('Insufficient funds')) {
-                this.props.handleSetError('Insufficient ether in account to pay gas for transaction');
-            } else if (e.message.includes('User denied transaction signature')) {
+            if (e.message.includes("Insufficient funds")) {
+                this.props.handleSetError(
+                    "Insufficient ether in account to pay gas for transaction",
+                );
+            } else if (e.message.includes("User denied transaction signature")) {
                 this.props.handleSetError("Wallet has denied transaction.");
             } else {
                 this.props.handleSetError(e.message);
@@ -262,7 +264,7 @@ class TradingPermissions extends React.Component<Props, State> {
 
         return (
             <TradingPermissionsContainer className={this.props.className}>
-                <TradingPermissionsTitle>{"Trading Permissions"}</TradingPermissionsTitle>
+                <TradingPermissionsTitle>{"Token Permissions "}</TradingPermissionsTitle>
                 {tokenItems}
                 <Collapse isOpen={this.state.collapse}>{tokenItemsMore}</Collapse>
                 <ShowMoreButton onClick={this.showMore}>

@@ -12,6 +12,7 @@
     "@types/node": "^9.4.6",
     "@types/react": "^16.0.40",
     "@types/react-dom": "^16.0.4",
+    "@types/react-icons": "^2.2.5",
     "@types/react-jsonschema-form": "1.0.2",
     "@types/react-redux": "^5.0.14",
     "@types/react-router": "3",
