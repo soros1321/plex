@@ -86,7 +86,7 @@ class RequestLoanForm extends React.Component<Props, State> {
 
             const simpleInterestLoan = {
                 principalTokenSymbol,
-                principalAmount: new BigNumber(principalAmount),
+                principalAmount: new BigNumber(principalAmount * 10 ** 18),
                 interestRate: new BigNumber(interestRate),
                 amortizationUnit,
                 termLength: new BigNumber(termLength)

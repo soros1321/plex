@@ -5,7 +5,7 @@ import {
     formatTime,
     getIdenticonImgSrc,
     shortenString,
-    amortizationUnitToFrequency
+    amortizationUnitToFrequency,
 } from "../../../../utils";
 import {
     Wrapper,
@@ -30,17 +30,22 @@ import {
     ScheduleIcon,
     Strikethrough,
     ShowMore,
-    PaymentDate
+    PaymentDate,
 } from "./styledComponents";
 import { MakeRepaymentModal } from "../../../../components";
 import { Row, Col, Collapse } from "reactstrap";
 import { BigNumber } from "bignumber.js";
 import Dharma from "@dharmaprotocol/dharma.js";
+import { TokenAmount } from "src/components";
 
 interface Props {
     debtOrder: DebtOrderEntity;
     dharma: Dharma;
-    handleSuccessfulRepayment: (agreementId: string, repaymentAmount: BigNumber, repaymentSymbol: string) => void;
+    handleSuccessfulRepayment: (
+        agreementId: string,
+        repaymentAmount: BigNumber,
+        repaymentSymbol: string,
+    ) => void;
     handleSetErrorToast: (errorMessage: string) => void;
     handleSetSuccessToast: (successMessage: string) => void;
 }
@@ -57,7 +62,7 @@ class ActiveDebtOrder extends React.Component<Props, State> {
         this.state = {
             collapse: false,
             makeRepayment: false,
-            awaitingRepaymentTx: false
+            awaitingRepaymentTx: false,
         };
         this.toggleDrawer = this.toggleDrawer.bind(this);
         this.toggleRepaymentModal = this.toggleRepaymentModal.bind(this);
@@ -87,25 +92,28 @@ class ActiveDebtOrder extends React.Component<Props, State> {
 
         dharma.servicing
             .makeRepayment(this.props.debtOrder.issuanceHash, tokenAmount, tokenAddress)
-            .then(txHash => {
+            .then((txHash) => {
                 return dharma.blockchain.awaitTransactionMinedAsync(txHash, 1000, 60000);
             })
-            .then(receipt => {
+            .then((receipt) => {
                 return dharma.blockchain.getErrorLogs(receipt.transactionHash);
             })
-            .then(errors => {
+            .then((errors) => {
                 this.setState({ makeRepayment: false, awaitingRepaymentTx: false });
 
                 if (errors.length > 0) {
                     this.props.handleSetErrorToast(errors[0]);
                 } else {
-                    this.props.handleSuccessfulRepayment(this.props.debtOrder.issuanceHash, tokenAmount, tokenSymbol);
+                    this.props.handleSuccessfulRepayment(
+                        this.props.debtOrder.issuanceHash,
+                        tokenAmount,
+                        tokenSymbol,
+                    );
                     this.props.handleSetSuccessToast(
-                        `Successfully made repayment of ${tokenAmount.toString()} ${tokenSymbol}`
+                        `Successfully made repayment of ${tokenAmount.toString()} ${tokenSymbol}`,
                     );
                 }
-            })
-            .catch(err => {
+            }).catch(err => {
                 if (err.message.includes('User denied transaction signature')) {
                     this.props.handleSetErrorToast("Wallet has denied transaction.");
                 } else {
@@ -131,7 +139,7 @@ class ActiveDebtOrder extends React.Component<Props, State> {
         let maxDisplay = 0;
         let selected = false;
         let selectedPaymentSchedule = 0;
-        repaymentSchedule.forEach(paymentSchedule => {
+        repaymentSchedule.forEach((paymentSchedule) => {
             if (maxDisplay < 5) {
                 if (maxDisplay === 4 && repaymentSchedule.length > 5) {
                     repaymentScheduleItems.push(
@@ -141,7 +149,7 @@ class ActiveDebtOrder extends React.Component<Props, State> {
                             </ScheduleIconContainer>
                             <Strikethrough />
                             <ShowMore>+ {repaymentSchedule.length - maxDisplay} more</ShowMore>
-                        </Schedule>
+                        </Schedule>,
                     );
                 } else {
                     if (now <= paymentSchedule && !selected) {
@@ -162,7 +170,7 @@ class ActiveDebtOrder extends React.Component<Props, State> {
                                     ? formatDate(paymentSchedule)
                                     : formatTime(paymentSchedule)}
                             </PaymentDate>
-                        </Schedule>
+                        </Schedule>,
                     );
                 }
             }
@@ -182,12 +190,17 @@ class ActiveDebtOrder extends React.Component<Props, State> {
         return (
             <Wrapper onClick={this.toggleDrawer}>
                 <Row>
-                    <ImageContainer>{identiconImgSrc && <IdenticonImage src={identiconImgSrc} />}</ImageContainer>
+                    <ImageContainer>
+                        {identiconImgSrc && <IdenticonImage src={identiconImgSrc} />}
+                    </ImageContainer>
                     <DetailContainer>
                         <Row>
                             <Col xs="12" md="6">
                                 <Amount>
-                                    {debtOrder.principalAmount!.toNumber()} {debtOrder.principalTokenSymbol}
+                                    <TokenAmount
+                                        tokenAmount={debtOrder.principalAmount}
+                                        tokenSymbol={debtOrder.principalTokenSymbol}
+                                    />
                                 </Amount>
                                 <Url>{detailLink}</Url>
                             </Col>
@@ -206,7 +219,9 @@ class ActiveDebtOrder extends React.Component<Props, State> {
                         )}
                         <Terms>Simple Interest (Non-Collateralized)</Terms>
                     </DetailContainer>
-                    <RepaymentScheduleContainer className={debtOrder.status === "active" ? "active" : ""}>
+                    <RepaymentScheduleContainer
+                        className={debtOrder.status === "active" ? "active" : ""}
+                    >
                         <Title>Repayment Schedule</Title>
                         {repaymentScheduleItems}
                     </RepaymentScheduleContainer>
@@ -218,7 +233,10 @@ class ActiveDebtOrder extends React.Component<Props, State> {
                                 <InfoItem>
                                     <InfoItemTitle>Requested</InfoItemTitle>
                                     <InfoItemContent>
-                                        {debtOrder.principalAmount!.toNumber() + " " + debtOrder.principalTokenSymbol}
+                                        <TokenAmount
+                                            tokenAmount={debtOrder.principalAmount}
+                                            tokenSymbol={debtOrder.principalTokenSymbol}
+                                        />
                                     </InfoItemContent>
                                 </InfoItem>
                             </Col>
@@ -226,7 +244,10 @@ class ActiveDebtOrder extends React.Component<Props, State> {
                                 <InfoItem>
                                     <InfoItemTitle>Repaid</InfoItemTitle>
                                     <InfoItemContent>
-                                        {debtOrder.repaidAmount.toNumber() + " " + debtOrder.principalTokenSymbol}
+                                        <TokenAmount
+                                            tokenAmount={debtOrder.repaidAmount}
+                                            tokenSymbol={debtOrder.principalTokenSymbol}
+                                        />
                                     </InfoItemContent>
                                 </InfoItem>
                             </Col>
@@ -234,14 +255,18 @@ class ActiveDebtOrder extends React.Component<Props, State> {
                                 <InfoItem>
                                     <InfoItemTitle>Term Length</InfoItemTitle>
                                     <InfoItemContent>
-                                        {debtOrder.termLength.toNumber() + " " + debtOrder.amortizationUnit}
+                                        {debtOrder.termLength.toNumber() +
+                                            " " +
+                                            debtOrder.amortizationUnit}
                                     </InfoItemContent>
                                 </InfoItem>
                             </Col>
                             <Col xs="12" md="2">
                                 <InfoItem>
                                     <InfoItemTitle>Interest Rate</InfoItemTitle>
-                                    <InfoItemContent>{debtOrder.interestRate.toNumber() + "%"}</InfoItemContent>
+                                    <InfoItemContent>
+                                        {debtOrder.interestRate.toNumber() + "%"}
+                                    </InfoItemContent>
                                 </InfoItem>
                             </Col>
                             <Col xs="12" md="2">
@@ -266,7 +291,9 @@ class ActiveDebtOrder extends React.Component<Props, State> {
                     debtOrder={debtOrder}
                     title="Make Repayment"
                     closeButtonText="Nevermind"
-                    submitButtonText={this.state.awaitingRepaymentTx ? "Making Repayment..." : "Make Repayment"}
+                    submitButtonText={
+                        this.state.awaitingRepaymentTx ? "Making Repayment..." : "Make Repayment"
+                    }
                     awaitingTx={this.state.awaitingRepaymentTx}
                     onToggle={this.toggleRepaymentModal}
                     onSubmit={this.handleRepaymentFormSubmission}
