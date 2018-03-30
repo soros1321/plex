@@ -83,12 +83,16 @@
     "build": "node scripts/build.js",
     "test:watch": "jest --watch --runInBand",
     "ngrok:start": "ngrok http 3000",
-    "migrations:loans": "tsc; node build/dist/migrations/loans.js"
+    "migrations:loans": "tsc; node build/dist/migrations/loans.js",
+    "prettify": "prettier --write src/**/*.ts{,x}",
+    "precommit": "yarn prettify"
   },
   "devDependencies": {
     "enzyme": "^3.3.0",
     "enzyme-adapter-react-16": "^1.1.1",
+    "husky": "^0.14.3",
     "jest-enzyme": "^4.2.0",
+    "prettier": "1.11.1",
     "redux-mock-store": "1.4.0",
     "ts-jest": "^22.0.4",
     "typescript": "^2.7.1",

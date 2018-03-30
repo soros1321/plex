@@ -8,6 +8,7 @@ import {
 	TokenWrapper,
 	Label
 } from './styledComponents';
+import { TokenAmount } from 'src/components';
 
 interface Props {
 	investments: InvestmentEntity[];
@@ -77,7 +78,9 @@ class InvestmentsMetrics extends React.Component<Props, State> {
 						);
 					} else {
 						totalLendedRows.push(
-							<TokenWrapper key={token}>{tokenBalances[token].totalLended.toNumber() + ' ' + token}</TokenWrapper>
+							<TokenWrapper key={token}>
+								<TokenAmount tokenAmount={tokenBalances[token].totalLended} tokenSymbol={token}/>
+							</TokenWrapper>
 						);
 					}
 				}
@@ -88,7 +91,9 @@ class InvestmentsMetrics extends React.Component<Props, State> {
 						);
 					} else {
 						totalEarnedRows.push(
-							<TokenWrapper key={token}>{tokenBalances[token].totalEarned.toNumber() + ' ' + token}</TokenWrapper>
+							<TokenWrapper key={token}>
+								<TokenAmount tokenAmount={tokenBalances[token].totalEarned} tokenSymbol={token}/>
+							</TokenWrapper>
 						);
 					}
 				}

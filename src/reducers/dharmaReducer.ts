@@ -1,25 +1,28 @@
-import { actionsEnums } from '../common/actionsEnums';
+import { actionsEnums } from "../common/actionsEnums";
 
 class DharmaReducerState {
-	dharma: any;
+    dharma: any;
 
-	constructor() {
-		this.dharma = null;
-	}
+    constructor() {
+        this.dharma = null;
+    }
 }
 
 const handleDharmaInstantiated = (state: DharmaReducerState, action: any) => {
-	return {
-		...state,
-		dharma: action.dharma
-	};
+    return {
+        ...state,
+        dharma: action.dharma,
+    };
 };
 
-export const dharmaReducer = (state: DharmaReducerState = new DharmaReducerState(), action: any) => {
-	switch (action.type) {
-		case actionsEnums.DHARMA_INSTANTIATED:
-			return handleDharmaInstantiated(state, action);
-		default:
-			return state;
-	}
+export const dharmaReducer = (
+    state: DharmaReducerState = new DharmaReducerState(),
+    action: any,
+) => {
+    switch (action.type) {
+        case actionsEnums.DHARMA_INSTANTIATED:
+            return handleDharmaInstantiated(state, action);
+        default:
+            return state;
+    }
 };

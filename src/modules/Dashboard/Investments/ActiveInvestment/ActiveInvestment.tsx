@@ -33,6 +33,7 @@ import {
 	// TransferButton
 } from './styledComponents';
 import { Row, Col, Collapse } from 'reactstrap';
+import { TokenAmount } from 'src/components';
 
 interface Props {
 	investment: InvestmentEntity;
@@ -122,7 +123,9 @@ class ActiveInvestment extends React.Component<Props, State> {
 					<DetailContainer>
 						<Row>
 							<Col xs="12" md="6">
-								<Amount>{investment.principalAmount.toNumber() + ' ' + investment.principalTokenSymbol}</Amount>
+								<Amount>
+									<TokenAmount tokenAmount={investment.principalAmount} tokenSymbol={investment.principalTokenSymbol}/>
+								</Amount>
 								<Url>
 									<DetailLink to={`/request/success/${investment.issuanceHash}`}>
 										{shortenString(investment.issuanceHash)}

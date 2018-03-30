@@ -5,10 +5,12 @@ import { DebtsMetricsContainer } from './DebtsMetrics/DebtsMetricsContainer';
 import { ActiveDebtOrderContainer } from './ActiveDebtOrder/ActiveDebtOrderContainer';
 import { DebtOrderHistory } from './DebtOrderHistory';
 import Dharma from '@dharmaprotocol/dharma.js';
+import { BarLoader } from 'react-spinners';
 
 interface Props {
     debtOrders: DebtOrderEntity[];
     dharma: Dharma;
+    initializing: boolean;
 }
 
 interface State {
@@ -60,20 +62,29 @@ class Debts extends React.Component<Props, State> {
     render() {
         const { allDebtOrders, activeDebtOrders, inactiveDebtOrders } = this.state;
 
-        return (
-            <MainWrapper>
-                <Header title="Your debts" />
-                <DebtsMetricsContainer debtOrders={allDebtOrders} />
-                {activeDebtOrders.map(debtOrder => (
-                    <ActiveDebtOrderContainer
-                        dharma={this.props.dharma}
-                        debtOrder={debtOrder}
-                        key={debtOrder.issuanceHash}
-                    />
-                ))}
-                <DebtOrderHistory debtOrders={inactiveDebtOrders} />
-            </MainWrapper>
-        );
+        if (this.props.initializing) {
+            return (
+                <MainWrapper>
+                    <Header title="Your Debts" />
+                    <BarLoader width={200} height={10} color={"#1cc1cc"} loading={true} />
+                </MainWrapper>
+            );
+        } else {
+            return (
+                <MainWrapper>
+                    <Header title="Your Debts" />
+                    <DebtsMetricsContainer debtOrders={allDebtOrders} />
+                    {activeDebtOrders.map(debtOrder => (
+                        <ActiveDebtOrderContainer
+                            dharma={this.props.dharma}
+                            debtOrder={debtOrder}
+                            key={debtOrder.issuanceHash}
+                        />
+                    ))}
+                    <DebtOrderHistory debtOrders={inactiveDebtOrders} />
+                </MainWrapper>
+            );
+        }
     }
 }
 

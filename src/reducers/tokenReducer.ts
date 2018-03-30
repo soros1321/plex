@@ -1,5 +1,5 @@
-import { actionsEnums } from '../common/actionsEnums';
-import { TokenEntity } from '../models';
+import { actionsEnums } from "../common/actionsEnums";
+import { TokenEntity } from "../models";
 
 class TokenReducerState {
     tokens: TokenEntity[];
@@ -12,66 +12,66 @@ class TokenReducerState {
 const handleToggleTokenLoadingSpinner = (state: TokenReducerState, action: any) => {
     return {
         ...state,
-        tokens: state.tokens.map(token => {
+        tokens: state.tokens.map((token) => {
             if (token.address === action.tokenAddress) {
                 return {
                     ...token,
-                    awaitingTransaction: action.loading
+                    awaitingTransaction: action.loading,
                 };
             }
             return token;
-        })
+        }),
     };
 };
 
 const handleSetAllTokensTradingPermission = (state: TokenReducerState, action: any) => {
     return {
         ...state,
-        tokens: action.tokens
+        tokens: action.tokens,
     };
 };
 
 const handleToggleTokenTradingPermission = (state: TokenReducerState, action: any) => {
     return {
         ...state,
-        tokens: state.tokens.map(token => {
+        tokens: state.tokens.map((token) => {
             if (token.address === action.tokenAddress) {
                 return {
                     ...token,
-                    tradingPermitted: action.permission
+                    tradingPermitted: action.permission,
                 };
             }
             return token;
-        })
+        }),
     };
 };
 
 const handleSetTokenBalance = (state: TokenReducerState, action: any) => {
     return {
         ...state,
-        tokens: state.tokens.map(token => {
+        tokens: state.tokens.map((token) => {
             if (token.address === action.tokenAddress) {
                 return {
                     ...token,
-                    balance: action.balance
+                    balance: action.balance,
                 };
             }
             return token;
-        })
+        }),
     };
 };
 
 const handleSuccessfulRepayment = (state: TokenReducerState, action: any) => {
     return {
-        tokens: state.tokens.map(token => {
+        tokens: state.tokens.map((token) => {
             if (token.tokenSymbol === action.repaymentTokenSymbol) {
                 return {
                     ...token,
-                    balance: token.balance.minus(action.repaymentAmount)
+                    balance: token.balance.minus(action.repaymentAmount),
                 };
             }
             return token;
-        })
+        }),
     };
 };
 

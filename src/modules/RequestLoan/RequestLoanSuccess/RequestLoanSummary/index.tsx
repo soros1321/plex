@@ -18,6 +18,7 @@ import {
 	CopyButton,
 	CopiedMessage
 } from './styledComponents';
+import { TokenAmount } from 'src/components';
 
 interface Props {
 	debtOrder: DebtOrderEntity;
@@ -51,39 +52,14 @@ class RequestLoanSummary extends React.Component<Props, State> {
 			return null;
 		}
 		const debtOrderInfo = debtOrderFromJSON(debtOrder.json);
-		const leftInfoItems = [
-			{title: 'Principal', content: debtOrderInfo.principalAmount.toNumber() + ' ' + debtOrder.principalTokenSymbol},
-			{title: 'Term Length', content: debtOrder.termLength.toNumber() + ' ' + debtOrder.amortizationUnit}
-		];
-		const rightInfoItems = [
-			{title: 'Interest Rate', content: debtOrder.interestRate.toNumber() + '%'},
-			{title: 'Installment Frequency', content: amortizationUnitToFrequency(debtOrder.amortizationUnit)}
-		];
-		const leftInfoItemRows = leftInfoItems.map((item) => (
-			<InfoItem key={item.title}>
-				<Title>
-					{item.title}
-				</Title>
-				<Content>
-					{item.content}
-				</Content>
-			</InfoItem>
-		));
-		const rightInfoItemRows = rightInfoItems.map((item) => (
-			<InfoItem key={item.title}>
-				<Title>
-					{item.title}
-				</Title>
-				<Content>
-					{item.content}
-				</Content>
-			</InfoItem>
-		));
 		const summaryJSON = {
 			...debtOrderInfo,
 			description: debtOrder.description,
 			principalTokenSymbol: debtOrder.principalTokenSymbol
 		};
+		const termLength = `${debtOrder.termLength.toNumber()} ${debtOrder.amortizationUnit}`;
+		const interestRate = `${debtOrder.interestRate.toNumber()}%`;
+		const installmentFrequency = amortizationUnitToFrequency(debtOrder.amortizationUnit);
 
 		return (
 			<Wrapper>
@@ -91,10 +67,40 @@ class RequestLoanSummary extends React.Component<Props, State> {
 				<GrayContainer>
 					<Row>
 						<Col xs="12" md="6">
-							{leftInfoItemRows}
+							<InfoItem>
+								<Title>
+									Principal
+								</Title>
+								<Content>
+									<TokenAmount tokenAmount={debtOrder.principalAmount} tokenSymbol={debtOrder.principalTokenSymbol}/>
+								</Content>
+							</InfoItem>
+							<InfoItem>
+								<Title>
+									Term Length
+								</Title>
+								<Content>
+									{termLength}
+								</Content>
+							</InfoItem>
 						</Col>
 						<Col xs="12" md="6">
-							{rightInfoItemRows}
+							<InfoItem>
+								<Title>
+									Interest Rate
+								</Title>
+								<Content>
+									{interestRate}
+								</Content>
+							</InfoItem>
+							<InfoItem>
+								<Title>
+									Installment Frequency
+								</Title>
+								<Content>
+									{installmentFrequency}
+								</Content>
+							</InfoItem>
 						</Col>
 						<Col xs="12">
 							<InfoItem>
