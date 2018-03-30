@@ -8,6 +8,7 @@ import {
 	TokenWrapper,
 	Label
 } from './styledComponents';
+import { TokenAmount } from 'src/components';
 
 interface Props {
 	debtOrders: DebtOrderEntity[];
@@ -78,7 +79,9 @@ class DebtsMetrics extends React.Component<Props, State> {
 						);
 					} else {
 						totalRequestedRows.push(
-							<TokenWrapper key={token}>{tokenBalances[token].totalRequested.toNumber() + ' ' + token}</TokenWrapper>
+							<TokenWrapper key={token}>
+								<TokenAmount tokenAmount={tokenBalances[token].totalRequested} tokenSymbol={token}/>
+							</TokenWrapper>
 						);
 					}
 				}
@@ -89,7 +92,9 @@ class DebtsMetrics extends React.Component<Props, State> {
 						);
 					} else {
 						totalRepaidRows.push(
-							<TokenWrapper key={token}>{tokenBalances[token].totalRepaid.toNumber() + ' ' + token}</TokenWrapper>
+							<TokenWrapper key={token}>
+								<TokenAmount tokenAmount={tokenBalances[token].totalRepaid} tokenSymbol={token}/>
+							</TokenWrapper>
 						);
 					}
 				}

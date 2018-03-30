@@ -12,6 +12,7 @@ import {
 	InfoItemTitle,
 	InfoItemContent
 } from './styledComponents';
+import { TokenAmount } from 'src/components';
 
 interface Props {
 	debtOrder: DebtOrderEntity;
@@ -43,7 +44,7 @@ class DebtOrderRow extends React.Component<Props, State> {
 			<div onClick={this.toggleDrawer}>
 				<StyledRow>
 					<Col xs="3" md="2">
-						{debtOrder.principalAmount.toNumber() + ' ' + debtOrder.principalTokenSymbol}
+						<TokenAmount tokenAmount={debtOrder.principalAmount} tokenSymbol={debtOrder.principalTokenSymbol}/>
 					</Col>
 					<Col xs="3" md="2">
 						{shortenString(debtOrder.issuanceHash)}
