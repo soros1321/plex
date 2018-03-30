@@ -229,9 +229,10 @@ class ActiveDebtOrder extends React.Component<Props, State> {
                                 <InfoItem>
                                     <InfoItemTitle>Requested</InfoItemTitle>
                                     <InfoItemContent>
-                                        {debtOrder.principalAmount!.toNumber() +
-                                            " " +
-                                            debtOrder.principalTokenSymbol}
+                                        <TokenAmount
+                                            tokenAmount={debtOrder.principalAmount}
+                                            tokenSymbol={debtOrder.principalTokenSymbol}
+                                        />
                                     </InfoItemContent>
                                 </InfoItem>
                             </Col>
@@ -239,9 +240,10 @@ class ActiveDebtOrder extends React.Component<Props, State> {
                                 <InfoItem>
                                     <InfoItemTitle>Repaid</InfoItemTitle>
                                     <InfoItemContent>
-                                        {debtOrder.repaidAmount.toNumber() +
-                                            " " +
-                                            debtOrder.principalTokenSymbol}
+                                        <TokenAmount
+                                            tokenAmount={debtOrder.repaidAmount}
+                                            tokenSymbol={debtOrder.principalTokenSymbol}
+                                        />
                                     </InfoItemContent>
                                 </InfoItem>
                             </Col>
