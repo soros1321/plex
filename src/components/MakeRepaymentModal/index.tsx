@@ -34,7 +34,10 @@ class MakeRepaymentModal extends React.Component<Props, State> {
         this.handleToggle = this.handleToggle.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
 
-        this.state = { repaymentAmount: new BigNumber(-1), repaymentTokenSymbol: "" };
+        this.state = {
+            repaymentAmount: new BigNumber(-1),
+            repaymentTokenSymbol: props.debtOrder.principalTokenSymbol,
+        };
     }
 
     onAmountChange(event: any) {
@@ -64,7 +67,7 @@ class MakeRepaymentModal extends React.Component<Props, State> {
     calculatePrincipalPlusInterest(
         principalAmount: BigNumber,
         interestRate: BigNumber,
-        numInstallments: BigNumber
+        numInstallments: BigNumber,
     ): BigNumber {
         const interestPaidPerInstallment = principalAmount.times(interestRate).div(100);
         const totalInterestPaid = interestPaidPerInstallment.times(numInstallments);
@@ -79,12 +82,17 @@ class MakeRepaymentModal extends React.Component<Props, State> {
         const totalAmountOwed = this.calculatePrincipalPlusInterest(
             debtOrder.principalAmount,
             debtOrder.interestRate,
-            debtOrder.termLength
+            debtOrder.termLength,
         );
 
         return (
             <div>
-                <Modal isOpen={this.props.modal} toggle={this.handleToggle} keyboard={false} backdrop={"static"}>
+                <Modal
+                    isOpen={this.props.modal}
+                    toggle={this.handleToggle}
+                    keyboard={false}
+                    backdrop={"static"}
+                >
                     <ModalHeader toggle={this.handleToggle}>{this.props.title}</ModalHeader>
                     <ModalBody>
                         <LoanSummary>
@@ -95,8 +103,7 @@ class MakeRepaymentModal extends React.Component<Props, State> {
                             </LoanSummaryItem>. You owe
                             <LoanSummaryItem>
                                 {" "}
-                                {totalAmountOwed.toString()} {debtOrder.principalTokenSymbol}
-                                {" "}
+                                {totalAmountOwed.toString()} {debtOrder.principalTokenSymbol}{" "}
                             </LoanSummaryItem>
                             in total, of which you've already repaid
                             <LoanSummaryItem>
@@ -105,7 +112,9 @@ class MakeRepaymentModal extends React.Component<Props, State> {
                             </LoanSummaryItem>.
                         </LoanSummary>
                         <h4>
-                            <b>How large of a repayment would you like to make, and in what token?</b>
+                            <b>
+                                How large of a repayment would you like to make, and in what token?
+                            </b>
                         </h4>
                         <div className="repayment-group">
                             <input
@@ -125,7 +134,7 @@ class MakeRepaymentModal extends React.Component<Props, State> {
                                 options={[
                                     { value: "REP", label: "REP (Augur REP)" },
                                     { value: "MKR", label: "MKR (Maker DAO)" },
-                                    { value: "ZRX", label: "ZRX (0x Protocol)" }
+                                    { value: "ZRX", label: "ZRX (0x Protocol)" },
                                 ]}
                                 onChange={this.onTokenSymbolChange}
                                 style={{ borderRadius: 0, height: 38, borderColor: "#000000" }}
@@ -135,7 +144,10 @@ class MakeRepaymentModal extends React.Component<Props, State> {
                     <ModalFooter>
                         <Row className="button-container">
                             <Col xs="12" md="6">
-                                <Button className="button secondary width-95" onClick={this.handleToggle}>
+                                <Button
+                                    className="button secondary width-95"
+                                    onClick={this.handleToggle}
+                                >
                                     {this.props.closeButtonText}
                                 </Button>
                             </Col>
@@ -147,7 +159,11 @@ class MakeRepaymentModal extends React.Component<Props, State> {
                                 >
                                     {this.props.submitButtonText}
                                     <div className="loading-spinner">
-                                        <ClipLoader size={12} color={"#ffffff"} loading={this.props.awaitingTx} />
+                                        <ClipLoader
+                                            size={12}
+                                            color={"#ffffff"}
+                                            loading={this.props.awaitingTx}
+                                        />
                                     </div>
                                 </Button>
                             </Col>
