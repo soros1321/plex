@@ -34,9 +34,24 @@ import {
     SimpleInterestTermsContract,
 } from "@dharmaprotocol/contracts";
 
+const singleLineString = require("single-line-string");
+
 interface Props {
     store: any;
 }
+
+const WEB3_ERRORS = {
+    UNABLE_TO_FIND_ACCOUNTS: singleLineString`
+        Unable to find active account on current Ethereum network.  Make sure you are using
+        a Web3-enabled browser (such as Chrome with MetaMask installed), that you are connecting
+        to the Kovan testnet, and that your account is unlocked.
+    `,
+    UNABLE_TO_FIND_CONTRACTS: singleLineString`
+        Unable to find the Dharma smart contracts on the current Ethereum network.  Make sure you are using
+        a Web3-enabled browser (such as Chrome with MetaMask installed), that you are connecting
+        to the Kovan testnet, and that your account is unlocked.
+    `,
+};
 
 class AppRouter extends React.Component<Props, {}> {
     constructor(props: Props) {
@@ -63,7 +78,7 @@ class AppRouter extends React.Component<Props, {}> {
         const accounts = await promisify(web3.eth.getAccounts)();
 
         if (!accounts.length) {
-            dispatch(setError("Unable to find active account on current Ethereum network"));
+            dispatch(setError(WEB3_ERRORS.UNABLE_TO_FIND_ACCOUNTS));
             return;
         }
 
@@ -80,7 +95,7 @@ class AppRouter extends React.Component<Props, {}> {
                 networkId in SimpleInterestTermsContract.networks
             )
         ) {
-            dispatch(setError("Unable to connect to the blockchain"));
+            dispatch(setError(WEB3_ERRORS.UNABLE_TO_FIND_CONTRACTS));
             return;
         }
         const dharmaConfig = {
