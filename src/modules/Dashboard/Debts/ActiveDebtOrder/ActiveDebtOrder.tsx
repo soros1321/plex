@@ -1,12 +1,12 @@
-import * as React from "react";
-import { DebtOrderEntity } from "../../../../models";
+import * as React from 'react';
+import { DebtOrderEntity } from '../../../../models';
 import {
     formatDate,
     formatTime,
     getIdenticonImgSrc,
     shortenString,
     amortizationUnitToFrequency
-} from "../../../../utils";
+} from '../../../../utils';
 import {
     Wrapper,
     ImageContainer,
@@ -27,15 +27,15 @@ import {
     MakeRepaymentButton,
     Schedule,
     ScheduleIconContainer,
-    ScheduleIcon,
     Strikethrough,
     ShowMore,
     PaymentDate
-} from "./styledComponents";
-import { MakeRepaymentModal } from "../../../../components";
-import { Row, Col, Collapse } from "reactstrap";
-import { BigNumber } from "bignumber.js";
-import Dharma from "@dharmaprotocol/dharma.js";
+} from './styledComponents';
+import { MakeRepaymentModal } from '../../../../components';
+import { ScheduleIcon } from '../../../../components/scheduleIcon/scheduleIcon';
+import { Row, Col, Collapse } from 'reactstrap';
+import { BigNumber } from 'bignumber.js';
+import Dharma from '@dharmaprotocol/dharma.js';
 
 interface Props {
     debtOrder: DebtOrderEntity;
@@ -49,6 +49,7 @@ interface State {
     collapse: boolean;
     makeRepayment: boolean;
     awaitingRepaymentTx: boolean;
+    missedPayments: object;
 }
 
 class ActiveDebtOrder extends React.Component<Props, State> {
@@ -57,12 +58,18 @@ class ActiveDebtOrder extends React.Component<Props, State> {
         this.state = {
             collapse: false,
             makeRepayment: false,
-            awaitingRepaymentTx: false
+            awaitingRepaymentTx: false,
+            missedPayments: {}
         };
         this.toggleDrawer = this.toggleDrawer.bind(this);
         this.toggleRepaymentModal = this.toggleRepaymentModal.bind(this);
         this.handleMakeRepaymentClick = this.handleMakeRepaymentClick.bind(this);
         this.handleRepaymentFormSubmission = this.handleRepaymentFormSubmission.bind(this);
+    }
+
+    componentDidMount() {
+        // Calculate which payments have been missed, so as to display that in the repayment schedule.
+        this.calculatePaymentsMissed();
     }
 
     toggleDrawer() {
@@ -111,6 +118,23 @@ class ActiveDebtOrder extends React.Component<Props, State> {
             });
     }
 
+    async calculatePaymentsMissed() {
+        const { dharma } = this.props;
+        const { issuanceHash, repaidAmount, repaymentSchedule } = this.props.debtOrder;
+
+        let missedPayments = {};
+        let paymentDate;
+        let expectedRepaidAmount;
+
+        for (let i = 0; i < repaymentSchedule.length; i++) {
+            paymentDate = repaymentSchedule[i];
+            expectedRepaidAmount = await dharma.servicing.getExpectedValueRepaid(issuanceHash, paymentDate);
+            missedPayments[paymentDate] = repaidAmount <= expectedRepaidAmount;
+        }
+
+        this.setState({ missedPayments });
+    }
+
     render() {
         const { debtOrder } = this.props;
 
@@ -119,8 +143,6 @@ class ActiveDebtOrder extends React.Component<Props, State> {
             return null;
         }
         const now = Math.round(new Date().getTime() / 1000);
-        const pastIcon = require("../../../../assets/img/ok_circle.png");
-        const futureIcon = require("../../../../assets/img/circle_outline.png");
 
         const repaymentScheduleItems: JSX.Element[] = [];
         let maxDisplay = 0;
@@ -128,11 +150,23 @@ class ActiveDebtOrder extends React.Component<Props, State> {
         let selectedPaymentSchedule = 0;
         repaymentSchedule.forEach(paymentSchedule => {
             if (maxDisplay < 5) {
+                let repaymentState;
+
+                if (now > paymentSchedule) {
+                    if (this.state.missedPayments[paymentSchedule]) {
+                        repaymentState = 'missed';
+                    } else {
+                        repaymentState = 'past';
+                    }
+                } else {
+                    repaymentState = 'future';
+                }
+
                 if (maxDisplay === 4 && repaymentSchedule.length > 5) {
                     repaymentScheduleItems.push(
                         <Schedule key={paymentSchedule}>
                             <ScheduleIconContainer>
-                                <ScheduleIcon src={futureIcon} />
+                                <ScheduleIcon state={repaymentState} />
                             </ScheduleIconContainer>
                             <Strikethrough />
                             <ShowMore>+ {repaymentSchedule.length - maxDisplay} more</ShowMore>
@@ -149,7 +183,7 @@ class ActiveDebtOrder extends React.Component<Props, State> {
                             key={paymentSchedule}
                         >
                             <ScheduleIconContainer>
-                                <ScheduleIcon src={now > paymentSchedule ? pastIcon : futureIcon} />
+                                <ScheduleIcon state={repaymentState} />
                             </ScheduleIconContainer>
                             <Strikethrough />
                             <PaymentDate>
