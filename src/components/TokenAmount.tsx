@@ -15,7 +15,10 @@ class TokenAmount extends React.Component<Props, {}> {
     }
 
     private formatAsHumanReadable(value: BigNumber): string {
-        return value.div(10 ** 18).toString();
+        if (!(value instanceof BigNumber)) {
+            value = new BigNumber(value);
+        }
+        return value.div(new BigNumber(10 ** 18)).toString();
     }
 }
 
