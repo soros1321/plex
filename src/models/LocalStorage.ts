@@ -1,6 +1,8 @@
 export const loadState = () => {
     try {
-        const serializedState = localStorage.getItem("plexState");
+        const serializedState = localStorage.getItem(
+            process.env.REACT_APP_LOCAL_STORAGE_KEY_PREPEND + "state",
+        );
         if (serializedState === null) {
             return undefined;
         }
@@ -13,7 +15,10 @@ export const loadState = () => {
 export const saveState = (state: any) => {
     try {
         const serializedState = JSON.stringify(state);
-        localStorage.setItem("plexState", serializedState);
+        localStorage.setItem(
+            process.env.REACT_APP_LOCAL_STORAGE_KEY_PREPEND + "state",
+            serializedState,
+        );
     } catch (err) {
         // console.log(err);
     }
