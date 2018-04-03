@@ -11,7 +11,7 @@ class PlexReducerState {
 const handleAgreeToTerms = (state: PlexReducerState, action: any) => {
     return {
         ...state,
-        agreeToTerms: action.payload
+        agreeToTerms: action.payload,
     };
 };
 

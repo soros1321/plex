@@ -13,6 +13,6 @@ export const reducers = combineReducers({
     debtOrderReducer,
     toastReducer,
     tokenReducer,
-	plexReducer,
+    plexReducer,
     routing: routerReducer,
 });
