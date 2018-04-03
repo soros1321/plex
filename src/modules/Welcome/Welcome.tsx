@@ -12,7 +12,9 @@ import {
 import { browserHistory } from 'react-router';
 
 interface Props {
+	agreeToTerms: boolean;
 	handleSetError: (errorMessage: string) => void;
+	handleAgreeToTerms: (agree: boolean) => void;
 }
 
 interface State {
@@ -22,11 +24,23 @@ interface State {
 class Welcome extends React.Component<Props, State> {
 	constructor(props: Props) {
 		super(props);
+		this.handleAgreeChange = this.handleAgreeChange.bind(this);
+		this.checkAgree = this.checkAgree.bind(this);
 		this.state = {
 			agreeToTermsOfUse: false
 		};
-		this.handleAgreeChange = this.handleAgreeChange.bind(this);
-		this.checkAgree = this.checkAgree.bind(this);
+	}
+
+	componentDidMount() {
+		if (this.props.agreeToTerms) {
+			browserHistory.push('/request');
+		}
+	}
+
+	componentWillReceiveProps(nextProps: Props) {
+		if (nextProps.agreeToTerms) {
+			browserHistory.push('/request');
+		}
 	}
 
 	handleAgreeChange(checked: boolean) {
@@ -41,6 +55,7 @@ class Welcome extends React.Component<Props, State> {
 			this.props.handleSetError('You have to agree to the terms of use to continue');
 			return;
 		}
+		this.props.handleAgreeToTerms(true);
 		browserHistory.push('/request');
 	}
 

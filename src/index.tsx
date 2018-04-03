@@ -27,7 +27,8 @@ let store = createStore(
 
 store.subscribe(throttle(() => {
 	saveState({
-		debtOrderReducer: store.getState().debtOrderReducer
+		debtOrderReducer: store.getState().debtOrderReducer,
+		plexReducer: store.getState().plexReducer
 	});
 }, 1000));
 

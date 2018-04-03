@@ -29,6 +29,7 @@ interface Props {
     handleSetError: (errorMessage: string) => void;
     handleFaucetRequest: (tokenAddress: string, userAddress: string, dharma: Dharma) => void;
     toggleTokenLoadingSpinner: (tokenAddress: string, loading: boolean) => void;
+	agreeToTerms: boolean;
 }
 
 interface State {
@@ -199,7 +200,7 @@ class TradingPermissions extends React.Component<Props, State> {
         if (!this.props.tokens || !this.props.tokens.length) {
             return null;
         }
-        const { web3, tokens } = this.props;
+        const { web3, tokens, agreeToTerms } = this.props;
         let tokenItems: JSX.Element[] = [];
         let tokenItemsMore: JSX.Element[] = [];
 
@@ -238,7 +239,7 @@ class TradingPermissions extends React.Component<Props, State> {
                         name={token.tokenSymbol}
                         label={tokenLabel}
                         checked={token.tradingPermitted}
-                        disabled={token.balance.gt(0) ? false : true}
+                        disabled={token.balance.lte(0) || !agreeToTerms ? true : false}
                         onChange={() =>
                             this.updateProxyAllowanceAsync(token.tradingPermitted, token.address)
                         }
@@ -251,7 +252,7 @@ class TradingPermissions extends React.Component<Props, State> {
                         name={token.tokenSymbol}
                         label={tokenLabel}
                         checked={token.tradingPermitted}
-                        disabled={token.balance.gt(0) ? false : true}
+                        disabled={token.balance.lte(0) || !agreeToTerms ? true : false}
                         onChange={() =>
                             this.updateProxyAllowanceAsync(token.tradingPermitted, token.address)
                         }
