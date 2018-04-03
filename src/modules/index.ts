@@ -6,3 +6,4 @@ export * from "./Dashboard";
 export * from "./TestForm";
 export * from "./Terms";
 export * from "./Privacy";
+export * from "./EnsureAgreedToTerms";
