@@ -10,6 +10,7 @@ import { DebtsContainer } from './Debts/DebtsContainer';
 import { InvestmentsContainer } from './Investments/InvestmentsContainer';
 import { StyledNavItem, TitleFirstWord, TitleRest } from './styledComponents';
 import Dharma from '@dharmaprotocol/dharma.js';
+import { debtOrderFromJSON } from '../../utils';
 
 interface Props {
 	dharma: Dharma;
@@ -139,7 +140,14 @@ class Dashboard extends React.Component<Props, States> {
 	}
 
 	render() {
-		const debtOrders = this.props.pendingDebtOrders.concat(this.props.filledDebtOrders);
+		const { pendingDebtOrders } = this.props;
+		if (pendingDebtOrders) {
+			for (const index of Object.keys(pendingDebtOrders)) {
+				pendingDebtOrders[index] = debtOrderFromJSON(JSON.stringify(pendingDebtOrders[index]));
+			}
+		}
+
+		const debtOrders = pendingDebtOrders.concat(this.props.filledDebtOrders);
 
 		const { investments, activeTab, initiallyLoading } = this.state;
 		const tabs = [
