@@ -255,7 +255,7 @@ class FillLoanEntered extends React.Component<Props, States> {
         return (
             <PaperLayout>
                 <MainWrapper>
-                    <Header title={"Fill a loan"} description={descriptionContent} />
+                    <Header title={"Fill a Loan"} description={descriptionContent} />
                     <LoanInfoContainer>
                         <HalfCol>{leftInfoItemRows}</HalfCol>
                         <HalfCol>{rightInfoItemRows}</HalfCol>

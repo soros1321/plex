@@ -120,7 +120,7 @@ class FillLoanEmpty extends React.Component<{}, State> {
         return (
             <PaperLayout>
                 <MainWrapper>
-                    <Header title={"Fill a loan"} description={descriptionContent} />
+                    <Header title={"Fill a Loan"} description={descriptionContent} />
 					<JSONSchemaForm
 						schema={schema}
 						uiSchema={uiSchema}
