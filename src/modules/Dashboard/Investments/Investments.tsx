@@ -4,9 +4,11 @@ import { Header, MainWrapper } from '../../../components';
 import { InvestmentsMetricsContainer } from './InvestmentsMetrics/InvestmentsMetricsContainer';
 import { ActiveInvestmentContainer } from './ActiveInvestment/ActiveInvestmentContainer';
 import { InvestmentHistory } from './InvestmentHistory';
+import { BarLoader } from 'react-spinners';
 
 interface Props {
 	investments: InvestmentEntity[];
+	initializing: boolean;
 }
 
 interface State {
@@ -58,17 +60,26 @@ class Investments extends React.Component<Props, State> {
 	render() {
 		const { allInvestments, activeInvestments, inactiveInvestments } = this.state;
 
-		return (
-			<MainWrapper>
-				<Header title="Your investments" />
-				<InvestmentsMetricsContainer investments={allInvestments} />
-				{ activeInvestments.map((investment) => (
-						<ActiveInvestmentContainer investment={investment} key={investment.issuanceHash} />
-					))
-				}
-				<InvestmentHistory investments={inactiveInvestments} />
-			</MainWrapper>
-		);
+		if (this.props.initializing) {
+			return (
+				<MainWrapper>
+					<Header title="Your Investments" />
+                    <BarLoader width={200} height={15} color={"#1cc1cc"} loading={true} />
+				</MainWrapper>
+			);
+		} else {
+			return (
+				<MainWrapper>
+					<Header title="Your Investments" />
+					<InvestmentsMetricsContainer investments={allInvestments} />
+					{ activeInvestments.map((investment) => (
+							<ActiveInvestmentContainer investment={investment} key={investment.issuanceHash} />
+						))
+					}
+					<InvestmentHistory investments={inactiveInvestments} />
+				</MainWrapper>
+			);
+		}
 	}
 }
 

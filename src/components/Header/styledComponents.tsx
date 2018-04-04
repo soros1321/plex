@@ -6,8 +6,12 @@ export const Description = styled.div`
 	font-family: DIN;
 	font-size: 17px;
 	line-height: 25px;
-	margin-bottom: 30px;
+	margin: 30px 0;
 	word-wrap: break-word;
+
+	& b {
+		font-family: DIN-Bold;
+	}
 
 	@media only screen and (max-width: 480px) {
 		width: 100%;

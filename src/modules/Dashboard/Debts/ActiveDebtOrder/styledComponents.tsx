@@ -169,13 +169,6 @@ export const ScheduleIconContainer = styled.div`
 	}
 `;
 
-export const ScheduleIcon = styled.img`
-	width: 15px;
-	@media only screen and (max-width: 480px) {
-		width: 10px;
-	}
-`;
-
 export const PaymentDate = styled.div`
 	color: #FFFFFF;
 	font-size: 13px;

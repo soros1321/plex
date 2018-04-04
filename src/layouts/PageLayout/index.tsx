@@ -13,7 +13,7 @@ import {
 class PageLayout extends React.Component {
 	render() {
 		const topLinkItems = [
-			{url: '/bazaar', display: 'BAZAAR'},
+			{url: '/plex', display: 'PLEX'},
 			{url: '/whitepaper', display: 'WHITEPAPER'},
 			{url: '/blog', display: 'BLOG'},
 			{url: '/github', display: 'GITHUB'},

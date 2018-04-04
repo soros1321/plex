@@ -17,7 +17,15 @@ export const CustomSelectDropdown = (props: any) => {
 				break;
 		}
 	};
-	props.options.enumOptions.map((opt: any) => selectOptions.push({value: opt.value, label: opt.label}));
+	props.options.enumOptions.map((opt: any) => {
+		// TODO: Remove once we enable more loan types.  This is a hacky way of disabling the
+		// 	options, but is also temporary.
+		if (opt.label.includes('Coming Soon')) {
+			selectOptions.push({value: opt.value, label: opt.label, disabled: true});
+		} else {
+			selectOptions.push({value: opt.value, label: opt.label});
+		}
+	});
 	return (
 		<div>
 			<Select
@@ -30,6 +38,7 @@ export const CustomSelectDropdown = (props: any) => {
 				style={{ borderRadius: 0, height: 38, borderColor: '#000000' }}
 				disabled={props.disabled}
 				onInputKeyDown={onInputKeyDown}
+				placeholder={props.placeholder}
 			/>
 			{ (props.options.pressEnter || typeof props.options.pressEnter === 'undefined') && (
 					<PressEnter className={'press-enter ' + (props.value ? 'active' : '')}>OK, Press ENTER</PressEnter>

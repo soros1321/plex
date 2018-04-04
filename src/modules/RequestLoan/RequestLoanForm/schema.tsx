@@ -21,7 +21,7 @@ export const schema: JSONSchema4 = {
 	properties: {
 		debtOrderType: {
 			type: 'string',
-			title: 'Which type of debt would you like?',
+			title: 'Which type of loan would you like?',
 			enum: [
 				'simpleInterestLoanNonCollateralized',
 				'compoundInterestLoanNonCollateralized',
@@ -30,9 +30,9 @@ export const schema: JSONSchema4 = {
 			],
 			enumNames: [
 				'Simple Interest Loan (Non-Collateralized)',
-				'Compound Interest Loan (Non-Collateralized)',
-				'Simple Interest Loan (Collateralized)',
-				'Compound Interest Loan (Collateralized)'
+				'Compound Interest Loan (Non-Collateralized) (Coming Soon)',
+				'Simple Interest Loan (Collateralized) (Coming Soon)',
+				'Compound Interest Loan (Collateralized) (Coming Soon)'
 			],
 			default: 'simpleInterestLoanNonCollateralized'
 		}
@@ -48,7 +48,7 @@ export const schema: JSONSchema4 = {
 						},
 						loan: {
 							type: 'object',
-							title: 'How much do you want?',
+							title: 'How much of which token would you like to borrow?',
 							required: [
 								'principalAmount',
 								'principalTokenSymbol'
@@ -98,7 +98,6 @@ export const schema: JSONSchema4 = {
 						terms: {
 							type: 'object',
 							title: 'What terms would you like?',
-							description: 'The most commonly chosen options are selected by default.',
 							required: [
 								'interestRate',
 								'amortizationUnit',
@@ -107,7 +106,8 @@ export const schema: JSONSchema4 = {
 							properties: {
 								interestRate: {
 									type: 'number',
-									title: 'Interest Rate'
+									title: 'Interest Rate (Per Installment)',
+									description: 'The interest rate you specify below will be applied for each installment.',
 								},
 								amortizationUnit: {
 									type: 'string',
@@ -157,7 +157,7 @@ export const uiSchema = {
 			}
 		},
 		principalTokenSymbol: {
-			'ui:placeholder': 'select',
+			'ui:placeholder': 'Select token...',
 			'ui:options': {
 				label: false,
 				pressEnter: false
