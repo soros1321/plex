@@ -29,6 +29,9 @@ class Toast extends React.Component<Props, State> {
 	componentWillReceiveProps(nextProps: Props) {
 		if (this.props.message !== nextProps.message && nextProps.message) {
 			this.setState({ visible: true });
+			setTimeout(() => {
+				this.setState({ visible: false });
+			}, 15000);
 		}
 	}
 
