@@ -47,7 +47,7 @@ class InvestmentRow extends React.Component<Props, State> {
 						{shortenString(investment.issuanceHash)}
 					</Col>
 					<Col xs="3" md="4">
-						{investment.principalAmount.eq(investment.earnedAmount) ? 'Paid' : 'Delinquent'}
+						{investment.earnedAmount.gte(investment.principalAmount) ? 'Paid' : 'Delinquent'}
 					</Col>
 					<Col xs="3" md="4">
 						Simple Interest Loan (Non-Collateralized)

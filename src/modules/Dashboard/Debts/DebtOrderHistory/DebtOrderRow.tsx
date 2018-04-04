@@ -50,7 +50,7 @@ class DebtOrderRow extends React.Component<Props, State> {
 						{shortenString(debtOrder.issuanceHash)}
 					</Col>
 					<Col xs="3" md="4">
-						{debtOrder.principalAmount.eq(debtOrder.repaidAmount) ? 'Paid' : 'Delinquent'}
+						{debtOrder.repaidAmount.gte(debtOrder.principalAmount) ? 'Paid' : 'Delinquent'}
 					</Col>
 					<Col xs="3" md="4">
 						Simple Interest Loan (Non-Collateralized)
