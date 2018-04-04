@@ -5,6 +5,7 @@ import { Header, ScrollToTopOnMount, MainWrapper } from '../../../components';
 import { ShareRequestURL } from './ShareRequestURL';
 import { RequestLoanSummary } from './RequestLoanSummary';
 import { DebtOrderEntity } from '../../../models';
+import { debtOrderFromJSON } from '../../../utils';
 
 interface Props {
 	params?: any;
@@ -74,10 +75,11 @@ class RequestLoanSuccess extends React.Component<Props, States> {
 	}
 
 	render() {
-		const { debtOrder } = this.props;
+		let { debtOrder } = this.props;
 		if (!debtOrder) {
 			return null;
 		}
+		debtOrder = debtOrderFromJSON(JSON.stringify(debtOrder));
 
 		// <GetNotified email={this.state.email} onInputChange={this.handleEmailChange} onFormSubmit={this.handleGetNotified} />
 		const descriptionContent = <span>Get lenders to fill your loan request by directing them to your request URL.</span>;

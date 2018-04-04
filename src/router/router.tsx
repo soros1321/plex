@@ -13,6 +13,7 @@ import {
     FillLoanEnteredContainer,
     Terms,
     Privacy,
+    EnsureAgreedToTermsContainer,
 } from "../modules";
 import { ParentContainer } from "../layouts";
 import * as Web3 from "web3";
@@ -119,24 +120,26 @@ class AppRouter extends React.Component<Props, {}> {
             <Router history={history}>
                 <Route path="/" component={AppContainer}>
                     <IndexRoute component={WelcomeContainer} />
+                    <Route component={EnsureAgreedToTermsContainer}>
+                        <Route path="/dashboard" component={DashboardContainer} />
+                        <Route path="/request" component={ParentContainer}>
+                            <IndexRoute component={RequestLoanFormContainer} />
+                            <Route
+                                path="success/:issuanceHash"
+                                component={RequestLoanSuccessContainer}
+                            />
+                        </Route>
+                        <Route path="/fill" component={ParentContainer}>
+                            <IndexRoute component={FillLoanEmpty} />
+                            <Route path="loan" component={FillLoanEnteredContainer} />
+                        </Route>
+                    </Route>
                     <Route path="/plex" component={DefaultContent} />
                     <Route path="/whitepaper" component={DefaultContent} />
                     <Route path="/blog" component={DefaultContent} />
                     <Route path="/github" component={DefaultContent} />
                     <Route path="/chat" component={DefaultContent} />
                     <Route path="/twitter" component={DefaultContent} />
-                    <Route path="/dashboard" component={DashboardContainer} />
-                    <Route path="/request" component={ParentContainer}>
-                        <IndexRoute component={RequestLoanFormContainer} />
-                        <Route
-                            path="success/:issuanceHash"
-                            component={RequestLoanSuccessContainer}
-                        />
-                    </Route>
-                    <Route path="/fill" component={ParentContainer}>
-                        <IndexRoute component={FillLoanEmpty} />
-                        <Route path="loan" component={FillLoanEnteredContainer} />
-                    </Route>
                     <Route path="/test" component={TestForm} />
                     <Route path="/terms" component={Terms} />
                     <Route path="/privacy" component={Privacy} />

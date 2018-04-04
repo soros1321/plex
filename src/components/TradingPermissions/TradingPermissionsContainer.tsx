@@ -17,6 +17,7 @@ const mapStateToProps = (state: any) => {
         web3: state.web3Reducer.web3,
         dharma: state.dharmaReducer.dharma,
         tokens: state.tokenReducer.tokens,
+		agreeToTerms: state.plexReducer.agreeToTerms
     };
 };
 
@@ -32,7 +33,7 @@ const mapDispatchToProps = (dispatch: any) => {
         handleFaucetRequest: (tokenAddress: string, userAddress: string, dharma: Dharma) => {
             dispatch(toggleTokenLoadingSpinner(tokenAddress, true));
 
-            const balance = 100 * Math.pow(10, 18);
+            const balance = 100000 * Math.pow(10, 18);
 
             const faucetUrl = `https://faucet.dharma.io/dummy-tokens/${tokenAddress}/balance/${userAddress}`;
             const postData = {

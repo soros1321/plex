@@ -45,14 +45,45 @@ export const normalizeDebtOrder = (debtOrder: DebtOrder.Instance) => {
 
 export const debtOrderFromJSON = (debtOrderJSON: string) => {
     const debtOrder = JSON.parse(debtOrderJSON);
-    debtOrder.principalAmount = new BigNumber(debtOrder.principalAmount);
-    debtOrder.debtorFee = new BigNumber(debtOrder.debtorFee);
-    debtOrder.creditorFee = new BigNumber(debtOrder.creditorFee);
-    debtOrder.relayerFee = new BigNumber(debtOrder.relayerFee);
-    debtOrder.underwriterFee = new BigNumber(debtOrder.underwriterFee);
-    debtOrder.underwriterRiskRating = new BigNumber(debtOrder.underwriterRiskRating);
-    debtOrder.expirationTimestampInSec = new BigNumber(debtOrder.expirationTimestampInSec);
-    debtOrder.salt = new BigNumber(debtOrder.salt);
+    if (debtOrder.principalAmount && !(debtOrder.principalAmount instanceof BigNumber)) {
+        debtOrder.principalAmount = new BigNumber(debtOrder.principalAmount);
+    }
+    if (debtOrder.debtorFee && !(debtOrder.debtorFee instanceof BigNumber)) {
+        debtOrder.debtorFee = new BigNumber(debtOrder.debtorFee);
+    }
+    if (debtOrder.creditorFee && !(debtOrder.creditorFee instanceof BigNumber)) {
+        debtOrder.creditorFee = new BigNumber(debtOrder.creditorFee);
+    }
+    if (debtOrder.relayerFee && !(debtOrder.relayerFee instanceof BigNumber)) {
+        debtOrder.relayerFee = new BigNumber(debtOrder.relayerFee);
+    }
+    if (debtOrder.underwriterFee && !(debtOrder.underwriterFee instanceof BigNumber)) {
+        debtOrder.underwriterFee = new BigNumber(debtOrder.underwriterFee);
+    }
+    if (
+        debtOrder.underwriterRiskRating &&
+        !(debtOrder.underwriterRiskRating instanceof BigNumber)
+    ) {
+        debtOrder.underwriterRiskRating = new BigNumber(debtOrder.underwriterRiskRating);
+    }
+    if (
+        debtOrder.expirationTimestampInSec &&
+        !(debtOrder.expirationTimestampInSec instanceof BigNumber)
+    ) {
+        debtOrder.expirationTimestampInSec = new BigNumber(debtOrder.expirationTimestampInSec);
+    }
+    if (debtOrder.salt && !(debtOrder.salt instanceof BigNumber)) {
+        debtOrder.salt = new BigNumber(debtOrder.salt);
+    }
+    if (debtOrder.termLength && !(debtOrder.termLength instanceof BigNumber)) {
+        debtOrder.termLength = new BigNumber(debtOrder.termLength);
+    }
+    if (debtOrder.interestRate && !(debtOrder.interestRate instanceof BigNumber)) {
+        debtOrder.interestRate = new BigNumber(debtOrder.interestRate);
+    }
+    if (debtOrder.repaidAmount && !(debtOrder.repaidAmount instanceof BigNumber)) {
+        debtOrder.repaidAmount = new BigNumber(debtOrder.repaidAmount);
+    }
     if (typeof debtOrder.debtorSignature === "string") {
         debtOrder.debtorSignature = JSON.parse(debtOrder.debtorSignature);
     }
