@@ -45,7 +45,7 @@ class MakeRepaymentModal extends React.Component<Props, State> {
         if (event.target.value === "") {
             this.setState({ repaymentAmount: new BigNumber(-1) });
         } else {
-            this.setState({ repaymentAmount: new BigNumber(event.target.value) });
+            this.setState({ repaymentAmount: new BigNumber(event.target.value * 10 ** 18) });
         }
     }
 

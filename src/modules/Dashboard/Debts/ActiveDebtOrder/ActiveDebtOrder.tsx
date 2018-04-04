@@ -117,7 +117,7 @@ class ActiveDebtOrder extends React.Component<Props, State> {
                         tokenSymbol,
                     );
                     this.props.handleSetSuccessToast(
-                        `Successfully made repayment of ${tokenAmount.toString()} ${tokenSymbol}`,
+                        `Successfully made repayment of ${tokenAmount.div(10 ** 18).toString()} ${tokenSymbol}`,
                     );
                 }
             }).catch(err => {
