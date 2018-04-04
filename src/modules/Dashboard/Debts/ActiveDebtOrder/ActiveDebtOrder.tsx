@@ -29,9 +29,10 @@ import {
     ScheduleIconContainer,
     Strikethrough,
     ShowMore,
-    PaymentDate
+    PaymentDate,
+	CancelButton
 } from './styledComponents';
-import { MakeRepaymentModal } from '../../../../components';
+import { MakeRepaymentModal, ConfirmationModal, Bold } from '../../../../components';
 import { ScheduleIcon } from '../../../../components/scheduleIcon/scheduleIcon';
 import { Row, Col, Collapse } from 'reactstrap';
 import { BigNumber } from 'bignumber.js';
@@ -48,6 +49,7 @@ interface Props {
     ) => void;
     handleSetErrorToast: (errorMessage: string) => void;
     handleSetSuccessToast: (successMessage: string) => void;
+	handleCancelDebtOrder: (issuanceHash: string) => void;
 }
 
 interface State {
@@ -55,6 +57,7 @@ interface State {
     makeRepayment: boolean;
     awaitingRepaymentTx: boolean;
     missedPayments: object;
+	confirmationModal: boolean;
 }
 
 class ActiveDebtOrder extends React.Component<Props, State> {
@@ -64,12 +67,16 @@ class ActiveDebtOrder extends React.Component<Props, State> {
             collapse: false,
             makeRepayment: false,
             awaitingRepaymentTx: false,
-            missedPayments: {}
+            missedPayments: {},
+			confirmationModal: false
         };
         this.toggleDrawer = this.toggleDrawer.bind(this);
         this.toggleRepaymentModal = this.toggleRepaymentModal.bind(this);
         this.handleMakeRepaymentClick = this.handleMakeRepaymentClick.bind(this);
         this.handleRepaymentFormSubmission = this.handleRepaymentFormSubmission.bind(this);
+		this.confirmationModalToggle = this.confirmationModalToggle.bind(this);
+		this.handleCancelDebtOrderClick = this.handleCancelDebtOrderClick.bind(this);
+		this.handleCancelDebtOrderSubmission = this.handleCancelDebtOrderSubmission.bind(this);
     }
 
     componentDidMount() {
@@ -89,6 +96,25 @@ class ActiveDebtOrder extends React.Component<Props, State> {
         event.stopPropagation();
         this.toggleRepaymentModal();
     }
+
+	confirmationModalToggle() {
+		this.setState({
+			confirmationModal: !this.state.confirmationModal
+		});
+	}
+
+    handleCancelDebtOrderClick(event: React.MouseEvent<HTMLElement>) {
+        event.stopPropagation();
+		this.confirmationModalToggle();
+    }
+
+	handleCancelDebtOrderSubmission() {
+		this.props.handleCancelDebtOrder(this.props.debtOrder.issuanceHash);
+		this.confirmationModalToggle();
+		this.props.handleSetSuccessToast(
+			`Debt agreement ${shortenString(this.props.debtOrder.issuanceHash)} is cancelled successfully`,
+		);
+	}
 
     async handleRepaymentFormSubmission(tokenAmount: BigNumber, tokenSymbol: string) {
         const { dharma } = this.props;
@@ -221,6 +247,11 @@ class ActiveDebtOrder extends React.Component<Props, State> {
                 shortenString(debtOrder.issuanceHash)
             );
 
+		const confirmationModalContent = (
+			<span>
+				Are you sure you want to cancel debt agreement <Bold>{shortenString(debtOrder.issuanceHash)}</Bold>
+			</span>
+		);
         return (
             <Wrapper onClick={this.toggleDrawer}>
                 <Row>
@@ -243,6 +274,11 @@ class ActiveDebtOrder extends React.Component<Props, State> {
                                     <MakeRepaymentButton onClick={this.handleMakeRepaymentClick}>
                                         Make Repayment
                                     </MakeRepaymentButton>
+                                )}
+                                {debtOrder.status === "pending" && (
+                                    <CancelButton onClick={this.handleCancelDebtOrderClick}>
+                                       Cancel
+                                    </CancelButton>
                                 )}
                             </Col>
                         </Row>
@@ -332,6 +368,15 @@ class ActiveDebtOrder extends React.Component<Props, State> {
                     onToggle={this.toggleRepaymentModal}
                     onSubmit={this.handleRepaymentFormSubmission}
                 />
+				<ConfirmationModal
+					modal={this.state.confirmationModal}
+					title="Please confirm"
+					content={confirmationModalContent}
+					onToggle={this.confirmationModalToggle}
+					onSubmit={this.handleCancelDebtOrderSubmission}
+					closeButtonText="No"
+					submitButtonText="Yes"
+				/>
             </Wrapper>
         );
     }

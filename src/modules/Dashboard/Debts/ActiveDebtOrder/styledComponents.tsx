@@ -238,3 +238,8 @@ export const MakeRepaymentButton = StyledButton.extend`
 		line-height: 24px !important;
 	}
 `;
+
+export const CancelButton = MakeRepaymentButton.extend`
+	background-color: #1CC1CC !important;
+	border-color: #1CC1CC !important;
+`;
