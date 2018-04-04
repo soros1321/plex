@@ -407,5 +407,29 @@ describe('TradingPermissions (Unit)', () => {
 				await expect(dharma.blockchain.awaitTransactionMinedAsync).not.toHaveBeenCalled();
 			});
 		});
+
+		describe('there is no matching token', () => {
+			beforeEach(() => {
+				props.tokens = [
+					{
+						address: 'address3',
+						tokenSymbol: 'MKR',
+						tradingPermitted: true,
+						balance: new BigNumber(0)
+					}
+				];
+				dharma.token.setProxyAllowanceAsync.mockReset();
+				dharma.token.setUnlimitedProxyAllowanceAsync.mockReset();
+				dharma.blockchain.awaitTransactionMinedAsync.mockReset()
+			});
+
+			it('should not call dharma functions', async () => {
+				const tradingPermissions = shallow(<TradingPermissions {...props} />);
+				await tradingPermissions.instance().updateProxyAllowanceAsync(true, 'BLAH');
+				await expect(dharma.token.setProxyAllowanceAsync).not.toHaveBeenCalled();
+				await expect(dharma.token.setUnlimitedProxyAllowanceAsync).not.toHaveBeenCalled();
+				await expect(dharma.blockchain.awaitTransactionMinedAsync).not.toHaveBeenCalled();
+			});
+		});
   });
 });
