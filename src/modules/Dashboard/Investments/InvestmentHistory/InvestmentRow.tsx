@@ -10,22 +10,48 @@ import {
 	InfoItemContent
 } from './styledComponents';
 import { TokenAmount } from 'src/components';
+import Dharma from '@dharmaprotocol/dharma.js';
+import * as moment from 'moment';
+import { BigNumber } from 'bignumber.js';
 
 interface Props {
+	dharma: Dharma;
 	investment: InvestmentEntity;
 }
 
 interface State {
 	collapse: boolean;
+	status: string;
 }
 
 class InvestmentRow extends React.Component<Props, State> {
 	constructor(props: Props) {
 		super(props);
 		this.state = {
-			collapse: false
+			collapse: false,
+			status: ''
 		};
 		this.toggleDrawer = this.toggleDrawer.bind(this);
+	}
+
+	async componentDidMount() {
+		if (this.props.dharma && this.props.investment) {
+			await this.determineStatus(this.props.dharma, this.props.investment);
+		}
+	}
+
+	async componentWillReceiveProps(nextProps: Props) {
+		if (nextProps.dharma && nextProps.investment) {
+			await this.determineStatus(nextProps.dharma, nextProps.investment);
+		}
+	}
+
+	async determineStatus(dharma: Dharma, investment: InvestmentEntity) {
+		const earnedAmount = await dharma.servicing.getValueRepaid(investment.issuanceHash);
+		const expectedEarnedAmount = await dharma.servicing.getExpectedValueRepaid(investment.issuanceHash, moment().unix());
+		this.setState({
+			status: new BigNumber(earnedAmount).lt(new BigNumber(expectedEarnedAmount)) ? 'Delinquent' : 'Paid'
+		});
 	}
 
 	toggleDrawer() {
@@ -47,7 +73,7 @@ class InvestmentRow extends React.Component<Props, State> {
 						{shortenString(investment.issuanceHash)}
 					</Col>
 					<Col xs="3" md="4">
-						{investment.earnedAmount.gte(investment.principalAmount) ? 'Paid' : 'Delinquent'}
+						{this.state.status}
 					</Col>
 					<Col xs="3" md="4">
 						Simple Interest Loan (Non-Collateralized)

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { DebtOrderEntity } from '../../../../models';
 // import { formatDate } from '../../../../utils';
 import { Col } from 'reactstrap';
-import { DebtOrderRow } from './DebtOrderRow';
+import { DebtOrderRowContainer } from './DebtOrderRowContainer';
 import {
 	Wrapper,
 	Title,
@@ -35,7 +35,7 @@ class DebtOrderHistory extends React.Component<Props, {}> {
 				</TableHeaderRow>
 				{
 					debtOrders.map((debtOrder) => (
-						<DebtOrderRow debtOrder={debtOrder} key={debtOrder.issuanceHash} />
+						<DebtOrderRowContainer debtOrder={debtOrder} key={debtOrder.issuanceHash} />
 					))
 				}
 			</Wrapper>
