@@ -135,7 +135,11 @@ class ActiveDebtOrder extends React.Component<Props, State> {
                 this.setState({ makeRepayment: false, awaitingRepaymentTx: false });
 
                 if (errors.length > 0) {
-                    this.props.handleSetErrorToast(errors[0]);
+					if (this.props.debtOrder.principalTokenSymbol !== tokenSymbol) {
+						this.props.handleSetErrorToast(`Repayments to debt agreement ${shortenString(this.props.debtOrder.issuanceHash)} must be made in ${this.props.debtOrder.principalTokenSymbol}`);
+					} else {
+						this.props.handleSetErrorToast(errors[0]);
+					}
                 } else {
                     this.props.handleSuccessfulRepayment(
                         this.props.debtOrder.issuanceHash,

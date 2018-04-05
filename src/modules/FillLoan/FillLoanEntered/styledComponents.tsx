@@ -47,6 +47,7 @@ export const Content = Title.extend`
 	opacity: 1;
 	font-size: 18px;
 	text-transform: none;
+	word-wrap: break-word;
 `;
 
 export const ButtonContainer = styled.div`

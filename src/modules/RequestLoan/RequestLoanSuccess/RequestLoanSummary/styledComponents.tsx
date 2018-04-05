@@ -44,6 +44,7 @@ export const Content = styled.div`
 	color: #002326;
 	font-size: 17px;
 	line-height: 25px;
+	word-wrap: break-word;
 `;
 
 export const SummaryJsonContainer = styled(FormGroup)`
