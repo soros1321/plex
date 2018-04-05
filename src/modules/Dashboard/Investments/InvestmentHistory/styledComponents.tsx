@@ -76,4 +76,5 @@ export const InfoItemContent = styled.div`
 	color: #002326;
 	font-size: 13px;
 	line-height: 20px;
+	word-wrap: break-word;
 `;
