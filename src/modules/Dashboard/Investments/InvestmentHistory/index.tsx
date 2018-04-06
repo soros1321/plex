@@ -2,7 +2,7 @@ import * as React from 'react';
 import { InvestmentEntity } from '../../../../models';
 // import { formatDate } from '../../../../utils';
 import { Col } from 'reactstrap';
-import { InvestmentRow } from './InvestmentRow';
+import { InvestmentRowContainer } from './InvestmentRowContainer';
 import {
 	Wrapper,
 	Title,
@@ -35,7 +35,7 @@ class InvestmentHistory extends React.Component<Props, {}> {
 				</TableHeaderRow>
 				{
 					investments.map((investment) => (
-						<InvestmentRow investment={investment} key={investment.issuanceHash} />
+						<InvestmentRowContainer investment={investment} key={investment.issuanceHash} />
 					))
 				}
 			</Wrapper>
