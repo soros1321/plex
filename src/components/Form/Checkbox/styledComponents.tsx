@@ -14,6 +14,12 @@ export const Checkmark = styled.span`
 		position: absolute;
 		display: none;
 	}
+
+	@media only screen and (max-width: 568px) {
+		height: 10px;
+		width: 10px;
+		top: 7px;
+	}
 `;
 
 export const CheckboxLabel = styled(Label)`
@@ -60,5 +66,19 @@ export const CheckboxLabel = styled(Label)`
 		-webkit-transform: rotate(45deg);
 		-ms-transform: rotate(45deg);
 		transform: rotate(45deg);
+	}
+
+	@media only screen and (max-width: 568px) {
+		padding-left: 15px;
+		margin-bottom: 5px;
+		font-size: 10px;
+
+		${Checkmark}:after {
+			left: 3px;
+			top: 1px;
+			width: 4px;
+			height: 6px;
+			border-width: 0 1px 1px 0;
+		}
 	}
 `;

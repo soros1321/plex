@@ -8,6 +8,12 @@ export const TradingPermissionsContainer = styled.div`
 		bottom: 10px;
 		padding-left: 25px;
 	}
+	@media only screen and (max-width: 568px) {
+		&.left {
+			bottom: 10px;
+			padding: 0px 10px;
+		}
+	}
 	@media only screen and (max-width: 480px) {
 		width: 100%;
 		&.left {
@@ -17,12 +23,22 @@ export const TradingPermissionsContainer = styled.div`
 `;
 
 export const TradingPermissionsTitle = styled.div`
-  color: #FFFFFF;
-  font-size: 13px;
-  line-height: 25px;
-  opacity: 0.5;
-  padding: 5px 0px;
-  text-transform: uppercase;
+	color: #FFFFFF;
+	font-size: 13px;
+	line-height: 25px;
+	opacity: 0.5;
+	padding: 5px 0px;
+	text-transform: uppercase;
+
+	@media only screen and (max-width: 568px) {
+		font-size: 8px;
+		line-height: 12px;
+	}
+
+	@media only screen and (max-width: 480px) {
+		font-size: 10px;
+		line-height: 10px;
+	}
 `;
 
 export const TokenSymbol = styled.div`

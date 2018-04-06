@@ -224,13 +224,15 @@ class TradingPermissions extends React.Component<Props, State> {
                             Faucet
                         </FaucetButton>
                     )}
-                    <LoaderContainer>
-                        <ClipLoader
-                            size={12}
-                            color={"#1cc1cc"}
-                            loading={token.awaitingTransaction}
-                        />
-                    </LoaderContainer>
+					{token.awaitingTransaction && (
+						<LoaderContainer>
+							<ClipLoader
+								size={12}
+								color={"#1cc1cc"}
+								loading={token.awaitingTransaction}
+							/>
+						</LoaderContainer>
+					)}
                 </div>
             );
             if (count < 2) {

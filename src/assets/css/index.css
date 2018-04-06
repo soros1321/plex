@@ -240,6 +240,18 @@ button:focus {
 	transform: translate(-50%, -50%) !important;
 	margin: 0;
 }
+@media only screen and (max-width: 568px) {
+	h1 {
+		font-size: 32px;
+		line-height: 36px;
+	}
+	label {
+		font-size: 15px;
+		line-height: 25px;
+		margin-bottom: 0px;
+	}
+
+}
 @media only screen and (max-width: 480px) {
 	h1 {
 		font-size: 30px;

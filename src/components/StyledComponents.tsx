@@ -5,6 +5,9 @@ import { Link } from "react-router";
 // styles-components
 export const MainWrapper = styled.div`
     padding: 50px;
+    @media only screen and (max-width: 568px) {
+        padding: 30px;
+    }
     @media only screen and (max-width: 480px) {
         padding: 15px;
     }
@@ -27,6 +30,12 @@ export const StyledButton = styled(Button)`
     border-radius: 0 !important;
     text-transform: uppercase;
     min-width: 200px !important;
+
+    @media only screen and (max-width: 568px) {
+        font-size: 10px !important;
+        line-height: 22px !important;
+        min-width: 130px !important;
+    }
 `;
 
 export const Wrapper30 = styled.div`

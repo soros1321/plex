@@ -7,6 +7,7 @@
   background-color: transparent;
   border: 0;
   padding: 0;
+  width: 35px;
 
   -webkit-touch-callout: none;
   -webkit-user-select: none;
@@ -139,3 +140,33 @@
   -moz-box-shadow: 0px 0px 5px 5px #0099E0;
   box-shadow: 0px 0px 5px 5px #0099E0;
 }
+
+@media only screen and (max-width: 568px) {
+	.react-toggle {
+		width: 20px;
+	}
+	.react-toggle-track {
+		width: 20px;
+		height: 10px;
+	}
+	.react-toggle-track-check {
+		width: 10px;
+		height: 10px;
+		left: 8px;
+	}
+	.react-toggle-track-x {
+		width: 10px;
+		height: 10px;
+		right: 10px;
+	}
+	.react-toggle-thumb {
+		top: 0px;
+		left: 0px;
+		width: 10px;
+		height: 10px;
+	}
+	.react-toggle--checked .react-toggle-thumb {
+		left: 10px;
+	}
+}
+
