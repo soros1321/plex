@@ -81,5 +81,5 @@ export const StyledLink = styled(Link)`
 `;
 
 export const StyledNav = styled(Nav)`
-	margin-bottom: 20px !important;
+	margin: 10px 0 20px !important;
 `;

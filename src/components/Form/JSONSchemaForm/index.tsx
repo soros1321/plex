@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Button } from 'reactstrap';
+import { StyledButton } from '../../StyledComponents';
 import { JSONSchema4 } from 'json-schema';
 import { StyledForm, FieldWrapper, PressEnter } from './styledComponents';
 import { ObjectFieldTemplate } from './ObjectFieldTemplate';
@@ -442,7 +442,7 @@ class JSONSchemaForm extends React.Component<Props, {}> {
 				validate={this.props.validate}
 			>
 				<FieldWrapper className="field-wrapper button-container">
-					<Button type="submit" className="button">{this.props.buttonText || 'Submit'}</Button>
+					<StyledButton type="submit" className="button">{this.props.buttonText || 'Submit'}</StyledButton>
 					<PressEnter className="press-enter">OK, Press ENTER</PressEnter>
 				</FieldWrapper>
 			</StyledForm>

@@ -216,7 +216,7 @@ export const uiSchema = {
 			}
 		},
 		amortizationUnit: {
-			'ui:placeholder': 'select',
+			'ui:placeholder': 'Select installments...',
 			classNames: 'group-field',
 			'ui:options': {
 				pressEnter: false

@@ -21,6 +21,12 @@ export const Title = styled.div`
 	line-height: 25px;
 	margin-top: 50px;
 	margin-bottom: 5px;
+
+	@media only screen and (max-width: 568px) {
+		font-size: 10px;
+		line-height: 18px;
+		margin-top: 20px;
+	}
 `;
 
 export const Description = styled.div`
@@ -29,12 +35,21 @@ export const Description = styled.div`
 	font-size: 13px;
 	line-height: 20px;
 	margin-bottom: 5px;
+
+	@media only screen and (max-width: 568px) {
+		font-size: 8px;
+		line-height: 15px;
+	}
 `;
 
 export const InputContainerBorder = styled.div`
 	padding: 20px;
 	border: 1px solid #1CC1CC;
 	background-color: rgba(28,193,204,0.01);}
+
+	@media only screen and (max-width: 568px) {
+		padding: 10px;
+	}
 `;
 
 export const FieldWrapper = styled.div`
@@ -83,6 +98,14 @@ export const FieldWrapper = styled.div`
 	&.button-container {
 		margin-top: -100px;
 	}
+
+	@media only screen and (max-width: 568px) {
+		&.form-group.inline-field {
+			&.padding-top {
+				padding-top: 23px;
+			}
+		}
+	}
 `;
 
 export const Error = styled.div`
@@ -90,6 +113,11 @@ export const Error = styled.div`
 	font-family: DIN-Bold;
 	font-size: 15px;
 	color: #FF0000;
+
+	@media only screen and (max-width: 568px) {
+		margin: 2px 0px;
+		font-size: 8px;
+	}
 `;
 
 export const Help = Description.extend`

@@ -241,14 +241,21 @@ button:focus {
 	margin: 0;
 }
 @media only screen and (max-width: 568px) {
+	body {
+		font-size: 10px;
+		line-height: 18px;
+	}
 	h1 {
-		font-size: 32px;
-		line-height: 36px;
+		font-size: 20px;
+		line-height: 25px;
 	}
 	label {
-		font-size: 15px;
-		line-height: 25px;
+		font-size: 10px;
+		line-height: 18px;
 		margin-bottom: 0px;
+	}
+	.form-control {
+		font-size: 10px;
 	}
 
 }
