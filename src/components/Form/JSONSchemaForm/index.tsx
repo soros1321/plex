@@ -23,6 +23,7 @@ interface Props {
 	onHandleChange: (formData: any) => void;
 	onHandleSubmit: () => void;
 	validate?: (formData: any, errors: any) => any;
+	transformErrors?: (errors: any[]) => any[];
 }
 
 const widgets = {
@@ -440,6 +441,7 @@ class JSONSchemaForm extends React.Component<Props, {}> {
 				showErrorList={false}
 				widgets={widgets}
 				validate={this.props.validate}
+				transformErrors={this.props.transformErrors}
 			>
 				<FieldWrapper className="field-wrapper button-container">
 					<Button type="submit" className="button">{this.props.buttonText || 'Submit'}</Button>
