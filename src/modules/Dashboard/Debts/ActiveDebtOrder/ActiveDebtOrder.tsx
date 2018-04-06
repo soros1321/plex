@@ -6,6 +6,7 @@ import {
     getIdenticonImgSrc,
     shortenString,
     amortizationUnitToFrequency,
+	debtOrderFromJSON
 } from "../../../../utils";
 import {
     Wrapper,
@@ -29,9 +30,10 @@ import {
     ScheduleIconContainer,
     Strikethrough,
     ShowMore,
-    PaymentDate
+    PaymentDate,
+	CancelButton
 } from './styledComponents';
-import { MakeRepaymentModal } from '../../../../components';
+import { MakeRepaymentModal, ConfirmationModal, Bold } from '../../../../components';
 import { ScheduleIcon } from '../../../../components/scheduleIcon/scheduleIcon';
 import { Row, Col, Collapse } from 'reactstrap';
 import { BigNumber } from 'bignumber.js';
@@ -41,6 +43,7 @@ import { TokenAmount } from "src/components";
 interface Props {
     debtOrder: DebtOrderEntity;
     dharma: Dharma;
+	accounts: string[];
     handleSuccessfulRepayment: (
         agreementId: string,
         repaymentAmount: BigNumber,
@@ -48,13 +51,16 @@ interface Props {
     ) => void;
     handleSetErrorToast: (errorMessage: string) => void;
     handleSetSuccessToast: (successMessage: string) => void;
+	handleCancelDebtOrder: (issuanceHash: string) => void;
 }
 
 interface State {
     collapse: boolean;
     makeRepayment: boolean;
     awaitingRepaymentTx: boolean;
+	awaitingCancelTx: boolean;
     missedPayments: object;
+	confirmationModal: boolean;
 }
 
 class ActiveDebtOrder extends React.Component<Props, State> {
@@ -64,12 +70,17 @@ class ActiveDebtOrder extends React.Component<Props, State> {
             collapse: false,
             makeRepayment: false,
             awaitingRepaymentTx: false,
-            missedPayments: {}
+			awaitingCancelTx: false,
+            missedPayments: {},
+			confirmationModal: false
         };
         this.toggleDrawer = this.toggleDrawer.bind(this);
         this.toggleRepaymentModal = this.toggleRepaymentModal.bind(this);
         this.handleMakeRepaymentClick = this.handleMakeRepaymentClick.bind(this);
         this.handleRepaymentFormSubmission = this.handleRepaymentFormSubmission.bind(this);
+		this.confirmationModalToggle = this.confirmationModalToggle.bind(this);
+		this.handleCancelDebtOrderClick = this.handleCancelDebtOrderClick.bind(this);
+		this.handleCancelDebtOrderSubmission = this.handleCancelDebtOrderSubmission.bind(this);
     }
 
     componentDidMount() {
@@ -89,6 +100,73 @@ class ActiveDebtOrder extends React.Component<Props, State> {
         event.stopPropagation();
         this.toggleRepaymentModal();
     }
+
+	confirmationModalToggle() {
+		this.setState({
+			confirmationModal: !this.state.confirmationModal
+		});
+	}
+
+    handleCancelDebtOrderClick(event: React.MouseEvent<HTMLElement>) {
+        event.stopPropagation();
+		this.confirmationModalToggle();
+    }
+
+	async handleCancelDebtOrderSubmission() {
+		try {
+			const {
+				dharma,
+				debtOrder,
+				accounts,
+				handleCancelDebtOrder,
+				handleSetSuccessToast,
+				handleSetErrorToast
+			} = this.props;
+
+			if (!accounts.length) {
+				handleSetErrorToast('Unable to find active account on Ethereum network');
+				return;
+			}
+			if (!debtOrder.json) {
+				return;
+			}
+
+			const dharmaDebtOrder = debtOrderFromJSON(debtOrder.json);
+			dharma.order.cancelOrderAsync(dharmaDebtOrder, {from: accounts[0]})
+				.then((txHash) => {
+					this.setState({ awaitingCancelTx: true });
+					return dharma.blockchain.awaitTransactionMinedAsync(txHash, 1000, 60000);
+				})
+				.then((receipt) => {
+					return dharma.blockchain.getErrorLogs(receipt.transactionHash);
+				})
+				.then(async (errors) => {
+					this.setState({ awaitingCancelTx: false });
+					this.confirmationModalToggle();
+
+					if (errors.length > 0) {
+						handleSetErrorToast(errors[0]);
+					} else {
+						handleCancelDebtOrder(debtOrder.issuanceHash);
+
+						handleSetSuccessToast(
+							`Debt agreement ${shortenString(debtOrder.issuanceHash)} is cancelled successfully`,
+						);
+					}
+				}).catch(err => {
+					if (err.message.includes('User denied transaction signature')) {
+						this.props.handleSetErrorToast("Wallet has denied transaction.");
+					} else {
+						this.props.handleSetErrorToast(err.message);
+					}
+					this.confirmationModalToggle();
+					this.setState({ awaitingCancelTx: false });
+				});
+		} catch (e) {
+			this.confirmationModalToggle();
+			this.props.handleSetErrorToast(e.message);
+		}
+	}
 
     async handleRepaymentFormSubmission(tokenAmount: BigNumber, tokenSymbol: string) {
         const { dharma } = this.props;
@@ -225,6 +303,11 @@ class ActiveDebtOrder extends React.Component<Props, State> {
                 shortenString(debtOrder.issuanceHash)
             );
 
+		const confirmationModalContent = (
+			<span>
+				Are you sure you want to cancel debt agreement <Bold>{shortenString(debtOrder.issuanceHash)}</Bold>
+			</span>
+		);
         return (
             <Wrapper onClick={this.toggleDrawer}>
                 <Row>
@@ -248,6 +331,11 @@ class ActiveDebtOrder extends React.Component<Props, State> {
                                         Make Repayment
                                     </MakeRepaymentButton>
                                 )}
+                                {debtOrder.status === "pending" && (
+									<CancelButton onClick={this.handleCancelDebtOrderClick}>
+									   Cancel
+									</CancelButton>
+								)}
                             </Col>
                         </Row>
                         {debtOrder.status === "active" ? (
@@ -336,6 +424,17 @@ class ActiveDebtOrder extends React.Component<Props, State> {
                     onToggle={this.toggleRepaymentModal}
                     onSubmit={this.handleRepaymentFormSubmission}
                 />
+				<ConfirmationModal
+					modal={this.state.confirmationModal}
+					title="Please confirm"
+					content={confirmationModalContent}
+					onToggle={this.confirmationModalToggle}
+					onSubmit={this.handleCancelDebtOrderSubmission}
+					closeButtonText="No"
+					submitButtonText={
+						this.state.awaitingCancelTx ? "Canceling Order..." : "Yes"
+					}
+				/>
             </Wrapper>
         );
     }

@@ -36,7 +36,7 @@ class Investments extends React.Component<Props, State> {
 	}
 
 	async getInvestmentsDetails(investments: InvestmentEntity[]) {
-		if (!investments || !investments.length) {
+		if (!investments) {
 			return;
 		}
 		const allInvestments: InvestmentEntity[] = [];

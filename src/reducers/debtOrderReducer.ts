@@ -58,6 +58,7 @@ export const debtOrderReducer = (
         case actionsEnums.GET_PENDING_DEBT_ORDER:
             return handleGetPendingDebtOrder(state, action.payload);
         case actionsEnums.FILL_DEBT_ORDER:
+        case actionsEnums.CANCEL_DEBT_ORDER:
             return handleRemovePendingDebtOrder(state, action.payload);
         case actionsEnums.SET_FILLED_DEBT_ORDERS:
             return handleSetFilledDebtOrders(state, action);
