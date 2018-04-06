@@ -29,3 +29,30 @@ export const uiSchema = {
 		}
 	}
 };
+
+export const validDebtOrderSchema = {
+	required: [
+		'kernelVersion',
+		'issuanceVersion',
+		'principalAmount',
+		'principalToken',
+		'debtor',
+		'debtorFee',
+		'creditor',
+		'creditorFee',
+		'relayer',
+		'relayerFee',
+		'underwriter',
+		'underwriterFee',
+		'underwriterRiskRating',
+		'termsContract',
+		'termsContractParameters',
+		'expirationTimestampInSec',
+		'salt',
+		'debtorSignature',
+		'creditorSignature',
+		'underwriterSignature',
+		'description',
+		'principalTokenSymbol'
+	]
+};

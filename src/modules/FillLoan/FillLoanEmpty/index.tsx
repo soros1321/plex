@@ -1,9 +1,9 @@
 import * as React from "react";
 import { Header, MainWrapper, JSONSchemaForm } from "../../../components";
-import { schema, uiSchema } from "./schema";
+import { schema, uiSchema, validDebtOrderSchema } from "./schema";
 import { PaperLayout } from "../../../layouts";
 import { Instructions, Title, StyledLink } from "./styledComponents";
-import { encodeUrlParams } from "../../../utils";
+import { encodeUrlParams, debtOrderFromJSON } from "../../../utils";
 import { browserHistory } from "react-router";
 
 interface State {
@@ -18,6 +18,7 @@ class FillLoanEmpty extends React.Component<{}, State> {
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+		this.validateForm = this.validateForm.bind(this);
     }
 
     handleChange(formData: any) {
@@ -33,6 +34,20 @@ class FillLoanEmpty extends React.Component<{}, State> {
         browserHistory.push(`/fill/loan?${encodeUrlParams(loanRequest)}`);
     }
 
+	validateForm(formData: any, errors: any) {
+		try {
+			const loanRequest = debtOrderFromJSON(formData.loan.loanRequest);
+			for (let field of validDebtOrderSchema.required) {
+				if (!loanRequest.hasOwnProperty(field)) {
+					errors.loan.loanRequest.addError(`JSON string is missing ${field} key.`);
+				}
+			}
+		} catch (e) {
+			errors.loan.loanRequest.addError("Invalid JSON string.");
+		}
+		return errors;
+	}
+
     render() {
         const descriptionContent = (
             <span>
@@ -45,14 +60,15 @@ class FillLoanEmpty extends React.Component<{}, State> {
             <PaperLayout>
                 <MainWrapper>
                     <Header title={"Fill a Loan"} description={descriptionContent} />
-                    <JSONSchemaForm
-                        schema={schema}
-                        uiSchema={uiSchema}
-                        formData={this.state.formData}
-                        buttonText="Next &#8594;"
-                        onHandleChange={this.handleChange}
-                        onHandleSubmit={this.handleSubmit}
-                    />
+					<JSONSchemaForm
+						schema={schema}
+						uiSchema={uiSchema}
+						formData={this.state.formData}
+						buttonText="Next &#8594;"
+						onHandleChange={this.handleChange}
+						onHandleSubmit={this.handleSubmit}
+						validate={this.validateForm}
+					/>
                     <Instructions>
                         <Title>Just getting started?</Title>
                         {/*<StyledLink to="#" >FILLING DEBT ORDERS (VIDEO)</StyledLink>*/}
