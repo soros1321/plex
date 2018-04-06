@@ -6,6 +6,7 @@ import { setError, setSuccess } from '../../../../components/Toast/actions';
 
 const mapStateToProps = (state: any) => {
 	return {
+		accounts: state.web3Reducer.accounts
 	};
 };
 

@@ -6,6 +6,7 @@ import {
     getIdenticonImgSrc,
     shortenString,
     amortizationUnitToFrequency,
+	debtOrderFromJSON
 } from "../../../../utils";
 import {
     Wrapper,
@@ -42,6 +43,7 @@ import { TokenAmount } from "src/components";
 interface Props {
     debtOrder: DebtOrderEntity;
     dharma: Dharma;
+	accounts: string[];
     handleSuccessfulRepayment: (
         agreementId: string,
         repaymentAmount: BigNumber,
@@ -56,6 +58,7 @@ interface State {
     collapse: boolean;
     makeRepayment: boolean;
     awaitingRepaymentTx: boolean;
+	awaitingCancelTx: boolean;
     missedPayments: object;
 	confirmationModal: boolean;
 }
@@ -67,6 +70,7 @@ class ActiveDebtOrder extends React.Component<Props, State> {
             collapse: false,
             makeRepayment: false,
             awaitingRepaymentTx: false,
+			awaitingCancelTx: false,
             missedPayments: {},
 			confirmationModal: false
         };
@@ -108,12 +112,60 @@ class ActiveDebtOrder extends React.Component<Props, State> {
 		this.confirmationModalToggle();
     }
 
-	handleCancelDebtOrderSubmission() {
-		this.props.handleCancelDebtOrder(this.props.debtOrder.issuanceHash);
-		this.confirmationModalToggle();
-		this.props.handleSetSuccessToast(
-			`Debt agreement ${shortenString(this.props.debtOrder.issuanceHash)} is cancelled successfully`,
-		);
+	async handleCancelDebtOrderSubmission() {
+		try {
+			const {
+				dharma,
+				debtOrder,
+				accounts,
+				handleCancelDebtOrder,
+				handleSetSuccessToast,
+				handleSetErrorToast
+			} = this.props;
+
+			if (!accounts.length) {
+				handleSetErrorToast('Unable to find active account on Ethereum network');
+				return;
+			}
+			if (!debtOrder.json) {
+				return;
+			}
+
+			const dharmaDebtOrder = debtOrderFromJSON(debtOrder.json);
+			dharma.order.cancelOrderAsync(dharmaDebtOrder, {from: accounts[0]})
+				.then((txHash) => {
+					this.setState({ awaitingCancelTx: true });
+					return dharma.blockchain.awaitTransactionMinedAsync(txHash, 1000, 60000);
+				})
+				.then((receipt) => {
+					return dharma.blockchain.getErrorLogs(receipt.transactionHash);
+				})
+				.then(async (errors) => {
+					this.setState({ awaitingCancelTx: false });
+					this.confirmationModalToggle();
+
+					if (errors.length > 0) {
+						handleSetErrorToast(errors[0]);
+					} else {
+						handleCancelDebtOrder(debtOrder.issuanceHash);
+
+						handleSetSuccessToast(
+							`Debt agreement ${shortenString(debtOrder.issuanceHash)} is cancelled successfully`,
+						);
+					}
+				}).catch(err => {
+					if (err.message.includes('User denied transaction signature')) {
+						this.props.handleSetErrorToast("Wallet has denied transaction.");
+					} else {
+						this.props.handleSetErrorToast(err.message);
+					}
+					this.confirmationModalToggle();
+					this.setState({ awaitingCancelTx: false });
+				});
+		} catch (e) {
+			this.confirmationModalToggle();
+			this.props.handleSetErrorToast(e.message);
+		}
 	}
 
     async handleRepaymentFormSubmission(tokenAmount: BigNumber, tokenSymbol: string) {
@@ -280,10 +332,10 @@ class ActiveDebtOrder extends React.Component<Props, State> {
                                     </MakeRepaymentButton>
                                 )}
                                 {debtOrder.status === "pending" && (
-                                    <CancelButton onClick={this.handleCancelDebtOrderClick}>
-                                       Cancel
-                                    </CancelButton>
-                                )}
+									<CancelButton onClick={this.handleCancelDebtOrderClick}>
+									   Cancel
+									</CancelButton>
+								)}
                             </Col>
                         </Row>
                         {debtOrder.status === "active" ? (
@@ -379,7 +431,9 @@ class ActiveDebtOrder extends React.Component<Props, State> {
 					onToggle={this.confirmationModalToggle}
 					onSubmit={this.handleCancelDebtOrderSubmission}
 					closeButtonText="No"
-					submitButtonText="Yes"
+					submitButtonText={
+						this.state.awaitingCancelTx ? "Canceling Order..." : "Yes"
+					}
 				/>
             </Wrapper>
         );

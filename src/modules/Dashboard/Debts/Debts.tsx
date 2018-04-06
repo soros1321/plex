@@ -38,7 +38,7 @@ class Debts extends React.Component<Props, State> {
     }
 
     getDebtOrdersDetails(debtOrders: DebtOrderEntity[]) {
-		if (!debtOrders || !debtOrders.length) {
+		if (!debtOrders) {
             return;
         }
         const allDebtOrders: DebtOrderEntity[] = [];
