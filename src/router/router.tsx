@@ -11,7 +11,7 @@ import {
     RequestLoanSuccessContainer,
     DashboardContainer,
     FillLoanEnteredContainer,
-    Terms,
+    TermsContainer,
     Privacy,
     EnsureAgreedToTermsContainer,
 } from "../modules";
@@ -141,7 +141,7 @@ class AppRouter extends React.Component<Props, {}> {
                     <Route path="/chat" component={DefaultContent} />
                     <Route path="/twitter" component={DefaultContent} />
                     <Route path="/test" component={TestForm} />
-                    <Route path="/terms" component={Terms} />
+                    <Route path="/terms" component={TermsContainer} />
                     <Route path="/privacy" component={Privacy} />
                 </Route>
             </Router>

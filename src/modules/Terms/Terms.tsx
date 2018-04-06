@@ -6,14 +6,32 @@ import {
 	A,
 	P,
 	Ol,
-	Li
+	Li,
+	StyledButton
 } from '../../components';
 import {
 	TermsWrapper,
-	Title
+	Title,
+	ButtonContainer
 } from './styledComponents';
+import { browserHistory } from 'react-router';
 
-class Terms extends React.Component {
+interface Props {
+	agreeToTerms: boolean;
+	handleAgreeToTerms: (agree: boolean) => void;
+}
+
+class Terms extends React.Component<Props, {}> {
+	constructor(props: Props) {
+		super(props);
+		this.handleAgreeButtonClick = this.handleAgreeButtonClick.bind(this);
+	}
+
+	handleAgreeButtonClick() {
+		this.props.handleAgreeToTerms(true);
+		browserHistory.push('/request');
+	}
+
 	render() {
 		return (
 			<PaperLayout>
@@ -75,6 +93,11 @@ SOME JURISDICTIONS DO NOT ALLOW THE EXCLUSION OR LIMITATION OF DIRECT, INCIDENTA
 								<Bold>General.</Bold> If any provision of these Terms of Use is held by a court of competent jurisdiction or arbitrator to be illegal, invalid, or unenforceable, the remaining provisions will remain in full force and effect. You and the Company intend that the provisions of these Terms of Use be enforced to the fullest extent permitted by applicable law. Accordingly, you and the Company agree that if any provision is deemed unenforceable, where possible, it will be modified to the extent necessary to make it enforceable, which may include its deletion. The Company may assign these Terms of Use, in whole or in part, at any time with or without notice to you. You may not assign these Terms of Use or assign, transfer, or sublicense your rights, if any, to access or use the Website or its content, and any attempt by you to do so is void. The Company’s failure to act with respect to a breach by you or others does not waive its right to act with respect to subsequent or similar breaches. A waiver will only be binding on the Company if it is in a written document signed by the Company. These Terms of Use (including any incorporated terms) constitute the entire agreement between you and the Company with respect to the Website and its contents. Both you and the Company warrant to each other that, in entering into these Terms of Use, neither the Company or you have relied on or will have any right or remedy based upon any statement, representation, warranty, or assurance other than those expressly stated in these Terms of Use. The preceding sentence will not limit or exclude any liability that cannot be limited or excluded under applicable law. No one other than you and the Company, or the Company’s successors and assigns, will have any right to enforce any of these Terms of Use. Neither these Terms of Use nor the Website create partnership, joint venture, employment, or other agency relationships between us. You may not enter into any contract on our behalf or bind us in any way.
 							</Li>
 						</Ol>
+						{ !this.props.agreeToTerms && (
+							<ButtonContainer>
+								<StyledButton onClick={this.handleAgreeButtonClick}>Yes, I agree</StyledButton>
+							</ButtonContainer>
+						)}
 					</TermsWrapper>
 				</MainWrapper>
 			</PaperLayout>
