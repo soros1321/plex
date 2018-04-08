@@ -38,6 +38,7 @@ class RequestLoanForm extends React.Component<Props, State> {
         this.handleSignDebtOrder = this.handleSignDebtOrder.bind(this);
         this.confirmationModalToggle = this.confirmationModalToggle.bind(this);
         this.validateForm = this.validateForm.bind(this);
+		this.transformErrors = this.transformErrors.bind(this);
 
         this.state = {
             formData: {},
@@ -191,6 +192,15 @@ class RequestLoanForm extends React.Component<Props, State> {
         return errors;
     }
 
+	transformErrors(errors: any[]) {
+		return errors.map(error => {
+			if (error.name === "oneOf") {
+				error.message = "Please fix the errors above";
+			}
+			return error;
+		});
+	}
+
     render() {
         const confirmationModalContent = (
             <span>
@@ -218,15 +228,16 @@ class RequestLoanForm extends React.Component<Props, State> {
             <PaperLayout>
                 <MainWrapper>
                     <Header title={"Request a Loan"} description={descriptionContent} />
-                    <JSONSchemaForm
-                        schema={schema}
-                        uiSchema={uiSchema}
-                        formData={this.state.formData}
-                        buttonText="Generate Debt Order"
-                        onHandleChange={this.handleChange}
-                        onHandleSubmit={this.handleSubmit}
-                        validate={this.validateForm}
-                    />
+					<JSONSchemaForm
+						schema={schema}
+						uiSchema={uiSchema}
+						formData={this.state.formData}
+						buttonText="Generate Debt Order"
+						onHandleChange={this.handleChange}
+						onHandleSubmit={this.handleSubmit}
+						validate={this.validateForm}
+						transformErrors={this.transformErrors}
+					/>
                 </MainWrapper>
                 <ConfirmationModal
                     modal={this.state.confirmationModal}

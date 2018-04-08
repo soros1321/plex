@@ -12,3 +12,7 @@ export const Title = styled.div`
 	font-family: DIN-Bold;
 	margin: 20px 0;
 `;
+
+export const ButtonContainer = styled.div`
+	margin-top: 30px;
+`;

@@ -46,24 +46,20 @@ class DebtsMetrics extends React.Component<Props, State> {
 
 	initiateTokenBalance(tokens: TokenEntity[], debtOrders: DebtOrderEntity[]) {
 		let tokenBalances: any = {};
-		if (tokens.length) {
-			for (let token of tokens) {
-				tokenBalances[token.tokenSymbol] = {
-					totalRequested: new BigNumber(0),
-					totalRepaid: new BigNumber(0)
-				};
+		for (let token of tokens) {
+			tokenBalances[token.tokenSymbol] = {
+				totalRequested: new BigNumber(0),
+				totalRepaid: new BigNumber(0)
+			};
+		}
+		for (let debtOrder of debtOrders) {
+			if (tokenBalances[debtOrder.principalTokenSymbol]) {
+				// TODO: Should we exclude pending debt orders?
+				tokenBalances[debtOrder.principalTokenSymbol].totalRequested = tokenBalances[debtOrder.principalTokenSymbol].totalRequested.plus(debtOrder.principalAmount);
+				tokenBalances[debtOrder.principalTokenSymbol].totalRepaid = tokenBalances[debtOrder.principalTokenSymbol].totalRepaid.plus(debtOrder.repaidAmount);
 			}
 		}
-		if (debtOrders.length) {
-			for (let debtOrder of debtOrders) {
-				if (tokenBalances[debtOrder.principalTokenSymbol]) {
-					// TODO: Should we exclude pending debt orders?
-					tokenBalances[debtOrder.principalTokenSymbol].totalRequested = tokenBalances[debtOrder.principalTokenSymbol].totalRequested.plus(debtOrder.principalAmount);
-					tokenBalances[debtOrder.principalTokenSymbol].totalRepaid = tokenBalances[debtOrder.principalTokenSymbol].totalRepaid.plus(debtOrder.repaidAmount);
-				}
-			}
-			this.setState({ tokenBalances });
-		}
+		this.setState({ tokenBalances });
 	}
 
 	render() {

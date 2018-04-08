@@ -40,26 +40,22 @@ class InvestmentsMetrics extends React.Component<Props, State> {
 
     initiateTokenBalance(tokens: TokenEntity[], investments: InvestmentEntity[]) {
         let tokenBalances: any = {};
-        if (tokens && tokens.length) {
-            for (let token of tokens) {
-                tokenBalances[token.tokenSymbol] = {
-                    totalLended: new BigNumber(0),
-                    totalEarned: new BigNumber(0),
-                };
-            }
-        }
-        if (investments && investments.length) {
-            for (let investment of investments) {
-                if (tokenBalances[investment.principalTokenSymbol]) {
-                    tokenBalances[investment.principalTokenSymbol].totalLended = tokenBalances[
-                        investment.principalTokenSymbol
-                    ].totalLended.plus(investment.principalAmount);
-                    tokenBalances[investment.principalTokenSymbol].totalEarned = tokenBalances[
-                        investment.principalTokenSymbol
-                    ].totalEarned.plus(investment.earnedAmount);
-                }
-            }
-        }
+		for (let token of tokens) {
+			tokenBalances[token.tokenSymbol] = {
+				totalLended: new BigNumber(0),
+				totalEarned: new BigNumber(0),
+			};
+		}
+		for (let investment of investments) {
+			if (tokenBalances[investment.principalTokenSymbol]) {
+				tokenBalances[investment.principalTokenSymbol].totalLended = tokenBalances[
+					investment.principalTokenSymbol
+				].totalLended.plus(investment.principalAmount);
+				tokenBalances[investment.principalTokenSymbol].totalEarned = tokenBalances[
+					investment.principalTokenSymbol
+				].totalEarned.plus(investment.earnedAmount);
+			}
+		}
         this.setState({ tokenBalances });
     }
 

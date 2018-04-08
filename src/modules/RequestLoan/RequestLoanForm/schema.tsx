@@ -63,6 +63,7 @@ export const schema: JSONSchema4 = {
 								},
 								description: {
 									type: 'string',
+									maxLength: 500
 								}
 							}
 						},
