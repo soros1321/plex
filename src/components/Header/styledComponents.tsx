@@ -16,8 +16,4 @@ export const Description = styled.div`
 		font-size: 10px;
 		line-height: 18px;
 	}
-	@media only screen and (max-width: 480px) {
-		width: 100%;
-		font-size: 14px;
-	}
 `;

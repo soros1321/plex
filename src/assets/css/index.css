@@ -283,8 +283,8 @@ button:focus {
 }
 @media only screen and (max-width: 480px) {
 	h1 {
-		font-size: 30px;
-		line-height: 30px;
+		font-size: 22px;
+		line-height: 27px;
 	}
 	.modal .modal-dialog {
 		width: 280px;
