@@ -18,6 +18,15 @@ export const StyledLabel = styled(Label)`
 	font-size: 17px;
 	line-height: 25px;
 	opacity: 1;
+
+	@media only screen and (max-width: 568px) {
+		font-size: 10px;
+		line-height: 18px;
+	}
+	@media only screen and (max-width: 480px) {
+		font-size: 14px;
+		line-height: 22px;
+	}
 `;
 
 export const GrayRow = styled(Row)`
@@ -28,7 +37,7 @@ export const GrayRow = styled(Row)`
 class UglyImageContainer extends React.Component<Props, {}> {
 	render() {
 		return (
-			<Col xs="5" md="3" className={this.props.className}>
+			<Col xs="3" md="3" className={this.props.className}>
 				{this.props.children}
 			</Col>
 		);
@@ -36,18 +45,27 @@ class UglyImageContainer extends React.Component<Props, {}> {
 }
 
 export const ImageContainer = styled(UglyImageContainer)`
-	min-width: 120px;
 `;
 
 export const IdenticonImage = styled.img`
 	width: 100px;
 	height: 100px;
+
+	@media only screen and (max-width: 568px) {
+		width: 60px;
+		height: 60px;
+	}
+
+	@media only screen and (max-width: 480px) {
+		width: 50px;
+		height: 50px;
+	}
 `;
 
 class UglyDetailContainer extends React.Component<Props, {}> {
 	render() {
 		return (
-			<Col xs="7" md="9" className={this.props.className}>
+			<Col xs="9" md="9" className={this.props.className}>
 				{this.props.children}
 			</Col>
 		);
@@ -58,21 +76,36 @@ export const DetailContainer = styled(UglyDetailContainer)`
 `;
 
 export const ShareButtonsContainer = styled.div`
-	margin: 10px;
+	margin: 10px 0px 10px 10px;
 
+	@media only screen and (max-width: 568px) {
+		margin: 5px 0px 5px 5px;
+	}
 	@media only screen and (max-width: 480px) {
-		text-align: center;
+		margin: 0 0 2px 0;
 	}
 `;
 
 export const ShareButton = styled.div`
 	display: inline;
-	margin: 10px;
+	margin: 0 10px;
 	cursor: pointer;
+
+	> img {
+		width: 35px;
+	}
+
+	@media only screen and (max-width: 568px) {
+		margin: 0 5px;
+		> img {
+			width: 20px;
+		}
+	}
 `;
 
 export const StyledFormGroup = styled(FormGroup)`
 	margin-left: 10px;
+	margin-bottom: 0px !important;
 
 	@media only screen and (max-width: 480px) {
 		margin-left: 0;
@@ -82,7 +115,7 @@ export const StyledFormGroup = styled(FormGroup)`
 class UglyInputContainer extends React.Component<Props, {}> {
 	render() {
 		return (
-			<Col xs="12" md="8" className={this.props.className}>
+			<Col xs="8" md="8" className={this.props.className}>
 				{this.props.children}
 			</Col>
 		);
@@ -99,16 +132,16 @@ export const RequestInput = styled.input`
 	font-family: DIN-Bold;
 	width: 95% !important;
 
-	@media only screen and (max-width: 480px) {
-		width: 100% !important;
-		margin-bottom: 20px;
+	@media only screen and (max-width: 568px) {
+		height: 29px !important;
+		font-size: 10px !important;
 	}
 `;
 
 class UglyButtonContainer extends React.Component<Props, {}> {
 	render() {
 		return (
-			<Col xs="12" md="4" className={this.props.className}>
+			<Col xs="4" md="4" className={this.props.className}>
 				{this.props.children}
 			</Col>
 		);
@@ -122,13 +155,18 @@ export const CopyButton = StyledButton.extend`
 	min-width: auto !important;
 	width: 100% !important;
 	padding: 2px 10px !important;
+
+	@media only screen and (max-width: 568px) {
+		min-width: auto !important;
+	}
 `;
 
 export const CopiedMessage = styled.div`
 	font-family: DIN-Bold;
 	font-size: 15px;
 
-	@media only screen and (max-width: 480px) {
-		margin-bottom: 5px;
+	@media only screen and (max-width: 568px) {
+		font-size: 10px;
+		margin-bottom: 2px;
 	}
 `;
