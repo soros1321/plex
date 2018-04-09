@@ -17,7 +17,7 @@ export const LeftContainer = styled.div`
 	float: left;
 	width: 213px;
 
-	@media only screen and (max-width: 812px) {
+	@media only screen and (max-width: 823px) {
 		width: 160px;
 	}
 	@media only screen and (max-width: 667px) {
@@ -39,6 +39,9 @@ export const RightContainer = styled.div`
 	min-height: 100%;
 	position: relative;
 
+	@media only screen and (max-width: 823px) {
+		width: 663px !important;
+	}
 	@media only screen and (max-width: 812px) {
 		width: 652px !important;
 	}
@@ -105,7 +108,7 @@ export const Footer = styled.div`
 	text-align: right;
 	height: 60px;
 
-	@media only screen and (max-width: 812px) {
+	@media only screen and (max-width: 823px) {
 		height: 40px;
 		padding: 5px;
 	}
@@ -133,7 +136,7 @@ export const FooterLink = styled(Link)`
 		text-decoration: none;
 	}
 
-	@media only screen and (max-width: 812px) {
+	@media only screen and (max-width: 823px) {
 		margin: 0 8px;
 		font-size: 11px;
 	}

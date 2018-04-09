@@ -240,7 +240,7 @@ button:focus {
 	transform: translate(-50%, -50%) !important;
 	margin: 0;
 }
-@media only screen and (max-width: 812px) {
+@media only screen and (max-width: 823px) {
 	body {
 		font-size: 12px;
 		line-height: 20px;

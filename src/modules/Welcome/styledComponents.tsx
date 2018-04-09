@@ -14,7 +14,7 @@ export const BannerContainer = styled.div`
 	width: 100%;
 	height: 207px;
 
-	@media only screen and (max-width: 812px) {
+	@media only screen and (max-width: 823px) {
 		height: 140px;
 	}
 	@media only screen and (max-width: 568px) {
@@ -31,7 +31,7 @@ export const Header = styled.div`
 	font-size: 40px;
 	line-height: 50px;
 
-	@media only screen and (max-width: 812px) {
+	@media only screen and (max-width: 823px) {
 		font-size: 28px;
 		line-height: 33px;
 	}
@@ -51,7 +51,7 @@ export const Description = styled.div`
 	line-height: 25px;
 	margin: 20px 0;
 
-	@media only screen and (max-width: 812px) {
+	@media only screen and (max-width: 823px) {
 		font-size: 12px;
 		line-height: 20px;
 		margin: 12px 0;
@@ -94,7 +94,7 @@ export const StyledLink = styled(Link)`
 	font-size: 17px;
 	line-height: 25px;
 
-	@media only screen and (max-width: 812px) {
+	@media only screen and (max-width: 823px) {
 		font-size: 12px;
 		line-height: 20px;
 	}

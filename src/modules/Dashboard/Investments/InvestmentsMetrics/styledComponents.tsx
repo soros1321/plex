@@ -9,7 +9,7 @@ interface Props {
 export const Wrapper = styled(Row)`
 	margin-bottom: 20px;
 
-	@media only screen and (max-width: 812px) {
+	@media only screen and (max-width: 823px) {
 		margin-bottom: 12px;
 	}
 	@media only screen and (max-width: 568px) {
@@ -36,7 +36,7 @@ export const Value = styled.div`
 	font-size: 17px;
 	line-height: 25px;
 
-	@media only screen and (max-width: 812px) {
+	@media only screen and (max-width: 823px) {
 		font-size: 12px;
 		line-height: 20px;
 	}
@@ -63,7 +63,7 @@ export const TokenWrapper = styled.span`
 		border-right: 1px solid #002326;
 		padding: 0 10px;
 	}
-	@media only screen and (max-width: 812px) {
+	@media only screen and (max-width: 823px) {
 		&:first-child {
 			padding-right: 6px;
 		}

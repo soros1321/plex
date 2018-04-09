@@ -15,7 +15,7 @@ export const StyledLink = styled(Link)`
 	margin: 10px 0;
 	display: block;
 
-	@media only screen and (max-width: 812px) {
+	@media only screen and (max-width: 823px) {
 		font-size: 12px;
 		line-height: 20px;
 	}

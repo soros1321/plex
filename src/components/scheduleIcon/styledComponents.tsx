@@ -3,7 +3,7 @@ import styled from 'styled-components';
 export const ScheduleIconImage = styled.img`
 	width: 15px;
 
-	@media only screen and (max-width: 812px) {
+	@media only screen and (max-width: 823px) {
 		width: 10px;
 	}
 	@media only screen and (max-width: 568px) {
@@ -25,7 +25,7 @@ export const ScheduleIconDiv = styled.div`
     font-size: 14px;
     padding-top: 1px;
 
-	@media only screen and (max-width: 812px) {
+	@media only screen and (max-width: 823px) {
 		width: 12px;
 		height: 12px;
 		font-size: 8px;

@@ -12,7 +12,7 @@ export const Description = styled.div`
 		font-family: DIN-Bold;
 	}
 
-	@media only screen and (max-width: 812px) {
+	@media only screen and (max-width: 823px) {
 		margin: 17px 0;
 		font-size: 12px;
 		line-height: 20px;

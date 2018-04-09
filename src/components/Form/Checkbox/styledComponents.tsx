@@ -15,7 +15,7 @@ export const Checkmark = styled.span`
 		display: none;
 	}
 
-	@media only screen and (max-width: 812px) {
+	@media only screen and (max-width: 823px) {
 		height: 12px;
 		width: 12px;
 		top: 5px;
@@ -73,7 +73,7 @@ export const CheckboxLabel = styled(Label)`
 		transform: rotate(45deg);
 	}
 
-	@media only screen and (max-width: 812px) {
+	@media only screen and (max-width: 823px) {
 		padding-left: 20px;
 		margin-bottom: 5px;
 		font-size: 12px;

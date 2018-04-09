@@ -27,7 +27,7 @@ class UglyImageContainer extends React.Component<Props, {}> {
 export const ImageContainer = styled(UglyImageContainer)`
 	padding: 15px 0 15px 15px !important;
 
-	@media only screen and (max-width: 812px) {
+	@media only screen and (max-width: 823px) {
 		padding: 10px 0 10px 10px !important;
 	}
 	@media only screen and (max-width: 568px) {
@@ -39,7 +39,7 @@ export const IdenticonImage = styled.img`
 	width: 60px;
 	height: 60px;
 
-	@media only screen and (max-width: 812px) {
+	@media only screen and (max-width: 823px) {
 		width: 40px;
 		height: 40px;
 	}
@@ -66,7 +66,7 @@ class UglyDetailContainer extends React.Component<Props, {}> {
 export const DetailContainer = styled(UglyDetailContainer)`
 	padding: 15px !important;
 
-	@media only screen and (max-width: 812px) {
+	@media only screen and (max-width: 823px) {
 		padding: 10px !important;
 	}
 	@media only screen and (max-width: 568px) {
@@ -80,7 +80,7 @@ export const Amount = styled.div`
 	font-size: 17px;
 	line-height: 25px;
 
-	@media only screen and (max-width: 812px) {
+	@media only screen and (max-width: 823px) {
 		font-size: 14px;
 		line-height: 22px;
 	}
@@ -95,7 +95,7 @@ export const Url = styled.div`
 	font-size: 15px;
 	line-height: 25px;
 
-	@media only screen and (max-width: 812px) {
+	@media only screen and (max-width: 823px) {
 		font-size: 10px;
 		line-height: 18px;
 	}
@@ -117,7 +117,7 @@ export const StatusActive = styled.div`
 	padding: 2px 10px;
 	margin-right: 10px;
 
-	@media only screen and (max-width: 812px) {
+	@media only screen and (max-width: 823px) {
 		font-size: 8px;
 		line-height: 12px;
 	}
@@ -138,7 +138,7 @@ export const Terms = styled.div`
 	line-height: 16px;
 	text-transform: uppercase;
 
-	@media only screen and (max-width: 812px) {
+	@media only screen and (max-width: 823px) {
 		font-size: 8px;
 		line-height: 16px;
 	}
@@ -169,7 +169,7 @@ export const RepaymentScheduleContainer = styled(HalfCol)`
 		display: block;
 	}
 
-	@media only screen and (max-width: 812px) {
+	@media only screen and (max-width: 823px) {
 		padding: 10px !important;
 	}
 	@media only screen and (max-width: 568px) {
@@ -183,7 +183,7 @@ export const Title = styled.div`
 	line-height: 25px;
 	text-transform: uppercase;
 
-	@media only screen and (max-width: 812px) {
+	@media only screen and (max-width: 823px) {
 		font-size: 10px;
 		line-height: 18px;
 	}
@@ -207,7 +207,7 @@ export const Strikethrough = styled.div`
 		width: 65px;
 	}
 
-	@media only screen and (max-width: 812px) {
+	@media only screen and (max-width: 823px) {
 		&::before {
 			top: -3px;
 			width: 43px;
@@ -240,7 +240,7 @@ export const Schedule = styled.div`
 		opacity: 1;
 	}
 
-	@media only screen and (max-width: 812px) {
+	@media only screen and (max-width: 823px) {
 		width: 53px;
 	}
 	@media only screen and (max-width: 568px) {
@@ -263,7 +263,7 @@ export const PaymentDate = styled.div`
 	font-size: 13px;
 	line-height: 25px;
 
-	@media only screen and (max-width: 812px) {
+	@media only screen and (max-width: 823px) {
 		font-size: 8px;
 		line-height: 16px;
 	}
@@ -281,7 +281,7 @@ export const Drawer = styled.div`
 	padding: 20px;
 	background-color: #F5F5F5;
 
-	@media only screen and (max-width: 812px) {
+	@media only screen and (max-width: 823px) {
 		padding: 12px;
 	}
 	@media only screen and (max-width: 568px) {
@@ -290,7 +290,7 @@ export const Drawer = styled.div`
 `;
 
 export const InfoItem = styled.div`
-	@media only screen and (max-width: 812px) {
+	@media only screen and (max-width: 823px) {
 		margin-bottom: 5px;
 	}
 	@media only screen and (max-width: 568px) {
@@ -306,7 +306,7 @@ export const InfoItemTitle = styled.div`
 	font-size: 13px;
 	line-height: 20px;
 
-	@media only screen and (max-width: 812px) {
+	@media only screen and (max-width: 823px) {
 		font-size: 12px;
 		line-height: 20px;
 	}
@@ -325,7 +325,7 @@ export const InfoItemContent = styled.div`
 	line-height: 20px;
 	word-wrap: break-word;
 
-	@media only screen and (max-width: 812px) {
+	@media only screen and (max-width: 823px) {
 		margin-top: 2px;
 		font-size: 10px;
 		line-height: 18px;
@@ -353,7 +353,7 @@ export const MakeRepaymentButton = StyledButton.extend`
 	float: right;
 	line-height: 36px !important;
 
-	@media only screen and (max-width: 812px) {
+	@media only screen and (max-width: 823px) {
 		margin-top: 5px;
 		padding: 4px 14px !important;
 		font-size: 10px !important;

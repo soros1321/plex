@@ -5,7 +5,7 @@ import { Link } from "react-router";
 // styles-components
 export const MainWrapper = styled.div`
     padding: 50px;
-    @media only screen and (max-width: 812px) {
+    @media only screen and (max-width: 823px) {
         padding: 40px;
     }
     @media only screen and (max-width: 568px) {
@@ -34,7 +34,7 @@ export const StyledButton = styled(Button)`
     text-transform: uppercase;
     min-width: 200px !important;
 
-    @media only screen and (max-width: 812px) {
+    @media only screen and (max-width: 823px) {
         font-size: 12px !important;
         line-height: 24px !important;
         min-width: 150px !important;

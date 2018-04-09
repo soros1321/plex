@@ -12,6 +12,9 @@ export const Wrapper = styled.div`
 	&:empty {
 		display: none;
 	}
+	@media only screen and (max-width: 823px) {
+		width: 663px !important;
+	}
 	@media only screen and (max-width: 812px) {
 		width: 652px !important;
 	}
@@ -97,7 +100,7 @@ export const StyledAlert = styled(Alert)`
 		text-shadow: none;
 	}
 
-	@media only screen and (max-width: 812px) {
+	@media only screen and (max-width: 823px) {
 		&.alert {
 			font-size: 12px;
 		}

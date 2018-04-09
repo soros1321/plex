@@ -5,7 +5,7 @@ export const Background = styled.div`
 	padding: 55px 0 100px;
 	height: 100%;
 
-	@media only screen and (max-width: 812px) {
+	@media only screen and (max-width: 823px) {
 		padding: 50px 0 70px;
 	}
 	@media only screen and (max-width: 667px) {
@@ -27,7 +27,7 @@ export const InnerContainer = styled.div`
 	background-color: #FFFFFF;
 	box-shadow: 0 12px 24px 0 rgba(0,0,0,0.12);
 
-	@media only screen and (max-width: 812px) {
+	@media only screen and (max-width: 823px) {
 		width: 560px;
 	}
 	@media only screen and (max-width: 768px) {
