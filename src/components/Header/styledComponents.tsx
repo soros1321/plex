@@ -13,6 +13,7 @@ export const Description = styled.div`
 	}
 
 	@media only screen and (max-width: 568px) {
+		margin: 15px 0;
 		font-size: 10px;
 		line-height: 18px;
 	}

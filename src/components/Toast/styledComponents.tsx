@@ -12,6 +12,9 @@ export const Wrapper = styled.div`
 	&:empty {
 		display: none;
 	}
+	@media only screen and (max-width: 568px) {
+		width: 448px !important;
+	}
 	@media only screen and (max-width: 480px) {
 		width: 100% !important;
 	}
@@ -40,18 +43,18 @@ export const StyledAlert = styled(Alert)`
 	}
 	&.alert-info {
 		color: #002326;
-		background-color: #F27550; 
+		background-color: #F27550;
 	}
 	& > .close {
 		text-shadow: none;
 	}
 
-	@media only screen and (max-width: 480px) {
+	@media only screen and (max-width: 568px) {
 		&.alert {
-			font-size: 13px;
+			font-size: 12px;
 		}
 		& > .close {
-			font-size: 17px;
+			font-size: 15px;
 		}
 	}
 `;

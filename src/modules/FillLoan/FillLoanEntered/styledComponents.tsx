@@ -19,7 +19,7 @@ export const LoanInfoContainer = styled(Row)`
 class UglyHalfCol extends React.Component<Props, {}> {
 	render() {
 		return(
-			<Col xs="12" md="6" className={this.props.className}>
+			<Col xs="6" md="6" className={this.props.className}>
 				{this.props.children}
 			</Col>
 		);
@@ -31,6 +31,10 @@ export const HalfCol = styled(UglyHalfCol)`
 
 export const InfoItem = styled.div`
 	margin-bottom: 30px;
+
+	@media only screen and (max-width: 568px) {
+		margin-bottom: 10px;
+	}
 `;
 
 export const Title = styled.div`
@@ -40,6 +44,11 @@ export const Title = styled.div`
 	font-size: 15px;
 	line-height: 25px;
 	text-transform: uppercase;
+
+	@media only screen and (max-width: 568px) {
+		font-size: 10px;
+		line-height: 18px;
+	}
 `;
 
 export const Content = Title.extend`
@@ -48,6 +57,12 @@ export const Content = Title.extend`
 	font-size: 18px;
 	text-transform: none;
 	word-wrap: break-word;
+
+	@media only screen and (max-width: 568px) {
+		margin-top: 2px;
+		font-size: 10px;
+		line-height: 18px;
+	}
 `;
 
 export const ButtonContainer = styled.div`
