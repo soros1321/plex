@@ -280,6 +280,13 @@ button:focus {
 		width: 100%;
 		margin-bottom: 5px;
 	}
+	.nav.nav-tabs .nav-item .nav-link {
+		padding: 12px 15px;
+		font-size: 10px;
+	}
+	.nav.nav-tabs .nav-item .nav-link.active {
+		padding: 12px 15px 7px;
+	}
 }
 @media only screen and (max-width: 480px) {
 	h1 {
@@ -290,6 +297,7 @@ button:focus {
 		width: 280px;
 	}
 	.nav.nav-tabs .nav-item .nav-link {
+		font-size: 13px;
 		padding: 12px 0px;
 	}
 	.nav.nav-tabs .nav-item .nav-link.active {
