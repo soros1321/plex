@@ -18,7 +18,7 @@ export const Wrapper = styled.div`
 class UglyImageContainer extends React.Component<Props, {}> {
 	render() {
 		return (
-			<Col className={this.props.className} xs="3" md="1">
+			<Col className={this.props.className} xs="3" sm="1" md="1">
 				{this.props.children}
 			</Col>
 		);
@@ -57,7 +57,7 @@ export const IdenticonImage = styled.img`
 class UglyDetailContainer extends React.Component<Props, {}> {
 	render() {
 		return (
-			<Col className={this.props.className} xs="9" md="5">
+			<Col className={this.props.className} xs="9" sm="5" md="5">
 				{this.props.children}
 			</Col>
 		);
@@ -152,7 +152,7 @@ export const Terms = styled.div`
 class HalfCol extends React.Component<Props, {}> {
 	render() {
 		return (
-			<Col className={this.props.className} xs="12" md="6">
+			<Col className={this.props.className} xs="12" sm="6" md="6">
 				{this.props.children}
 			</Col>
 		);
@@ -204,10 +204,40 @@ export const Strikethrough = styled.div`
 		width: 65px;
 	}
 
+	@media only screen and (max-width: 1024px) {
+		&::before {
+			top: -3px;
+			width: 50px;
+		}
+	}
 	@media only screen and (max-width: 823px) {
 		&::before {
 			top: -3px;
 			width: 43px;
+		}
+	}
+	@media only screen and (max-width: 768px) {
+		&::before {
+			top: -3px;
+			width: 38px;
+		}
+	}
+	@media only screen and (max-width: 736px) {
+		&::before {
+			top: -3px;
+			width: 35px;
+		}
+	}
+	@media only screen and (max-width: 667px) {
+		&::before {
+			top: -3px;
+			width: 32px;
+		}
+	}
+	@media only screen and (max-width: 640px) {
+		&::before {
+			top: -3px;
+			width: 30px;
 		}
 	}
 	@media only screen and (max-width: 568px) {
@@ -237,8 +267,23 @@ export const Schedule = styled.div`
 		opacity: 1;
 	}
 
+	@media only screen and (max-width: 1024px) {
+		width: 59px;
+	}
 	@media only screen and (max-width: 823px) {
 		width: 53px;
+	}
+	@media only screen and (max-width: 768px) {
+		width: 48px;
+	}
+	@media only screen and (max-width: 736px) {
+		width: 45px;
+	}
+	@media only screen and (max-width: 667px) {
+		width: 42px;
+	}
+	@media only screen and (max-width: 640px) {
+		width: 40px;
 	}
 	@media only screen and (max-width: 568px) {
 		width: 73px;
@@ -257,6 +302,9 @@ export const ScheduleIconContainer = styled.div`
 
 export const ScheduleIcon = styled.img`
 	width: 15px;
+	@media only screen and (max-width: 1024px) {
+		width: 10px;
+	}
 	@media only screen and (max-width: 823px) {
 		width: 10px;
 	}
@@ -270,6 +318,10 @@ export const PaymentDate = styled.div`
 	font-size: 13px;
 	line-height: 25px;
 
+	@media only screen and (max-width: 1024px) {
+		font-size: 10px;
+		line-height: 18px;
+	}
 	@media only screen and (max-width: 823px) {
 		font-size: 8px;
 		line-height: 16px;
@@ -365,6 +417,13 @@ export const TransferButton = StyledButton.extend`
 		padding: 4px 14px !important;
 		font-size: 10px !important;
 		line-height: 14px !important;
+		min-width: auto !important;
+	}
+	@media only screen and (max-width: 736px) {
+		margin-top: 5px;
+		padding: 2px 12px !important;
+		font-size: 8px !important;
+		line-height: 12px !important;
 		min-width: auto !important;
 	}
 	@media only screen and (max-width: 568px) {
