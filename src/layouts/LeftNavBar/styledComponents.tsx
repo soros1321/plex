@@ -113,6 +113,18 @@ export const StyledLink = styled(Link)`
 		}
 	}
 
+	@media only screen and (max-width: 667px) {
+		font-size: 8px;
+		line-height: 12px;
+		padding: 10px 10px !important;
+
+		&:hover,
+		&.active {
+			border-left: 3px solid #F3764B;
+			padding: 10px 10px 10px 7px !important;
+		}
+	}
+
 	@media only screen and (max-width: 568px) {
 		font-size: 8px;
 		line-height: 12px;

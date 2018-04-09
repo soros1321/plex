@@ -40,6 +40,10 @@ export const TradingPermissionsTitle = styled.div`
 		font-size: 10px;
 		line-height: 14px;
 	}
+	@media only screen and (max-width: 667px) {
+		font-size: 8px;
+		line-height: 12px;
+	}
 	@media only screen and (max-width: 568px) {
 		font-size: 8px;
 		line-height: 12px;

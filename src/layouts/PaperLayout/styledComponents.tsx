@@ -8,6 +8,9 @@ export const Background = styled.div`
 	@media only screen and (max-width: 812px) {
 		padding: 50px 0 70px;
 	}
+	@media only screen and (max-width: 667px) {
+		padding: 40px 0 60px;
+	}
 	@media only screen and (max-width: 568px) {
 		padding: 40px 0 60px;
 	}
@@ -26,6 +29,15 @@ export const InnerContainer = styled.div`
 
 	@media only screen and (max-width: 812px) {
 		width: 560px;
+	}
+	@media only screen and (max-width: 768px) {
+		width: 520px;
+	}
+	@media only screen and (max-width: 736px) {
+		width: 490px;
+	}
+	@media only screen and (max-width: 667px) {
+		width: 460px;
 	}
 	@media only screen and (max-width: 568px) {
 		width: 360px;

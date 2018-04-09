@@ -169,7 +169,7 @@
 		left: 10px;
 	}
 }
-@media only screen and (max-width: 568px) {
+@media only screen and (max-width: 667px) {
 	.react-toggle {
 		width: 20px;
 	}
