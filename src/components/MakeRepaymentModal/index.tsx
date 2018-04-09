@@ -136,7 +136,7 @@ class MakeRepaymentModal extends React.Component<Props, State> {
                             />
                             <Select
                                 name="Token"
-                                className="width35"
+                                className="width35 make-repayment"
                                 value={repaymentTokenSymbol}
                                 options={[
                                     { value: "REP", label: "REP (Augur REP)" },

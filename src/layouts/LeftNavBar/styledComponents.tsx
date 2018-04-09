@@ -32,6 +32,9 @@ export const LogoContainer = styled.div`
 	margin: 40px 0 50px;
 	text-align: center;
 
+	@media only screen and (max-width: 812px) {
+		margin: 20px 0 30px;
+	}
 	@media only screen and (max-width: 568px) {
 		margin: 20px 0 30px;
 	}
@@ -43,6 +46,9 @@ export const LogoContainer = styled.div`
 export const BrandLogo = styled.img`
 	width: 35px;
 
+	@media only screen and (max-width: 812px) {
+		width: 25px;
+	}
 	@media only screen and (max-width: 568px) {
 		width: 25px;
 	}
@@ -59,6 +65,11 @@ class UglyCol extends React.Component<Props, {}> {
 }
 
 export const StyledCol = styled(UglyCol)`
+	@media only screen and (max-width: 812px) {
+		-ms-flex: 0 0 100% !important;
+		flex: 0 0 100% !important;
+		max-width: 100% !important;
+	}
 	@media only screen and (max-width: 568px) {
 		-ms-flex: 0 0 100% !important;
 		flex: 0 0 100% !important;
@@ -88,6 +99,18 @@ export const StyledLink = styled(Link)`
 		border-left: 5px solid #F3764B;
 		opacity: 1;
 		padding: 20px 25px 20px 20px !important;
+	}
+
+	@media only screen and (max-width: 812px) {
+		font-size: 10px;
+		line-height: 14px;
+		padding: 12px 12px !important;
+
+		&:hover,
+		&.active {
+			border-left: 4px solid #F3764B;
+			padding: 12px 12px 12px 8px !important;
+		}
 	}
 
 	@media only screen and (max-width: 568px) {

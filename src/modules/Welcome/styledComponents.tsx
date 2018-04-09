@@ -14,6 +14,9 @@ export const BannerContainer = styled.div`
 	width: 100%;
 	height: 207px;
 
+	@media only screen and (max-width: 812px) {
+		height: 140px;
+	}
 	@media only screen and (max-width: 568px) {
 		height: 120px;
 	}
@@ -28,6 +31,10 @@ export const Header = styled.div`
 	font-size: 40px;
 	line-height: 50px;
 
+	@media only screen and (max-width: 812px) {
+		font-size: 28px;
+		line-height: 33px;
+	}
 	@media only screen and (max-width: 568px) {
 		font-size: 20px;
 		line-height: 25px;
@@ -44,6 +51,11 @@ export const Description = styled.div`
 	line-height: 25px;
 	margin: 20px 0;
 
+	@media only screen and (max-width: 812px) {
+		font-size: 12px;
+		line-height: 20px;
+		margin: 12px 0;
+	}
 	@media only screen and (max-width: 568px) {
 		font-size: 10px;
 		line-height: 18px;
@@ -82,6 +94,10 @@ export const StyledLink = styled(Link)`
 	font-size: 17px;
 	line-height: 25px;
 
+	@media only screen and (max-width: 812px) {
+		font-size: 12px;
+		line-height: 20px;
+	}
 	@media only screen and (max-width: 568px) {
 		font-size: 10px;
 		line-height: 18px;

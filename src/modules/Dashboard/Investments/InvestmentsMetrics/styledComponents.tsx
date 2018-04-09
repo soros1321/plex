@@ -9,6 +9,9 @@ interface Props {
 export const Wrapper = styled(Row)`
 	margin-bottom: 20px;
 
+	@media only screen and (max-width: 812px) {
+		margin-bottom: 12px;
+	}
 	@media only screen and (max-width: 568px) {
 		margin-bottom: 10px;
 	}
@@ -33,6 +36,10 @@ export const Value = styled.div`
 	font-size: 17px;
 	line-height: 25px;
 
+	@media only screen and (max-width: 812px) {
+		font-size: 12px;
+		line-height: 20px;
+	}
 	@media only screen and (max-width: 568px) {
 		font-size: 10px;
 		line-height: 18px;
@@ -55,6 +62,17 @@ export const TokenWrapper = styled.span`
 	&:not(:first-child):not(:last-child) {
 		border-right: 1px solid #002326;
 		padding: 0 10px;
+	}
+	@media only screen and (max-width: 812px) {
+		&:first-child {
+			padding-right: 6px;
+		}
+		&:last-child {
+			padding-left: 6px;
+		}
+		&:not(:first-child):not(:last-child) {
+			padding: 0 6px;
+		}
 	}
 	@media only screen and (max-width: 568px) {
 		&:first-child {

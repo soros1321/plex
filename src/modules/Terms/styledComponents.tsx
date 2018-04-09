@@ -2,6 +2,9 @@ import styled from 'styled-components';
 
 export const TermsWrapper = styled.div`
 	font-size: 15px;
+	@media only screen and (max-width: 812px) {
+		font-size: 12px;
+	}
 	@media only screen and (max-width: 568px) {
 		font-size: 10px;
 	}

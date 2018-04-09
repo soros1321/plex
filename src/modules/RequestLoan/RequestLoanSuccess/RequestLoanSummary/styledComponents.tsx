@@ -14,6 +14,10 @@ export const StyledLabel = styled(Label)`
 	line-height: 25px;
 	opacity: 1;
 
+	@media only screen and (max-width: 812px) {
+		font-size: 12px;
+		line-height: 20px;
+	}
 	@media only screen and (max-width: 568px) {
 		font-size: 10px;
 		line-height: 18px;
@@ -28,6 +32,9 @@ export const GrayContainer = styled.div`
 export const InfoItem = styled.div`
 	margin-bottom: 30px;
 
+	@media only screen and (max-width: 812px) {
+		margin-bottom: 12px;
+	}
 	@media only screen and (max-width: 568px) {
 		margin-bottom: 10px;
 	}
@@ -41,6 +48,10 @@ export const Title = styled.div`
 	font-size: 15px;
 	line-height: 25px;
 
+	@media only screen and (max-width: 812px) {
+		font-size: 12px;
+		line-height: 20px;
+	}
 	@media only screen and (max-width: 568px) {
 		font-size: 10px;
 		line-height: 18px;
@@ -56,6 +67,11 @@ export const Content = styled.div`
 	line-height: 25px;
 	word-wrap: break-word;
 
+	@media only screen and (max-width: 812px) {
+		margin-top: 4px;
+		font-size: 12px;
+		line-height: 20px;
+	}
 	@media only screen and (max-width: 568px) {
 		margin-top: 2px;
 		font-size: 10px;
@@ -85,6 +101,10 @@ export const CopyButton = StyledButton.extend`
 	border-color: #002326 !important;
 	background-color: #002326 !important;
 
+	@media only screen and (max-width: 812px) {
+		padding: 2px 25px !important;
+		min-width: auto !important;
+	}
 	@media only screen and (max-width: 568px) {
 		padding: 2px 25px !important;
 		min-width: auto !important;
@@ -96,6 +116,11 @@ export const CopiedMessage = styled.div`
 	font-family: DIN-Bold;
 	font-size: 15px;
 
+	@media only screen and (max-width: 812px) {
+		position: relative;
+		font-size: 12px;
+		margin-bottom: 4px;
+	}
 	@media only screen and (max-width: 568px) {
 		position: relative;
 		font-size: 10px;

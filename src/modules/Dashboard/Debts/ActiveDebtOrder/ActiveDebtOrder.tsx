@@ -355,7 +355,7 @@ class ActiveDebtOrder extends React.Component<Props, State> {
                 <Collapse isOpen={this.state.collapse}>
                     <Drawer>
                         <Row>
-                            <Col xs="4" md="2">
+                            <Col xs="4" sm="4" md="4" lg="2">
                                 <InfoItem>
                                     <InfoItemTitle>Requested</InfoItemTitle>
                                     <InfoItemContent>
@@ -366,7 +366,7 @@ class ActiveDebtOrder extends React.Component<Props, State> {
                                     </InfoItemContent>
                                 </InfoItem>
                             </Col>
-                            <Col xs="4" md="2">
+                            <Col xs="4" sm="4" md="4" lg="2">
                                 <InfoItem>
                                     <InfoItemTitle>Repaid</InfoItemTitle>
                                     <InfoItemContent>
@@ -377,7 +377,7 @@ class ActiveDebtOrder extends React.Component<Props, State> {
                                     </InfoItemContent>
                                 </InfoItem>
                             </Col>
-                            <Col xs="4" md="2">
+                            <Col xs="4" sm="4" md="4" lg="2">
                                 <InfoItem>
                                     <InfoItemTitle>Term Length</InfoItemTitle>
                                     <InfoItemContent>
@@ -387,7 +387,7 @@ class ActiveDebtOrder extends React.Component<Props, State> {
                                     </InfoItemContent>
                                 </InfoItem>
                             </Col>
-                            <Col xs="4" md="2">
+                            <Col xs="4" sm="4" md="4" lg="2">
                                 <InfoItem>
                                     <InfoItemTitle>Interest Rate</InfoItemTitle>
                                     <InfoItemContent>
@@ -395,7 +395,7 @@ class ActiveDebtOrder extends React.Component<Props, State> {
                                     </InfoItemContent>
                                 </InfoItem>
                             </Col>
-                            <Col xs="8" md="2">
+                            <Col xs="8" sm="8" md="8" lg="2">
                                 <InfoItem>
                                     <InfoItemTitle>Installment Frequency</InfoItemTitle>
                                     <InfoItemContent>
@@ -403,7 +403,7 @@ class ActiveDebtOrder extends React.Component<Props, State> {
                                     </InfoItemContent>
                                 </InfoItem>
                             </Col>
-                            <Col xs="12" md="2">
+                            <Col xs="12" sm="12" md="12" lg="2">
                                 <InfoItem>
                                     <InfoItemTitle>Description</InfoItemTitle>
                                     <InfoItemContent>{debtOrder.description ? debtOrder.description : '-'}</InfoItemContent>

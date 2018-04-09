@@ -28,6 +28,9 @@ class UglyImageContainer extends React.Component<Props, {}> {
 export const ImageContainer = styled(UglyImageContainer)`
 	padding: 15px 0 15px 15px !important;
 
+	@media only screen and (max-width: 812px) {
+		padding: 10px 0 10px 10px !important;
+	}
 	@media only screen and (max-width: 568px) {
 		padding: 10px 0 10px 10px !important;
 	}
@@ -37,6 +40,10 @@ export const IdenticonImage = styled.img`
 	width: 60px;
 	height: 60px;
 
+	@media only screen and (max-width: 812px) {
+		width: 40px;
+		height: 40px;
+	}
 	@media only screen and (max-width: 568px) {
 		width: 80px;
 		height: 80px;
@@ -60,6 +67,9 @@ class UglyDetailContainer extends React.Component<Props, {}> {
 export const DetailContainer = styled(UglyDetailContainer)`
 	padding: 15px !important;
 
+	@media only screen and (max-width: 812px) {
+		padding: 10px !important;
+	}
 	@media only screen and (max-width: 568px) {
 		padding: 10px !important;
 	}
@@ -71,6 +81,10 @@ export const Amount = styled.div`
 	font-size: 17px;
 	line-height: 25px;
 
+	@media only screen and (max-width: 812px) {
+		font-size: 14px;
+		line-height: 22px;
+	}
 	@media only screen and (max-width: 568px) {
 		font-size: 14px;
 		line-height: 22px;
@@ -82,6 +96,10 @@ export const Url = styled.div`
 	font-size: 15px;
 	line-height: 25px;
 
+	@media only screen and (max-width: 812px) {
+		font-size: 10px;
+		line-height: 18px;
+	}
 	@media only screen and (max-width: 568px) {
 		font-size: 10px;
 		line-height: 18px;
@@ -100,6 +118,10 @@ export const StatusActive = styled.div`
 	padding: 2px 10px;
 	margin-right: 10px;
 
+	@media only screen and (max-width: 812px) {
+		font-size: 8px;
+		line-height: 12px;
+	}
 	@media only screen and (max-width: 568px) {
 		font-size: 8px;
 		line-height: 12px;
@@ -117,6 +139,10 @@ export const Terms = styled.div`
 	line-height: 16px;
 	text-transform: uppercase;
 
+	@media only screen and (max-width: 812px) {
+		font-size: 8px;
+		line-height: 16px;
+	}
 	@media only screen and (max-width: 568px) {
 		font-size: 8px;
 		line-height: 16px;
@@ -140,6 +166,9 @@ export const RepaymentScheduleContainer = styled(HalfCol)`
 	color: #FFFFFF;
 	display: block;
 
+	@media only screen and (max-width: 812px) {
+		padding: 10px !important;
+	}
 	@media only screen and (max-width: 568px) {
 		padding: 10px !important;
 	}
@@ -151,6 +180,10 @@ export const Title = styled.div`
 	line-height: 25px;
 	text-transform: uppercase;
 
+	@media only screen and (max-width: 812px) {
+		font-size: 10px;
+		line-height: 18px;
+	}
 	@media only screen and (max-width: 568px) {
 		font-size: 10px;
 		line-height: 18px;
@@ -171,17 +204,22 @@ export const Strikethrough = styled.div`
 		width: 65px;
 	}
 
+	@media only screen and (max-width: 812px) {
+		&::before {
+			top: -3px;
+			width: 43px;
+		}
+	}
 	@media only screen and (max-width: 568px) {
 		&::before {
 			top: -3px;
-			width: 70px;
+			width: 63px;
 		}
 	}
-
 	@media only screen and (max-width: 480px) {
 		&::before {
 			top: -3px;
-			width: 46px;
+			width: 44px;
 		}
 	}
 `;
@@ -199,8 +237,14 @@ export const Schedule = styled.div`
 		opacity: 1;
 	}
 
+	@media only screen and (max-width: 812px) {
+		width: 53px;
+	}
+	@media only screen and (max-width: 568px) {
+		width: 73px;
+	}
 	@media only screen and (max-width: 480px) {
-		width: 56px;
+		width: 54px;
 	}
 `;
 
@@ -213,6 +257,9 @@ export const ScheduleIconContainer = styled.div`
 
 export const ScheduleIcon = styled.img`
 	width: 15px;
+	@media only screen and (max-width: 812px) {
+		width: 10px;
+	}
 	@media only screen and (max-width: 568px) {
 		width: 10px;
 	}
@@ -223,6 +270,10 @@ export const PaymentDate = styled.div`
 	font-size: 13px;
 	line-height: 25px;
 
+	@media only screen and (max-width: 812px) {
+		font-size: 8px;
+		line-height: 16px;
+	}
 	@media only screen and (max-width: 568px) {
 		font-size: 8px;
 		line-height: 16px;
@@ -237,15 +288,21 @@ export const Drawer = styled.div`
 	padding: 20px;
 	background-color: #F5F5F5;
 
+	@media only screen and (max-width: 812px) {
+		padding: 10px;
+	}
 	@media only screen and (max-width: 568px) {
 		padding: 10px;
 	}
 `;
 
 export const InfoItem = styled.div`
- @media only screen and (max-width: 568px) {
-	 margin-bottom: 5px;
- }
+	@media only screen and (max-width: 812px) {
+		margin-bottom: 5px;
+	}
+	@media only screen and (max-width: 568px) {
+		margin-bottom: 5px;
+	}
 `;
 
 export const InfoItemTitle = styled.div`
@@ -256,6 +313,10 @@ export const InfoItemTitle = styled.div`
 	font-size: 13px;
 	line-height: 20px;
 
+	@media only screen and (max-width: 812px) {
+		font-size: 10px;
+		line-height: 18px;
+	}
 	@media only screen and (max-width: 568px) {
 		font-size: 10px;
 		line-height: 18px;
@@ -271,6 +332,11 @@ export const InfoItemContent = styled.div`
 	line-height: 20px;
 	word-wrap: break-word;
 
+	@media only screen and (max-width: 812px) {
+		margin-top: 2px;
+		font-size: 10px;
+		line-height: 18px;
+	}
 	@media only screen and (max-width: 568px) {
 		margin-top: 2px;
 		font-size: 10px;
@@ -294,6 +360,13 @@ export const TransferButton = StyledButton.extend`
 	float: right;
 	line-height: 36px !important;
 
+	@media only screen and (max-width: 812px) {
+		margin-top: 5px;
+		padding: 4px 14px !important;
+		font-size: 10px !important;
+		line-height: 14px !important;
+		min-width: auto !important;
+	}
 	@media only screen and (max-width: 568px) {
 		margin-top: 5px;
 		padding: 4px 14px !important;
@@ -301,7 +374,6 @@ export const TransferButton = StyledButton.extend`
 		line-height: 14px !important;
 		min-width: auto !important;
 	}
-
 	@media only screen and (max-width: 480px) {
 		padding: 3px 12px !important;
 		font-size: 8px !important;

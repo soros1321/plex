@@ -240,6 +240,58 @@ button:focus {
 	transform: translate(-50%, -50%) !important;
 	margin: 0;
 }
+@media only screen and (max-width: 812px) {
+	body {
+		font-size: 12px;
+		line-height: 20px;
+	}
+	h1 {
+		font-size: 28px;
+		line-height: 33px;
+	}
+	h4 {
+		font-size: 16px;
+		line-height: 22px;
+	}
+	label {
+		font-size: 12px;
+		line-height: 20px;
+		margin-bottom: 2px;
+	}
+	.form-control {
+		font-size: 12px;
+	}
+	.modal .modal-header .modal-title {
+		font-size: 28px;
+		line-height: 33px;
+	}
+	.modal .modal-dialog {
+		width: auto;
+	}
+	.modal .modal-body {
+		padding: 0 1rem;
+	}
+	.button {
+		font-size: 12px;
+		line-height: 24px;
+		padding: 4px 7px;
+		min-width: 150px;
+	}
+	.row.button-container {
+		width: 100%;
+	}
+	.row .width-95.button {
+		width: 95%;
+		margin-bottom: 5px;
+	}
+	.nav.nav-tabs .nav-item .nav-link {
+		padding: 12px 15px;
+		font-size: 12px;
+	}
+	.nav.nav-tabs .nav-item .nav-link.active {
+		padding: 12px 15px 7px;
+	}
+}
 @media only screen and (max-width: 568px) {
 	body {
 		font-size: 10px;

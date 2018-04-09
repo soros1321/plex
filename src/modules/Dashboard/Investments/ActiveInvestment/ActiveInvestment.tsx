@@ -199,7 +199,7 @@ class ActiveInvestment extends React.Component<Props, State> {
                                     </InfoItemContent>
                                 </InfoItem>
                             </Col>
-                            <Col xs="8" md="2">
+                            <Col xs="8" md="4">
                                 <InfoItem>
                                     <InfoItemTitle>Installment Frequency</InfoItemTitle>
                                     <InfoItemContent>

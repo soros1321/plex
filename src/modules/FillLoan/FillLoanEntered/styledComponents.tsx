@@ -32,6 +32,9 @@ export const HalfCol = styled(UglyHalfCol)`
 export const InfoItem = styled.div`
 	margin-bottom: 30px;
 
+	@media only screen and (max-width: 812px) {
+		margin-bottom: 12px;
+	}
 	@media only screen and (max-width: 568px) {
 		margin-bottom: 10px;
 	}
@@ -45,6 +48,10 @@ export const Title = styled.div`
 	line-height: 25px;
 	text-transform: uppercase;
 
+	@media only screen and (max-width: 812px) {
+		font-size: 12px;
+		line-height: 20px;
+	}
 	@media only screen and (max-width: 568px) {
 		font-size: 10px;
 		line-height: 18px;
@@ -58,6 +65,11 @@ export const Content = Title.extend`
 	text-transform: none;
 	word-wrap: break-word;
 
+	@media only screen and (max-width: 812px) {
+		margin-top: 4px;
+		font-size: 12px;
+		line-height: 20px;
+	}
 	@media only screen and (max-width: 568px) {
 		margin-top: 2px;
 		font-size: 10px;

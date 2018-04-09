@@ -7,6 +7,11 @@ export const ToggleLabel = styled.label`
 	opacity: 1;
 	width: 152px;
 
+	@media only screen and (max-width: 812px) {
+		width: 120px;
+		padding: 2px 0px;
+		margin-top: -6px;
+	}
 	@media only screen and (max-width: 568px) {
 		width: 79px;
 		padding: 2px 0px;
@@ -26,12 +31,16 @@ export const ToggleName = styled.div`
 	margin-left: 10px;
 	opacity: 1;
 
+	@media only screen and (max-width: 812px) {
+		font-size: 8px;
+		line-height: 12px;
+		margin-left: 5px;
+	}
 	@media only screen and (max-width: 568px) {
 		font-size: 8px;
 		line-height: 12px;
 		margin-left: 5px;
 	}
-
 	@media only screen and (max-width: 480px) {
 		font-size: 10px;
 		line-height: 14px;

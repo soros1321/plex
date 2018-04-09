@@ -19,6 +19,10 @@ export const StyledLabel = styled(Label)`
 	line-height: 25px;
 	opacity: 1;
 
+	@media only screen and (max-width: 812px) {
+		font-size: 12px;
+		line-height: 20px;
+	}
 	@media only screen and (max-width: 568px) {
 		font-size: 10px;
 		line-height: 18px;
@@ -51,11 +55,14 @@ export const IdenticonImage = styled.img`
 	width: 100px;
 	height: 100px;
 
+	@media only screen and (max-width: 812px) {
+		width: 80px;
+		height: 80px;
+	}
 	@media only screen and (max-width: 568px) {
 		width: 60px;
 		height: 60px;
 	}
-
 	@media only screen and (max-width: 480px) {
 		width: 50px;
 		height: 50px;
@@ -78,6 +85,9 @@ export const DetailContainer = styled(UglyDetailContainer)`
 export const ShareButtonsContainer = styled.div`
 	margin: 10px 0px 10px 10px;
 
+	@media only screen and (max-width: 812px) {
+		margin: 8px 0px 8px 8px;
+	}
 	@media only screen and (max-width: 568px) {
 		margin: 5px 0px 5px 5px;
 	}
@@ -95,6 +105,12 @@ export const ShareButton = styled.div`
 		width: 35px;
 	}
 
+	@media only screen and (max-width: 812px) {
+		margin: 0 8px;
+		> img {
+			width: 25px;
+		}
+	}
 	@media only screen and (max-width: 568px) {
 		margin: 0 5px;
 		> img {
@@ -132,6 +148,10 @@ export const RequestInput = styled.input`
 	font-family: DIN-Bold;
 	width: 95% !important;
 
+	@media only screen and (max-width: 812px) {
+		height: 31px !important;
+		font-size: 12px !important;
+	}
 	@media only screen and (max-width: 568px) {
 		height: 29px !important;
 		font-size: 10px !important;
@@ -156,6 +176,9 @@ export const CopyButton = StyledButton.extend`
 	width: 100% !important;
 	padding: 2px 10px !important;
 
+	@media only screen and (max-width: 812px) {
+		min-width: auto !important;
+	}
 	@media only screen and (max-width: 568px) {
 		min-width: auto !important;
 	}
@@ -165,6 +188,10 @@ export const CopiedMessage = styled.div`
 	font-family: DIN-Bold;
 	font-size: 15px;
 
+	@media only screen and (max-width: 812px) {
+		font-size: 12px;
+		margin-bottom: 4px;
+	}
 	@media only screen and (max-width: 568px) {
 		font-size: 10px;
 		margin-bottom: 2px;

@@ -3,7 +3,7 @@ import styled from 'styled-components';
 export const LoanSummary = styled.div`
 	margin: 20px 0;
 
-	@media only screen and (max-width: 568px) {
+	@media only screen and (max-width: 812px) {
 		margin: 0 0 10px;
 	}
 `;
