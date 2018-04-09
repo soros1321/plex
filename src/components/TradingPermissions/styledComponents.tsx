@@ -76,6 +76,19 @@ export const FaucetButton = StyledButton.extend`
 	padding: 10px 15px !important;
 	min-width: auto !important;
 	line-height: 4px !important;
+
+	@media only screen and (max-width: 823px) {
+		font-size: 8px !important;
+		padding: 2px 8px !important;
+		min-width: auto !important;
+		line-height: 12px !important;
+	}
+	@media only screen and (max-width: 667px) {
+		font-size: 6px !important;
+		padding: 0px 8px !important;
+		min-width: auto !important;
+		line-height: 12px !important;
+	}
 `;
 
 export const ShowMoreButton = TradingPermissionsTitle.extend`
