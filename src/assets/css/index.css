@@ -249,6 +249,10 @@ button:focus {
 		font-size: 20px;
 		line-height: 25px;
 	}
+	h4 {
+		font-size: 14px;
+		line-height: 20px;
+	}
 	label {
 		font-size: 10px;
 		line-height: 18px;

@@ -144,7 +144,7 @@ class MakeRepaymentModal extends React.Component<Props, State> {
                                     { value: "ZRX", label: "ZRX (0x Protocol)" },
                                 ]}
                                 onChange={this.onTokenSymbolChange}
-                                style={{ borderRadius: 0, height: 38, borderColor: "#000000" }}
+                                style={{ borderRadius: 0, borderColor: "#000000" }}
                             />
                         </div>
                     </ModalBody>
