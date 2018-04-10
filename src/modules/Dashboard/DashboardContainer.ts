@@ -3,6 +3,7 @@ import { Dashboard } from "./Dashboard";
 import { setError } from "../../components/Toast/actions";
 import { setFilledDebtOrders } from "./actions";
 import { DebtOrderEntity } from "../../models";
+import { fillDebtOrder } from "../FillLoan/FillLoanEntered/actions";
 
 const mapStateToProps = (state: any) => {
     return {
@@ -17,7 +18,8 @@ const mapDispatchToProps = (dispatch: any) => {
     return {
         handleSetError: (errorMessage: string) => dispatch(setError(errorMessage)),
         handleSetFilledDebtOrders: (filledDebtOrders: DebtOrderEntity[]) =>
-            dispatch(setFilledDebtOrders(filledDebtOrders))
+			dispatch(setFilledDebtOrders(filledDebtOrders)),
+		handleFillDebtOrder: (issuanceHash: string) => dispatch(fillDebtOrder(issuanceHash))
     };
 };
 

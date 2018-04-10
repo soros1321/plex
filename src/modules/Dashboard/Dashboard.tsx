@@ -19,6 +19,7 @@ interface Props {
 	pendingDebtOrders: DebtOrderEntity[];
 	handleSetError: (errorMessage: string) => void;
 	handleSetFilledDebtOrders: (filledDebtOrders: DebtOrderEntity[]) => void;
+	handleFillDebtOrder: (issuanceHash: string) => void;
 }
 
 interface States {
@@ -40,26 +41,27 @@ class Dashboard extends React.Component<Props, States> {
 	}
 
 	async componentDidMount() {
-		if (this.props.dharma && this.props.accounts) {
-			await this.getDebtsAsync(this.props.dharma, this.props.accounts, this.props.pendingDebtOrders);
-			await this.getInvestmentsAsync(this.props.dharma, this.props.accounts);
+		if (this.props.dharma) {
+			await this.getDebtsAsync(this.props.dharma);
+			await this.getInvestmentsAsync(this.props.dharma);
 			this.setState({ initiallyLoading: false });
 		}
 	}
 
 	async componentWillReceiveProps(nextProps: Props) {
-		if (nextProps.dharma && nextProps.accounts) {
-			await this.getDebtsAsync(nextProps.dharma, nextProps.accounts, nextProps.pendingDebtOrders);
-			await this.getInvestmentsAsync(nextProps.dharma, nextProps.accounts);
+		if (this.props.dharma !== nextProps.dharma) {
+			await this.getDebtsAsync(nextProps.dharma);
+			await this.getInvestmentsAsync(nextProps.dharma);
 			this.setState({ initiallyLoading: false });
 		}
 	}
 
-	async getDebtsAsync(dharma: Dharma, accounts: string[], pendingDebtOrders: DebtOrderEntity[]) {
+	async getDebtsAsync(dharma: Dharma) {
 		try {
-			if (!accounts.length) {
+			if (!dharma || !this.props.accounts || !this.props.accounts.length) {
 				return;
 			}
+			const { accounts, pendingDebtOrders } = this.props;
 			const issuanceHashes = await dharma.servicing.getDebtsAsync(accounts[0]);
 			let filledDebtOrders: DebtOrderEntity[] = [];
 			for (let issuanceHash of issuanceHashes) {
@@ -89,16 +91,28 @@ class Dashboard extends React.Component<Props, States> {
 			}
 
 			this.props.handleSetFilledDebtOrders(filledDebtOrders);
+
+			// Check whether any of the pending debt orders is filled
+			// Then, we want to remove it from the list
+			if (pendingDebtOrders) {
+				for (let pendingDebtOrder of pendingDebtOrders) {
+					if (issuanceHashes.indexOf(pendingDebtOrder.issuanceHash) >= 0) {
+						this.props.handleFillDebtOrder(pendingDebtOrder.issuanceHash);
+					}
+				}
+			}
 		} catch (e) {
-			this.props.handleSetError('Unable to get debt orders info');
+			// this.props.handleSetError('Unable to get debt orders info');
+			this.props.handleSetError(e.message);
 		}
 	}
 
-	async getInvestmentsAsync(dharma: Dharma, accounts: string[]) {
+	async getInvestmentsAsync(dharma: Dharma) {
 		try {
-			if (!accounts.length) {
+			if (!dharma || !this.props.accounts || !this.props.accounts.length) {
 				return;
 			}
+			const { accounts } = this.props;
 			const issuanceHashes = await dharma.servicing.getInvestmentsAsync(accounts[0]);
 			let investments: InvestmentEntity[] = [];
 			for (let issuanceHash of issuanceHashes) {
@@ -127,7 +141,8 @@ class Dashboard extends React.Component<Props, States> {
 			}
 			this.setState({ investments });
 		} catch (e) {
-			this.props.handleSetError('Unable to get investments info');
+			// this.props.handleSetError('Unable to get investments info');
+			this.props.handleSetError(e.message);
 		}
 	}
 
