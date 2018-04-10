@@ -23,6 +23,7 @@ import Dharma from "@dharmaprotocol/dharma.js";
 import { DebtOrder } from "@dharmaprotocol/dharma.js/dist/types/src/types";
 import { BigNumber } from "bignumber.js";
 import { TokenEntity } from "../../../models";
+import { web3Errors } from "src/common/web3Errors";
 
 interface Props {
     location?: any;
@@ -118,6 +119,13 @@ class FillLoanEntered extends React.Component<Props, States> {
         try {
             this.props.handleSetError("");
             const { dharma, accounts } = this.props;
+			if (!dharma) {
+				this.props.handleSetError(web3Errors.UNABLE_TO_FIND_CONTRACTS);
+				return;
+			} else if (!accounts.length) {
+				this.props.handleSetError(web3Errors.UNABLE_TO_FIND_ACCOUNTS);
+				return;
+			}
             const { debtOrder, issuanceHash } = this.state;
 
             debtOrder.creditor = accounts[0];
