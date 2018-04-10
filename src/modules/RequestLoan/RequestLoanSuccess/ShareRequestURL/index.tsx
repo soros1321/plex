@@ -84,14 +84,13 @@ class ShareRequestURL extends React.Component<Props, State> {
 						<StyledFormGroup>
 							<Row>
 								<InputContainer>
-									<a href={shortUrl}>
-										<RequestInput
-											type="text"
-											value={shortUrl}
-											readOnly={true}
-											innerRef={(input: HTMLInputElement) => { this.requestInput = input; }}
-										/>
-									</a>
+									<RequestInput
+										type="text"
+										value={shortUrl}
+										readOnly={true}
+										innerRef={(input: HTMLInputElement) => { this.requestInput = input; }}
+										onClick={this.handleCopyClipboard}
+									/>
 									<CopiedMessage>{this.state.copied ? 'Copied!' : ''}</CopiedMessage>
 								</InputContainer>
 								<ButtonContainer>
