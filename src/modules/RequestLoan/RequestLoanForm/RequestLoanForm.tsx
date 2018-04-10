@@ -10,6 +10,7 @@ import { BigNumber } from "bignumber.js";
 import { encodeUrlParams, debtOrderFromJSON, normalizeDebtOrder, withCommas } from "../../../utils";
 import { validateTermLength, validateInterestRate } from "./validator";
 const BitlyClient = require("bitly");
+import { web3Errors } from "../../../common/web3Errors";
 
 interface Props {
     web3: Web3;
@@ -86,6 +87,14 @@ class RequestLoanForm extends React.Component<Props, State> {
             const { interestRate, amortizationUnit, termLength } = this.state.formData.terms;
             const { dharma, accounts } = this.props;
 
+			if (!this.props.dharma) {
+				this.props.handleSetError(web3Errors.UNABLE_TO_FIND_CONTRACTS);
+				return;
+			} else if (!this.props.accounts.length) {
+				this.props.handleSetError(web3Errors.UNABLE_TO_FIND_ACCOUNTS);
+				return;
+			}
+
             const simpleInterestLoan = {
                 principalTokenSymbol,
                 principalAmount: new BigNumber(principalAmount * 10 ** 18),
@@ -115,7 +124,13 @@ class RequestLoanForm extends React.Component<Props, State> {
             if (!this.state.debtOrder) {
                 this.props.handleSetError("No Debt Order has been generated yet");
                 return;
-            }
+			} else if (!this.props.dharma) {
+				this.props.handleSetError(web3Errors.UNABLE_TO_FIND_CONTRACTS);
+				return;
+			} else if (!this.props.accounts.length) {
+				this.props.handleSetError(web3Errors.UNABLE_TO_FIND_ACCOUNTS);
+				return;
+			}
 
             const { description, principalTokenSymbol, issuanceHash, bitly } = this.state;
             const debtOrder = debtOrderFromJSON(this.state.debtOrder);

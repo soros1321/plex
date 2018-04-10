@@ -2,9 +2,11 @@ import styled from 'styled-components';
 
 export const ScheduleIconImage = styled.img`
 	width: 15px;
-	margin-left: 1px;
-	
-	@media only screen and (max-width: 480px) {
+
+	@media only screen and (max-width: 1024px) {
+		width: 10px;
+	}
+	@media only screen and (max-width: 568px) {
 		width: 10px;
 	}
 `;
@@ -19,8 +21,22 @@ export const ScheduleIconDiv = styled.div`
     vertical-align: middle;
     text-align: center;
     margin-left: 1px;
-    padding-right: 1px;
     font-family: sans-serif;
     font-size: 14px;
     padding-top: 1px;
+
+	@media only screen and (max-width: 1024px) {
+		width: 12px;
+		height: 12px;
+		font-size: 8px;
+		padding-top: 0px;
+		margin-right: -1px;
+	}
+	@media only screen and (max-width: 568px) {
+		width: 12px;
+		height: 12px;
+		font-size: 8px;
+		padding-top: 0px;
+		margin-right: -1px;
+	}
 `;

@@ -1,6 +1,5 @@
 import * as React from 'react';
 import {
-	Button,
 	Modal,
 	ModalHeader,
 	ModalBody,
@@ -8,6 +7,7 @@ import {
 } from 'reactstrap';
 import { Bold } from '../../../../components';
 import { shortenString } from '../../../../utils';
+import { DoneButton } from './styledComponents';
 
 interface Props {
 	modal: boolean;
@@ -40,7 +40,7 @@ class SuccessModal extends React.Component<Props, {}> {
 						You filled debt order <Bold>{shortenString(this.props.issuanceHash)}</Bold>. You will find this order at the top of your dashboard.
 					</ModalBody>
 					<ModalFooter className="center">
-						<Button className="button" onClick={this.handleRedirect}>Done</Button>
+						<DoneButton className="button" onClick={this.handleRedirect}>Done</DoneButton>
 					</ModalFooter>
 				</Modal>
 			</div>

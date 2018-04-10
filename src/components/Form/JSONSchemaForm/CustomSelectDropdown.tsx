@@ -19,7 +19,7 @@ export const CustomSelectDropdown = (props: any) => {
 	};
 	props.options.enumOptions.map((opt: any) => {
 		// TODO: Remove once we enable more loan types.  This is a hacky way of disabling the
-		// 	options, but is also temporary.
+		// options, but is also temporary.
 		if (opt.label.includes('Coming Soon')) {
 			selectOptions.push({value: opt.value, label: opt.label, disabled: true});
 		} else {
@@ -33,9 +33,13 @@ export const CustomSelectDropdown = (props: any) => {
 				autoFocus={props.autofocus}
 				options={selectOptions}
 				value={props.value}
-				onChange={(selected: any) => props.onChange(selected.value)}
+				onChange={(selected: any) => {
+					if (selected) {
+						props.onChange(selected.value);
+					}
+				}}
 				clearable={false}
-				style={{ borderRadius: 0, height: 38, borderColor: '#000000' }}
+				style={{ borderRadius: 0, borderColor: '#000000' }}
 				disabled={props.disabled}
 				onInputKeyDown={onInputKeyDown}
 				placeholder={props.placeholder}

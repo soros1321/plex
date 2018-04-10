@@ -18,6 +18,7 @@ const promisify = require("tiny-promisify");
 import { Collapse } from "reactstrap";
 import { ClipLoader } from "react-spinners";
 import { truncate } from "src/utils/webUtils";
+import { web3Errors } from "../../common/web3Errors";
 
 interface Props {
     web3: Web3;
@@ -52,9 +53,9 @@ class TradingPermissions extends React.Component<Props, State> {
         this.getTokenData(this.props.dharma);
     }
 
-    componentWillReceiveProps(nextProps: Props) {
-        if (!this.props.dharma && nextProps.dharma) {
-            this.getTokenData(nextProps.dharma);
+    componentDidUpdate(prevProps: Props) {
+		if (this.props.dharma !== prevProps.dharma) {
+            this.getTokenData(this.props.dharma);
         }
     }
 
@@ -131,7 +132,13 @@ class TradingPermissions extends React.Component<Props, State> {
         this.props.toggleTokenLoadingSpinner(tokenAddress, true);
 
         try {
+			this.props.handleSetError('');
             const { tokens, dharma } = this.props;
+			if (!dharma) {
+				this.props.handleSetError(web3Errors.UNABLE_TO_FIND_CONTRACTS);
+				return;
+			}
+
             let selectedToken: TokenEntity | undefined = undefined;
             for (let token of tokens) {
                 if (token.address === tokenAddress) {
@@ -185,9 +192,18 @@ class TradingPermissions extends React.Component<Props, State> {
     }
 
     async handleFaucet(tokenAddress: string) {
+		this.props.handleSetError('');
         const { dharma } = this.props;
+		if (!dharma) {
+			this.props.handleSetError(web3Errors.UNABLE_TO_FIND_CONTRACTS);
+			return;
+		}
 
         const accounts = await promisify(this.props.web3.eth.getAccounts)();
+		if (!accounts.length) {
+			this.props.handleSetError(web3Errors.UNABLE_TO_FIND_ACCOUNTS);
+			return;
+		}
 
         return this.props.handleFaucetRequest(tokenAddress, accounts[0], dharma);
     }
@@ -224,13 +240,15 @@ class TradingPermissions extends React.Component<Props, State> {
                             Faucet
                         </FaucetButton>
                     )}
-                    <LoaderContainer>
-                        <ClipLoader
-                            size={12}
-                            color={"#1cc1cc"}
-                            loading={token.awaitingTransaction}
-                        />
-                    </LoaderContainer>
+					{token.awaitingTransaction && (
+						<LoaderContainer>
+							<ClipLoader
+								size={12}
+								color={"#1cc1cc"}
+								loading={token.awaitingTransaction}
+							/>
+						</LoaderContainer>
+					)}
                 </div>
             );
             if (count < 2) {

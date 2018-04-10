@@ -4,8 +4,12 @@ import { Row } from 'reactstrap';
 export const Wrapper = styled.div`
 	margin-top: 80px;
 
-	@media only screen and (max-width: 480px) {
-		margin-top: 40px;
+
+	@media only screen and (max-width: 823px) {
+		margin-top: 20px;
+	}
+	@media only screen and (max-width: 568px) {
+		margin-top: 20px;
 	}
 `;
 
@@ -14,6 +18,17 @@ export const Title = styled.div`
 	font-size: 17px;
 	line-height: 25px;
 	margin-bottom: 20px;
+
+	@media only screen and (max-width: 823px) {
+		font-size: 10px;
+		line-height: 18px;
+		margin-bottom: 10px;
+	}
+	@media only screen and (max-width: 568px) {
+		font-size: 10px;
+		line-height: 18px;
+		margin-bottom: 10px;
+	}
 `;
 
 export const TableHeaderRow = styled(Row)`
@@ -26,8 +41,15 @@ export const TableHeaderRow = styled(Row)`
 	line-height: 25px;
 	padding-bottom: 8px;
 
-	@media only screen and (max-width: 480px) {
-		font-size: 13px;
+	@media only screen and (max-width: 823px) {
+		font-size: 10px;
+		line-height: 18px;
+		padding-bottom: 4px;
+	}
+	@media only screen and (max-width: 568px) {
+		font-size: 10px;
+		line-height: 18px;
+		padding-bottom: 4px;
 	}
 `;
 
@@ -39,9 +61,13 @@ export const StyledRow = styled(Row)`
 	padding: 15px 0px;
 	cursor: pointer;
 
-	@media only screen and (max-width: 480px) {
-		font-size: 11px;
-		padding: 8px 0px;
+	@media only screen and (max-width: 823px) {
+		font-size: 8px;
+		padding: 4px 0px;
+	}
+	@media only screen and (max-width: 568px) {
+		font-size: 8px;
+		padding: 4px 0px;
 	}
 `;
 
@@ -49,13 +75,19 @@ export const Drawer = styled.div`
 	padding: 20px;
 	background-color: #F5F5F5;
 
-	@media only screen and (max-width: 480px) {
+	@media only screen and (max-width: 823px) {
+		padding: 10px;
+	}
+	@media only screen and (max-width: 568px) {
 		padding: 10px;
 	}
 `;
 
 export const InfoItem = styled.div`
-	@media only screen and (max-width: 480px) {
+	@media only screen and (max-width: 823px) {
+		margin-bottom: 5px;
+	}
+	@media only screen and (max-width: 568px) {
 		margin-bottom: 5px;
 	}
 `;
@@ -67,6 +99,15 @@ export const InfoItemTitle = styled.div`
 	color: #002326;
 	font-size: 13px;
 	line-height: 20px;
+
+	@media only screen and (max-width: 823px) {
+		font-size: 10px;
+		line-height: 18px;
+	}
+	@media only screen and (max-width: 568px) {
+		font-size: 10px;
+		line-height: 18px;
+	}
 `;
 
 export const InfoItemContent = styled.div`
@@ -77,4 +118,15 @@ export const InfoItemContent = styled.div`
 	font-size: 13px;
 	line-height: 20px;
 	word-wrap: break-word;
+
+	@media only screen and (max-width: 823px) {
+		margin-top: 2px;
+		font-size: 10px;
+		line-height: 18px;
+	}
+	@media only screen and (max-width: 568px) {
+		margin-top: 2px;
+		font-size: 10px;
+		line-height: 18px;
+	}
 `;

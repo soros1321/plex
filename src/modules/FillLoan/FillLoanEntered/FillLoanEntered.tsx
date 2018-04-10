@@ -23,6 +23,7 @@ import Dharma from "@dharmaprotocol/dharma.js";
 import { DebtOrder } from "@dharmaprotocol/dharma.js/dist/types/src/types";
 import { BigNumber } from "bignumber.js";
 import { TokenEntity } from "../../../models";
+import { web3Errors } from "src/common/web3Errors";
 
 interface Props {
     location?: any;
@@ -72,19 +73,21 @@ class FillLoanEntered extends React.Component<Props, States> {
     }
 
     async componentDidMount() {
-        if (this.props.dharma && this.props.location.query) {
-            this.getDebtOrderDetail(this.props.dharma, this.props.location.query);
+		this.getDebtOrderDetail(this.props.dharma);
+    }
+
+    componentDidUpdate(prevProps: Props) {
+        if (this.props.dharma !== prevProps.dharma) {
+            this.getDebtOrderDetail(this.props.dharma);
         }
     }
 
-    componentWillReceiveProps(nextProps: Props) {
-        if (nextProps.dharma && nextProps.location.query) {
-            this.getDebtOrderDetail(nextProps.dharma, nextProps.location.query);
-        }
-    }
-
-    async getDebtOrderDetail(dharma: Dharma, urlParams: any) {
+    async getDebtOrderDetail(dharma: Dharma) {
         try {
+			const urlParams = this.props.location.query;
+			if (!dharma || !urlParams) {
+				return;
+			}
             const debtOrder = debtOrderFromJSON(JSON.stringify(urlParams));
             const description = debtOrder.description;
             const principalTokenSymbol = debtOrder.principalTokenSymbol;
@@ -118,6 +121,13 @@ class FillLoanEntered extends React.Component<Props, States> {
         try {
             this.props.handleSetError("");
             const { dharma, accounts } = this.props;
+			if (!dharma) {
+				this.props.handleSetError(web3Errors.UNABLE_TO_FIND_CONTRACTS);
+				return;
+			} else if (!accounts.length) {
+				this.props.handleSetError(web3Errors.UNABLE_TO_FIND_ACCOUNTS);
+				return;
+			}
             const { debtOrder, issuanceHash } = this.state;
 
             debtOrder.creditor = accounts[0];

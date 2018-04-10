@@ -14,6 +14,7 @@ import {
 	Title,
 	Content,
 	SummaryJsonContainer,
+	TextareaContainer,
 	StyledTextarea,
 	CopyButton,
 	CopiedMessage
@@ -66,7 +67,7 @@ class RequestLoanSummary extends React.Component<Props, State> {
 				<StyledLabel>Loan request summary</StyledLabel>
 				<GrayContainer>
 					<Row>
-						<Col xs="12" md="6">
+						<Col xs="6" md="6">
 							<InfoItem>
 								<Title>
 									Principal
@@ -84,7 +85,7 @@ class RequestLoanSummary extends React.Component<Props, State> {
 								</Content>
 							</InfoItem>
 						</Col>
-						<Col xs="12" md="6">
+						<Col xs="6" md="6">
 							<InfoItem>
 								<Title>
 									Interest Rate
@@ -115,13 +116,15 @@ class RequestLoanSummary extends React.Component<Props, State> {
 					</Row>
 					<SummaryJsonContainer>
 						<Label>JSON</Label>
-						<StyledTextarea
-							value={JSON.stringify(normalizeDebtOrder(summaryJSON))}
-							readOnly={true}
-							innerRef={(textarea: HTMLTextAreaElement) => { this.summaryTextarea = textarea; }}
-						/>
+						<TextareaContainer>
+							<StyledTextarea
+								value={JSON.stringify(normalizeDebtOrder(summaryJSON))}
+								readOnly={true}
+								innerRef={(textarea: HTMLTextAreaElement) => { this.summaryTextarea = textarea; }}
+							/>
+							<CopyButton onClick={this.handleCopyClipboard}>Copy</CopyButton>
+						</TextareaContainer>
 						<CopiedMessage>{this.state.copied ? 'Copied!' : ''}</CopiedMessage>
-						<CopyButton onClick={this.handleCopyClipboard}>Copy</CopyButton>
 					</SummaryJsonContainer>
 				</GrayContainer>
 			</Wrapper>

@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 
 export const Description = styled.div`
-	width: 460px;
 	color: #002326;
 	font-family: DIN;
 	font-size: 17px;
@@ -13,8 +12,14 @@ export const Description = styled.div`
 		font-family: DIN-Bold;
 	}
 
-	@media only screen and (max-width: 480px) {
-		width: 100%;
-		font-size: 14px;
+	@media only screen and (max-width: 823px) {
+		margin: 17px 0;
+		font-size: 12px;
+		line-height: 20px;
+	}
+	@media only screen and (max-width: 568px) {
+		margin: 15px 0;
+		font-size: 10px;
+		line-height: 18px;
 	}
 `;

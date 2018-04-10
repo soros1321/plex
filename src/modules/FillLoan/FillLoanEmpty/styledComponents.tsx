@@ -14,4 +14,13 @@ export const StyledLink = styled(Link)`
 	font-size: 15px;
 	margin: 10px 0;
 	display: block;
+
+	@media only screen and (max-width: 823px) {
+		font-size: 12px;
+		line-height: 20px;
+	}
+	@media only screen and (max-width: 568px) {
+		font-size: 10px;
+		line-height: 18px;
+	}
 `;

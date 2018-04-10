@@ -1,6 +1,13 @@
 import styled from 'styled-components';
 import { NavItem } from 'reactstrap';
 
+export const Wrapper = styled.div`
+	padding-bottom: 80px;
+	@media only screen and (max-width: 480px) {
+		padding-bottom: 20px;
+	}
+`;
+
 export const StyledNavItem = styled(NavItem)`
 	@media only screen and (max-width: 480px) {
 		width: 50%;

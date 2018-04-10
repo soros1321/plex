@@ -39,6 +39,7 @@ import { Row, Col, Collapse } from 'reactstrap';
 import { BigNumber } from 'bignumber.js';
 import Dharma from '@dharmaprotocol/dharma.js';
 import { TokenAmount } from "src/components";
+import { web3Errors } from "src/common/web3Errors";
 
 interface Props {
     debtOrder: DebtOrderEntity;
@@ -123,45 +124,54 @@ class ActiveDebtOrder extends React.Component<Props, State> {
 				handleSetErrorToast
 			} = this.props;
 
-			if (!accounts.length) {
-				handleSetErrorToast('Unable to find active account on Ethereum network');
+			handleSetErrorToast('');
+			if (!dharma) {
+				handleSetErrorToast(web3Errors.UNABLE_TO_FIND_CONTRACTS);
 				return;
-			}
-			if (!debtOrder.json) {
+			} else if (!accounts.length) {
+				handleSetErrorToast(web3Errors.UNABLE_TO_FIND_ACCOUNTS);
+				return;
+			} else if (!debtOrder.json) {
+				handleSetErrorToast("Unable to get debt order info");
 				return;
 			}
 
 			const dharmaDebtOrder = debtOrderFromJSON(debtOrder.json);
-			dharma.order.cancelOrderAsync(dharmaDebtOrder, {from: accounts[0]})
-				.then((txHash) => {
-					this.setState({ awaitingCancelTx: true });
-					return dharma.blockchain.awaitTransactionMinedAsync(txHash, 1000, 60000);
-				})
-				.then((receipt) => {
-					return dharma.blockchain.getErrorLogs(receipt.transactionHash);
-				})
-				.then(async (errors) => {
-					this.setState({ awaitingCancelTx: false });
-					this.confirmationModalToggle();
+			if (dharmaDebtOrder.debtor !== accounts[0]) {
+				this.confirmationModalToggle();
+				handleSetErrorToast("Debt order can only be cancelled by the specified order's debtor");
+			} else {
+				dharma.order.cancelOrderAsync(dharmaDebtOrder, {from: accounts[0]})
+					.then((txHash) => {
+						this.setState({ awaitingCancelTx: true });
+						return dharma.blockchain.awaitTransactionMinedAsync(txHash, 1000, 60000);
+					})
+					.then((receipt) => {
+						return dharma.blockchain.getErrorLogs(receipt.transactionHash);
+					})
+					.then(async (errors) => {
+						this.setState({ awaitingCancelTx: false });
+						this.confirmationModalToggle();
 
-					if (errors.length > 0) {
-						handleSetErrorToast(errors[0]);
-					} else {
-						handleCancelDebtOrder(debtOrder.issuanceHash);
+						if (errors.length > 0) {
+							handleSetErrorToast(errors[0]);
+						} else {
+							handleCancelDebtOrder(debtOrder.issuanceHash);
 
-						handleSetSuccessToast(
-							`Debt agreement ${shortenString(debtOrder.issuanceHash)} is cancelled successfully`,
-						);
-					}
-				}).catch(err => {
-					if (err.message.includes('User denied transaction signature')) {
-						this.props.handleSetErrorToast("Wallet has denied transaction.");
-					} else {
-						this.props.handleSetErrorToast(err.message);
-					}
-					this.confirmationModalToggle();
-					this.setState({ awaitingCancelTx: false });
-				});
+							handleSetSuccessToast(
+								`Debt agreement ${shortenString(debtOrder.issuanceHash)} is cancelled successfully`,
+							);
+						}
+					}).catch(err => {
+						if (err.message.includes('User denied transaction signature')) {
+							handleSetErrorToast("Wallet has denied transaction.");
+						} else {
+							handleSetErrorToast(err.message);
+						}
+						this.confirmationModalToggle();
+						this.setState({ awaitingCancelTx: false });
+					});
+			}
 		} catch (e) {
 			this.confirmationModalToggle();
 			this.props.handleSetErrorToast(e.message);
@@ -169,7 +179,12 @@ class ActiveDebtOrder extends React.Component<Props, State> {
 	}
 
     async handleRepaymentFormSubmission(tokenAmount: BigNumber, tokenSymbol: string) {
+		this.props.handleSetErrorToast('');
         const { dharma } = this.props;
+		if (!dharma) {
+			this.props.handleSetErrorToast(web3Errors.UNABLE_TO_FIND_CONTRACTS);
+			return;
+		}
 
         const tokenAddress = await dharma.contracts.getTokenAddressBySymbolAsync(tokenSymbol);
 
@@ -215,6 +230,9 @@ class ActiveDebtOrder extends React.Component<Props, State> {
 
     async calculatePaymentsMissed() {
         const { dharma } = this.props;
+		if (!dharma) {
+			return;
+		}
         const { issuanceHash, repaidAmount, repaymentSchedule } = this.props.debtOrder;
 
         let missedPayments = {};
@@ -316,7 +334,7 @@ class ActiveDebtOrder extends React.Component<Props, State> {
                     </ImageContainer>
                     <DetailContainer>
                         <Row>
-                            <Col xs="12" md="6">
+                            <Col xs="6" md="6">
                                 <Amount>
                                     <TokenAmount
                                         tokenAmount={debtOrder.principalAmount}
@@ -325,7 +343,7 @@ class ActiveDebtOrder extends React.Component<Props, State> {
                                 </Amount>
                                 <Url>{detailLink}</Url>
                             </Col>
-                            <Col xs="12" md="6">
+                            <Col xs="6" md="6">
                                 {debtOrder.status === "active" && (
                                     <MakeRepaymentButton onClick={this.handleMakeRepaymentClick}>
                                         Make Repayment
@@ -355,7 +373,7 @@ class ActiveDebtOrder extends React.Component<Props, State> {
                 <Collapse isOpen={this.state.collapse}>
                     <Drawer>
                         <Row>
-                            <Col xs="12" md="2">
+                            <Col xs="4" sm="4" md="4" lg="2">
                                 <InfoItem>
                                     <InfoItemTitle>Requested</InfoItemTitle>
                                     <InfoItemContent>
@@ -366,7 +384,7 @@ class ActiveDebtOrder extends React.Component<Props, State> {
                                     </InfoItemContent>
                                 </InfoItem>
                             </Col>
-                            <Col xs="12" md="2">
+                            <Col xs="4" sm="4" md="4" lg="2">
                                 <InfoItem>
                                     <InfoItemTitle>Repaid</InfoItemTitle>
                                     <InfoItemContent>
@@ -377,7 +395,7 @@ class ActiveDebtOrder extends React.Component<Props, State> {
                                     </InfoItemContent>
                                 </InfoItem>
                             </Col>
-                            <Col xs="12" md="2">
+                            <Col xs="4" sm="4" md="4" lg="2">
                                 <InfoItem>
                                     <InfoItemTitle>Term Length</InfoItemTitle>
                                     <InfoItemContent>
@@ -387,7 +405,7 @@ class ActiveDebtOrder extends React.Component<Props, State> {
                                     </InfoItemContent>
                                 </InfoItem>
                             </Col>
-                            <Col xs="12" md="2">
+                            <Col xs="4" sm="4" md="4" lg="2">
                                 <InfoItem>
                                     <InfoItemTitle>Interest Rate</InfoItemTitle>
                                     <InfoItemContent>
@@ -395,7 +413,7 @@ class ActiveDebtOrder extends React.Component<Props, State> {
                                     </InfoItemContent>
                                 </InfoItem>
                             </Col>
-                            <Col xs="12" md="2">
+                            <Col xs="8" sm="8" md="8" lg="2">
                                 <InfoItem>
                                     <InfoItemTitle>Installment Frequency</InfoItemTitle>
                                     <InfoItemContent>
@@ -403,10 +421,10 @@ class ActiveDebtOrder extends React.Component<Props, State> {
                                     </InfoItemContent>
                                 </InfoItem>
                             </Col>
-                            <Col xs="12" md="2">
+                            <Col xs="12" sm="12" md="12" lg="2">
                                 <InfoItem>
                                     <InfoItemTitle>Description</InfoItemTitle>
-                                    <InfoItemContent>{debtOrder.description}</InfoItemContent>
+                                    <InfoItemContent>{debtOrder.description ? debtOrder.description : '-'}</InfoItemContent>
                                 </InfoItem>
                             </Col>
                         </Row>
