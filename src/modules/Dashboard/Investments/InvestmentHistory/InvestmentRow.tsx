@@ -35,18 +35,20 @@ class InvestmentRow extends React.Component<Props, State> {
 	}
 
 	async componentDidMount() {
-		if (this.props.dharma && this.props.investment) {
-			await this.determineStatus(this.props.dharma, this.props.investment);
+		await this.determineStatus(this.props.dharma);
+	}
+
+	async componentDidUpdate(prevProps: Props) {
+		if (this.props.dharma !== prevProps.dharma) {
+			await this.determineStatus(this.props.dharma);
 		}
 	}
 
-	async componentWillReceiveProps(nextProps: Props) {
-		if (nextProps.dharma && nextProps.investment) {
-			await this.determineStatus(nextProps.dharma, nextProps.investment);
+	async determineStatus(dharma: Dharma) {
+		const { investment } = this.props;
+		if (!dharma || !investment) {
+			return;
 		}
-	}
-
-	async determineStatus(dharma: Dharma, investment: InvestmentEntity) {
 		const earnedAmount = await dharma.servicing.getValueRepaid(investment.issuanceHash);
 		const expectedEarnedAmount = await dharma.servicing.getExpectedValueRepaid(investment.issuanceHash, moment().unix());
 		this.setState({

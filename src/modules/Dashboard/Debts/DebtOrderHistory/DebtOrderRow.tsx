@@ -38,18 +38,20 @@ class DebtOrderRow extends React.Component<Props, State> {
 	}
 
 	async componentDidMount() {
-		if (this.props.dharma && this.props.debtOrder) {
-			await this.determineStatus(this.props.dharma, this.props.debtOrder);
+		await this.determineStatus(this.props.dharma);
+	}
+
+	async componentDidUpdate(prevProps: Props) {
+		if (this.props.dharma !== prevProps.dharma) {
+			await this.determineStatus(this.props.dharma);
 		}
 	}
 
-	async componentWillReceiveProps(nextProps: Props) {
-		if (nextProps.dharma && nextProps.debtOrder) {
-			await this.determineStatus(nextProps.dharma, nextProps.debtOrder);
+	async determineStatus(dharma: Dharma) {
+		const { debtOrder } = this.props;
+		if (!dharma || !debtOrder) {
+			return;
 		}
-	}
-
-	async determineStatus(dharma: Dharma, debtOrder: DebtOrderEntity) {
 		const valueRepaid = await dharma.servicing.getValueRepaid(debtOrder.issuanceHash);
 		const expectedRepaidAmount = await dharma.servicing.getExpectedValueRepaid(debtOrder.issuanceHash, moment().unix());
 		this.setState({

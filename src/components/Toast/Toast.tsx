@@ -26,8 +26,8 @@ class Toast extends React.Component<Props, State> {
 		this.onDismiss = this.onDismiss.bind(this);
 	}
 
-	componentWillReceiveProps(nextProps: Props) {
-		if (this.props.message !== nextProps.message && nextProps.message) {
+	componentDidUpdate(prevProps: Props) {
+		if (this.props.message !== prevProps.message && this.props.message) {
 			this.setState({ visible: true });
 			setTimeout(() => {
 				this.setState({ visible: false });

@@ -27,18 +27,20 @@ class InvestmentsMetrics extends React.Component<Props, State> {
     }
 
     componentDidMount() {
-        if (this.props.tokens && this.props.investments) {
-            this.initiateTokenBalance(this.props.tokens, this.props.investments);
+		this.initiateTokenBalance(this.props.tokens);
+    }
+
+    componentDidUpdate(prevProps: Props) {
+        if (this.props.tokens !== prevProps.tokens) {
+            this.initiateTokenBalance(this.props.tokens);
         }
     }
 
-    componentWillReceiveProps(nextProps: Props) {
-        if (nextProps.tokens && nextProps.investments) {
-            this.initiateTokenBalance(nextProps.tokens, nextProps.investments);
-        }
-    }
-
-    initiateTokenBalance(tokens: TokenEntity[], investments: InvestmentEntity[]) {
+    initiateTokenBalance(tokens: TokenEntity[]) {
+		const { investments } = this.props;
+		if (!tokens || !investments) {
+			return;
+		}
         let tokenBalances: any = {};
 		for (let token of tokens) {
 			tokenBalances[token.tokenSymbol] = {

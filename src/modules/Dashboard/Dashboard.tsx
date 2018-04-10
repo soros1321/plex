@@ -48,10 +48,10 @@ class Dashboard extends React.Component<Props, States> {
 		}
 	}
 
-	async componentWillReceiveProps(nextProps: Props) {
-		if (this.props.dharma !== nextProps.dharma) {
-			await this.getDebtsAsync(nextProps.dharma);
-			await this.getInvestmentsAsync(nextProps.dharma);
+	async componentDidUpdate(prevProps: Props) {
+		if (this.props.dharma !== prevProps.dharma) {
+			await this.getDebtsAsync(this.props.dharma);
+			await this.getInvestmentsAsync(this.props.dharma);
 			this.setState({ initiallyLoading: false });
 		}
 	}

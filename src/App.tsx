@@ -39,12 +39,6 @@ class App extends React.Component<Props, State> {
         clearInterval(this.state.intervalId);
     }
 
-    componentWillReceiveProps(nextProps: Props) {
-        if (nextProps.web3 && nextProps.accounts) {
-            this.checkAccount(nextProps.web3, nextProps.accounts);
-        }
-    }
-
     async checkAccount(web3: Web3, accounts: string[]) {
         if (!web3 || !accounts) {
             return;

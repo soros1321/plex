@@ -33,8 +33,10 @@ class Debts extends React.Component<Props, State> {
         this.getDebtOrdersDetails(this.props.debtOrders);
     }
 
-    componentWillReceiveProps(nextProps: Props) {
-        this.getDebtOrdersDetails(nextProps.debtOrders);
+    componentDidUpdate(prevProps: Props) {
+		if (this.props.debtOrders !== prevProps.debtOrders) {
+			this.getDebtOrdersDetails(this.props.debtOrders);
+		}
     }
 
     getDebtOrdersDetails(debtOrders: DebtOrderEntity[]) {
