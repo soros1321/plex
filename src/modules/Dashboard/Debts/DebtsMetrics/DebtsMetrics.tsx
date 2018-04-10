@@ -33,18 +33,20 @@ class DebtsMetrics extends React.Component<Props, State> {
 	}
 
 	componentDidMount() {
-		if (this.props.tokens && this.props.debtOrders) {
-			this.initiateTokenBalance(this.props.tokens, this.props.debtOrders);
+		this.initiateTokenBalance(this.props.tokens);
+	}
+
+	componentDidUpdate(prevProps: Props) {
+		if (this.props.tokens !== prevProps.tokens) {
+			this.initiateTokenBalance(this.props.tokens);
 		}
 	}
 
-	componentWillReceiveProps(nextProps: Props) {
-		if (nextProps.tokens && nextProps.debtOrders) {
-			this.initiateTokenBalance(nextProps.tokens, nextProps.debtOrders);
+	initiateTokenBalance(tokens: TokenEntity[]) {
+		if (!tokens || !tokens.length) {
+			return;
 		}
-	}
-
-	initiateTokenBalance(tokens: TokenEntity[], debtOrders: DebtOrderEntity[]) {
+		const { debtOrders } = this.props;
 		let tokenBalances: any = {};
 		for (let token of tokens) {
 			tokenBalances[token.tokenSymbol] = {

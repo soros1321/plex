@@ -52,9 +52,9 @@ class TradingPermissions extends React.Component<Props, State> {
         this.getTokenData(this.props.dharma);
     }
 
-    componentWillReceiveProps(nextProps: Props) {
-        if (!this.props.dharma && nextProps.dharma) {
-            this.getTokenData(nextProps.dharma);
+    componentDidUpdate(prevProps: Props) {
+		if (this.props.dharma !== prevProps.dharma) {
+            this.getTokenData(this.props.dharma);
         }
     }
 

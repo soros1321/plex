@@ -72,19 +72,21 @@ class FillLoanEntered extends React.Component<Props, States> {
     }
 
     async componentDidMount() {
-        if (this.props.dharma && this.props.location.query) {
-            this.getDebtOrderDetail(this.props.dharma, this.props.location.query);
+		this.getDebtOrderDetail(this.props.dharma);
+    }
+
+    componentDidUpdate(prevProps: Props) {
+        if (this.props.dharma !== prevProps.dharma) {
+            this.getDebtOrderDetail(this.props.dharma);
         }
     }
 
-    componentWillReceiveProps(nextProps: Props) {
-        if (nextProps.dharma && nextProps.location.query) {
-            this.getDebtOrderDetail(nextProps.dharma, nextProps.location.query);
-        }
-    }
-
-    async getDebtOrderDetail(dharma: Dharma, urlParams: any) {
+    async getDebtOrderDetail(dharma: Dharma) {
         try {
+			const urlParams = this.props.location.query;
+			if (!dharma || !urlParams) {
+				return;
+			}
             const debtOrder = debtOrderFromJSON(JSON.stringify(urlParams));
             const description = debtOrder.description;
             const principalTokenSymbol = debtOrder.principalTokenSymbol;

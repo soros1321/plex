@@ -31,8 +31,10 @@ class Investments extends React.Component<Props, State> {
 		this.getInvestmentsDetails(this.props.investments);
 	}
 
-	componentWillReceiveProps(nextProps: Props) {
-		this.getInvestmentsDetails(nextProps.investments);
+	componentDidUpdate(prevProps: Props) {
+		if (this.props.investments !== prevProps.investments) {
+			this.getInvestmentsDetails(this.props.investments);
+		}
 	}
 
 	async getInvestmentsDetails(investments: InvestmentEntity[]) {

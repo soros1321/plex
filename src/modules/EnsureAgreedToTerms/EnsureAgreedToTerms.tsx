@@ -12,8 +12,8 @@ class EnsureAgreedToTerms extends React.Component<Props, {}> {
 		}
 	}
 
-	componentWillReceiveProps(nextProps: Props) {
-		if (!nextProps.agreeToTerms) {
+	componentDidUpdate(prevProps: Props) {
+		if (this.props.agreeToTerms !== prevProps.agreeToTerms && !this.props.agreeToTerms) {
 			browserHistory.push('/');
 		}
 	}
