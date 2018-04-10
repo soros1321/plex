@@ -82,7 +82,7 @@ class InvestmentRow extends React.Component<Props, State> {
 				<Collapse isOpen={this.state.collapse}>
 					<Drawer>
 						<Row>
-							<Col xs="12" md="2">
+							<Col xs="6" md="2">
 								<InfoItem>
 									<InfoItemTitle>
 										Term Length
@@ -92,7 +92,7 @@ class InvestmentRow extends React.Component<Props, State> {
 									</InfoItemContent>
 								</InfoItem>
 							</Col>
-							<Col xs="12" md="2">
+							<Col xs="6" md="2">
 								<InfoItem>
 									<InfoItemTitle>
 										Interest Rate

@@ -1,8 +1,7 @@
 import * as React from 'react';
 import {
 	Collapse,
-	Navbar,
-	Nav
+	Navbar
 } from 'reactstrap';
 import { IndexLink } from 'react-router';
 import {
@@ -10,7 +9,8 @@ import {
 	BrandLogo,
 	StyledNavbarToggler,
 	StyledNavItem,
-	StyledLink
+	StyledLink,
+	StyledNav
 } from './styledComponents';
 import { TradingPermissionsContainer } from '../../components';
 
@@ -56,9 +56,9 @@ class TopNavBar extends React.Component<Props, TopNavBarState> {
 					</IndexLink>
 					<StyledNavbarToggler onClick={this.toggle} />
 					<Collapse isOpen={this.state.isOpen} navbar={true}>
-						<Nav className="ml-auto" navbar={true}>
+						<StyledNav className="ml-auto" navbar={true}>
 							{linkItemRows}
-						</Nav>
+						</StyledNav>
 						<TradingPermissionsContainer />
 					</Collapse>
 				</Navbar>

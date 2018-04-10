@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { NavbarToggler, NavItem } from 'reactstrap';
+import { NavbarToggler, NavItem, Nav } from 'reactstrap';
 import { Link } from 'react-router';
 
 export const Wrapper = styled.div`
@@ -53,7 +53,7 @@ export const StyledNavItem = styled(NavItem)`
 	}
 
 	@media only screen and (max-width: 480px) {
-		padding: 2px 0px;
+		padding: 0px;
 
 		&:first-child,
 		&:nth-child(2) {
@@ -76,6 +76,10 @@ export const StyledLink = styled(Link)`
 	}
 
 	@media only screen and (max-width: 480px) {
-		font-size: 13px;
+		font-size: 10px;
 	}
+`;
+
+export const StyledNav = styled(Nav)`
+	margin: 10px 0 20px !important;
 `;

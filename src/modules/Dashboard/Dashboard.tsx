@@ -8,7 +8,7 @@ import {
 } from 'reactstrap';
 import { DebtsContainer } from './Debts/DebtsContainer';
 import { InvestmentsContainer } from './Investments/InvestmentsContainer';
-import { StyledNavItem, TitleFirstWord, TitleRest } from './styledComponents';
+import { Wrapper, StyledNavItem, TitleFirstWord, TitleRest } from './styledComponents';
 import Dharma from '@dharmaprotocol/dharma.js';
 import { debtOrderFromJSON } from '../../utils';
 
@@ -90,7 +90,8 @@ class Dashboard extends React.Component<Props, States> {
 
 			this.props.handleSetFilledDebtOrders(filledDebtOrders);
 		} catch (e) {
-			this.props.handleSetError('Unable to get debt orders info');
+			// this.props.handleSetError('Unable to get debt orders info');
+			this.props.handleSetError(e.message);
 		}
 	}
 
@@ -127,7 +128,8 @@ class Dashboard extends React.Component<Props, States> {
 			}
 			this.setState({ investments });
 		} catch (e) {
-			this.props.handleSetError('Unable to get investments info');
+			// this.props.handleSetError('Unable to get investments info');
+			this.props.handleSetError(e.message);
 		}
 	}
 
@@ -186,14 +188,14 @@ class Dashboard extends React.Component<Props, States> {
 		));
 
 		return (
-			<div>
+			<Wrapper>
 				<Nav tabs={true}>
 					{tabNavs}
 				</Nav>
 				<TabContent activeTab={activeTab}>
 					{tabContents}
 				</TabContent>
-			</div>
+			</Wrapper>
 		);
 	}
 }

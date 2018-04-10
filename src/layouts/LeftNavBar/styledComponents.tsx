@@ -32,6 +32,12 @@ export const LogoContainer = styled.div`
 	margin: 40px 0 50px;
 	text-align: center;
 
+	@media only screen and (max-width: 823px) {
+		margin: 20px 0 30px;
+	}
+	@media only screen and (max-width: 568px) {
+		margin: 20px 0 30px;
+	}
 	@media only screen and (max-width: 480px) {
 		display: none;
 	}
@@ -39,6 +45,13 @@ export const LogoContainer = styled.div`
 
 export const BrandLogo = styled.img`
 	width: 35px;
+
+	@media only screen and (max-width: 823px) {
+		width: 25px;
+	}
+	@media only screen and (max-width: 568px) {
+		width: 25px;
+	}
 `;
 
 class UglyCol extends React.Component<Props, {}> {
@@ -52,6 +65,21 @@ class UglyCol extends React.Component<Props, {}> {
 }
 
 export const StyledCol = styled(UglyCol)`
+	@media only screen and (max-width: 823px) {
+		-ms-flex: 0 0 100% !important;
+		flex: 0 0 100% !important;
+		max-width: 100% !important;
+	}
+	@media only screen and (max-width: 568px) {
+		-ms-flex: 0 0 100% !important;
+		flex: 0 0 100% !important;
+		max-width: 100% !important;
+	}
+	@media only screen and (max-width: 480px) {
+		-ms-flex: 0 0 33.33% !important;
+		flex: 0 0 33.33% !important;
+		max-width: 33.33% !important;
+	}
 `;
 
 export const StyledLink = styled(Link)`
@@ -73,6 +101,42 @@ export const StyledLink = styled(Link)`
 		padding: 20px 25px 20px 20px !important;
 	}
 
+	@media only screen and (max-width: 823px) {
+		font-size: 10px;
+		line-height: 14px;
+		padding: 12px 12px !important;
+
+		&:hover,
+		&.active {
+			border-left: 4px solid #F3764B;
+			padding: 12px 12px 12px 8px !important;
+		}
+	}
+
+	@media only screen and (max-width: 667px) {
+		font-size: 8px;
+		line-height: 12px;
+		padding: 10px 10px !important;
+
+		&:hover,
+		&.active {
+			border-left: 3px solid #F3764B;
+			padding: 10px 10px 10px 7px !important;
+		}
+	}
+
+	@media only screen and (max-width: 568px) {
+		font-size: 8px;
+		line-height: 12px;
+		padding: 10px 10px !important;
+
+		&:hover,
+		&.active {
+			border-left: 3px solid #F3764B;
+			padding: 10px 10px 10px 7px !important;
+		}
+	}
+
 	@media only screen and (max-width: 480px) {
 		text-align: center;
 		font-size: 13px;
@@ -83,6 +147,7 @@ export const StyledLink = styled(Link)`
 			border-left: 0;
 			background-color: #002326;
 			margin-left: 0px;
+			padding: 13px 0 13px !important;
 		}
 		&.active {
 			border-left: 0;

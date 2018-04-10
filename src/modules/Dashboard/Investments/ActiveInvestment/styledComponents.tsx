@@ -9,7 +9,7 @@ interface Props {
 
 // styles-components
 export const Wrapper = styled.div`
-	margin: 20px 0px;
+	margin-bottom: 20px;
 	background-color: #FFFFFF;
 	box-shadow: 0 12px 24px 0 rgba(0,0,0,0.12);
 	cursor: pointer;
@@ -18,7 +18,7 @@ export const Wrapper = styled.div`
 class UglyImageContainer extends React.Component<Props, {}> {
 	render() {
 		return (
-			<Col className={this.props.className} xs="4" md="1">
+			<Col className={this.props.className} xs="3" sm="1" md="1">
 				{this.props.children}
 			</Col>
 		);
@@ -27,21 +27,37 @@ class UglyImageContainer extends React.Component<Props, {}> {
 
 export const ImageContainer = styled(UglyImageContainer)`
 	padding: 15px 0 15px 15px !important;
+
+	@media only screen and (max-width: 823px) {
+		padding: 10px 0 10px 10px !important;
+	}
+	@media only screen and (max-width: 568px) {
+		padding: 10px 0 10px 10px !important;
+	}
 `;
 
 export const IdenticonImage = styled.img`
 	width: 60px;
 	height: 60px;
+
+	@media only screen and (max-width: 823px) {
+		width: 40px;
+		height: 40px;
+	}
+	@media only screen and (max-width: 568px) {
+		width: 80px;
+		height: 80px;
+	}
 	@media only screen and (max-width: 480px) {
-		width: 100px;
-		height: 100px;
+		width: 60px;
+		height: 60px;
 	}
 `;
 
 class UglyDetailContainer extends React.Component<Props, {}> {
 	render() {
 		return (
-			<Col className={this.props.className} xs="8" md="5">
+			<Col className={this.props.className} xs="9" sm="5" md="5">
 				{this.props.children}
 			</Col>
 		);
@@ -50,6 +66,13 @@ class UglyDetailContainer extends React.Component<Props, {}> {
 
 export const DetailContainer = styled(UglyDetailContainer)`
 	padding: 15px !important;
+
+	@media only screen and (max-width: 823px) {
+		padding: 10px !important;
+	}
+	@media only screen and (max-width: 568px) {
+		padding: 10px !important;
+	}
 `;
 
 export const Amount = styled.div`
@@ -57,12 +80,30 @@ export const Amount = styled.div`
 	font-family: DIN-Bold;
 	font-size: 17px;
 	line-height: 25px;
+
+	@media only screen and (max-width: 823px) {
+		font-size: 14px;
+		line-height: 22px;
+	}
+	@media only screen and (max-width: 568px) {
+		font-size: 14px;
+		line-height: 22px;
+	}
 `;
 
 export const Url = styled.div`
 	color: #002326;
 	font-size: 15px;
 	line-height: 25px;
+
+	@media only screen and (max-width: 823px) {
+		font-size: 10px;
+		line-height: 18px;
+	}
+	@media only screen and (max-width: 568px) {
+		font-size: 10px;
+		line-height: 18px;
+	}
 `;
 
 export const StatusActive = styled.div`
@@ -76,6 +117,15 @@ export const StatusActive = styled.div`
 	text-transform: uppercase;
 	padding: 2px 10px;
 	margin-right: 10px;
+
+	@media only screen and (max-width: 823px) {
+		font-size: 8px;
+		line-height: 12px;
+	}
+	@media only screen and (max-width: 568px) {
+		font-size: 8px;
+		line-height: 12px;
+	}
 `;
 
 export const StatusDefaulted = StatusActive.extend`
@@ -89,15 +139,20 @@ export const Terms = styled.div`
 	line-height: 16px;
 	text-transform: uppercase;
 
-	@media only screen and (max-width: 480px) {
-		font-size: 11px;
+	@media only screen and (max-width: 823px) {
+		font-size: 8px;
+		line-height: 16px;
+	}
+	@media only screen and (max-width: 568px) {
+		font-size: 8px;
+		line-height: 16px;
 	}
 `;
 
 class HalfCol extends React.Component<Props, {}> {
 	render() {
 		return (
-			<Col className={this.props.className} xs="12" md="6">
+			<Col className={this.props.className} xs="12" sm="6" md="6">
 				{this.props.children}
 			</Col>
 		);
@@ -110,6 +165,13 @@ export const RepaymentScheduleContainer = styled(HalfCol)`
 	background-color: #082C30;
 	color: #FFFFFF;
 	display: block;
+
+	@media only screen and (max-width: 823px) {
+		padding: 10px !important;
+	}
+	@media only screen and (max-width: 568px) {
+		padding: 10px !important;
+	}
 `;
 
 export const Title = styled.div`
@@ -117,6 +179,15 @@ export const Title = styled.div`
 	font-size: 13px;
 	line-height: 25px;
 	text-transform: uppercase;
+
+	@media only screen and (max-width: 823px) {
+		font-size: 10px;
+		line-height: 18px;
+	}
+	@media only screen and (max-width: 568px) {
+		font-size: 10px;
+		line-height: 18px;
+	}
 `;
 
 export const Strikethrough = styled.div`
@@ -133,10 +204,52 @@ export const Strikethrough = styled.div`
 		width: 65px;
 	}
 
+	@media only screen and (max-width: 1024px) {
+		&::before {
+			top: -3px;
+			width: 50px;
+		}
+	}
+	@media only screen and (max-width: 823px) {
+		&::before {
+			top: -3px;
+			width: 43px;
+		}
+	}
+	@media only screen and (max-width: 768px) {
+		&::before {
+			top: -3px;
+			width: 38px;
+		}
+	}
+	@media only screen and (max-width: 736px) {
+		&::before {
+			top: -3px;
+			width: 35px;
+		}
+	}
+	@media only screen and (max-width: 667px) {
+		&::before {
+			top: -3px;
+			width: 32px;
+		}
+	}
+	@media only screen and (max-width: 640px) {
+		&::before {
+			top: -3px;
+			width: 30px;
+		}
+	}
+	@media only screen and (max-width: 568px) {
+		&::before {
+			top: -3px;
+			width: 63px;
+		}
+	}
 	@media only screen and (max-width: 480px) {
 		&::before {
-			top: -5px;
-			width: 46px;
+			top: -3px;
+			width: 44px;
 		}
 	}
 `;
@@ -154,8 +267,29 @@ export const Schedule = styled.div`
 		opacity: 1;
 	}
 
+	@media only screen and (max-width: 1024px) {
+		width: 59px;
+	}
+	@media only screen and (max-width: 823px) {
+		width: 53px;
+	}
+	@media only screen and (max-width: 768px) {
+		width: 48px;
+	}
+	@media only screen and (max-width: 736px) {
+		width: 45px;
+	}
+	@media only screen and (max-width: 667px) {
+		width: 42px;
+	}
+	@media only screen and (max-width: 640px) {
+		width: 40px;
+	}
+	@media only screen and (max-width: 568px) {
+		width: 73px;
+	}
 	@media only screen and (max-width: 480px) {
-		width: 56px;
+		width: 54px;
 	}
 `;
 
@@ -168,7 +302,13 @@ export const ScheduleIconContainer = styled.div`
 
 export const ScheduleIcon = styled.img`
 	width: 15px;
-	@media only screen and (max-width: 480px) {
+	@media only screen and (max-width: 1024px) {
+		width: 10px;
+	}
+	@media only screen and (max-width: 823px) {
+		width: 10px;
+	}
+	@media only screen and (max-width: 568px) {
 		width: 10px;
 	}
 `;
@@ -177,8 +317,18 @@ export const PaymentDate = styled.div`
 	color: #FFFFFF;
 	font-size: 13px;
 	line-height: 25px;
-	@media only screen and (max-width: 480px) {
-		font-size: 11px;
+
+	@media only screen and (max-width: 1024px) {
+		font-size: 10px;
+		line-height: 18px;
+	}
+	@media only screen and (max-width: 823px) {
+		font-size: 8px;
+		line-height: 16px;
+	}
+	@media only screen and (max-width: 568px) {
+		font-size: 8px;
+		line-height: 16px;
 	}
 `;
 
@@ -190,15 +340,21 @@ export const Drawer = styled.div`
 	padding: 20px;
 	background-color: #F5F5F5;
 
-	@media only screen and (max-width: 480px) {
+	@media only screen and (max-width: 823px) {
+		padding: 10px;
+	}
+	@media only screen and (max-width: 568px) {
 		padding: 10px;
 	}
 `;
 
 export const InfoItem = styled.div`
- @media only screen and (max-width: 480px) {
-	 margin-bottom: 5px;
- }
+	@media only screen and (max-width: 823px) {
+		margin-bottom: 5px;
+	}
+	@media only screen and (max-width: 568px) {
+		margin-bottom: 5px;
+	}
 `;
 
 export const InfoItemTitle = styled.div`
@@ -208,6 +364,15 @@ export const InfoItemTitle = styled.div`
 	color: #002326;
 	font-size: 13px;
 	line-height: 20px;
+
+	@media only screen and (max-width: 823px) {
+		font-size: 10px;
+		line-height: 18px;
+	}
+	@media only screen and (max-width: 568px) {
+		font-size: 10px;
+		line-height: 18px;
+	}
 `;
 
 export const InfoItemContent = styled.div`
@@ -218,6 +383,17 @@ export const InfoItemContent = styled.div`
 	font-size: 13px;
 	line-height: 20px;
 	word-wrap: break-word;
+
+	@media only screen and (max-width: 823px) {
+		margin-top: 2px;
+		font-size: 10px;
+		line-height: 18px;
+	}
+	@media only screen and (max-width: 568px) {
+		margin-top: 2px;
+		font-size: 10px;
+		line-height: 18px;
+	}
 `;
 
 export const DetailLink = StyledLink.extend`
@@ -236,10 +412,30 @@ export const TransferButton = StyledButton.extend`
 	float: right;
 	line-height: 36px !important;
 
+	@media only screen and (max-width: 823px) {
+		margin-top: 5px;
+		padding: 4px 14px !important;
+		font-size: 10px !important;
+		line-height: 14px !important;
+		min-width: auto !important;
+	}
+	@media only screen and (max-width: 736px) {
+		margin-top: 5px;
+		padding: 2px 12px !important;
+		font-size: 8px !important;
+		line-height: 12px !important;
+		min-width: auto !important;
+	}
+	@media only screen and (max-width: 568px) {
+		margin-top: 5px;
+		padding: 4px 14px !important;
+		font-size: 10px !important;
+		line-height: 14px !important;
+		min-width: auto !important;
+	}
 	@media only screen and (max-width: 480px) {
-		float: none;
-		margin: 5px 0px !important;
-		font-size: 11px !important;
-		line-height: 24px !important;
+		padding: 3px 12px !important;
+		font-size: 8px !important;
+		line-height: 12px !important;
 	}
 `;

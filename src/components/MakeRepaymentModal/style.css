@@ -20,3 +20,9 @@
 .repayment-group {
     margin-top: 25px;
 }
+
+@media only screen and (max-width: 823px) {
+	.make-repayment {
+		margin-top: -2px;
+	}
+}

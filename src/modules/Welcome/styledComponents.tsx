@@ -14,6 +14,12 @@ export const BannerContainer = styled.div`
 	width: 100%;
 	height: 207px;
 
+	@media only screen and (max-width: 823px) {
+		height: 140px;
+	}
+	@media only screen and (max-width: 568px) {
+		height: 120px;
+	}
 	@media only screen and (max-width: 480px) {
 		display: none;
 	}
@@ -24,8 +30,15 @@ export const Header = styled.div`
 	font-family: DIN-Bold;
 	font-size: 40px;
 	line-height: 50px;
-	width: 499px;
 
+	@media only screen and (max-width: 823px) {
+		font-size: 28px;
+		line-height: 33px;
+	}
+	@media only screen and (max-width: 568px) {
+		font-size: 20px;
+		line-height: 25px;
+	}
 	@media only screen and (max-width: 480px) {
 		width: 100%;
 	}
@@ -37,6 +50,17 @@ export const Description = styled.div`
 	font-size: 17px;
 	line-height: 25px;
 	margin: 20px 0;
+
+	@media only screen and (max-width: 823px) {
+		font-size: 12px;
+		line-height: 20px;
+		margin: 12px 0;
+	}
+	@media only screen and (max-width: 568px) {
+		font-size: 10px;
+		line-height: 18px;
+		margin: 10px 0;
+	}
 `;
 
 export const ButtonContainer = styled.div`
@@ -69,4 +93,13 @@ export const StyledLink = styled(Link)`
 	font-family: DIN-Bold;
 	font-size: 17px;
 	line-height: 25px;
+
+	@media only screen and (max-width: 823px) {
+		font-size: 12px;
+		line-height: 20px;
+	}
+	@media only screen and (max-width: 568px) {
+		font-size: 10px;
+		line-height: 18px;
+	}
 `;

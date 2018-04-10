@@ -85,7 +85,7 @@ class DebtOrderRow extends React.Component<Props, State> {
 				<Collapse isOpen={this.state.collapse}>
 					<Drawer>
 						<Row>
-							<Col xs="12" md="2">
+							<Col xs="6" md="2">
 								<InfoItem>
 									<InfoItemTitle>
 										Term Length
@@ -95,7 +95,7 @@ class DebtOrderRow extends React.Component<Props, State> {
 									</InfoItemContent>
 								</InfoItem>
 							</Col>
-							<Col xs="12" md="2">
+							<Col xs="6" md="2">
 								<InfoItem>
 									<InfoItemTitle>
 										Interest Rate
@@ -105,7 +105,7 @@ class DebtOrderRow extends React.Component<Props, State> {
 									</InfoItemContent>
 								</InfoItem>
 							</Col>
-							<Col xs="12" md="3">
+							<Col xs="6" md="3">
 								<InfoItem>
 									<InfoItemTitle>
 										Installment Frequency
@@ -115,13 +115,13 @@ class DebtOrderRow extends React.Component<Props, State> {
 									</InfoItemContent>
 								</InfoItem>
 							</Col>
-							<Col xs="12" md="5">
+							<Col xs="6" md="5">
 								<InfoItem>
 									<InfoItemTitle>
 										Description
 									</InfoItemTitle>
 									<InfoItemContent>
-										{debtOrder.description}
+										{debtOrder.description ? debtOrder.description : '-'}
 									</InfoItemContent>
 								</InfoItem>
 							</Col>
