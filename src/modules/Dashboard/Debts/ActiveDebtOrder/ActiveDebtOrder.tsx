@@ -132,36 +132,41 @@ class ActiveDebtOrder extends React.Component<Props, State> {
 			}
 
 			const dharmaDebtOrder = debtOrderFromJSON(debtOrder.json);
-			dharma.order.cancelOrderAsync(dharmaDebtOrder, {from: accounts[0]})
-				.then((txHash) => {
-					this.setState({ awaitingCancelTx: true });
-					return dharma.blockchain.awaitTransactionMinedAsync(txHash, 1000, 60000);
-				})
-				.then((receipt) => {
-					return dharma.blockchain.getErrorLogs(receipt.transactionHash);
-				})
-				.then(async (errors) => {
-					this.setState({ awaitingCancelTx: false });
-					this.confirmationModalToggle();
+			if (dharmaDebtOrder.debtor !== accounts[0]) {
+				this.confirmationModalToggle();
+				handleSetErrorToast("Debt order can only be cancelled by the specified order's debtor");
+			} else {
+				dharma.order.cancelOrderAsync(dharmaDebtOrder, {from: accounts[0]})
+					.then((txHash) => {
+						this.setState({ awaitingCancelTx: true });
+						return dharma.blockchain.awaitTransactionMinedAsync(txHash, 1000, 60000);
+					})
+					.then((receipt) => {
+						return dharma.blockchain.getErrorLogs(receipt.transactionHash);
+					})
+					.then(async (errors) => {
+						this.setState({ awaitingCancelTx: false });
+						this.confirmationModalToggle();
 
-					if (errors.length > 0) {
-						handleSetErrorToast(errors[0]);
-					} else {
-						handleCancelDebtOrder(debtOrder.issuanceHash);
+						if (errors.length > 0) {
+							handleSetErrorToast(errors[0]);
+						} else {
+							handleCancelDebtOrder(debtOrder.issuanceHash);
 
-						handleSetSuccessToast(
-							`Debt agreement ${shortenString(debtOrder.issuanceHash)} is cancelled successfully`,
-						);
-					}
-				}).catch(err => {
-					if (err.message.includes('User denied transaction signature')) {
-						this.props.handleSetErrorToast("Wallet has denied transaction.");
-					} else {
-						this.props.handleSetErrorToast(err.message);
-					}
-					this.confirmationModalToggle();
-					this.setState({ awaitingCancelTx: false });
-				});
+							handleSetSuccessToast(
+								`Debt agreement ${shortenString(debtOrder.issuanceHash)} is cancelled successfully`,
+							);
+						}
+					}).catch(err => {
+						if (err.message.includes('User denied transaction signature')) {
+							handleSetErrorToast("Wallet has denied transaction.");
+						} else {
+							handleSetErrorToast(err.message);
+						}
+						this.confirmationModalToggle();
+						this.setState({ awaitingCancelTx: false });
+					});
+			}
 		} catch (e) {
 			this.confirmationModalToggle();
 			this.props.handleSetErrorToast(e.message);
