@@ -39,6 +39,7 @@ import { Row, Col, Collapse } from 'reactstrap';
 import { BigNumber } from 'bignumber.js';
 import Dharma from '@dharmaprotocol/dharma.js';
 import { TokenAmount } from "src/components";
+import { web3Errors } from "src/common/web3Errors";
 
 interface Props {
     debtOrder: DebtOrderEntity;
@@ -123,11 +124,15 @@ class ActiveDebtOrder extends React.Component<Props, State> {
 				handleSetErrorToast
 			} = this.props;
 
-			if (!accounts.length) {
-				handleSetErrorToast('Unable to find active account on Ethereum network');
+			handleSetErrorToast('');
+			if (!dharma) {
+				handleSetErrorToast(web3Errors.UNABLE_TO_FIND_CONTRACTS);
 				return;
-			}
-			if (!debtOrder.json) {
+			} else if (!accounts.length) {
+				handleSetErrorToast(web3Errors.UNABLE_TO_FIND_ACCOUNTS);
+				return;
+			} else if (!debtOrder.json) {
+				handleSetErrorToast("Unable to get debt order info");
 				return;
 			}
 
@@ -174,7 +179,12 @@ class ActiveDebtOrder extends React.Component<Props, State> {
 	}
 
     async handleRepaymentFormSubmission(tokenAmount: BigNumber, tokenSymbol: string) {
+		this.props.handleSetErrorToast('');
         const { dharma } = this.props;
+		if (!dharma) {
+			this.props.handleSetErrorToast(web3Errors.UNABLE_TO_FIND_CONTRACTS);
+			return;
+		}
 
         const tokenAddress = await dharma.contracts.getTokenAddressBySymbolAsync(tokenSymbol);
 
@@ -220,6 +230,9 @@ class ActiveDebtOrder extends React.Component<Props, State> {
 
     async calculatePaymentsMissed() {
         const { dharma } = this.props;
+		if (!dharma) {
+			return;
+		}
         const { issuanceHash, repaidAmount, repaymentSchedule } = this.props.debtOrder;
 
         let missedPayments = {};
