@@ -51,6 +51,7 @@ class App extends React.Component<Props, State> {
         }
         const latestAccounts = await promisify(web3.eth.getAccounts)();
         if (latestAccounts.length && accounts.length && latestAccounts[0] !== accounts[0]) {
+			localStorage.clear();
             window.location.reload();
         }
     }
