@@ -8,6 +8,7 @@ import * as Web3 from "web3";
 import Dharma from "@dharmaprotocol/dharma.js";
 import { BigNumber } from "bignumber.js";
 import { encodeUrlParams, debtOrderFromJSON, normalizeDebtOrder, withCommas } from "../../../utils";
+import { validateTermLength, validateInterestRate } from "./validator";
 const BitlyClient = require("bitly");
 import { web3Errors } from "../../../common/web3Errors";
 
@@ -201,9 +202,18 @@ class RequestLoanForm extends React.Component<Props, State> {
     }
 
     validateForm(formData: any, errors: any) {
-        if (formData.terms.termLength % 1 !== 0) {
-            errors.terms.termLength.addError("Term length can not have decimals.");
-        }
+		if (formData.terms.termLength) {
+			const error = validateTermLength(formData.terms.termLength);
+			if (error) {
+				errors.terms.termLength.addError(error);
+			}
+		}
+		if (formData.terms.interestRate) {
+			const error = validateInterestRate(formData.terms.interestRate);
+			if (error) {
+				errors.terms.interestRate.addError(error);
+			}
+		}
         return errors;
     }
 
