@@ -177,6 +177,17 @@ export const RepaymentScheduleContainer = styled(HalfCol)`
 	}
 `;
 
+export const CancelButtonContainer = RepaymentScheduleContainer.extend`
+	background-color: #FFFFFF;
+	display: block;
+
+	@media only screen and (max-width: 480px) {
+		float: none;
+		padding-top: 0px !important;
+		text-align: center;
+	}
+`;
+
 export const Title = styled.div`
 	color: #FFFFFF;
 	font-size: 13px;
@@ -433,4 +444,10 @@ export const MakeRepaymentButton = StyledButton.extend`
 export const CancelButton = MakeRepaymentButton.extend`
 	background-color: #1CC1CC !important;
 	border-color: #1CC1CC !important;
+
+	@media only screen and (max-width: 480px) {
+		font-size: 10px !important;
+		width: 100%;
+	}
+
 `;

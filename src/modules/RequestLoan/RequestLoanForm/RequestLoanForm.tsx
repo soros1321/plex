@@ -30,6 +30,7 @@ interface State {
     issuanceHash: string;
     confirmationModal: boolean;
     bitly: any;
+	awaitingSignTx: boolean;
 }
 
 class RequestLoanForm extends React.Component<Props, State> {
@@ -51,7 +52,8 @@ class RequestLoanForm extends React.Component<Props, State> {
             description: "",
             issuanceHash: "",
             confirmationModal: false,
-            bitly: null
+            bitly: null,
+			awaitingSignTx: false
         };
     }
 
@@ -131,6 +133,7 @@ class RequestLoanForm extends React.Component<Props, State> {
 				this.props.handleSetError(web3Errors.UNABLE_TO_FIND_ACCOUNTS);
 				return;
 			}
+			this.setState({ awaitingSignTx: true });
 
             const { description, principalTokenSymbol, issuanceHash, bitly } = this.state;
             const debtOrder = debtOrderFromJSON(this.state.debtOrder);
@@ -141,6 +144,7 @@ class RequestLoanForm extends React.Component<Props, State> {
 
             this.setState({
                 debtOrder: JSON.stringify(debtOrder),
+				awaitingSignTx: false,
                 confirmationModal: false
             });
 
@@ -189,6 +193,7 @@ class RequestLoanForm extends React.Component<Props, State> {
 			}
 
             this.setState({
+				awaitingSignTx: false,
                 confirmationModal: false
             });
             return;
@@ -264,15 +269,18 @@ class RequestLoanForm extends React.Component<Props, State> {
 						transformErrors={this.transformErrors}
 					/>
                 </MainWrapper>
-                <ConfirmationModal
-                    modal={this.state.confirmationModal}
-                    title="Please confirm"
-                    content={confirmationModalContent}
-                    onToggle={this.confirmationModalToggle}
-                    onSubmit={this.handleSignDebtOrder}
-                    closeButtonText="&#8592; Modify Request"
-                    submitButtonText="Complete Request"
-                />
+				<ConfirmationModal
+					modal={this.state.confirmationModal}
+					title="Please confirm"
+					content={confirmationModalContent}
+					onToggle={this.confirmationModalToggle}
+					onSubmit={this.handleSignDebtOrder}
+					closeButtonText="&#8592; Modify Request"
+					submitButtonText={
+						this.state.awaitingSignTx ? "Completing Request..." : "Complete Request"
+					}
+					awaitingTx={this.state.awaitingSignTx}
+				/>
             </PaperLayout>
         );
     }

@@ -31,6 +31,7 @@ import {
     Strikethrough,
     ShowMore,
     PaymentDate,
+	CancelButtonContainer,
 	CancelButton
 } from './styledComponents';
 import { MakeRepaymentModal, ConfirmationModal, Bold } from '../../../../components';
@@ -349,11 +350,6 @@ class ActiveDebtOrder extends React.Component<Props, State> {
                                         Make Repayment
                                     </MakeRepaymentButton>
                                 )}
-                                {debtOrder.status === "pending" && (
-									<CancelButton onClick={this.handleCancelDebtOrderClick}>
-									   Cancel
-									</CancelButton>
-								)}
                             </Col>
                         </Row>
                         {debtOrder.status === "active" ? (
@@ -363,12 +359,22 @@ class ActiveDebtOrder extends React.Component<Props, State> {
                         )}
                         <Terms>Simple Interest (Non-Collateralized)</Terms>
                     </DetailContainer>
-                    <RepaymentScheduleContainer
-                        className={debtOrder.status === "active" ? "active" : ""}
-                    >
-                        <Title>Repayment Schedule</Title>
-                        {repaymentScheduleItems}
-                    </RepaymentScheduleContainer>
+					{debtOrder.status === "pending" ?
+						(
+							<CancelButtonContainer>
+								<CancelButton onClick={this.handleCancelDebtOrderClick}>
+								Cancel
+								</CancelButton>
+							</CancelButtonContainer>
+						) : (
+							<RepaymentScheduleContainer
+								className={debtOrder.status === "active" ? "active" : ""}
+							>
+								<Title>Repayment Schedule</Title>
+								{repaymentScheduleItems}
+							</RepaymentScheduleContainer>
+						)
+					}
                 </Row>
                 <Collapse isOpen={this.state.collapse}>
                     <Drawer>
@@ -449,6 +455,7 @@ class ActiveDebtOrder extends React.Component<Props, State> {
 					onToggle={this.confirmationModalToggle}
 					onSubmit={this.handleCancelDebtOrderSubmission}
 					closeButtonText="No"
+					awaitingTx={this.state.awaitingCancelTx}
 					submitButtonText={
 						this.state.awaitingCancelTx ? "Canceling Order..." : "Yes"
 					}

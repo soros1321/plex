@@ -8,6 +8,7 @@ import {
 	ModalBody,
 	ModalFooter
 } from 'reactstrap';
+import { ClipLoader } from "react-spinners";
 
 interface Props {
 	modal: boolean;
@@ -18,6 +19,7 @@ interface Props {
 	onToggle: () => void;
 	onSubmit: () => void;
     disabled?: boolean;
+	awaitingTx?: boolean;
 }
 
 class ConfirmationModal extends React.Component<Props, {}> {
@@ -40,7 +42,7 @@ class ConfirmationModal extends React.Component<Props, {}> {
 	}
 
 	render() {
-		const { disabled } = this.props;
+		const { disabled, awaitingTx } = this.props;
 
 		return (
 			<div>
@@ -52,10 +54,13 @@ class ConfirmationModal extends React.Component<Props, {}> {
 					<ModalFooter>
 						<Row className="button-container">
 							<Col xs="12" md="6">
-								<Button className="button secondary width-95" disabled={!!disabled} onClick={this.handleToggle}>{this.props.closeButtonText}</Button>
+								<Button className="button secondary width-95" disabled={!!disabled || !!awaitingTx} onClick={this.handleToggle}>{this.props.closeButtonText}</Button>
 							</Col>
 							<Col xs="12" md="6" className="align-right">
-								<Button className="button width-95" disabled={!!disabled} onClick={this.handleSubmit}>{this.props.submitButtonText}</Button>
+								<Button className="button width-95" disabled={!!disabled || !!awaitingTx} onClick={this.handleSubmit}>
+									{this.props.submitButtonText}
+									<ClipLoader size={12} color={"#FFFFFF"} loading={!!awaitingTx} />
+								</Button>
 							</Col>
 						</Row>
 					</ModalFooter>
