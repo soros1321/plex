@@ -13,8 +13,8 @@ class PressEnter extends React.Component<Props, {}> {
 
 	handleClick(event: any) {
 		event.stopPropagation();
-		const selectGoToNext = new CustomEvent('selectGoToNext', {detail: {name: this.props.detailId}});
-		window.dispatchEvent(selectGoToNext);
+		const highlightNextFieldEvent = new CustomEvent('highlightNextField', {detail: {name: this.props.detailId}});
+		window.dispatchEvent(highlightNextFieldEvent);
 	}
 
 	render() {

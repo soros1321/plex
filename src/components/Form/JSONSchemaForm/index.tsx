@@ -270,7 +270,7 @@ class JSONSchemaForm extends React.Component<Props, {}> {
 		this.handleKeyPress = this.handleKeyPress.bind(this);
 		this.handleKeyUp = this.handleKeyUp.bind(this);
 		this.handleClick = this.handleClick.bind(this);
-		this.handleSelectGoToNext = this.handleSelectGoToNext.bind(this);
+		this.handleHighlightNextField = this.handleHighlightNextField.bind(this);
 	}
 
 	componentDidMount() {
@@ -278,7 +278,7 @@ class JSONSchemaForm extends React.Component<Props, {}> {
 		window.addEventListener('keypress', this.handleKeyPress);
 		window.addEventListener('keyup', this.handleKeyUp);
 		window.addEventListener('click', this.handleClick);
-		window.addEventListener('selectGoToNext', this.handleSelectGoToNext);
+		window.addEventListener('highlightNextField', this.handleHighlightNextField);
 
 		// Always set the root element as active
 		const rootElm = document.querySelector('.' + fieldClassName);
@@ -303,7 +303,7 @@ class JSONSchemaForm extends React.Component<Props, {}> {
 		window.removeEventListener('keypress', this.handleKeyPress);
 		window.removeEventListener('keyup', this.handleKeyUp);
 		window.removeEventListener('click', this.handleClick);
-		window.removeEventListener('selectGoToNext', this.handleSelectGoToNext);
+		window.removeEventListener('highlightNextField', this.handleHighlightNextField);
 	}
 
 	handleChange(response: FormResponse) {
@@ -418,7 +418,7 @@ class JSONSchemaForm extends React.Component<Props, {}> {
 		}
 	}
 
-	handleSelectGoToNext(event: any) {
+	handleHighlightNextField(event: any) {
 		if (event.detail.name === 'form_submit_button') {
 			this.handleSubmit();
 		} else {

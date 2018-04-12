@@ -10,8 +10,8 @@ export const CustomSelectDropdown = (props: any) => {
 		switch (event.keyCode) {
 			case 13:
 				event.preventDefault();
-				const selectGoToNext = new CustomEvent('selectGoToNext', {detail: {name: props.id}});
-				window.dispatchEvent(selectGoToNext);
+				const highlightNextFieldEvent = new CustomEvent('highlightNextField', {detail: {name: props.id}});
+				window.dispatchEvent(highlightNextFieldEvent);
 				break;
 			default:
 				break;
