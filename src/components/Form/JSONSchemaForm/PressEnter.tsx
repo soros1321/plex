@@ -2,34 +2,24 @@ import * as React from 'react';
 import { PressEnterButton } from './styledComponents';
 
 interface Props {
-	id?: string;
-	value?: any;
+	detailId: string;
 }
 
-interface State {
-	clicked: boolean;
-}
-
-class PressEnter extends React.Component<Props, State> {
+class PressEnter extends React.Component<Props, {}> {
 	constructor(props: Props) {
 		super(props);
-		this.state = {
-			clicked: false
-		};
 		this.handleClick = this.handleClick.bind(this);
 	}
 
-	handleClick() {
-		this.setState({ clicked: true });
-		console.log(this.props);
-		const selectGoToNext = new CustomEvent('selectGoToNext', {detail: {name: this.props.id}});
+	handleClick(event: any) {
+		event.stopPropagation();
+		const selectGoToNext = new CustomEvent('selectGoToNext', {detail: {name: this.props.detailId}});
 		window.dispatchEvent(selectGoToNext);
 	}
 
 	render() {
-		console.log(this.props);
 		return (
-			<PressEnterButton id={'press-enter-' + this.props.id} className={'press-enter ' + (this.props.value ? 'active' : '')} onClick={this.handleClick}>OK, Press ENTER</PressEnterButton>
+			<PressEnterButton className={'press-enter'} onClick={this.handleClick}>OK, Press ENTER</PressEnterButton>
 		);
 	}
 }

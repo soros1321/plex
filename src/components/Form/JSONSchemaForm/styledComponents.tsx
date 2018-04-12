@@ -268,7 +268,7 @@ export const RadioLabel = styled.label`
 	}
 `;
 
-export const PressEnter = Description.extend`
+export const PressEnterButton = Description.extend`
 	margin-top: 5px;
 	font-family: DIN-Bold;
 	opacity: 0;
@@ -281,6 +281,7 @@ export const PressEnter = Description.extend`
 	-moz-transition: opacity 0.3s ease-out;
 	-o-transition: opacity 0.3s ease-out;
 	cursor: pointer;
+	display: none;
 
 	&.active {
 		-webkit-transition: opacity 0.3s ease-in;
@@ -288,8 +289,6 @@ export const PressEnter = Description.extend`
 		-o-transition: opacity 0.3s ease-in;
 		opacity: 1;
 		height: auto;
+		display: block;
 	}
-`;
-
-export const PressEnterButton = PressEnter.extend`
 `;
