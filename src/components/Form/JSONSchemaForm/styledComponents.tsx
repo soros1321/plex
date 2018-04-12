@@ -280,6 +280,7 @@ export const PressEnter = Description.extend`
 	-webkit-transition: opacity 0.3s ease-out;
 	-moz-transition: opacity 0.3s ease-out;
 	-o-transition: opacity 0.3s ease-out;
+	cursor: pointer;
 
 	&.active {
 		-webkit-transition: opacity 0.3s ease-in;
@@ -288,4 +289,7 @@ export const PressEnter = Description.extend`
 		opacity: 1;
 		height: auto;
 	}
+`;
+
+export const PressEnterButton = PressEnter.extend`
 `;
