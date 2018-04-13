@@ -1,15 +1,15 @@
 import * as React from 'react';
 import { shallow, mount } from 'enzyme';
-import { FillLoanEntered } from '../../../../../src/modules/FillLoan/FillLoanEntered/FillLoanEntered';
-import { FillLoanEnteredContainer } from '../../../../../src/modules/FillLoan/FillLoanEntered/FillLoanEnteredContainer';
-import { PaperLayout } from '../../../../../src/layouts';
+import { FillLoanEntered } from 'src/modules/FillLoan/FillLoanEntered/FillLoanEntered';
+import { FillLoanEnteredContainer } from 'src/modules/FillLoan/FillLoanEntered/FillLoanEnteredContainer';
+import { PaperLayout } from 'src/layouts';
 import {
 	Header,
 	ConfirmationModal,
 	MainWrapper
-} from '../../../../../src/components';
+} from 'src/components';
 import { Col } from 'reactstrap';
-import { SuccessModal } from '../../../../../src/modules/FillLoan/FillLoanEntered/SuccessModal';
+import { SuccessModal } from 'src/modules/FillLoan/FillLoanEntered/SuccessModal';
 import {
 	LoanInfoContainer,
 	HalfCol,
@@ -19,17 +19,17 @@ import {
 	ButtonContainer,
 	DeclineButton,
 	FillLoanButton
-} from '../../../../../src/modules/FillLoan/FillLoanEntered/styledComponents';
-import MockWeb3 from '../../../../../__mocks__/web3';
-import MockDharma from '../../../../../__mocks__/dharma.js';
+} from 'src/modules/FillLoan/FillLoanEntered/styledComponents';
+import MockWeb3 from '__mocks__/web3';
+import MockDharma from '__mocks__/dharma.js';
 import { BigNumber } from 'bignumber.js';
 import { Link, browserHistory } from 'react-router';
 import configureStore from 'redux-mock-store';
 import { Provider } from 'react-redux';
 import { createStore } from 'redux';
-import { fillDebtOrder } from '../../../../../src/modules/FillLoan/FillLoanEntered/actions';
+import { fillDebtOrder } from 'src/modules/FillLoan/FillLoanEntered/actions';
 import { DebtKernel } from '@dharmaprotocol/contracts';
-import { debtOrderFromJSON } from '../../../../../src/utils';
+import { debtOrderFromJSON } from 'src/utils';
 const compact = require('lodash.compact');
 const ABIDecoder = require('abi-decoder');
 ABIDecoder.addABI(DebtKernel.abi);
@@ -76,7 +76,8 @@ describe('<FillLoanEntered />', () => {
 			dharma,
 			tokens: [],
 			handleSetError: jest.fn(),
-			handleFillDebtOrder: jest.fn()
+			handleFillDebtOrder: jest.fn(),
+			updateTokenBalance: jest.fn()
 		};
 	});
 
@@ -184,25 +185,16 @@ describe('<FillLoanEntered />', () => {
 		});
 	});
 
-	describe('#componentDidMount', async () => {
+	describe('#componentDidMount', () => {
 		it('should call getDebtOrderDetail', async () => {
 			const spy = jest.spyOn(FillLoanEntered.prototype, 'getDebtOrderDetail');
 			const wrapper = shallow(<FillLoanEntered {... props} />);
 			await expect(spy).toHaveBeenCalled();
 			spy.mockRestore();
 		});
-
-		it('should not call getDebtOrderDetail when there is no dharma and no location.query', async () => {
-			props.dharma = null;
-			props.location.query = null;
-			const spy = jest.spyOn(FillLoanEntered.prototype, 'getDebtOrderDetail');
-			const wrapper = shallow(<FillLoanEntered {... props} />);
-			expect(spy).not.toHaveBeenCalled();
-			spy.mockRestore();
-		});
 	});
 
-	describe('#componentWillReceiveProps', async () => {
+	describe('#componentDidUpdate', () => {
 		it('should call getDebtOrderDetail', async () => {
 			props.location.query = null;
 			props.dharma = null;
@@ -211,19 +203,7 @@ describe('<FillLoanEntered />', () => {
 			props.location.query = query;
 			props.dharma = dharma;
 			wrapper.setProps(props);
-			expect(spy).toHaveBeenCalledWith(props.dharma, props.location.query);
-			spy.mockRestore();
-		});
-
-		it('should not call getDebtOrderDetail when there is no dharma and no location.query', async () => {
-			props.location.query = null;
-			props.dharma = null;
-			const spy = jest.spyOn(FillLoanEntered.prototype, 'getDebtOrderDetail');
-			const wrapper = shallow(<FillLoanEntered {... props} />);
-			props.dharma = null;
-			props.location.query = null;
-			wrapper.setProps(props);
-			expect(spy).not.toHaveBeenCalled();
+			expect(spy).toHaveBeenCalledWith(props.dharma);
 			spy.mockRestore();
 		});
 	});
@@ -329,7 +309,7 @@ describe('<FillLoanEntered />', () => {
 				const wrapper = shallow(<FillLoanEntered {... props} />);
 				await wrapper.instance().handleFillOrder();
 				const expectedTxHash = await dharma.order.fillAsync(debtOrder);
-				await expect(dharma.blockchain.awaitTransactionMinedAsync).toHaveBeenCalledWith(expectedTxHash, 1000, 10000);
+				await expect(dharma.blockchain.awaitTransactionMinedAsync).toHaveBeenCalledWith(expectedTxHash, 1000, 60000);
 			});
 
 			it('calls Dharma#getErrorLogs', async () => {
@@ -338,14 +318,6 @@ describe('<FillLoanEntered />', () => {
 				const expectedTxHash = await dharma.order.fillAsync(debtOrder);
 				const expectedErrorLogs = await dharma.blockchain.getErrorLogs(expectedTxHash);
 				await expect(dharma.blockchain.getErrorLogs).toHaveBeenCalledWith(expectedTxHash);
-			});
-
-			it('calls ABIDecoder.decodeLogs', async () => {
-				const spy = jest.spyOn(ABIDecoder, 'decodeLogs');
-				const wrapper = shallow(<FillLoanEntered {... props} />);
-				await wrapper.instance().handleFillOrder();
-				await expect(spy).toHaveBeenCalled();
-				await expect(ABIDecoder.decodeLogs).toHaveBeenCalled();
 			});
 
 			it('calls props handleFillDebtOrder', async () => {
@@ -400,92 +372,6 @@ describe('<FillLoanEntered />', () => {
 			const wrapper = shallow(<FillLoanEntered {... props} />);
 			wrapper.instance().handleRedirect();
 			expect(spy).toHaveBeenCalledWith('/dashboard');
-		});
-	});
-
-	describe('#validateFillOrder', () => {
-		it('should call clear error', () => {
-			const wrapper = shallow(<FillLoanEntered {... props} />);
-			wrapper.instance().validateFillOrder();
-			expect(props.handleSetError).toHaveBeenCalledWith('');
-		});
-
-		describe('no token', () => {
-			it('should set error', () => {
-				const wrapper = shallow(<FillLoanEntered {... props} />);
-				wrapper.instance().validateFillOrder();
-				const errorMessage = props.location.query.principalTokenSymbol + ' is currently disabled for trading';
-				expect(props.handleSetError).toHaveBeenCalledWith(errorMessage);
-			});
-		});
-
-		describe('token is not permitted for trading', () => {
-			it('should set error', () => {
-				props.tokens = [
-					{
-						address: '0x07e93e27ac8a1c114f1931f65e3c8b5186b9b77e',
-						tokenSymbol: 'MKR',
-						tradingPermitted: false,
-						balance: new BigNumber(0)
-					}
-				];
-				const wrapper = shallow(<FillLoanEntered {... props} />);
-				wrapper.instance().validateFillOrder();
-				const errorMessage = props.location.query.principalTokenSymbol + ' is currently disabled for trading';
-				expect(props.handleSetError).toHaveBeenCalledWith(errorMessage);
-			});
-		});
-
-		describe('token is permitted for trading', () => {
-			it('should call confirmationModalToggle', () => {
-				props.tokens = [
-					{
-						address: '0x07e93e27ac8a1c114f1931f65e3c8b5186b9b77e',
-						tokenSymbol: 'MKR',
-						tradingPermitted: true,
-						balance: new BigNumber(1000000)
-					}
-				];
-				const wrapper = shallow(<FillLoanEntered {... props} />);
-				const spy = jest.spyOn(wrapper.instance(), 'confirmationModalToggle');
-				wrapper.instance().validateFillOrder();
-				expect(spy).toHaveBeenCalled();
-			});
-		});
-
-		describe('no token match', () => {
-			it('should set error', () => {
-				props.tokens = [
-					{
-						address: '0x00000',
-						tokenSymbol: 'REP',
-						tradingPermitted: true,
-						balance: new BigNumber(1000000)
-					}
-				];
-				const wrapper = shallow(<FillLoanEntered {... props} />);
-				wrapper.instance().validateFillOrder();
-				const errorMessage = props.location.query.principalTokenSymbol + ' is currently disabled for trading';
-				expect(props.handleSetError).toHaveBeenCalledWith(errorMessage);
-			});
-		});
-
-		describe('no principalAmount', () => {
-			it('should set error', () => {
-				props.tokens = [
-					{
-						address: '0x07e93e27ac8a1c114f1931f65e3c8b5186b9b77e',
-						tokenSymbol: 'MKR',
-						tradingPermitted: true,
-						balance: new BigNumber(1000000)
-					}
-				];
-				props.location.query.principalAmount = null;
-				const wrapper = shallow(<FillLoanEntered {... props} />);
-				wrapper.instance().validateFillOrder();
-				const errorMessage = 'Invalid debt order';
-				expect(props.handleSetError).toHaveBeenCalledWith(errorMessage);
-			});
 		});
 	});
 });

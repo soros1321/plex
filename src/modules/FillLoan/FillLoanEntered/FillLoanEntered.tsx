@@ -98,13 +98,19 @@ class FillLoanEntered extends React.Component<Props, States> {
                 const fromDebtOrder = await dharma.adapters.simpleInterestLoan.fromDebtOrder(
                     debtOrder,
                 );
+				if (fromDebtOrder) {
+					this.setState({
+						interestRate: fromDebtOrder.interestRate,
+						termLength: fromDebtOrder.termLength,
+						amortizationUnit: fromDebtOrder.amortizationUnit
+					});
+				}
                 const issuanceHash = await dharma.order.getIssuanceHash(debtOrder);
-                this.setState({
-                    interestRate: fromDebtOrder.interestRate,
-                    termLength: fromDebtOrder.termLength,
-                    amortizationUnit: fromDebtOrder.amortizationUnit,
-                    issuanceHash: issuanceHash,
-                });
+				if (issuanceHash) {
+					this.setState({
+						issuanceHash: issuanceHash,
+					});
+				}
             }
         } catch (e) {
             console.log(e);

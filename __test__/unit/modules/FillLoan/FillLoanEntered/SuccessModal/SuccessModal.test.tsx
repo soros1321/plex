@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { shallow } from 'enzyme';
-import { SuccessModal } from '../../../../../../src/modules/FillLoan/FillLoanEntered/SuccessModal';
+import { SuccessModal } from 'src/modules/FillLoan/FillLoanEntered/SuccessModal';
 import {
-	Button,
 	Modal,
 	ModalHeader,
 	ModalBody,
 	ModalFooter
 } from 'reactstrap';
+import { DoneButton } from 'src/modules/FillLoan/FillLoanEntered/SuccessModal/styledComponents';
 
 describe('<SuccessModal />', () => {
 	let wrapper;
@@ -43,8 +43,8 @@ describe('<SuccessModal />', () => {
 			expect(wrapper.find(Modal).find(ModalFooter).length).toEqual(1);
 		});
 
-		it('should render a <Button />', () => {
-			expect(wrapper.find(Modal).find(ModalFooter).find(Button).length).toEqual(1);
+		it('should render a <DoneButton />', () => {
+			expect(wrapper.find(Modal).find(ModalFooter).find(DoneButton).length).toEqual(1);
 		});
 	});
 
@@ -59,7 +59,7 @@ describe('<SuccessModal />', () => {
 		it('should call handleRedirect when the button is clicked', () => {
 			const spy = jest.spyOn(SuccessModal.prototype, 'handleRedirect');
 			const _wrapper = shallow(<SuccessModal {... props} />);
-			_wrapper.find(Modal).find(ModalFooter).find(Button).simulate('click');
+			_wrapper.find(Modal).find(ModalFooter).find(DoneButton).simulate('click');
 			expect(spy).toHaveBeenCalled();
 		});
 

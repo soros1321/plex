@@ -10,7 +10,11 @@ import {
 	mockGetRepaymentSchedule,
 	mockToDebtOrder
 } from './adapters/simpleInterestLoan';
-import { mockGetValueRepaid, mockGetDebtRegistryEntry } from './servicing';
+import {
+	mockGetValueRepaid,
+	mockGetDebtRegistryEntry,
+	mockGetExpectedValueRepaid
+} from './servicing';
 import {
 	mockAwaitTransactionMinedAsync,
 	mockGetErrorLogs
@@ -44,7 +48,8 @@ const adapters = {
 
 const servicing = {
 	getValueRepaid: mockGetValueRepaid,
-	getDebtRegistryEntry: mockGetDebtRegistryEntry
+	getDebtRegistryEntry: mockGetDebtRegistryEntry,
+	getExpectedValueRepaid: mockGetExpectedValueRepaid
 };
 
 const blockchain = {

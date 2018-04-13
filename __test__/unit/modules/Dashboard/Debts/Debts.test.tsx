@@ -1,12 +1,13 @@
 import * as React from 'react';
 import { shallow, mount } from 'enzyme';
-import { Debts } from '../../../../../src/modules/Dashboard/Debts/Debts';
-import { Header, MainWrapper } from '../../../../../src/components';
-import { DebtsMetricsContainer } from '../../../../../src/modules/Dashboard/Debts/DebtsMetrics/DebtsMetricsContainer';
-import { ActiveDebtOrderContainer } from '../../../../../src/modules/Dashboard/Debts/ActiveDebtOrder/ActiveDebtOrderContainer';
-import { DebtOrderHistory } from '../../../../../src/modules/Dashboard/Debts/DebtOrderHistory';
+import { Debts } from 'src/modules/Dashboard/Debts/Debts';
+import { Header, MainWrapper } from 'src/components';
+import { DebtsMetricsContainer } from 'src/modules/Dashboard/Debts/DebtsMetrics/DebtsMetricsContainer';
+import { ActiveDebtOrderContainer } from 'src/modules/Dashboard/Debts/ActiveDebtOrder/ActiveDebtOrderContainer';
+import { DebtOrderHistory } from 'src/modules/Dashboard/Debts/DebtOrderHistory';
 import { BigNumber } from 'bignumber.js';
-import { debtOrderFromJSON } from '../../../../../src/utils';
+import { debtOrderFromJSON } from 'src/utils';
+import { BarLoader } from 'react-spinners';
 
 describe('<Debts />', () => {
 	describe('#render', () => {
@@ -15,7 +16,8 @@ describe('<Debts />', () => {
 
 		beforeEach(() => {
 			props = {
-				debtOrders: []
+				debtOrders: [],
+				initializing: false
 			};
 			wrapper = shallow(<Debts {... props} />);
 		});
@@ -26,6 +28,12 @@ describe('<Debts />', () => {
 
 		it('should render a <Header />', () => {
 			expect(wrapper.find(MainWrapper).find(Header).length).toEqual(1);
+		});
+
+		it('should render a <BarLoader />', () => {
+			props.initializing = true;
+			wrapper = shallow(<Debts {... props} />);
+			expect(wrapper.find(MainWrapper).find(BarLoader).length).toEqual(1);
 		});
 
 		it('should render a <DebtsMetricsContainer />', () => {
@@ -52,7 +60,7 @@ describe('<Debts />', () => {
 		});
 	});
 
-	describe('#componentWillReceiveProps', () => {
+	describe('#componentDidUpdate', () => {
 		it('should not call getDebtOrderDetails when debtOrders is null', () => {
 			const props = {
 				debtOrders: []
@@ -116,14 +124,14 @@ describe('<Debts />', () => {
 			};
 			return expectedState;
 		};
-		it('returns without setting state if debtOrders is empty', () => {
+		it('returns without setting state if debtOrders is null', () => {
 			const props = {
 				debtOrders: []
 			};
 			const wrapper = shallow(<Debts {... props} />);
 			const spy = jest.spyOn(wrapper.instance(), 'setState');
 
-			wrapper.instance().getDebtOrdersDetails([]);
+			wrapper.instance().getDebtOrdersDetails(null);
 			expect(spy).not.toHaveBeenCalled();
 			spy.mockRestore();
 		});

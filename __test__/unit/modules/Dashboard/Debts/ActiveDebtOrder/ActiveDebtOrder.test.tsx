@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { shallow } from 'enzyme';
-import { ActiveDebtOrder } from '../../../../../../src/modules/Dashboard/Debts/ActiveDebtOrder/ActiveDebtOrder';
+import { ActiveDebtOrder } from 'src/modules/Dashboard/Debts/ActiveDebtOrder/ActiveDebtOrder';
 import {
 	Wrapper,
 	ImageContainer,
@@ -15,7 +15,6 @@ import {
 	Title,
 	Schedule,
 	ScheduleIconContainer,
-	ScheduleIcon,
 	Strikethrough,
 	PaymentDate,
 	ShowMore,
@@ -24,8 +23,10 @@ import {
 	InfoItem,
 	InfoItemTitle,
 	InfoItemContent,
-	MakeRepaymentButton
-} from '../../../../../../src/modules/Dashboard/Debts/ActiveDebtOrder/styledComponents';
+	MakeRepaymentButton,
+	CancelButtonContainer,
+	CancelButton
+} from 'src/modules/Dashboard/Debts/ActiveDebtOrder/styledComponents';
 import { Collapse } from 'reactstrap';
 import {
 	formatDate,
@@ -33,10 +34,11 @@ import {
 	getIdenticonImgSrc,
 	shortenString,
 	amortizationUnitToFrequency
-} from '../../../../../../src/utils';
+} from 'src/utils';
 import { BigNumber } from 'bignumber.js';
-const pastIcon = require('../../../../../../src/assets/img/ok_circle.png');
-const futureIcon = require('../../../../../../src/assets/img/circle_outline.png');
+import MockDharma from '__mocks__/dharma.js';
+import { TokenAmount } from 'src/components';
+import { ScheduleIcon } from 'src/components/scheduleIcon/scheduleIcon';
 
 describe('<ActiveDebtOrder />', () => {
 	const debtOrder = {
@@ -64,7 +66,15 @@ describe('<ActiveDebtOrder />', () => {
 		let wrapper;
 		let props;
 		beforeEach(() => {
-			props = { debtOrder };
+			props = {
+				debtOrder,
+				dharma: new MockDharma(),
+				accounts: [],
+				handleSuccessfulRepayment: jest.fn(),
+				handleSetErrorToast: jest.fn(),
+				handleSetSuccessToast: jest.fn(),
+				handleCancelDebtOrder: jest.fn()
+			};
 			wrapper = shallow(<ActiveDebtOrder {... props} />);
 		});
 
@@ -100,9 +110,9 @@ describe('<ActiveDebtOrder />', () => {
 			});
 
 			it('should render correct <Amount />', () => {
-				const amount = [debtOrder.principalAmount.toNumber(), ' ', props.debtOrder.principalTokenSymbol];
 				expect(detailContainer.find(Amount).length).toEqual(1);
-				expect(detailContainer.find(Amount).get(0).props.children).toEqual(amount);
+				expect(detailContainer.find(Amount).find(TokenAmount).prop('tokenAmount')).toEqual(props.debtOrder.principalAmount);
+				expect(detailContainer.find(Amount).find(TokenAmount).prop('tokenSymbol')).toEqual(props.debtOrder.principalTokenSymbol);
 			});
 
 			describe('<Url />', () => {
@@ -153,27 +163,31 @@ describe('<ActiveDebtOrder />', () => {
 			});
 		});
 
-		describe('<RepaymentScheduleContainer />', () => {
-			it('should render', () => {
-				expect(wrapper.find(RepaymentScheduleContainer).length).toEqual(1);
-			});
-
-			it('should have class .active when status is active', () => {
-				props.debtOrder.status = 'active';
-				wrapper.setProps({ props });
-				expect(wrapper.find(RepaymentScheduleContainer).hasClass('active')).toEqual(true);
-			});
-
-			it('should not have class .active when status is pending', () => {
+		describe('<CancelButton />', () => {
+			it('should render CancelButton when status is pending', () => {
 				props.debtOrder.status = 'pending';
 				wrapper.setProps({ props });
-				expect(wrapper.find(RepaymentScheduleContainer).hasClass('active')).toEqual(false);
+				expect(wrapper.find(CancelButtonContainer).find(CancelButton).length).toEqual(1);
+			});
+		});
+
+		describe('<RepaymentScheduleContainer />', () => {
+			it('should render', () => {
 				props.debtOrder.status = 'active';
 				wrapper.setProps({ props });
+				expect(wrapper.find(RepaymentScheduleContainer).length).toEqual(1);
 			});
 
 			it('should render a <Title />', () => {
 				expect(wrapper.find(RepaymentScheduleContainer).find(Title).length).toEqual(1);
+			});
+
+			it('should not render when status is pending', () => {
+				props.debtOrder.status = 'pending';
+				wrapper.setProps({ props });
+				expect(wrapper.find(RepaymentScheduleContainer).length).toEqual(0);
+				props.debtOrder.status = 'active';
+				wrapper.setProps({ props });
 			});
 
 			describe('<Schedule />', () => {
@@ -185,22 +199,15 @@ describe('<ActiveDebtOrder />', () => {
 					expect(wrapper.find(Schedule).first().find(ScheduleIconContainer).length).toEqual(1);
 				});
 
-				it('should render pastIcon <ScheduleIcon />', () => {
+				it('should render <ScheduleIcon />', () => {
 					props.debtOrder.repaymentSchedule = [0];
 					wrapper.setProps({ debtOrder: props.debtOrder });
 					expect(wrapper.find(Schedule).first().find(ScheduleIconContainer).find(ScheduleIcon).length).toEqual(1);
-					expect(wrapper.find(Schedule).first().find(ScheduleIconContainer).find(ScheduleIcon).prop('src')).toEqual(pastIcon);
-				});
-
-				it('should render futureIcon <ScheduleIcon />', () => {
-					props.debtOrder.repaymentSchedule = [2553557371];
-					wrapper.setProps({ debtOrder: props.debtOrder });
-					expect(wrapper.find(Schedule).first().find(ScheduleIconContainer).find(ScheduleIcon).length).toEqual(1);
-					expect(wrapper.find(Schedule).first().find(ScheduleIconContainer).find(ScheduleIcon).prop('src')).toEqual(futureIcon);
 				});
 
 				it('should render time in <PaymentDate />', () => {
 					props.debtOrder.amortizationUnit = 'hours';
+					props.debtOrder.repaymentSchedule = [2553557371];
 					wrapper.setProps({ debtOrder: props.debtOrder });
 					const expectedValue = formatTime(2553557371);
 					expect(wrapper.find(Schedule).first().find(PaymentDate).length).toEqual(1);
@@ -240,15 +247,15 @@ describe('<ActiveDebtOrder />', () => {
 			it('1st <InfoItem /> should render Requested info', () => {
 				const elm = collapse.find(InfoItem).at(0);
 				expect(elm.find(InfoItemTitle).get(0).props.children).toEqual('Requested');
-				const content = debtOrder.principalAmount.toNumber() + ' ' + props.debtOrder.principalTokenSymbol;
-				expect(elm.find(InfoItemContent).get(0).props.children).toEqual(content);
+				expect(elm.find(InfoItemContent).find(TokenAmount).prop('tokenAmount')).toEqual(props.debtOrder.principalAmount);
+				expect(elm.find(InfoItemContent).find(TokenAmount).prop('tokenSymbol')).toEqual(props.debtOrder.principalTokenSymbol);
 			});
 
 			it('2nd <InfoItem /> should render Repaid info', () => {
 				const elm = collapse.find(InfoItem).at(1);
 				expect(elm.find(InfoItemTitle).get(0).props.children).toEqual('Repaid');
-				const content = props.debtOrder.repaidAmount.toNumber() + ' ' + props.debtOrder.principalTokenSymbol;
-				expect(elm.find(InfoItemContent).get(0).props.children).toEqual(content);
+				expect(elm.find(InfoItemContent).find(TokenAmount).prop('tokenAmount')).toEqual(props.debtOrder.repaidAmount);
+				expect(elm.find(InfoItemContent).find(TokenAmount).prop('tokenSymbol')).toEqual(props.debtOrder.principalTokenSymbol);
 			});
 
 			it('3rd <InfoItem /> should render Term Length info', () => {
@@ -305,7 +312,7 @@ describe('<ActiveDebtOrder />', () => {
 	describe('#onClick <MakeRepaymentButton />', () => {
 		it('should call makeRepayment', () => {
 			const props = { debtOrder };
-			const spy = jest.spyOn(ActiveDebtOrder.prototype, 'makeRepayment');
+			const spy = jest.spyOn(ActiveDebtOrder.prototype, 'handleMakeRepaymentClick');
 			const wrapper = shallow(<ActiveDebtOrder {... props} />);
 			const event = {
 				stopPropagation: jest.fn()
