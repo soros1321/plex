@@ -1,7 +1,8 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { Col } from 'reactstrap';
-import { StyledLink, StyledButton } from '../../../../components';
+import { StyledLink, StyledButton, A } from '../../../../components';
+import { Link } from 'react-router';
 
 interface Props {
 	className?: string;
@@ -177,11 +178,11 @@ export const RepaymentScheduleContainer = styled(HalfCol)`
 	}
 `;
 
-export const CancelButtonContainer = RepaymentScheduleContainer.extend`
+export const PendingActionContainer = RepaymentScheduleContainer.extend`
 	background-color: #FFFFFF;
 	display: block;
 
-	@media only screen and (max-width: 480px) {
+	@media only screen and (max-width: 568px) {
 		float: none;
 		padding-top: 0px !important;
 		text-align: center;
@@ -445,9 +446,54 @@ export const CancelButton = MakeRepaymentButton.extend`
 	background-color: #1CC1CC !important;
 	border-color: #1CC1CC !important;
 
-	@media only screen and (max-width: 480px) {
+	@media only screen and (max-width: 568px) {
 		font-size: 10px !important;
 		width: 100%;
 	}
+`;
 
+export const ShareButton = styled(Link)`
+	background-color: #E93D59 !important;
+	font-size: 13px !important;
+	border-color: #E93D59 !important;
+	min-width: auto !important;
+	padding: 0px 15px !important;
+	float: right;
+	line-height: 38px !important;
+	margin-right: 10px;
+    color: #ffffff !important;
+    font-family: DIN;
+    border-radius: 0 !important;
+    text-transform: uppercase;
+	text-align: center;
+
+	&:hover {
+		text-decoration: none;
+	}
+
+	@media only screen and (max-width: 823px) {
+		margin-top: 5px;
+		padding: 5px 14px !important;
+		font-size: 10px !important;
+		line-height: 14px !important;
+		min-width: auto !important;
+	}
+	@media only screen and (max-width: 736px) {
+		margin-top: 5px;
+		padding: 3px 12px !important;
+		font-size: 8px !important;
+		line-height: 12px !important;
+		min-width: auto !important;
+	}
+	@media only screen and (max-width: 568px) {
+		padding: 3px 12px !important;
+		font-size: 10px !important;
+		line-height: 12px !important;
+		margin-right: 0px;
+		margin-bottom: 5px;
+		width: 100%;
+	}
+`;
+
+export const BitlyLink = A.extend`
 `;

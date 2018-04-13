@@ -31,8 +31,10 @@ import {
     Strikethrough,
     ShowMore,
     PaymentDate,
-	CancelButtonContainer,
-	CancelButton
+	PendingActionContainer,
+	CancelButton,
+	ShareButton,
+	BitlyLink
 } from './styledComponents';
 import { MakeRepaymentModal, ConfirmationModal, Bold } from '../../../../components';
 import { ScheduleIcon } from '../../../../components/scheduleIcon/scheduleIcon';
@@ -350,6 +352,11 @@ class ActiveDebtOrder extends React.Component<Props, State> {
                                         Make Repayment
                                     </MakeRepaymentButton>
                                 )}
+                                {debtOrder.status === "pending" && (
+                                    <BitlyLink href={debtOrder.fillLoanShortUrl}>
+										{debtOrder.fillLoanShortUrl}
+                                    </BitlyLink>
+                                )}
                             </Col>
                         </Row>
                         {debtOrder.status === "active" ? (
@@ -361,11 +368,14 @@ class ActiveDebtOrder extends React.Component<Props, State> {
                     </DetailContainer>
 					{debtOrder.status === "pending" ?
 						(
-							<CancelButtonContainer>
+							<PendingActionContainer>
 								<CancelButton onClick={this.handleCancelDebtOrderClick}>
-								Cancel
+									Cancel
 								</CancelButton>
-							</CancelButtonContainer>
+								<ShareButton to={`/request/success/${debtOrder.issuanceHash}`}>
+									Share
+								</ShareButton>
+							</PendingActionContainer>
 						) : (
 							<RepaymentScheduleContainer
 								className={debtOrder.status === "active" ? "active" : ""}
