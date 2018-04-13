@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { PressEnter } from './styledComponents';
+import { PressEnter } from './PressEnter';
 
 export const CustomBaseInput = (props: any) => {
 	return (
@@ -8,6 +8,7 @@ export const CustomBaseInput = (props: any) => {
 				type="text"
 				className="form-control"
 				id={props.id}
+				name={props.id}
 				placeholder={props.placeholder}
 				required={props.required}
 				disabled={props.disabled}
@@ -15,7 +16,7 @@ export const CustomBaseInput = (props: any) => {
 				onChange={(event) => props.onChange(event.target.value)}
 			/>
 			{ (props.options.pressEnter || typeof props.options.pressEnter === 'undefined') && (
-					<PressEnter className={'press-enter ' + (props.value ? 'active' : '')}>OK, Press ENTER</PressEnter>
+					<PressEnter detailId={props.id} />
 				)
 			}
 		</div>

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { PressEnter } from './styledComponents';
+import { PressEnter } from './PressEnter';
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
 import './select.css';
@@ -10,8 +10,8 @@ export const CustomSelectDropdown = (props: any) => {
 		switch (event.keyCode) {
 			case 13:
 				event.preventDefault();
-				const selectGoToNext = new CustomEvent('selectGoToNext', {detail: {name: props.id}});
-				window.dispatchEvent(selectGoToNext);
+				const highlightNextFieldEvent = new CustomEvent('highlightNextField', {detail: {name: props.id}});
+				window.dispatchEvent(highlightNextFieldEvent);
 				break;
 			default:
 				break;
@@ -45,7 +45,7 @@ export const CustomSelectDropdown = (props: any) => {
 				placeholder={props.placeholder}
 			/>
 			{ (props.options.pressEnter || typeof props.options.pressEnter === 'undefined') && (
-					<PressEnter className={'press-enter ' + (props.value ? 'active' : '')}>OK, Press ENTER</PressEnter>
+					<PressEnter detailId={props.id} />
 				)
 			}
 		</div>
