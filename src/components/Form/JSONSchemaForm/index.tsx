@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { StyledButton } from '../../StyledComponents';
 import { JSONSchema4 } from 'json-schema';
-import { StyledForm, FieldWrapper, PressEnter } from './styledComponents';
+import { StyledForm, FieldWrapper } from './styledComponents';
 import { ObjectFieldTemplate } from './ObjectFieldTemplate';
 import { FieldTemplate } from './FieldTemplate';
 import { CustomCheckbox } from './CustomCheckbox';
@@ -9,6 +9,7 @@ import { CustomBaseInput } from './CustomBaseInput';
 import { CustomSelectDropdown } from './CustomSelectDropdown';
 import { CustomTextarea } from './CustomTextarea';
 import { animateScroll as scroll } from 'react-scroll';
+import { PressEnter } from './PressEnter';
 
 interface FormResponse {
 	formData: any;
@@ -269,7 +270,7 @@ class JSONSchemaForm extends React.Component<Props, {}> {
 		this.handleKeyPress = this.handleKeyPress.bind(this);
 		this.handleKeyUp = this.handleKeyUp.bind(this);
 		this.handleClick = this.handleClick.bind(this);
-		this.handleSelectGoToNext = this.handleSelectGoToNext.bind(this);
+		this.handleHighlightNextField = this.handleHighlightNextField.bind(this);
 	}
 
 	componentDidMount() {
@@ -277,7 +278,7 @@ class JSONSchemaForm extends React.Component<Props, {}> {
 		window.addEventListener('keypress', this.handleKeyPress);
 		window.addEventListener('keyup', this.handleKeyUp);
 		window.addEventListener('click', this.handleClick);
-		window.addEventListener('selectGoToNext', this.handleSelectGoToNext);
+		window.addEventListener('highlightNextField', this.handleHighlightNextField);
 
 		// Always set the root element as active
 		const rootElm = document.querySelector('.' + fieldClassName);
@@ -302,7 +303,7 @@ class JSONSchemaForm extends React.Component<Props, {}> {
 		window.removeEventListener('keypress', this.handleKeyPress);
 		window.removeEventListener('keyup', this.handleKeyUp);
 		window.removeEventListener('click', this.handleClick);
-		window.removeEventListener('selectGoToNext', this.handleSelectGoToNext);
+		window.removeEventListener('highlightNextField', this.handleHighlightNextField);
 	}
 
 	handleChange(response: FormResponse) {
@@ -417,11 +418,20 @@ class JSONSchemaForm extends React.Component<Props, {}> {
 		}
 	}
 
-	handleSelectGoToNext(event: any) {
-		const elm = document.querySelector('input[name="' + event.detail.name + '"]');
-		const parentElm = findAncestor(elm, fieldClassName);
-		if (parentElm) {
-			highlightNextSibling(parentElm);
+	handleHighlightNextField(event: any) {
+		if (event.detail.name === 'form_submit_button') {
+			this.handleSubmit();
+		} else {
+			let elm = document.querySelector('input[name="' + event.detail.name + '"]');
+			if (!elm) {
+				elm = document.querySelector('div#' + event.detail.name);
+			}
+			if (elm) {
+				const parentElm = findAncestor(elm, fieldClassName);
+				if (parentElm) {
+					highlightNextSibling(parentElm);
+				}
+			}
 		}
 	}
 
@@ -445,7 +455,7 @@ class JSONSchemaForm extends React.Component<Props, {}> {
 			>
 				<FieldWrapper className="field-wrapper button-container">
 					<StyledButton type="submit" className="button">{this.props.buttonText || 'Submit'}</StyledButton>
-					<PressEnter className="press-enter">OK, Press ENTER</PressEnter>
+					<PressEnter detailId="form_submit_button" />
 				</FieldWrapper>
 			</StyledForm>
 		);

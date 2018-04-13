@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { PressEnter } from './styledComponents';
+import { PressEnter } from './PressEnter';
 
 export const CustomTextarea = (props: any) => {
 	return (
@@ -7,6 +7,7 @@ export const CustomTextarea = (props: any) => {
 			<textarea
 				className="form-control"
 				id={props.id}
+				name={props.id}
 				placeholder={props.placeholder}
 				required={props.required}
 				disabled={props.disabled}
@@ -15,7 +16,7 @@ export const CustomTextarea = (props: any) => {
 				rows={props.options.rows ? props.options.rows : 3}
 			/>
 			{ (props.options.pressEnter || typeof props.options.pressEnter === 'undefined') && (
-					<PressEnter className={'press-enter ' + (props.value ? 'active' : '')}>OK, Press ENTER</PressEnter>
+					<PressEnter detailId={props.id} />
 				)
 			}
 		</div>
