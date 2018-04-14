@@ -37,17 +37,21 @@ interface Props {
 }
 
 interface States {
-    confirmationModal: boolean;
-    successModal: boolean;
+    amortizationUnit: string;
     // True if the user has confirmed the order, but the block has not been mined.
     awaitingTransaction: boolean;
+    collateralAmount?: BigNumber;
+    collateralized?: boolean;
+    collateralTokenSymbol?: string;
+    confirmationModal: boolean;
     debtOrder: DebtOrder.Instance;
     description: string;
-    principalTokenSymbol: string;
+    gracePeriodInDays?: BigNumber;
     interestRate: BigNumber;
-    termLength: BigNumber;
-    amortizationUnit: string;
     issuanceHash: string;
+    principalTokenSymbol: string;
+    successModal: boolean;
+    termLength: BigNumber;
 }
 
 class FillLoanEntered extends React.Component<Props, States> {
@@ -95,9 +99,11 @@ class FillLoanEntered extends React.Component<Props, States> {
             delete debtOrder.principalTokenSymbol;
             this.setState({ debtOrder, description, principalTokenSymbol });
             if (debtOrder.termsContract && debtOrder.termsContractParameters) {
-                const fromDebtOrder = await dharma.adapters.simpleInterestLoan.fromDebtOrder(
-                    debtOrder,
-                );
+                const termsContractType = await dharma.contracts.getTermsContractType(debtOrder.termsContract);
+                const adapter = await dharma.adapters.getAdapterByTermsContractAddress(debtOrder.termsContract);
+
+                // TODO: cast fromDebtOrder to appropriate type
+                const fromDebtOrder = await adapter.fromDebtOrder(debtOrder) as any;
                 const issuanceHash = await dharma.order.getIssuanceHash(debtOrder);
                 this.setState({
                     interestRate: fromDebtOrder.interestRate,
@@ -105,6 +111,15 @@ class FillLoanEntered extends React.Component<Props, States> {
                     amortizationUnit: fromDebtOrder.amortizationUnit,
                     issuanceHash: issuanceHash,
                 });
+
+                if (termsContractType === 'CollateralizedSimpleInterestTermsContractContract') {
+                    this.setState({
+                        collateralAmount: fromDebtOrder.collateralAmount,
+                        collateralized: true,
+                        collateralTokenSymbol: fromDebtOrder.collateralTokenSymbol,
+                        gracePeriodInDays: fromDebtOrder.gracePeriodInDays,
+                    });
+                }
             }
         } catch (e) {
             console.log(e);
@@ -190,8 +205,12 @@ class FillLoanEntered extends React.Component<Props, States> {
 
     render() {
         const {
+            collateralAmount,
+            collateralized,
+            collateralTokenSymbol,
             debtOrder,
             description,
+            gracePeriodInDays,
             interestRate,
             termLength,
             amortizationUnit,
@@ -226,6 +245,18 @@ class FillLoanEntered extends React.Component<Props, States> {
                 content: amortizationUnit ? amortizationUnitToFrequency(amortizationUnit) : "-",
             },
         ];
+
+        if (collateralized && collateralAmount != null && collateralTokenSymbol != null && gracePeriodInDays != null) {
+            leftInfoItems.push({
+                title: "Collateral",
+                content: `${collateralAmount} ${collateralTokenSymbol}`,
+            });
+            rightInfoItems.push({
+                title: "Grace period",
+                content: `${gracePeriodInDays.toNumber()} days`
+            });
+        }
+
         const leftInfoItemRows = leftInfoItems.map((item) => (
             <InfoItem key={item.title}>
                 <Title>{item.title}</Title>

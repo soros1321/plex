@@ -65,17 +65,21 @@ class Dashboard extends React.Component<Props, States> {
 			const issuanceHashes = await dharma.servicing.getDebtsAsync(accounts[0]);
 			let filledDebtOrders: DebtOrderEntity[] = [];
 			for (let issuanceHash of issuanceHashes) {
-				const debtRegistry = await dharma.servicing.getDebtRegistryEntry(issuanceHash);
-				const dharmaDebtOrder = await dharma.adapters.simpleInterestLoan.fromDebtRegistryEntry(debtRegistry);
+				const debtRegistryEntry = await dharma.servicing.getDebtRegistryEntry(issuanceHash);
+
+				const termsContractType = await dharma.contracts.getTermsContractType(debtRegistryEntry.termsContract);
+				const adapter = await dharma.adapters.getAdapterByTermsContractAddress(debtRegistryEntry.termsContract);
+				// TODO: cast dharmaDebtOrder to termsContractType, set above
+				const dharmaDebtOrder = await adapter.fromDebtRegistryEntry(debtRegistryEntry) as any;
+				const repaymentSchedule = await adapter.getRepaymentSchedule(debtRegistryEntry);
 				const repaidAmount = await dharma.servicing.getValueRepaid(issuanceHash);
-				const repaymentSchedule = await dharma.adapters.simpleInterestLoan.getRepaymentSchedule(debtRegistry);
 				const status = repaidAmount.lt(dharmaDebtOrder.principalAmount) ? 'active' : 'inactive';
-				const debtOrder = {
+				const debtOrder: DebtOrderEntity = {
 					debtor: accounts[0],
-					termsContract: debtRegistry.termsContract,
-					termsContractParameters: debtRegistry.termsContractParameters,
-					underwriter: debtRegistry.underwriter,
-					underwriterRiskRating: debtRegistry.underwriterRiskRating,
+					termsContract: debtRegistryEntry.termsContract,
+					termsContractParameters: debtRegistryEntry.termsContractParameters,
+					underwriter: debtRegistryEntry.underwriter,
+					underwriterRiskRating: debtRegistryEntry.underwriterRiskRating,
 					amortizationUnit: dharmaDebtOrder.amortizationUnit,
 					interestRate: dharmaDebtOrder.interestRate,
 					principalAmount: dharmaDebtOrder.principalAmount,
@@ -85,8 +89,15 @@ class Dashboard extends React.Component<Props, States> {
 					repaidAmount,
 					repaymentSchedule,
 					status,
-					creditor: debtRegistry.beneficiary
+					creditor: debtRegistryEntry.beneficiary
 				};
+				if (termsContractType === 'CollateralizedSimpleInterestTermsContractContract') {
+					debtOrder.collateralAmount = dharmaDebtOrder.collateralAmount;
+					debtOrder.collateralized = true;
+					debtOrder.collateralTokenSymbol = dharmaDebtOrder.collateralTokenSymbol;
+					debtOrder.gracePeriodInDays = dharmaDebtOrder.gracePeriodInDays;
+				}
+
 				filledDebtOrders.push(debtOrder);
 			}
 
@@ -116,17 +127,21 @@ class Dashboard extends React.Component<Props, States> {
 			const issuanceHashes = await dharma.servicing.getInvestmentsAsync(accounts[0]);
 			let investments: InvestmentEntity[] = [];
 			for (let issuanceHash of issuanceHashes) {
-				const debtRegistry = await dharma.servicing.getDebtRegistryEntry(issuanceHash);
-				const dharmaDebtOrder = await dharma.adapters.simpleInterestLoan.fromDebtRegistryEntry(debtRegistry);
+				const debtRegistryEntry = await dharma.servicing.getDebtRegistryEntry(issuanceHash);
+
+				const termsContractType = await dharma.contracts.getTermsContractType(debtRegistryEntry.termsContract);
+				const adapter = await dharma.adapters.getAdapterByTermsContractAddress(debtRegistryEntry.termsContract);
+				// TODO: cast dharmaDebtOrder to termsContractType, set above
+				const dharmaDebtOrder = await adapter.fromDebtRegistryEntry(debtRegistryEntry) as any;
 				const earnedAmount = await dharma.servicing.getValueRepaid(issuanceHash);
-				const repaymentSchedule = await dharma.adapters.simpleInterestLoan.getRepaymentSchedule(debtRegistry);
+				const repaymentSchedule = await dharma.adapters.simpleInterestLoan.getRepaymentSchedule(debtRegistryEntry);
 				const status = earnedAmount.lt(dharmaDebtOrder.principalAmount) ? 'active' : 'inactive';
-				const investment = {
-					creditor: debtRegistry.beneficiary,
-					termsContract: debtRegistry.termsContract,
-					termsContractParameters: debtRegistry.termsContractParameters,
-					underwriter: debtRegistry.underwriter,
-					underwriterRiskRating: debtRegistry.underwriterRiskRating,
+				const investment: InvestmentEntity = {
+					creditor: debtRegistryEntry.beneficiary,
+					termsContract: debtRegistryEntry.termsContract,
+					termsContractParameters: debtRegistryEntry.termsContractParameters,
+					underwriter: debtRegistryEntry.underwriter,
+					underwriterRiskRating: debtRegistryEntry.underwriterRiskRating,
 					amortizationUnit: dharmaDebtOrder.amortizationUnit,
 					interestRate: dharmaDebtOrder.interestRate,
 					principalAmount: dharmaDebtOrder.principalAmount,
@@ -137,6 +152,13 @@ class Dashboard extends React.Component<Props, States> {
 					repaymentSchedule,
 					status
 				};
+				if (termsContractType === 'CollateralizedSimpleInterestTermsContractContract') {
+					investment.collateralAmount = dharmaDebtOrder.collateralAmount;
+					investment.collateralized = true;
+					investment.collateralTokenSymbol = dharmaDebtOrder.collateralTokenSymbol;
+					investment.gracePeriodInDays = dharmaDebtOrder.gracePeriodInDays;
+				}
+
 				investments.push(investment);
 			}
 			this.setState({ investments });
@@ -156,13 +178,11 @@ class Dashboard extends React.Component<Props, States> {
 
 	render() {
 		const { pendingDebtOrders } = this.props;
-		if (pendingDebtOrders) {
-			for (const index of Object.keys(pendingDebtOrders)) {
-				pendingDebtOrders[index] = debtOrderFromJSON(JSON.stringify(pendingDebtOrders[index]));
-			}
-		}
 
 		const debtOrders = pendingDebtOrders.concat(this.props.filledDebtOrders);
+		for (const index of Object.keys(debtOrders)) {
+			debtOrders[index] = debtOrderFromJSON(JSON.stringify(debtOrders[index]));
+		}
 
 		const { investments, activeTab, initiallyLoading } = this.state;
 		const tabs = [

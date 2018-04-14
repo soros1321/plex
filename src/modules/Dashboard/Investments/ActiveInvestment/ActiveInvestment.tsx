@@ -115,6 +115,31 @@ class ActiveInvestment extends React.Component<Props, State> {
             }
             maxDisplay++;
         });
+        let terms = 'Simple Interest (Non-Collateralized)';
+        let collateral = null;
+        let gracePeriod = null;
+
+        if (investment.collateralized) {
+            terms = 'Simple Interest (Collateralized)';
+            collateral = (
+                <Col xs="4" md="2">
+                    <InfoItem>
+                        <InfoItemTitle>Collateral</InfoItemTitle>
+                        <InfoItemContent>
+                            {investment.collateralAmount + ' ' + investment.collateralTokenSymbol}
+                        </InfoItemContent>
+                    </InfoItem>
+                </Col>);
+            gracePeriod = (
+                <Col xs="8" md="4">
+                    <InfoItem>
+                        <InfoItemTitle>Grace period</InfoItemTitle>
+                        <InfoItemContent>
+                            {investment.gracePeriodInDays + ' days'}
+                        </InfoItemContent>
+                    </InfoItem>
+                </Col>);
+        }
 
         const identiconImgSrc = getIdenticonImgSrc(investment.issuanceHash, 60, 0.1);
         return (
@@ -149,7 +174,7 @@ class ActiveInvestment extends React.Component<Props, State> {
                         ) : (
                             <StatusDefaulted>Defaulted</StatusDefaulted>
                         )}
-                        <Terms>Simple Interest (Non-Collateralized)</Terms>
+                        <Terms>{terms}</Terms>
                     </DetailContainer>
                     <RepaymentScheduleContainer>
                         <Title>Repayment Schedule</Title>
@@ -207,6 +232,8 @@ class ActiveInvestment extends React.Component<Props, State> {
                                     </InfoItemContent>
                                 </InfoItem>
                             </Col>
+                            {collateral}
+                            {gracePeriod}
                         </Row>
                     </Drawer>
                 </Collapse>
