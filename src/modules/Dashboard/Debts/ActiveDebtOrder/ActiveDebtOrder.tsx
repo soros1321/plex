@@ -31,8 +31,9 @@ import {
     Strikethrough,
     ShowMore,
     PaymentDate,
-    CancelButtonContainer,
+    PendingActionContainer,
     CancelButton,
+    ShareButton,
 } from "./styledComponents";
 import { MakeRepaymentModal, ConfirmationModal, Bold } from "../../../../components";
 import { ScheduleIcon } from "../../../../components/scheduleIcon/scheduleIcon";
@@ -403,11 +404,14 @@ class ActiveDebtOrder extends React.Component<Props, State> {
                         <Terms>{terms}</Terms>
                     </DetailContainer>
                     {debtOrder.status === "pending" ? (
-                        <CancelButtonContainer>
+                        <PendingActionContainer>
                             <CancelButton onClick={this.handleCancelDebtOrderClick}>
                                 Cancel
                             </CancelButton>
-                        </CancelButtonContainer>
+                            <ShareButton to={`/request/success/${debtOrder.issuanceHash}`}>
+                                Share
+                            </ShareButton>
+                        </PendingActionContainer>
                     ) : (
                         <RepaymentScheduleContainer
                             className={debtOrder.status === "active" ? "active" : ""}
