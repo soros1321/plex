@@ -1,17 +1,14 @@
-import { connect } from 'react-redux';
-import { ActiveInvestment } from './ActiveInvestment';
+import { connect } from "react-redux";
+import { ActiveInvestment } from "./ActiveInvestment";
 
 const mapStateToProps = (state: any) => {
-	return {
-	};
+    return {};
 };
 
 const mapDispatchToProps = (dispatch: any) => {
-	return {
-	};
+    return {};
 };
 
-export const ActiveInvestmentContainer = connect(
-	mapStateToProps,
-	mapDispatchToProps
-)(ActiveInvestment);
+export const ActiveInvestmentContainer = connect(mapStateToProps, mapDispatchToProps)(
+    ActiveInvestment,
+);

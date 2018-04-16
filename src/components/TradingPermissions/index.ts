@@ -1,2 +1,2 @@
-import { TradingPermissionsContainer } from './TradingPermissionsContainer';
+import { TradingPermissionsContainer } from "./TradingPermissionsContainer";
 export { TradingPermissionsContainer };

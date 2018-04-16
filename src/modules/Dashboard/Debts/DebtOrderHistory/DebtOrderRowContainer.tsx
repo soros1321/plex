@@ -1,18 +1,14 @@
-import { connect } from 'react-redux';
-import { DebtOrderRow } from './DebtOrderRow';
+import { connect } from "react-redux";
+import { DebtOrderRow } from "./DebtOrderRow";
 
 const mapStateToProps = (state: any) => {
-	return {
-		dharma: state.dharmaReducer.dharma
-	};
+    return {
+        dharma: state.dharmaReducer.dharma,
+    };
 };
 
 const mapDispatchToProps = (dispatch: any) => {
-	return {
-	};
+    return {};
 };
 
-export const DebtOrderRowContainer = connect(
-	mapStateToProps,
-	mapDispatchToProps
-)(DebtOrderRow);
+export const DebtOrderRowContainer = connect(mapStateToProps, mapDispatchToProps)(DebtOrderRow);

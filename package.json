@@ -69,7 +69,6 @@
     "sw-precache-webpack-plugin": "0.11.4",
     "tiny-promisify": "^1.0.0",
     "truffle": "4.0.3",
-    "ts-jest": "^20.0.7",
     "ts-loader": "^2.3.7",
     "tsconfig-paths-webpack-plugin": "^2.0.0",
     "tslint": "^5.7.0",
@@ -89,7 +88,7 @@
     "test:watch": "jest --watch --runInBand",
     "ngrok:start": "ngrok http 3000",
     "migrations:loans": "tsc; node build/dist/migrations/loans.js",
-    "prettify": "prettier --write src/**/*.ts{,x}",
+    "prettify": "prettier --write 'src/**/*.ts{,x}'",
     "precommit": "yarn prettify"
   },
   "devDependencies": {

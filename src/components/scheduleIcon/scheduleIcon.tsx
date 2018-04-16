@@ -1,6 +1,6 @@
-import * as React from 'react';
+import * as React from "react";
 
-import { ScheduleIconImage, ScheduleIconDiv } from './styledComponents';
+import { ScheduleIconImage, ScheduleIconDiv } from "./styledComponents";
 
 interface Props {
     state: String;
@@ -13,11 +13,11 @@ class ScheduleIcon extends React.Component<Props, {}> {
 
         const { state } = this.props;
 
-        if (state === 'past') {
+        if (state === "past") {
             return <ScheduleIconImage src={pastIcon} />;
-        } else if (state === 'future') {
+        } else if (state === "future") {
             return <ScheduleIconImage src={futureIcon} />;
-        } else if (state === 'missed') {
+        } else if (state === "missed") {
             return <ScheduleIconDiv>x</ScheduleIconDiv>;
         }
 

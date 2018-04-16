@@ -1,17 +1,12 @@
-import { connect } from 'react-redux';
-import { Investments } from './Investments';
+import { connect } from "react-redux";
+import { Investments } from "./Investments";
 
 const mapStateToProps = (state: any) => {
-	return {
-	};
+    return {};
 };
 
 const mapDispatchToProps = (dispatch: any) => {
-	return {
-	};
+    return {};
 };
 
-export const InvestmentsContainer = connect(
-	mapStateToProps,
-	mapDispatchToProps
-)(Investments);
+export const InvestmentsContainer = connect(mapStateToProps, mapDispatchToProps)(Investments);

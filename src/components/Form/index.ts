@@ -1,2 +1,2 @@
-export * from './Checkbox';
-export * from './JSONSchemaForm';
+export * from "./Checkbox";
+export * from "./JSONSchemaForm";

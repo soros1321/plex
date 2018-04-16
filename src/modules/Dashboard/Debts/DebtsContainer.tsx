@@ -1,17 +1,12 @@
-import { connect } from 'react-redux';
-import { Debts } from './Debts';
+import { connect } from "react-redux";
+import { Debts } from "./Debts";
 
 const mapStateToProps = (state: any) => {
-	return {
-	};
+    return {};
 };
 
 const mapDispatchToProps = (dispatch: any) => {
-	return {
-	};
+    return {};
 };
 
-export const DebtsContainer = connect(
-	mapStateToProps,
-	mapDispatchToProps
-)(Debts);
+export const DebtsContainer = connect(mapStateToProps, mapDispatchToProps)(Debts);

@@ -1,37 +1,37 @@
-import styled from 'styled-components';
-import { NavbarToggler, NavItem, Nav } from 'reactstrap';
-import { Link } from 'react-router';
+import styled from "styled-components";
+import { NavbarToggler, NavItem, Nav } from "reactstrap";
+import { Link } from "react-router";
 
 export const Wrapper = styled.div`
-	background-color: #0D3034;
-	position: fixed;
-	width: 100%;
-	z-index: 1;
-	/* remove display:none if we want the topnavbar again */
-	display: none;
+    background-color: #0d3034;
+    position: fixed;
+    width: 100%;
+    z-index: 1;
+    /* remove display:none if we want the topnavbar again */
+    display: none;
 
-	@media only screen and (max-width: 480px) {
-		background-color: #002326;
-		position: relative;
-		width: 100%;
-		z-index: 1;
-		display: block;
-	}
+    @media only screen and (max-width: 480px) {
+        background-color: #002326;
+        position: relative;
+        width: 100%;
+        z-index: 1;
+        display: block;
+    }
 `;
 
 export const BrandLogo = styled.img`
-	width: 35px;
-	position: absolute;
-	top: 38px;
-	left: 88px;
-	z-index: 1;
+    width: 35px;
+    position: absolute;
+    top: 38px;
+    left: 88px;
+    z-index: 1;
 
-	@media only screen and (max-width: 480px) {
-		width: 30px;
-		position: initial;
-		top: auto;
-		left: auto;
-	}
+    @media only screen and (max-width: 480px) {
+        width: 30px;
+        position: initial;
+        top: auto;
+        left: auto;
+    }
 `;
 
 export const StyledNavbarToggler = styled(NavbarToggler)`
@@ -46,40 +46,40 @@ export const StyledNavbarToggler = styled(NavbarToggler)`
 `;
 
 export const StyledNavItem = styled(NavItem)`
-	padding: 7px 0px 7px 20px;
-	&:first-child,
-	&:nth-child(2) {
-		margin-right: 40px;
-	}
+    padding: 7px 0px 7px 20px;
+    &:first-child,
+    &:nth-child(2) {
+        margin-right: 40px;
+    }
 
-	@media only screen and (max-width: 480px) {
-		padding: 0px;
+    @media only screen and (max-width: 480px) {
+        padding: 0px;
 
-		&:first-child,
-		&:nth-child(2) {
-			margin-right: 0px;
-		}
-	}
+        &:first-child,
+        &:nth-child(2) {
+            margin-right: 0px;
+        }
+    }
 `;
 
 export const StyledLink = styled(Link)`
-	font-size: 15px;
-	color: #FFFFFF;
-	transition: color 0.3s ease-in-out;
-	opacity: 0.5;
+    font-size: 15px;
+    color: #ffffff;
+    transition: color 0.3s ease-in-out;
+    opacity: 0.5;
 
-	&:hover,
-	&.active {
-		text-decoration: none;
-		color: #F3764B;
-		opacity: 1;
-	}
+    &:hover,
+    &.active {
+        text-decoration: none;
+        color: #f3764b;
+        opacity: 1;
+    }
 
-	@media only screen and (max-width: 480px) {
-		font-size: 10px;
-	}
+    @media only screen and (max-width: 480px) {
+        font-size: 10px;
+    }
 `;
 
 export const StyledNav = styled(Nav)`
-	margin: 10px 0 20px !important;
+    margin: 10px 0 20px !important;
 `;

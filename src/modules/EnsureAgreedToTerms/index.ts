@@ -1,3 +1,3 @@
-import { EnsureAgreedToTermsContainer } from './EnsureAgreedToTermsContainer';
+import { EnsureAgreedToTermsContainer } from "./EnsureAgreedToTermsContainer";
 
 export { EnsureAgreedToTermsContainer };

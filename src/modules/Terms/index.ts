@@ -1,2 +1,2 @@
-import { TermsContainer } from './TermsContainer';
+import { TermsContainer } from "./TermsContainer";
 export { TermsContainer };
