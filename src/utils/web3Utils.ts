@@ -14,9 +14,7 @@ class Web3Utils {
      * @returns {Promise<number>}
      */
     public async getCurrentBlockTime(): Promise<number> {
-        const latestBlock = await promisify(
-            this.web3.eth.getBlock
-        )("latest");
+        const latestBlock = await promisify(this.web3.eth.getBlock)("latest");
 
         return latestBlock.timestamp;
     }
@@ -29,10 +27,9 @@ class Web3Utils {
      * @returns {Promise<boolean>}
      */
     public async increaseTime(seconds: number): Promise<boolean> {
-        const increaseTimeResponse = await this.sendJsonRpcRequestAsync(
-            "evm_increaseTime",
-            [seconds],
-        );
+        const increaseTimeResponse = await this.sendJsonRpcRequestAsync("evm_increaseTime", [
+            seconds,
+        ]);
 
         // A new block must be mined to make this effective.
         const blockMineResponse = await this.mineBlock();
@@ -46,7 +43,7 @@ class Web3Utils {
      *
      * @returns {Promise<"web3".Web3.JSONRPCResponsePayload>}
      */
-    public async mineBlock(): Promise<Web3.JSONRPCResponsePayload>  {
+    public async mineBlock(): Promise<Web3.JSONRPCResponsePayload> {
         return this.sendJsonRpcRequestAsync("evm_mine", []);
     }
 

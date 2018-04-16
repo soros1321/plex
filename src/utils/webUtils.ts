@@ -1,3 +1,5 @@
+import { BigNumber } from "bignumber.js";
+
 export const encodeUrlParams = (params: any) => {
     const encodedParams = Object.keys(params)
         .map(function(k: string) {
@@ -19,7 +21,24 @@ export const withCommas = (input: number) => {
     return input.toLocaleString();
 };
 
-export const truncate = (input: number, numDecimals: number) => {
-    const scaledInput = Math.floor(input * 100 ** numDecimals) / 100 ** numDecimals;
-    return scaledInput.toFixed(numDecimals);
+/**
+ * Given a token's balance, and then number of decimals associated with that token,
+ * returns a human-readable string.
+ *
+ * Examples:
+ * displayBalance(100000000020000000000000, 18);
+ * => "100,000.00002"
+ *
+ * displayBalance(100000000000000200000000, 18);
+ * => "100,000.0000000002"
+ *
+ * displayBalance(100000000000000000000000, 18);
+ * => "100,000"
+ *
+ * @param {BigNumber} balance
+ * @param {number} numDecimals
+ * @returns {string}
+ */
+export const displayBalance = (balance: BigNumber, numDecimals: number) => {
+    return balance.shift(-numDecimals).toFormat();
 };

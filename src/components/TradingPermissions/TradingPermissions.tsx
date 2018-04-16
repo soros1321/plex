@@ -17,7 +17,7 @@ import { TokenEntity } from "../../models";
 const promisify = require("tiny-promisify");
 import { Collapse } from "reactstrap";
 import { ClipLoader } from "react-spinners";
-import { truncate } from "src/utils/webUtils";
+import { displayBalance } from "src/utils/webUtils";
 import { web3Errors } from "../../common/web3Errors";
 
 interface Props {
@@ -216,22 +216,25 @@ class TradingPermissions extends React.Component<Props, State> {
         if (!this.props.tokens || !this.props.tokens.length) {
             return null;
         }
-        const { web3, tokens, agreeToTerms } = this.props;
+        const { tokens, agreeToTerms } = this.props;
         let tokenItems: JSX.Element[] = [];
         let tokenItemsMore: JSX.Element[] = [];
 
         let count: number = 0;
         for (let token of tokens) {
-            const truncatedTokenBalance = truncate(
-                web3.fromWei(token.balance, "ether").toNumber(),
-                5,
+            // The number of decimals associated with this token.
+            // TODO: Fetch from contracts.
+            const numDecimals = 18;
+
+            const displayableBalance = displayBalance(
+                token.balance, numDecimals
             );
 
             const tokenLabel = (
                 <div>
                     <TokenSymbol>{token.tokenSymbol}</TokenSymbol>
                     {token.balance.gt(0) ? (
-                        <TokenBalance>({truncatedTokenBalance})</TokenBalance>
+                        <TokenBalance>({displayableBalance})</TokenBalance>
                     ) : (
                         <FaucetButton
                             onClick={(e) => this.handleFaucet(token.address)}
