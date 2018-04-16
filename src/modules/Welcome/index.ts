@@ -1,3 +1,3 @@
-import { WelcomeContainer } from './WelcomeContainer';
+import { WelcomeContainer } from "./WelcomeContainer";
 
 export { WelcomeContainer };

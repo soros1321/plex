@@ -77,7 +77,7 @@ class FillLoanEntered extends React.Component<Props, States> {
     }
 
     async componentDidMount() {
-		this.getDebtOrderDetail(this.props.dharma);
+        this.getDebtOrderDetail(this.props.dharma);
     }
 
     componentDidUpdate(prevProps: Props) {
@@ -88,10 +88,10 @@ class FillLoanEntered extends React.Component<Props, States> {
 
     async getDebtOrderDetail(dharma: Dharma) {
         try {
-			const urlParams = this.props.location.query;
-			if (!dharma || !urlParams) {
-				return;
-			}
+            const urlParams = this.props.location.query;
+            if (!dharma || !urlParams) {
+                return;
+            }
             const debtOrder = debtOrderFromJSON(JSON.stringify(urlParams));
             const description = debtOrder.description;
             const principalTokenSymbol = debtOrder.principalTokenSymbol;
@@ -99,11 +99,15 @@ class FillLoanEntered extends React.Component<Props, States> {
             delete debtOrder.principalTokenSymbol;
             this.setState({ debtOrder, description, principalTokenSymbol });
             if (debtOrder.termsContract && debtOrder.termsContractParameters) {
-                const termsContractType = await dharma.contracts.getTermsContractType(debtOrder.termsContract);
-                const adapter = await dharma.adapters.getAdapterByTermsContractAddress(debtOrder.termsContract);
+                const termsContractType = await dharma.contracts.getTermsContractType(
+                    debtOrder.termsContract,
+                );
+                const adapter = await dharma.adapters.getAdapterByTermsContractAddress(
+                    debtOrder.termsContract,
+                );
 
                 // TODO: cast fromDebtOrder to appropriate type
-                const fromDebtOrder = await adapter.fromDebtOrder(debtOrder) as any;
+                const fromDebtOrder = (await adapter.fromDebtOrder(debtOrder)) as any;
                 const issuanceHash = await dharma.order.getIssuanceHash(debtOrder);
                 this.setState({
                     interestRate: fromDebtOrder.interestRate,
@@ -112,7 +116,7 @@ class FillLoanEntered extends React.Component<Props, States> {
                     issuanceHash: issuanceHash,
                 });
 
-                if (termsContractType === 'CollateralizedSimpleInterestTermsContractContract') {
+                if (termsContractType === "CollateralizedSimpleInterestTermsContractContract") {
                     this.setState({
                         collateralAmount: fromDebtOrder.collateralAmount,
                         collateralized: true,
@@ -136,13 +140,13 @@ class FillLoanEntered extends React.Component<Props, States> {
         try {
             this.props.handleSetError("");
             const { dharma, accounts } = this.props;
-			if (!dharma) {
-				this.props.handleSetError(web3Errors.UNABLE_TO_FIND_CONTRACTS);
-				return;
-			} else if (!accounts.length) {
-				this.props.handleSetError(web3Errors.UNABLE_TO_FIND_ACCOUNTS);
-				return;
-			}
+            if (!dharma) {
+                this.props.handleSetError(web3Errors.UNABLE_TO_FIND_CONTRACTS);
+                return;
+            } else if (!accounts.length) {
+                this.props.handleSetError(web3Errors.UNABLE_TO_FIND_ACCOUNTS);
+                return;
+            }
             const { debtOrder, issuanceHash } = this.state;
 
             debtOrder.creditor = accounts[0];
@@ -246,14 +250,19 @@ class FillLoanEntered extends React.Component<Props, States> {
             },
         ];
 
-        if (collateralized && collateralAmount != null && collateralTokenSymbol != null && gracePeriodInDays != null) {
+        if (
+            collateralized &&
+            collateralAmount != null &&
+            collateralTokenSymbol != null &&
+            gracePeriodInDays != null
+        ) {
             leftInfoItems.push({
                 title: "Collateral",
                 content: `${collateralAmount} ${collateralTokenSymbol}`,
             });
             rightInfoItems.push({
                 title: "Grace period",
-                content: `${gracePeriodInDays.toNumber()} days`
+                content: `${gracePeriodInDays.toNumber()} days`,
             });
         }
 

@@ -27,7 +27,7 @@ class InvestmentsMetrics extends React.Component<Props, State> {
     }
 
     componentDidMount() {
-		this.initiateTokenBalance(this.props.tokens);
+        this.initiateTokenBalance(this.props.tokens);
     }
 
     componentDidUpdate(prevProps: Props) {
@@ -37,27 +37,27 @@ class InvestmentsMetrics extends React.Component<Props, State> {
     }
 
     initiateTokenBalance(tokens: TokenEntity[]) {
-		const { investments } = this.props;
-		if (!tokens || !investments) {
-			return;
-		}
+        const { investments } = this.props;
+        if (!tokens || !investments) {
+            return;
+        }
         let tokenBalances: any = {};
-		for (let token of tokens) {
-			tokenBalances[token.tokenSymbol] = {
-				totalLended: new BigNumber(0),
-				totalEarned: new BigNumber(0),
-			};
-		}
-		for (let investment of investments) {
-			if (tokenBalances[investment.principalTokenSymbol]) {
-				tokenBalances[investment.principalTokenSymbol].totalLended = tokenBalances[
-					investment.principalTokenSymbol
-				].totalLended.plus(investment.principalAmount);
-				tokenBalances[investment.principalTokenSymbol].totalEarned = tokenBalances[
-					investment.principalTokenSymbol
-				].totalEarned.plus(investment.earnedAmount);
-			}
-		}
+        for (let token of tokens) {
+            tokenBalances[token.tokenSymbol] = {
+                totalLended: new BigNumber(0),
+                totalEarned: new BigNumber(0),
+            };
+        }
+        for (let investment of investments) {
+            if (tokenBalances[investment.principalTokenSymbol]) {
+                tokenBalances[investment.principalTokenSymbol].totalLended = tokenBalances[
+                    investment.principalTokenSymbol
+                ].totalLended.plus(investment.principalAmount);
+                tokenBalances[investment.principalTokenSymbol].totalEarned = tokenBalances[
+                    investment.principalTokenSymbol
+                ].totalEarned.plus(investment.earnedAmount);
+            }
+        }
         this.setState({ tokenBalances });
     }
 
