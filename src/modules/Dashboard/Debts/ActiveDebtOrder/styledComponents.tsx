@@ -443,15 +443,6 @@ export const MakeRepaymentButton = StyledButton.extend`
 `;
 
 export const CancelButton = MakeRepaymentButton.extend`
-    <<<<<<<HEAD
-    background-color: #1cc1cc !important;
-    border-color: #1cc1cc !important;
-
-    @media only screen and (max-width: 480px) {
-        font-size: 10px !important;
-        width: 100%;
-    }
-    =======background-color: #1cc1cc !important;
     border-color: #1cc1cc !important;
 
     @media only screen and (max-width: 568px) {
