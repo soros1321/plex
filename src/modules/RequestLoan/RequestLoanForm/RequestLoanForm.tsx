@@ -21,16 +21,17 @@ interface Props {
 }
 
 interface State {
-    formData: any;
-    principalAmount: number;
-    principalTokenSymbol: string;
-    interestRate: number;
+    awaitingSignTx: boolean;
+    bitly: any;
+    collateralized: boolean;
+    confirmationModal: boolean;
     debtOrder: string;
     description: string;
+    formData: any;
+    interestRate: number;
     issuanceHash: string;
-    confirmationModal: boolean;
-    bitly: any;
-	awaitingSignTx: boolean;
+    principalAmount: number;
+    principalTokenSymbol: string;
 }
 
 class RequestLoanForm extends React.Component<Props, State> {
@@ -44,6 +45,7 @@ class RequestLoanForm extends React.Component<Props, State> {
 		this.transformErrors = this.transformErrors.bind(this);
 
         this.state = {
+            collateralized: false,
             formData: {},
             principalAmount: 0,
             principalTokenSymbol: "",
@@ -87,6 +89,8 @@ class RequestLoanForm extends React.Component<Props, State> {
             this.props.handleSetError("");
             const { principalAmount, principalTokenSymbol } = this.state.formData.loan;
             const { interestRate, amortizationUnit, termLength } = this.state.formData.terms;
+            const { collateralized, collateralAmount, collateralTokenSymbol, gracePeriodInDays } =
+                this.state.formData.collateral;
             const { dharma, accounts } = this.props;
 
 			if (!this.props.dharma) {
@@ -97,7 +101,7 @@ class RequestLoanForm extends React.Component<Props, State> {
 				return;
 			}
 
-            const simpleInterestLoan = {
+            let loanOrder = {
                 principalTokenSymbol,
                 principalAmount: new BigNumber(principalAmount * 10 ** 18),
                 interestRate: new BigNumber(interestRate),
@@ -105,11 +109,24 @@ class RequestLoanForm extends React.Component<Props, State> {
                 termLength: new BigNumber(termLength)
             };
 
-            const debtOrder = await dharma.adapters.simpleInterestLoan.toDebtOrder(simpleInterestLoan);
+            let debtOrder;
+            if (!collateralized) {
+                debtOrder = await dharma.adapters.simpleInterestLoan.toDebtOrder(loanOrder);
+            } else {
+                const collateralData = {
+                    collateralAmount: new BigNumber(collateralAmount),
+                    collateralTokenSymbol,
+                    gracePeriodInDays: new BigNumber(gracePeriodInDays)
+                };
+                const collateralizedLoanOrder = Object.assign(loanOrder, collateralData);
+
+                debtOrder = await dharma.adapters.collateralizedSimpleInterestLoan.toDebtOrder(collateralizedLoanOrder);
+            }
             debtOrder.debtor = accounts[0];
             const issuanceHash = await dharma.order.getIssuanceHash(debtOrder);
 
             this.setState({
+                collateralized,
                 debtOrder: JSON.stringify(debtOrder),
                 issuanceHash
             });
@@ -135,7 +152,8 @@ class RequestLoanForm extends React.Component<Props, State> {
 			}
 			this.setState({ awaitingSignTx: true });
 
-            const { description, principalTokenSymbol, issuanceHash, bitly } = this.state;
+            const { bitly, collateralized, description, issuanceHash, principalTokenSymbol } = this.state;
+
             const debtOrder = debtOrderFromJSON(this.state.debtOrder);
 
             // Sign as debtor
@@ -162,8 +180,15 @@ class RequestLoanForm extends React.Component<Props, State> {
                 return;
             }
 
-            const generatedDebtOrder = await this.props.dharma.adapters.simpleInterestLoan.fromDebtOrder(debtOrder);
-            const storeDebtOrder: DebtOrderEntity = {
+            // TODO: figure out how to type generatedDebtOrder
+            let generatedDebtOrder: any;
+            if (!collateralized) {
+                generatedDebtOrder = await this.props.dharma.adapters.simpleInterestLoan.fromDebtOrder(debtOrder);
+            } else {
+                generatedDebtOrder =
+                    await this.props.dharma.adapters.collateralizedSimpleInterestLoan.fromDebtOrder(debtOrder);
+            }
+            let storeDebtOrder: DebtOrderEntity = {
                 debtor: debtOrder.debtor,
                 termsContract: debtOrder.termsContract,
                 termsContractParameters: debtOrder.termsContractParameters,
@@ -183,6 +208,13 @@ class RequestLoanForm extends React.Component<Props, State> {
                 description,
                 fillLoanShortUrl
             };
+            if (collateralized) {
+                storeDebtOrder.collateralized = collateralized;
+                storeDebtOrder.collateralAmount = generatedDebtOrder.collateralAmount;
+                storeDebtOrder.collateralTokenSymbol = generatedDebtOrder.collateralTokenSymbol;
+                storeDebtOrder.gracePeriodInDays = generatedDebtOrder.gracePeriodInDays;
+            }
+
             this.props.handleRequestDebtOrder(storeDebtOrder);
             browserHistory.push(`/request/success/${storeDebtOrder.issuanceHash}`);
         } catch (e) {

@@ -1,20 +1,24 @@
 import { BigNumber } from "bignumber.js";
 
 export class InvestmentEntity {
+    amortizationUnit: string;
+    collateralAmount?: BigNumber;
+    collateralized?: boolean;
+    collateralTokenSymbol?: string;
     creditor: string; // Or `beneficiary` from `debtRegistry`
+    earnedAmount: BigNumber;
+    gracePeriodInDays?: BigNumber;
+    interestRate: BigNumber;
+    issuanceHash: string;
+    principalAmount: BigNumber;
+    principalTokenSymbol: string;
+    repaymentSchedule: number[];
+    status: string;
+    termLength: BigNumber;
     termsContract: string;
     termsContractParameters: string;
     underwriter: string;
     underwriterRiskRating: BigNumber;
-    amortizationUnit: string;
-    interestRate: BigNumber;
-    principalAmount: BigNumber;
-    principalTokenSymbol: string;
-    termLength: BigNumber;
-    issuanceHash: string;
-    earnedAmount: BigNumber;
-    repaymentSchedule: number[];
-    status: string;
 
     public constructor() {
         this.creditor = "";

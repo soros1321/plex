@@ -345,6 +345,32 @@ class ActiveDebtOrder extends React.Component<Props, State> {
                 <Bold>{shortenString(debtOrder.issuanceHash)}</Bold>
             </span>
         );
+        let terms = "Simple Interest (Non-Collateralized)";
+        let collateral = null;
+        let gracePeriod = null;
+
+        if (debtOrder.collateralized) {
+            terms = "Simple Interest (Collateralized)";
+            collateral = (
+                <Col xs="4" sm="4" md="4" lg="2">
+                    <InfoItem>
+                        <InfoItemTitle>Collateral</InfoItemTitle>
+                        <InfoItemContent>
+                            {debtOrder.collateralAmount + " " + debtOrder.collateralTokenSymbol}
+                        </InfoItemContent>
+                    </InfoItem>
+                </Col>
+            );
+            gracePeriod = (
+                <Col xs="8" sm="8" md="8" lg="2">
+                    <InfoItem>
+                        <InfoItemTitle>Grace period</InfoItemTitle>
+                        <InfoItemContent>{debtOrder.gracePeriodInDays + " days"}</InfoItemContent>
+                    </InfoItem>
+                </Col>
+            );
+        }
+
         return (
             <Wrapper onClick={this.toggleDrawer}>
                 <Row>
@@ -375,7 +401,7 @@ class ActiveDebtOrder extends React.Component<Props, State> {
                         ) : (
                             <StatusPending>Pending</StatusPending>
                         )}
-                        <Terms>Simple Interest (Non-Collateralized)</Terms>
+                        <Terms>{terms}</Terms>
                     </DetailContainer>
                     {debtOrder.status === "pending" ? (
                         <PendingActionContainer>
@@ -446,6 +472,8 @@ class ActiveDebtOrder extends React.Component<Props, State> {
                                     </InfoItemContent>
                                 </InfoItem>
                             </Col>
+                            {collateral}
+                            {gracePeriod}
                             <Col xs="12" sm="12" md="12" lg="2">
                                 <InfoItem>
                                     <InfoItemTitle>Description</InfoItemTitle>

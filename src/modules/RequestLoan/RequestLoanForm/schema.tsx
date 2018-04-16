@@ -23,123 +23,103 @@ export const schema: JSONSchema4 = {
 			type: 'string',
 			title: 'Which type of loan would you like?',
 			enum: [
-				'simpleInterestLoanNonCollateralized',
-				'compoundInterestLoanNonCollateralized',
-				'simpleInterestLoanCollateralized',
-				'compoundInterestLoanCollateralized'
+				'simpleInterestLoan',
+				'compoundInterestLoan'
 			],
 			enumNames: [
-				'Simple Interest Loan (Non-Collateralized)',
-				'Compound Interest Loan (Non-Collateralized) (Coming Soon)',
-				'Simple Interest Loan (Collateralized) (Coming Soon)',
-				'Compound Interest Loan (Collateralized) (Coming Soon)'
+				'Simple Interest Loan',
+				'Compound Interest Loan (Coming Soon)'
 			],
-			default: 'simpleInterestLoanNonCollateralized'
-		}
-	},
-	required: ['debtOrderType'],
-	dependencies: {
-		debtOrderType: {
-			oneOf: [
-				{
+			default: 'simpleInterestLoan',
+		},
+		loan: {
+			type: 'object',
+			title: 'How much of which token would you like to borrow?',
+			required: [
+				'principalAmount',
+				'principalTokenSymbol'
+			],
+			properties: {
+				principalAmount: {
+					type: 'number',
+					title: 'Amount',
+				},
+				principalTokenSymbol: {
+					'$ref': '#/definitions/tokens'
+				},
+				description: {
+					type: 'string',
+					maxLength: 500
+				}
+			}
+		},
+		terms: {
+			type: 'object',
+			title: 'What terms would you like?',
+			required: [
+				'interestRate',
+				'amortizationUnit',
+				'termLength'
+			],
+			properties: {
+				interestRate: {
+					type: 'number',
+					title: 'Interest Rate (Per Installment)',
+					description: 'The interest rate you specify below will be applied for each installment.',
+				},
+				amortizationUnit: {
+					type: 'string',
+					title: 'Installments Type',
+					enum: [
+						'hours',
+						'days',
+						'weeks',
+						'months',
+						'years'
+					],
+					enumNames: [
+						'Hourly',
+						'Daily',
+						'Weekly',
+						'Monthly',
+						'Yearly'
+					]
+				},
+				termLength: {
+					type: 'number',
+					title: 'Term Length',
+					description: 'Enter the length of the entire debt agreement, in units of the chosen installments (e.g. a term length of 2 with an installment type of "monthly" would be equivalent to a 2 month long loan)'
+				}
+			}
+		},
+		collateral: {
+			type: 'object',
+			title: 'Do you want it collateralized?',
+			properties: {
+				collateralized: {
+					type: 'boolean',
+					title: 'Collateralized',
+					description: 'A quick, layman\'s definition of what collateralized means and why it\'s a smart idea goes here.'
+				}
+			},
+			dependencies: {
+				collateralized: {
 					properties: {
-						debtOrderType: {
-							enum: ['simpleInterestLoanNonCollateralized']
+						collateralAmount: {
+							type: 'number',
 						},
-						loan: {
-							type: 'object',
-							title: 'How much of which token would you like to borrow?',
-							required: [
-								'principalAmount',
-								'principalTokenSymbol'
-							],
-							properties: {
-								principalAmount: {
-									type: 'number',
-									title: 'Amount',
-								},
-								principalTokenSymbol: {
-									'$ref': '#/definitions/tokens'
-								},
-								description: {
-									type: 'string',
-									maxLength: 500
-								}
-							}
+						collateralTokenSymbol: {
+							'$ref': '#/definitions/tokens'
 						},
-						/*
-						collateral: {
-							type: 'object',
-							title: 'Do you want it collateralized?',
-							properties: {
-								collateralized: {
-									type: 'boolean',
-									title: 'Collateralized',
-									description: 'A quick, layman\'s definition of what collateralized means and why it\'s a smart idea goes here.'
-								}
-							},
-							dependencies: {
-								collateralized: {
-									properties: {
-										collateralSource: {
-											title: 'Collateral',
-											'$ref': '#/definitions/tokens'
-										},
-										collateralAmount: {
-											type: 'number',
-										},
-										collateralTokenSymbol: {
-											'$ref': '#/definitions/tokens'
-										}
-									}
-								}
-							}
-						},
-						*/
-						terms: {
-							type: 'object',
-							title: 'What terms would you like?',
-							required: [
-								'interestRate',
-								'amortizationUnit',
-								'termLength'
-							],
-							properties: {
-								interestRate: {
-									type: 'number',
-									title: 'Interest Rate (Per Installment)',
-									description: 'The interest rate you specify below will be applied for each installment.',
-								},
-								amortizationUnit: {
-									type: 'string',
-									title: 'Installments Type',
-									enum: [
-										'hours',
-										'days',
-										'weeks',
-										'months',
-										'years'
-									],
-									enumNames: [
-										'Hourly',
-										'Daily',
-										'Weekly',
-										'Monthly',
-										'Yearly'
-									]
-								},
-								termLength: {
-									type: 'number',
-									title: 'Term Length',
-									description: 'Enter the length of the entire debt agreement, in units of the chosen installments (e.g. a term length of 2 with an installment type of "monthly" would be equivalent to a 2 month long loan)'
-								}
-							}
+						gracePeriodInDays: {
+							type: 'number',
 						}
 					}
 				}
-			]
-		}
-	}
+			}
+		},
+	},
+	required: ['debtOrderType', 'loan', 'terms'],
 };
 
 export const uiSchema = {
@@ -174,17 +154,8 @@ export const uiSchema = {
 			classNames: 'group-field'
 		}
 	},
-	/*
 	collateral: {
 		collateralized: {
-			'ui:disabled': true,
-			classNames: 'group-field',
-			'ui:options': {
-				pressEnter: false
-			}
-		},
-		collateralSource: {
-			'ui:placeholder': 'Select your source of collateral',
 			classNames: 'group-field',
 			'ui:options': {
 				pressEnter: false
@@ -205,9 +176,16 @@ export const uiSchema = {
 				pressEnter: false
 			},
 			classNames: 'inline-field width35'
+		},
+		gracePeriodInDays: {
+			'ui:placeholder': 'Grace period (days)',
+			'ui:options': {
+				label: false,
+				pressEnter: false
+			},
+			classNames: 'inline-field width65'
 		}
 	},
-	*/
 	terms: {
 		interestRate: {
 			'ui:placeholder': '8.12%',

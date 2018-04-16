@@ -62,6 +62,27 @@ class RequestLoanSummary extends React.Component<Props, State> {
 		const interestRate = `${debtOrder.interestRate.toNumber()}%`;
 		const installmentFrequency = amortizationUnitToFrequency(debtOrder.amortizationUnit);
 
+		const collateral = debtOrder.collateralized ? (
+			<InfoItem>
+				<Title>
+					Collateral
+				</Title>
+				<Content>
+					{debtOrder.collateralAmount} {debtOrder.collateralTokenSymbol}
+				</Content>
+			</InfoItem>
+		) : null;
+		const gracePeriod = debtOrder.collateralized ? (
+			<InfoItem>
+				<Title>
+					Grace Period
+				</Title>
+				<Content>
+					{debtOrder.gracePeriodInDays} {'days'}
+				</Content>
+			</InfoItem>
+		) : null;
+
 		return (
 			<Wrapper>
 				<StyledLabel>Loan request summary</StyledLabel>
@@ -84,6 +105,7 @@ class RequestLoanSummary extends React.Component<Props, State> {
 									{termLength}
 								</Content>
 							</InfoItem>
+							{collateral}
 						</Col>
 						<Col xs="6" md="6">
 							<InfoItem>
@@ -102,6 +124,7 @@ class RequestLoanSummary extends React.Component<Props, State> {
 									{installmentFrequency}
 								</Content>
 							</InfoItem>
+							{gracePeriod}
 						</Col>
 						<Col xs="12">
 							<InfoItem>
