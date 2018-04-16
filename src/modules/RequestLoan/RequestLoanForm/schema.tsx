@@ -1,4 +1,5 @@
 import { JSONSchema4 } from "json-schema";
+const singleLineString = require("single-line-string");
 
 export const schema: JSONSchema4 = {
     type: "object",
@@ -63,13 +64,17 @@ export const schema: JSONSchema4 = {
         },
         collateral: {
             type: "object",
-            title: "Do you want it collateralized?",
+            title: "Will you offer collateral?",
             properties: {
                 collateralized: {
                     type: "boolean",
                     title: "Collateralized",
-                    description:
-                        "A quick, layman's definition of what collateralized means and why it's a smart idea goes here.",
+                    description: singleLineString`Collateralization occurs when you, the borrower,
+                    pledge an asset as recourse to the lender in the event that you, the borrower,
+                    default on the original loan. Collateralization of assets gives lenders a
+                    sufficient level of reassurance against default risk. It also helps you, the
+                    borrower, receive loans that you might not otherwise receive given your credit
+                    history or lack thereof.`,
                 },
             },
             dependencies: {
