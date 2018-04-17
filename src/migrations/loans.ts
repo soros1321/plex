@@ -15,6 +15,7 @@ const promisify = require("tiny-promisify");
 const BigNumber = require("bignumber.js");
 const ABIDecoder = require("abi-decoder");
 const compact = require("lodash.compact");
+const Web3Utils = require("../utils/web3Utils");
 
 // Sample data
 const sampleDebtOrders = require(ROOT_DIR + "src/migrations/sampleDebtOrders.json");
@@ -38,6 +39,7 @@ const normalizeDebtOrder = (debtOrder: any) => {
 };
 
 let web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+const web3Utils = new Web3Utils(web3);
 let defaultAccount: string = "";
 let dharma: any = null;
 
@@ -48,6 +50,10 @@ ABIDecoder.addABI(RepaymentRouter.abi);
 if (web3.isConnected()) {
     instantiateDharma();
 }
+
+const log = (output: string) => {
+    console.log(output);
+};
 
 async function instantiateDharma() {
     try {
@@ -84,7 +90,10 @@ async function instantiateDharma() {
         };
 
         dharma = new Dharma.default(web3.currentProvider, dharmaConfig);
-        fillDebtOrders();
+        await fillDebtOrders();
+        await web3Utils.mineBlock();
+        log("Increasing blockchain time by 3 hours");
+        await web3Utils.increaseTime(3 * 60 * 60);
     } catch (e) {
         throw new Error(e);
     }
@@ -119,7 +128,7 @@ async function fillDebtOrders() {
             // Get issuance hash for this debt order
             const issuanceHash = await dharma.order.getIssuanceHash(dharmaDebtOrder);
 
-            console.log("Issuance Hash: " + issuanceHash);
+            log("Issuance Hash: " + issuanceHash);
             if (debtOrder.fill) {
                 // Sign as creditor
                 dharmaDebtOrder.creditor = defaultAccount;
@@ -131,7 +140,7 @@ async function fillDebtOrders() {
                 const receipt = await promisify(web3.eth.getTransactionReceipt)(txHash);
                 const [debtOrderFilledLog] = compact(ABIDecoder.decodeLogs(receipt.logs));
                 if (debtOrderFilledLog.name === "LogDebtOrderFilled") {
-                    console.log("- Debt order filled");
+                    log("- Debt order filled");
 
                     // Pay the debt order
                     const repaymentAmount = new BigNumber(debtOrder.repaymentAmount);
@@ -142,17 +151,17 @@ async function fillDebtOrders() {
                         { from: dharmaDebtOrder.debtor },
                     );
                     if (repaymentSuccess) {
-                        console.log("- Repayment success");
+                        log("- Repayment success");
                     } else {
-                        console.log("- Repayment failed");
+                        log("- Repayment failed");
                     }
                 } else {
-                    console.log("- Unable to fill debt order");
+                    log("- Unable to fill debt order");
                 }
             } else {
-                console.log("- Skipping filling debt order");
+                log("- Skipping filling debt order");
             }
-            console.log("\n");
+            log("\n");
         }
     } catch (e) {
         throw new Error(e);
