@@ -1,3 +1,3 @@
-import { RequestLoanSuccessContainer } from './RequestLoanSuccessContainer';
+import { RequestLoanSuccessContainer } from "./RequestLoanSuccessContainer";
 
 export { RequestLoanSuccessContainer };

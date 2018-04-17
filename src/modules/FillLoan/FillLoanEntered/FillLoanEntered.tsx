@@ -37,17 +37,21 @@ interface Props {
 }
 
 interface States {
-    confirmationModal: boolean;
-    successModal: boolean;
+    amortizationUnit: string;
     // True if the user has confirmed the order, but the block has not been mined.
     awaitingTransaction: boolean;
+    collateralAmount?: BigNumber;
+    collateralized?: boolean;
+    collateralTokenSymbol?: string;
+    confirmationModal: boolean;
     debtOrder: DebtOrder.Instance;
     description: string;
-    principalTokenSymbol: string;
+    gracePeriodInDays?: BigNumber;
     interestRate: BigNumber;
-    termLength: BigNumber;
-    amortizationUnit: string;
     issuanceHash: string;
+    principalTokenSymbol: string;
+    successModal: boolean;
+    termLength: BigNumber;
 }
 
 class FillLoanEntered extends React.Component<Props, States> {
@@ -73,7 +77,7 @@ class FillLoanEntered extends React.Component<Props, States> {
     }
 
     async componentDidMount() {
-		this.getDebtOrderDetail(this.props.dharma);
+        this.getDebtOrderDetail(this.props.dharma);
     }
 
     componentDidUpdate(prevProps: Props) {
@@ -84,10 +88,10 @@ class FillLoanEntered extends React.Component<Props, States> {
 
     async getDebtOrderDetail(dharma: Dharma) {
         try {
-			const urlParams = this.props.location.query;
-			if (!dharma || !urlParams) {
-				return;
-			}
+            const urlParams = this.props.location.query;
+            if (!dharma || !urlParams) {
+                return;
+            }
             const debtOrder = debtOrderFromJSON(JSON.stringify(urlParams));
             const description = debtOrder.description;
             const principalTokenSymbol = debtOrder.principalTokenSymbol;
@@ -95,22 +99,31 @@ class FillLoanEntered extends React.Component<Props, States> {
             delete debtOrder.principalTokenSymbol;
             this.setState({ debtOrder, description, principalTokenSymbol });
             if (debtOrder.termsContract && debtOrder.termsContractParameters) {
-                const fromDebtOrder = await dharma.adapters.simpleInterestLoan.fromDebtOrder(
-                    debtOrder,
+                const termsContractType = await dharma.contracts.getTermsContractType(
+                    debtOrder.termsContract,
                 );
-				if (fromDebtOrder) {
-					this.setState({
-						interestRate: fromDebtOrder.interestRate,
-						termLength: fromDebtOrder.termLength,
-						amortizationUnit: fromDebtOrder.amortizationUnit
-					});
-				}
+                const adapter = await dharma.adapters.getAdapterByTermsContractAddress(
+                    debtOrder.termsContract,
+                );
+
+                // TODO: cast fromDebtOrder to appropriate type
+                const fromDebtOrder = (await adapter.fromDebtOrder(debtOrder)) as any;
                 const issuanceHash = await dharma.order.getIssuanceHash(debtOrder);
-				if (issuanceHash) {
-					this.setState({
-						issuanceHash: issuanceHash,
-					});
-				}
+                this.setState({
+                    interestRate: fromDebtOrder.interestRate,
+                    termLength: fromDebtOrder.termLength,
+                    amortizationUnit: fromDebtOrder.amortizationUnit,
+                    issuanceHash: issuanceHash,
+                });
+
+                if (termsContractType === "CollateralizedSimpleInterestTermsContractContract") {
+                    this.setState({
+                        collateralAmount: fromDebtOrder.collateralAmount,
+                        collateralized: true,
+                        collateralTokenSymbol: fromDebtOrder.collateralTokenSymbol,
+                        gracePeriodInDays: fromDebtOrder.gracePeriodInDays,
+                    });
+                }
             }
         } catch (e) {
             console.log(e);
@@ -127,13 +140,13 @@ class FillLoanEntered extends React.Component<Props, States> {
         try {
             this.props.handleSetError("");
             const { dharma, accounts } = this.props;
-			if (!dharma) {
-				this.props.handleSetError(web3Errors.UNABLE_TO_FIND_CONTRACTS);
-				return;
-			} else if (!accounts.length) {
-				this.props.handleSetError(web3Errors.UNABLE_TO_FIND_ACCOUNTS);
-				return;
-			}
+            if (!dharma) {
+                this.props.handleSetError(web3Errors.UNABLE_TO_FIND_CONTRACTS);
+                return;
+            } else if (!accounts.length) {
+                this.props.handleSetError(web3Errors.UNABLE_TO_FIND_ACCOUNTS);
+                return;
+            }
             const { debtOrder, issuanceHash } = this.state;
 
             debtOrder.creditor = accounts[0];
@@ -196,8 +209,12 @@ class FillLoanEntered extends React.Component<Props, States> {
 
     render() {
         const {
+            collateralAmount,
+            collateralized,
+            collateralTokenSymbol,
             debtOrder,
             description,
+            gracePeriodInDays,
             interestRate,
             termLength,
             amortizationUnit,
@@ -232,6 +249,23 @@ class FillLoanEntered extends React.Component<Props, States> {
                 content: amortizationUnit ? amortizationUnitToFrequency(amortizationUnit) : "-",
             },
         ];
+
+        if (
+            collateralized &&
+            collateralAmount != null &&
+            collateralTokenSymbol != null &&
+            gracePeriodInDays != null
+        ) {
+            leftInfoItems.push({
+                title: "Collateral",
+                content: `${collateralAmount} ${collateralTokenSymbol}`,
+            });
+            rightInfoItems.push({
+                title: "Grace period",
+                content: `${gracePeriodInDays.toNumber()} days`,
+            });
+        }
+
         const leftInfoItemRows = leftInfoItems.map((item) => (
             <InfoItem key={item.title}>
                 <Title>{item.title}</Title>

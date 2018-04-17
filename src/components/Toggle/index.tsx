@@ -1,52 +1,56 @@
-import * as React from 'react';
-import ReactToggle from 'react-toggle';
-import { ToggleLabel, ToggleName } from './styledComponents';
-import './toggle.css';
+import * as React from "react";
+import ReactToggle from "react-toggle";
+import { ToggleLabel, ToggleName } from "./styledComponents";
+import "./toggle.css";
 
 interface Props {
-  disabled?: boolean;
-  name: string;
-  label: JSX.Element;
-  prepend?: string;
-  checked: boolean;
-  onChange: (checked: boolean) => void;
+    disabled?: boolean;
+    name: string;
+    label: JSX.Element;
+    prepend?: string;
+    checked: boolean;
+    onChange: (checked: boolean) => void;
 }
 
 interface State {
-  transactionUnderway: boolean;
+    transactionUnderway: boolean;
 }
 
 class Toggle extends React.Component<Props, State> {
-  constructor (props: Props) {
-    super(props);
-    this.handleChange = this.handleChange.bind(this);
+    constructor(props: Props) {
+        super(props);
+        this.handleChange = this.handleChange.bind(this);
 
-    this.state = { transactionUnderway: false };
-  }
+        this.state = { transactionUnderway: false };
+    }
 
-  handleChange(e: React.FormEvent<HTMLInputElement>) {
-    this.setState({ transactionUnderway: true });
-    this.props.onChange(e.currentTarget.checked);
-    this.setState({ transactionUnderway: false });
-  }
+    handleChange(e: React.FormEvent<HTMLInputElement>) {
+        this.setState({ transactionUnderway: true });
+        this.props.onChange(e.currentTarget.checked);
+        this.setState({ transactionUnderway: false });
+    }
 
-  render() {
-    return (
-      <div>
-		<ReactToggle
-			checked={this.props.checked}
-			disabled={this.state.transactionUnderway || this.props.disabled}
-			icons={false}
-			id={this.props.prepend ? this.props.prepend + '-' + this.props.name : this.props.name}
-			name={this.props.name}
-			onChange={this.handleChange}
-		/>
-        <ToggleLabel>
-          <ToggleName>{this.props.label}</ToggleName>
-        </ToggleLabel>
-      </div>
-    );
-  }
+    render() {
+        return (
+            <div>
+                <ReactToggle
+                    checked={this.props.checked}
+                    disabled={this.state.transactionUnderway || this.props.disabled}
+                    icons={false}
+                    id={
+                        this.props.prepend
+                            ? this.props.prepend + "-" + this.props.name
+                            : this.props.name
+                    }
+                    name={this.props.name}
+                    onChange={this.handleChange}
+                />
+                <ToggleLabel>
+                    <ToggleName>{this.props.label}</ToggleName>
+                </ToggleLabel>
+            </div>
+        );
+    }
 }
 
 export { Toggle };

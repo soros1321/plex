@@ -1,12 +1,12 @@
-import * as React from 'react';
-import { DebtOrderEntity } from '../../../../models';
+import * as React from "react";
+import { DebtOrderEntity } from "../../../../models";
 import {
     formatDate,
     formatTime,
     getIdenticonImgSrc,
     shortenString,
     amortizationUnitToFrequency,
-	debtOrderFromJSON
+    debtOrderFromJSON,
 } from "../../../../utils";
 import {
     Wrapper,
@@ -31,21 +31,23 @@ import {
     Strikethrough,
     ShowMore,
     PaymentDate,
-	CancelButtonContainer,
-	CancelButton
-} from './styledComponents';
-import { MakeRepaymentModal, ConfirmationModal, Bold } from '../../../../components';
-import { ScheduleIcon } from '../../../../components/scheduleIcon/scheduleIcon';
-import { Row, Col, Collapse } from 'reactstrap';
-import { BigNumber } from 'bignumber.js';
-import Dharma from '@dharmaprotocol/dharma.js';
+    PendingActionContainer,
+    CancelButton,
+    ShareButton,
+} from "./styledComponents";
+import { MakeRepaymentModal, ConfirmationModal, Bold } from "../../../../components";
+import { ScheduleIcon } from "../../../../components/scheduleIcon/scheduleIcon";
+import { Row, Col, Collapse } from "reactstrap";
+import { BigNumber } from "bignumber.js";
+import Dharma from "@dharmaprotocol/dharma.js";
 import { TokenAmount } from "src/components";
 import { web3Errors } from "src/common/web3Errors";
 
 interface Props {
+    currentTime?: number;
     debtOrder: DebtOrderEntity;
     dharma: Dharma;
-	accounts: string[];
+    accounts: string[];
     handleSuccessfulRepayment: (
         agreementId: string,
         repaymentAmount: BigNumber,
@@ -53,16 +55,16 @@ interface Props {
     ) => void;
     handleSetErrorToast: (errorMessage: string) => void;
     handleSetSuccessToast: (successMessage: string) => void;
-	handleCancelDebtOrder: (issuanceHash: string) => void;
+    handleCancelDebtOrder: (issuanceHash: string) => void;
 }
 
 interface State {
     collapse: boolean;
     makeRepayment: boolean;
     awaitingRepaymentTx: boolean;
-	awaitingCancelTx: boolean;
+    awaitingCancelTx: boolean;
     missedPayments: object;
-	confirmationModal: boolean;
+    confirmationModal: boolean;
 }
 
 class ActiveDebtOrder extends React.Component<Props, State> {
@@ -72,17 +74,17 @@ class ActiveDebtOrder extends React.Component<Props, State> {
             collapse: false,
             makeRepayment: false,
             awaitingRepaymentTx: false,
-			awaitingCancelTx: false,
+            awaitingCancelTx: false,
             missedPayments: {},
-			confirmationModal: false
+            confirmationModal: false,
         };
         this.toggleDrawer = this.toggleDrawer.bind(this);
         this.toggleRepaymentModal = this.toggleRepaymentModal.bind(this);
         this.handleMakeRepaymentClick = this.handleMakeRepaymentClick.bind(this);
         this.handleRepaymentFormSubmission = this.handleRepaymentFormSubmission.bind(this);
-		this.confirmationModalToggle = this.confirmationModalToggle.bind(this);
-		this.handleCancelDebtOrderClick = this.handleCancelDebtOrderClick.bind(this);
-		this.handleCancelDebtOrderSubmission = this.handleCancelDebtOrderSubmission.bind(this);
+        this.confirmationModalToggle = this.confirmationModalToggle.bind(this);
+        this.handleCancelDebtOrderClick = this.handleCancelDebtOrderClick.bind(this);
+        this.handleCancelDebtOrderSubmission = this.handleCancelDebtOrderSubmission.bind(this);
     }
 
     componentDidMount() {
@@ -103,89 +105,95 @@ class ActiveDebtOrder extends React.Component<Props, State> {
         this.toggleRepaymentModal();
     }
 
-	confirmationModalToggle() {
-		this.setState({
-			confirmationModal: !this.state.confirmationModal
-		});
-	}
+    confirmationModalToggle() {
+        this.setState({
+            confirmationModal: !this.state.confirmationModal,
+        });
+    }
 
     handleCancelDebtOrderClick(event: React.MouseEvent<HTMLElement>) {
         event.stopPropagation();
-		this.confirmationModalToggle();
+        this.confirmationModalToggle();
     }
 
-	async handleCancelDebtOrderSubmission() {
-		try {
-			const {
-				dharma,
-				debtOrder,
-				accounts,
-				handleCancelDebtOrder,
-				handleSetSuccessToast,
-				handleSetErrorToast
-			} = this.props;
+    async handleCancelDebtOrderSubmission() {
+        try {
+            const {
+                dharma,
+                debtOrder,
+                accounts,
+                handleCancelDebtOrder,
+                handleSetSuccessToast,
+                handleSetErrorToast,
+            } = this.props;
 
-			handleSetErrorToast('');
-			if (!dharma) {
-				handleSetErrorToast(web3Errors.UNABLE_TO_FIND_CONTRACTS);
-				return;
-			} else if (!accounts.length) {
-				handleSetErrorToast(web3Errors.UNABLE_TO_FIND_ACCOUNTS);
-				return;
-			} else if (!debtOrder.json) {
-				handleSetErrorToast("Unable to get debt order info");
-				return;
-			}
+            handleSetErrorToast("");
+            if (!dharma) {
+                handleSetErrorToast(web3Errors.UNABLE_TO_FIND_CONTRACTS);
+                return;
+            } else if (!accounts.length) {
+                handleSetErrorToast(web3Errors.UNABLE_TO_FIND_ACCOUNTS);
+                return;
+            } else if (!debtOrder.json) {
+                handleSetErrorToast("Unable to get debt order info");
+                return;
+            }
 
-			const dharmaDebtOrder = debtOrderFromJSON(debtOrder.json);
-			if (dharmaDebtOrder.debtor !== accounts[0]) {
-				this.confirmationModalToggle();
-				handleSetErrorToast("Debt order can only be cancelled by the specified order's debtor");
-			} else {
-				dharma.order.cancelOrderAsync(dharmaDebtOrder, {from: accounts[0]})
-					.then((txHash) => {
-						this.setState({ awaitingCancelTx: true });
-						return dharma.blockchain.awaitTransactionMinedAsync(txHash, 1000, 60000);
-					})
-					.then((receipt) => {
-						return dharma.blockchain.getErrorLogs(receipt.transactionHash);
-					})
-					.then(async (errors) => {
-						this.setState({ awaitingCancelTx: false });
-						this.confirmationModalToggle();
+            const dharmaDebtOrder = debtOrderFromJSON(debtOrder.json);
+            if (dharmaDebtOrder.debtor !== accounts[0]) {
+                this.confirmationModalToggle();
+                handleSetErrorToast(
+                    "Debt order can only be cancelled by the specified order's debtor",
+                );
+            } else {
+                dharma.order
+                    .cancelOrderAsync(dharmaDebtOrder, { from: accounts[0] })
+                    .then((txHash) => {
+                        this.setState({ awaitingCancelTx: true });
+                        return dharma.blockchain.awaitTransactionMinedAsync(txHash, 1000, 60000);
+                    })
+                    .then((receipt) => {
+                        return dharma.blockchain.getErrorLogs(receipt.transactionHash);
+                    })
+                    .then(async (errors) => {
+                        this.setState({ awaitingCancelTx: false });
+                        this.confirmationModalToggle();
 
-						if (errors.length > 0) {
-							handleSetErrorToast(errors[0]);
-						} else {
-							handleCancelDebtOrder(debtOrder.issuanceHash);
+                        if (errors.length > 0) {
+                            handleSetErrorToast(errors[0]);
+                        } else {
+                            handleCancelDebtOrder(debtOrder.issuanceHash);
 
-							handleSetSuccessToast(
-								`Debt agreement ${shortenString(debtOrder.issuanceHash)} is cancelled successfully`,
-							);
-						}
-					}).catch(err => {
-						if (err.message.includes('User denied transaction signature')) {
-							handleSetErrorToast("Wallet has denied transaction.");
-						} else {
-							handleSetErrorToast(err.message);
-						}
-						this.confirmationModalToggle();
-						this.setState({ awaitingCancelTx: false });
-					});
-			}
-		} catch (e) {
-			this.confirmationModalToggle();
-			this.props.handleSetErrorToast(e.message);
-		}
-	}
+                            handleSetSuccessToast(
+                                `Debt agreement ${shortenString(
+                                    debtOrder.issuanceHash,
+                                )} is cancelled successfully`,
+                            );
+                        }
+                    })
+                    .catch((err) => {
+                        if (err.message.includes("User denied transaction signature")) {
+                            handleSetErrorToast("Wallet has denied transaction.");
+                        } else {
+                            handleSetErrorToast(err.message);
+                        }
+                        this.confirmationModalToggle();
+                        this.setState({ awaitingCancelTx: false });
+                    });
+            }
+        } catch (e) {
+            this.confirmationModalToggle();
+            this.props.handleSetErrorToast(e.message);
+        }
+    }
 
     async handleRepaymentFormSubmission(tokenAmount: BigNumber, tokenSymbol: string) {
-		this.props.handleSetErrorToast('');
+        this.props.handleSetErrorToast("");
         const { dharma } = this.props;
-		if (!dharma) {
-			this.props.handleSetErrorToast(web3Errors.UNABLE_TO_FIND_CONTRACTS);
-			return;
-		}
+        if (!dharma) {
+            this.props.handleSetErrorToast(web3Errors.UNABLE_TO_FIND_CONTRACTS);
+            return;
+        }
 
         const tokenAddress = await dharma.contracts.getTokenAddressBySymbolAsync(tokenSymbol);
 
@@ -203,11 +211,15 @@ class ActiveDebtOrder extends React.Component<Props, State> {
                 this.setState({ makeRepayment: false, awaitingRepaymentTx: false });
 
                 if (errors.length > 0) {
-					if (this.props.debtOrder.principalTokenSymbol !== tokenSymbol) {
-						this.props.handleSetErrorToast(`Repayments to debt agreement ${shortenString(this.props.debtOrder.issuanceHash)} must be made in ${this.props.debtOrder.principalTokenSymbol}`);
-					} else {
-						this.props.handleSetErrorToast(errors[0]);
-					}
+                    if (this.props.debtOrder.principalTokenSymbol !== tokenSymbol) {
+                        this.props.handleSetErrorToast(
+                            `Repayments to debt agreement ${shortenString(
+                                this.props.debtOrder.issuanceHash,
+                            )} must be made in ${this.props.debtOrder.principalTokenSymbol}`,
+                        );
+                    } else {
+                        this.props.handleSetErrorToast(errors[0]);
+                    }
                 } else {
                     this.props.handleSuccessfulRepayment(
                         this.props.debtOrder.issuanceHash,
@@ -215,11 +227,14 @@ class ActiveDebtOrder extends React.Component<Props, State> {
                         tokenSymbol,
                     );
                     this.props.handleSetSuccessToast(
-                        `Successfully made repayment of ${tokenAmount.div(10 ** 18).toString()} ${tokenSymbol}`,
+                        `Successfully made repayment of ${tokenAmount
+                            .div(10 ** 18)
+                            .toString()} ${tokenSymbol}`,
                     );
                 }
-            }).catch(err => {
-                if (err.message.includes('User denied transaction signature')) {
+            })
+            .catch((err) => {
+                if (err.message.includes("User denied transaction signature")) {
                     this.props.handleSetErrorToast("Wallet has denied transaction.");
                 } else {
                     this.props.handleSetErrorToast(err.message);
@@ -231,9 +246,9 @@ class ActiveDebtOrder extends React.Component<Props, State> {
 
     async calculatePaymentsMissed() {
         const { dharma } = this.props;
-		if (!dharma) {
-			return;
-		}
+        if (!dharma) {
+            return;
+        }
         const { issuanceHash, repaidAmount, repaymentSchedule } = this.props.debtOrder;
 
         let missedPayments = {};
@@ -242,7 +257,10 @@ class ActiveDebtOrder extends React.Component<Props, State> {
 
         for (let i = 0; i < repaymentSchedule.length; i++) {
             paymentDate = repaymentSchedule[i];
-            expectedRepaidAmount = await dharma.servicing.getExpectedValueRepaid(issuanceHash, paymentDate);
+            expectedRepaidAmount = await dharma.servicing.getExpectedValueRepaid(
+                issuanceHash,
+                paymentDate,
+            );
             missedPayments[paymentDate] = repaidAmount < expectedRepaidAmount;
         }
 
@@ -250,13 +268,13 @@ class ActiveDebtOrder extends React.Component<Props, State> {
     }
 
     render() {
-        const { debtOrder } = this.props;
-        if (!debtOrder) {
-            return null;
-        }
+        const { currentTime, debtOrder } = this.props;
 
         const repaymentSchedule = debtOrder.repaymentSchedule;
-        const now = Math.round(new Date().getTime() / 1000);
+        if (!debtOrder || currentTime === undefined) {
+            return null;
+        }
+        const now = currentTime;
 
         const repaymentScheduleItems: JSX.Element[] = [];
         let maxDisplay = 0;
@@ -268,12 +286,12 @@ class ActiveDebtOrder extends React.Component<Props, State> {
 
                 if (now > paymentSchedule) {
                     if (this.state.missedPayments[paymentSchedule]) {
-                        repaymentState = 'missed';
+                        repaymentState = "missed";
                     } else {
-                        repaymentState = 'past';
+                        repaymentState = "past";
                     }
                 } else {
-                    repaymentState = 'future';
+                    repaymentState = "future";
                 }
 
                 if (maxDisplay === 4 && repaymentSchedule.length > 5) {
@@ -322,11 +340,38 @@ class ActiveDebtOrder extends React.Component<Props, State> {
                 shortenString(debtOrder.issuanceHash)
             );
 
-		const confirmationModalContent = (
-			<span>
-				Are you sure you want to cancel debt agreement <Bold>{shortenString(debtOrder.issuanceHash)}</Bold>
-			</span>
-		);
+        const confirmationModalContent = (
+            <span>
+                Are you sure you want to cancel debt agreement{" "}
+                <Bold>{shortenString(debtOrder.issuanceHash)}</Bold>
+            </span>
+        );
+        let terms = "Simple Interest (Non-Collateralized)";
+        let collateral = null;
+        let gracePeriod = null;
+
+        if (debtOrder.collateralized) {
+            terms = "Simple Interest (Collateralized)";
+            collateral = (
+                <Col xs="4" sm="4" md="4" lg="2">
+                    <InfoItem>
+                        <InfoItemTitle>Collateral</InfoItemTitle>
+                        <InfoItemContent>
+                            {debtOrder.collateralAmount + " " + debtOrder.collateralTokenSymbol}
+                        </InfoItemContent>
+                    </InfoItem>
+                </Col>
+            );
+            gracePeriod = (
+                <Col xs="8" sm="8" md="8" lg="2">
+                    <InfoItem>
+                        <InfoItemTitle>Grace period</InfoItemTitle>
+                        <InfoItemContent>{debtOrder.gracePeriodInDays + " days"}</InfoItemContent>
+                    </InfoItem>
+                </Col>
+            );
+        }
+
         return (
             <Wrapper onClick={this.toggleDrawer}>
                 <Row>
@@ -357,24 +402,25 @@ class ActiveDebtOrder extends React.Component<Props, State> {
                         ) : (
                             <StatusPending>Pending</StatusPending>
                         )}
-                        <Terms>Simple Interest (Non-Collateralized)</Terms>
+                        <Terms>{terms}</Terms>
                     </DetailContainer>
-					{debtOrder.status === "pending" ?
-						(
-							<CancelButtonContainer>
-								<CancelButton onClick={this.handleCancelDebtOrderClick}>
-								Cancel
-								</CancelButton>
-							</CancelButtonContainer>
-						) : (
-							<RepaymentScheduleContainer
-								className={debtOrder.status === "active" ? "active" : ""}
-							>
-								<Title>Repayment Schedule</Title>
-								{repaymentScheduleItems}
-							</RepaymentScheduleContainer>
-						)
-					}
+                    {debtOrder.status === "pending" ? (
+                        <PendingActionContainer>
+                            <CancelButton onClick={this.handleCancelDebtOrderClick}>
+                                Cancel
+                            </CancelButton>
+                            <ShareButton to={`/request/success/${debtOrder.issuanceHash}`}>
+                                Share
+                            </ShareButton>
+                        </PendingActionContainer>
+                    ) : (
+                        <RepaymentScheduleContainer
+                            className={debtOrder.status === "active" ? "active" : ""}
+                        >
+                            <Title>Repayment Schedule</Title>
+                            {repaymentScheduleItems}
+                        </RepaymentScheduleContainer>
+                    )}
                 </Row>
                 <Collapse isOpen={this.state.collapse}>
                     <Drawer>
@@ -427,10 +473,14 @@ class ActiveDebtOrder extends React.Component<Props, State> {
                                     </InfoItemContent>
                                 </InfoItem>
                             </Col>
+                            {collateral}
+                            {gracePeriod}
                             <Col xs="12" sm="12" md="12" lg="2">
                                 <InfoItem>
                                     <InfoItemTitle>Description</InfoItemTitle>
-                                    <InfoItemContent>{debtOrder.description ? debtOrder.description : '-'}</InfoItemContent>
+                                    <InfoItemContent>
+                                        {debtOrder.description ? debtOrder.description : "-"}
+                                    </InfoItemContent>
                                 </InfoItem>
                             </Col>
                         </Row>
@@ -448,18 +498,16 @@ class ActiveDebtOrder extends React.Component<Props, State> {
                     onToggle={this.toggleRepaymentModal}
                     onSubmit={this.handleRepaymentFormSubmission}
                 />
-				<ConfirmationModal
-					modal={this.state.confirmationModal}
-					title="Please confirm"
-					content={confirmationModalContent}
-					onToggle={this.confirmationModalToggle}
-					onSubmit={this.handleCancelDebtOrderSubmission}
-					closeButtonText="No"
-					awaitingTx={this.state.awaitingCancelTx}
-					submitButtonText={
-						this.state.awaitingCancelTx ? "Canceling Order..." : "Yes"
-					}
-				/>
+                <ConfirmationModal
+                    modal={this.state.confirmationModal}
+                    title="Please confirm"
+                    content={confirmationModalContent}
+                    onToggle={this.confirmationModalToggle}
+                    onSubmit={this.handleCancelDebtOrderSubmission}
+                    closeButtonText="No"
+                    awaitingTx={this.state.awaitingCancelTx}
+                    submitButtonText={this.state.awaitingCancelTx ? "Canceling Order..." : "Yes"}
+                />
             </Wrapper>
         );
     }

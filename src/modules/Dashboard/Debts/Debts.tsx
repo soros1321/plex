@@ -1,13 +1,14 @@
-import * as React from 'react';
-import { DebtOrderEntity } from '../../../models';
-import { Header, MainWrapper } from '../../../components';
-import { DebtsMetricsContainer } from './DebtsMetrics/DebtsMetricsContainer';
-import { ActiveDebtOrderContainer } from './ActiveDebtOrder/ActiveDebtOrderContainer';
-import { DebtOrderHistory } from './DebtOrderHistory';
-import Dharma from '@dharmaprotocol/dharma.js';
-import { BarLoader } from 'react-spinners';
+import * as React from "react";
+import { DebtOrderEntity } from "../../../models";
+import { Header, MainWrapper } from "../../../components";
+import { DebtsMetricsContainer } from "./DebtsMetrics/DebtsMetricsContainer";
+import { ActiveDebtOrderContainer } from "./ActiveDebtOrder/ActiveDebtOrderContainer";
+import { DebtOrderHistory } from "./DebtOrderHistory";
+import Dharma from "@dharmaprotocol/dharma.js";
+import { BarLoader } from "react-spinners";
 
 interface Props {
+    currentTime?: number;
     debtOrders: DebtOrderEntity[];
     dharma: Dharma;
     initializing: boolean;
@@ -25,7 +26,7 @@ class Debts extends React.Component<Props, State> {
         this.state = {
             allDebtOrders: [],
             activeDebtOrders: [],
-            inactiveDebtOrders: []
+            inactiveDebtOrders: [],
         };
     }
 
@@ -34,20 +35,20 @@ class Debts extends React.Component<Props, State> {
     }
 
     componentDidUpdate(prevProps: Props) {
-		if (this.props.debtOrders !== prevProps.debtOrders) {
-			this.getDebtOrdersDetails(this.props.debtOrders);
-		}
+        if (this.props.debtOrders !== prevProps.debtOrders) {
+            this.getDebtOrdersDetails(this.props.debtOrders);
+        }
     }
 
     getDebtOrdersDetails(debtOrders: DebtOrderEntity[]) {
-		if (!debtOrders) {
+        if (!debtOrders) {
             return;
         }
         const allDebtOrders: DebtOrderEntity[] = [];
         const activeDebtOrders: DebtOrderEntity[] = [];
         const inactiveDebtOrders: DebtOrderEntity[] = [];
         for (let debtOrder of debtOrders) {
-            if (debtOrder.status === 'inactive') {
+            if (debtOrder.status === "inactive") {
                 inactiveDebtOrders.push(debtOrder);
             } else {
                 activeDebtOrders.push(debtOrder);
@@ -57,14 +58,14 @@ class Debts extends React.Component<Props, State> {
         this.setState({
             allDebtOrders,
             activeDebtOrders,
-            inactiveDebtOrders
+            inactiveDebtOrders,
         });
     }
 
     render() {
         const { allDebtOrders, activeDebtOrders, inactiveDebtOrders } = this.state;
 
-        if (this.props.initializing) {
+        if (this.props.initializing || this.props.currentTime === undefined) {
             return (
                 <MainWrapper>
                     <Header title="Your Debts" />
@@ -76,8 +77,9 @@ class Debts extends React.Component<Props, State> {
                 <MainWrapper>
                     <Header title="Your Debts" />
                     <DebtsMetricsContainer debtOrders={allDebtOrders} />
-                    {activeDebtOrders.map(debtOrder => (
+                    {activeDebtOrders.map((debtOrder) => (
                         <ActiveDebtOrderContainer
+                            currentTime={this.props.currentTime}
                             dharma={this.props.dharma}
                             debtOrder={debtOrder}
                             key={debtOrder.issuanceHash}

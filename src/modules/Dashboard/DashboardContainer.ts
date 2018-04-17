@@ -10,7 +10,8 @@ const mapStateToProps = (state: any) => {
         dharma: state.dharmaReducer.dharma,
         accounts: state.web3Reducer.accounts,
         pendingDebtOrders: state.debtOrderReducer.pendingDebtOrders,
-        filledDebtOrders: state.debtOrderReducer.filledDebtOrders
+        filledDebtOrders: state.debtOrderReducer.filledDebtOrders,
+        web3: state.web3Reducer.web3,
     };
 };
 
@@ -18,8 +19,8 @@ const mapDispatchToProps = (dispatch: any) => {
     return {
         handleSetError: (errorMessage: string) => dispatch(setError(errorMessage)),
         handleSetFilledDebtOrders: (filledDebtOrders: DebtOrderEntity[]) =>
-			dispatch(setFilledDebtOrders(filledDebtOrders)),
-		handleFillDebtOrder: (issuanceHash: string) => dispatch(fillDebtOrder(issuanceHash))
+            dispatch(setFilledDebtOrders(filledDebtOrders)),
+        handleFillDebtOrder: (issuanceHash: string) => dispatch(fillDebtOrder(issuanceHash)),
     };
 };
 

@@ -1,8 +1,8 @@
-import { actionsEnums } from '../../../common/actionsEnums';
+import { actionsEnums } from "../../../common/actionsEnums";
 
 export const fillDebtOrder = (issuanceHash: string) => {
-	return {
-		type: actionsEnums.FILL_DEBT_ORDER,
-		payload: issuanceHash
-	};
+    return {
+        type: actionsEnums.FILL_DEBT_ORDER,
+        payload: issuanceHash,
+    };
 };
