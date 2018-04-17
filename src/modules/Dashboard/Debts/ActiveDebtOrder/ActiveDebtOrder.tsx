@@ -44,6 +44,7 @@ import { TokenAmount } from "src/components";
 import { web3Errors } from "src/common/web3Errors";
 
 interface Props {
+    currentTime?: number;
     debtOrder: DebtOrderEntity;
     dharma: Dharma;
     accounts: string[];
@@ -267,13 +268,13 @@ class ActiveDebtOrder extends React.Component<Props, State> {
     }
 
     render() {
-        const { debtOrder } = this.props;
+        const { currentTime, debtOrder } = this.props;
 
         const repaymentSchedule = debtOrder.repaymentSchedule;
-        if (!debtOrder) {
+        if (!debtOrder || currentTime === undefined) {
             return null;
         }
-        const now = Math.round(new Date().getTime() / 1000);
+        const now = currentTime;
 
         const repaymentScheduleItems: JSX.Element[] = [];
         let maxDisplay = 0;

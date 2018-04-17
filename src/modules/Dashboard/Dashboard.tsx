@@ -1,4 +1,5 @@
 import * as React from "react";
+import * as Web3 from "web3";
 import { DebtOrderEntity, InvestmentEntity } from "../../models";
 import { Nav, NavLink, TabContent, TabPane } from "reactstrap";
 import { DebtsContainer } from "./Debts/DebtsContainer";
@@ -6,6 +7,7 @@ import { InvestmentsContainer } from "./Investments/InvestmentsContainer";
 import { Wrapper, StyledNavItem, TitleFirstWord, TitleRest } from "./styledComponents";
 import Dharma from "@dharmaprotocol/dharma.js";
 import { debtOrderFromJSON } from "../../utils";
+const Web3Utils = require("../../utils/web3Utils");
 
 interface Props {
     dharma: Dharma;
@@ -15,12 +17,14 @@ interface Props {
     handleSetError: (errorMessage: string) => void;
     handleSetFilledDebtOrders: (filledDebtOrders: DebtOrderEntity[]) => void;
     handleFillDebtOrder: (issuanceHash: string) => void;
+    web3: Web3;
 }
 
 interface States {
     investments: InvestmentEntity[];
     initiallyLoading: boolean;
     activeTab: string;
+    currentTime?: number;
 }
 
 class Dashboard extends React.Component<Props, States> {
@@ -39,6 +43,7 @@ class Dashboard extends React.Component<Props, States> {
         if (this.props.dharma) {
             await this.getDebtsAsync(this.props.dharma);
             await this.getInvestmentsAsync(this.props.dharma);
+            await this.getBlockchainTime();
             this.setState({ initiallyLoading: false });
         }
     }
@@ -47,8 +52,15 @@ class Dashboard extends React.Component<Props, States> {
         if (this.props.dharma !== prevProps.dharma) {
             await this.getDebtsAsync(this.props.dharma);
             await this.getInvestmentsAsync(this.props.dharma);
+            await this.getBlockchainTime();
             this.setState({ initiallyLoading: false });
         }
+    }
+
+    async getBlockchainTime() {
+        const web3Utils = new Web3Utils(this.props.web3);
+        const currentTime = await web3Utils.getCurrentBlockTime();
+        this.setState({ currentTime });
     }
 
     async getDebtsAsync(dharma: Dharma) {
@@ -197,7 +209,7 @@ class Dashboard extends React.Component<Props, States> {
             debtOrders[index] = debtOrderFromJSON(JSON.stringify(debtOrders[index]));
         }
 
-        const { investments, activeTab, initiallyLoading } = this.state;
+        const { investments, activeTab, initiallyLoading, currentTime } = this.state;
         const tabs = [
             {
                 id: "1",
@@ -205,6 +217,7 @@ class Dashboard extends React.Component<Props, States> {
                 titleRest: "Debts (" + (debtOrders && debtOrders.length) + ")",
                 content: (
                     <DebtsContainer
+                        currentTime={currentTime}
                         dharma={this.props.dharma}
                         debtOrders={debtOrders}
                         initializing={initiallyLoading}
@@ -217,6 +230,7 @@ class Dashboard extends React.Component<Props, States> {
                 titleRest: "Investments (" + (investments && investments.length) + ")",
                 content: (
                     <InvestmentsContainer
+                        currentTime={currentTime}
                         investments={investments}
                         initializing={initiallyLoading}
                     />

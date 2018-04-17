@@ -11,6 +11,7 @@ const mapStateToProps = (state: any) => {
         accounts: state.web3Reducer.accounts,
         pendingDebtOrders: state.debtOrderReducer.pendingDebtOrders,
         filledDebtOrders: state.debtOrderReducer.filledDebtOrders,
+        web3: state.web3Reducer.web3,
     };
 };
 

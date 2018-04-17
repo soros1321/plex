@@ -226,9 +226,7 @@ class TradingPermissions extends React.Component<Props, State> {
             // TODO: Fetch from contracts.
             const numDecimals = 18;
 
-            const displayableBalance = displayBalance(
-                token.balance, numDecimals
-            );
+            const displayableBalance = displayBalance(token.balance, numDecimals);
 
             const tokenLabel = (
                 <div>

@@ -7,6 +7,7 @@ import { InvestmentHistory } from "./InvestmentHistory";
 import { BarLoader } from "react-spinners";
 
 interface Props {
+    currentTime?: number;
     investments: InvestmentEntity[];
     initializing: boolean;
 }
@@ -76,6 +77,7 @@ class Investments extends React.Component<Props, State> {
                     <InvestmentsMetricsContainer investments={allInvestments} />
                     {activeInvestments.map((investment) => (
                         <ActiveInvestmentContainer
+                            currentTime={this.props.currentTime}
                             investment={investment}
                             key={investment.issuanceHash}
                         />

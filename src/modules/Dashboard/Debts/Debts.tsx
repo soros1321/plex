@@ -8,6 +8,7 @@ import Dharma from "@dharmaprotocol/dharma.js";
 import { BarLoader } from "react-spinners";
 
 interface Props {
+    currentTime?: number;
     debtOrders: DebtOrderEntity[];
     dharma: Dharma;
     initializing: boolean;
@@ -64,7 +65,7 @@ class Debts extends React.Component<Props, State> {
     render() {
         const { allDebtOrders, activeDebtOrders, inactiveDebtOrders } = this.state;
 
-        if (this.props.initializing) {
+        if (this.props.initializing || this.props.currentTime === undefined) {
             return (
                 <MainWrapper>
                     <Header title="Your Debts" />
@@ -78,6 +79,7 @@ class Debts extends React.Component<Props, State> {
                     <DebtsMetricsContainer debtOrders={allDebtOrders} />
                     {activeDebtOrders.map((debtOrder) => (
                         <ActiveDebtOrderContainer
+                            currentTime={this.props.currentTime}
                             dharma={this.props.dharma}
                             debtOrder={debtOrder}
                             key={debtOrder.issuanceHash}
