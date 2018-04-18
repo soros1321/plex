@@ -32,23 +32,18 @@ export const validateInterestRate = (interestRate: number) => {
 };
 
 export const validateCollateral = (tokens: TokenEntity[], collateral: any) => {
-    let selectedToken;
     let response = { fieldName: "", error: "" };
-    for (let token of tokens) {
-        if (token.tokenSymbol === collateral.collateralTokenSymbol) {
-            selectedToken = token;
-            break;
-        }
-    }
+    const selectedToken = tokens.find(function(token: TokenEntity) {
+        return token.tokenSymbol === collateral.collateralTokenSymbol;
+    });
     if (!selectedToken) {
         response = {
             fieldName: "collateralTokenSymbol",
             error: `${collateral.collateralTokenSymbol} is currently not supported`,
         };
     } else if (
-        selectedToken &&
-        (!selectedToken.tradingPermitted ||
-            selectedToken.balance.lt(new BigNumber(collateral.collateralAmount * 10 ** 18)))
+        !selectedToken.tradingPermitted ||
+        selectedToken.balance.lt(new BigNumber(collateral.collateralAmount * 10 ** 18))
     ) {
         response = { fieldName: "collateralAmount", error: `Token allowance is insufficient` };
     }
