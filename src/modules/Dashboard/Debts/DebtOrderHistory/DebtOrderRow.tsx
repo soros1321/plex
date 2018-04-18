@@ -44,9 +44,12 @@ class DebtOrderRow extends React.Component<Props, State> {
             return;
         }
         const valueRepaid = await dharma.servicing.getValueRepaid(debtOrder.issuanceHash);
+        const termEndTimestamp = debtOrder.repaymentSchedule.length
+            ? debtOrder.repaymentSchedule[debtOrder.repaymentSchedule.length - 1]
+            : moment().unix();
         const expectedRepaidAmount = await dharma.servicing.getExpectedValueRepaid(
             debtOrder.issuanceHash,
-            moment().unix(),
+            termEndTimestamp,
         );
         this.setState({
             status: new BigNumber(valueRepaid).lt(new BigNumber(expectedRepaidAmount))

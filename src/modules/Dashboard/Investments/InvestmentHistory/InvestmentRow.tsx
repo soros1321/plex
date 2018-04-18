@@ -44,9 +44,12 @@ class InvestmentRow extends React.Component<Props, State> {
             return;
         }
         const earnedAmount = await dharma.servicing.getValueRepaid(investment.issuanceHash);
+        const termEndTimestamp = investment.repaymentSchedule.length
+            ? investment.repaymentSchedule[investment.repaymentSchedule.length - 1]
+            : moment().unix();
         const expectedEarnedAmount = await dharma.servicing.getExpectedValueRepaid(
             investment.issuanceHash,
-            moment().unix(),
+            termEndTimestamp,
         );
         this.setState({
             status: new BigNumber(earnedAmount).lt(new BigNumber(expectedEarnedAmount))

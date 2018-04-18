@@ -8,6 +8,8 @@ import { Wrapper, StyledNavItem, TitleFirstWord, TitleRest } from "./styledCompo
 import Dharma from "@dharmaprotocol/dharma.js";
 import { debtOrderFromJSON } from "../../utils";
 const Web3Utils = require("../../utils/web3Utils");
+import * as moment from "moment";
+import { BigNumber } from "bignumber.js";
 
 interface Props {
     dharma: Dharma;
@@ -85,10 +87,17 @@ class Dashboard extends React.Component<Props, States> {
                     debtRegistryEntry,
                 )) as any;
                 const repaymentSchedule = await adapter.getRepaymentSchedule(debtRegistryEntry);
+                const termEndTimestamp = repaymentSchedule.length
+                    ? repaymentSchedule[repaymentSchedule.length - 1]
+                    : moment().unix();
                 const repaidAmount = await dharma.servicing.getValueRepaid(issuanceHash);
-                const status = repaidAmount.lt(dharmaDebtOrder.principalAmount)
-                    ? "active"
-                    : "inactive";
+                const expectedRepaidAmount = await dharma.servicing.getExpectedValueRepaid(
+                    issuanceHash,
+                    termEndTimestamp,
+                );
+                const status = new BigNumber(repaidAmount).gte(new BigNumber(expectedRepaidAmount))
+                    ? "inactive"
+                    : "active";
                 const debtOrder: DebtOrderEntity = {
                     debtor: accounts[0],
                     termsContract: debtRegistryEntry.termsContract,
@@ -154,13 +163,18 @@ class Dashboard extends React.Component<Props, States> {
                 const dharmaDebtOrder = (await adapter.fromDebtRegistryEntry(
                     debtRegistryEntry,
                 )) as any;
+                const repaymentSchedule = await adapter.getRepaymentSchedule(debtRegistryEntry);
+                const termEndTimestamp = repaymentSchedule.length
+                    ? repaymentSchedule[repaymentSchedule.length - 1]
+                    : moment().unix();
                 const earnedAmount = await dharma.servicing.getValueRepaid(issuanceHash);
-                const repaymentSchedule = await dharma.adapters.simpleInterestLoan.getRepaymentSchedule(
-                    debtRegistryEntry,
+                const expectedEarnedAmount = await dharma.servicing.getExpectedValueRepaid(
+                    issuanceHash,
+                    termEndTimestamp,
                 );
-                const status = earnedAmount.lt(dharmaDebtOrder.principalAmount)
-                    ? "active"
-                    : "inactive";
+                const status = new BigNumber(earnedAmount).gte(new BigNumber(expectedEarnedAmount))
+                    ? "inactive"
+                    : "active";
                 const investment: InvestmentEntity = {
                     creditor: debtRegistryEntry.beneficiary,
                     termsContract: debtRegistryEntry.termsContract,
