@@ -48,7 +48,7 @@ export const validateCollateral = (tokens: TokenEntity[], collateral: any) => {
     } else if (
         selectedToken &&
         (!selectedToken.tradingPermitted ||
-            selectedToken.balance.lt(new BigNumber(collateral.collateralAmount)))
+            selectedToken.balance.lt(new BigNumber(collateral.collateralAmount * 10 ** 18)))
     ) {
         response = { fieldName: "collateralAmount", error: `Token allowance is insufficient` };
     }
