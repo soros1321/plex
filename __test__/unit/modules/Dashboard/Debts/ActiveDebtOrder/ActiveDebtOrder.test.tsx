@@ -24,7 +24,7 @@ import {
 	InfoItemTitle,
 	InfoItemContent,
 	MakeRepaymentButton,
-	CancelButtonContainer,
+	PendingActionContainer,
 	CancelButton
 } from 'src/modules/Dashboard/Debts/ActiveDebtOrder/styledComponents';
 import { Collapse } from 'reactstrap';
@@ -67,6 +67,7 @@ describe('<ActiveDebtOrder />', () => {
 		let props;
 		beforeEach(() => {
 			props = {
+				currentTime: 12345,
 				debtOrder,
 				dharma: new MockDharma(),
 				accounts: [],
@@ -124,16 +125,6 @@ describe('<ActiveDebtOrder />', () => {
 					expect(detailContainer.find(Url).get(0).props.children).toEqual(shortenString(props.debtOrder.issuanceHash));
 				});
 
-				it('should render correct <Url /> when status is pending', () => {
-					props.debtOrder.status = 'pending';
-					wrapper.setProps({ debtOrder: props.debtOrder });
-					detailContainer = wrapper.find(DetailContainer);
-					expect(detailContainer.find(Url).find(DetailLink).length).toEqual(1);
-					expect(detailContainer.find(Url).find(DetailLink).prop('to')).toEqual('/request/success/' + props.debtOrder.issuanceHash);
-					expect(detailContainer.find(Url).find(DetailLink).get(0).props.children).toEqual(shortenString(props.debtOrder.issuanceHash));
-					props.debtOrder.status = 'active';
-					wrapper.setProps({ debtOrder: props.debtOrder });
-				});
 			});
 
 			it('should render a <MakeRepaymentButton /> if status active', () => {
@@ -147,27 +138,8 @@ describe('<ActiveDebtOrder />', () => {
 				expect(detailContainer.find(StatusActive).length).toEqual(1);
 			});
 
-			it('should not render a <MakeRepaymentButton /> if status not active', () => {
-				props.debtOrder.status = 'pending';
-				wrapper.setProps({ props });
-				detailContainer = wrapper.find(DetailContainer);
-				expect(detailContainer.find(MakeRepaymentButton).length).toEqual(0);
-			});
-
-			it('should render <StatusPending /> if pending', () => {
-				expect(detailContainer.find(StatusPending).length).toEqual(1);
-			});
-
 			it('should render a <Terms />', () => {
 				expect(detailContainer.find(Terms).length).toEqual(1);
-			});
-		});
-
-		describe('<CancelButton />', () => {
-			it('should render CancelButton when status is pending', () => {
-				props.debtOrder.status = 'pending';
-				wrapper.setProps({ props });
-				expect(wrapper.find(CancelButtonContainer).find(CancelButton).length).toEqual(1);
 			});
 		});
 
@@ -180,14 +152,6 @@ describe('<ActiveDebtOrder />', () => {
 
 			it('should render a <Title />', () => {
 				expect(wrapper.find(RepaymentScheduleContainer).find(Title).length).toEqual(1);
-			});
-
-			it('should not render when status is pending', () => {
-				props.debtOrder.status = 'pending';
-				wrapper.setProps({ props });
-				expect(wrapper.find(RepaymentScheduleContainer).length).toEqual(0);
-				props.debtOrder.status = 'active';
-				wrapper.setProps({ props });
 			});
 
 			describe('<Schedule />', () => {
@@ -226,6 +190,41 @@ describe('<ActiveDebtOrder />', () => {
 					props.debtOrder.repaymentSchedule = [1553557371, 1553657371, 1553757371, 1553857371, 1553957371, 1554-57371];
 					wrapper.setProps({ debtOrder: props.debtOrder });
 					expect(wrapper.find(Schedule).last().find(ShowMore).length).toEqual(1);
+				});
+			});
+
+			describe('#status pending', () => {
+				let detailContainer;
+
+				beforeAll(() => {
+					props.debtOrder.status = 'pending';
+					wrapper.setProps({ debtOrder: props.debtOrder });
+					detailContainer = wrapper.find(DetailContainer);
+				});
+
+				it('should render correct <Url />', () => {
+					expect(detailContainer.find(Url).find(DetailLink).length).toEqual(1);
+					expect(detailContainer.find(Url).find(DetailLink).prop('to')).toEqual('/request/success/' + props.debtOrder.issuanceHash);
+					expect(detailContainer.find(Url).find(DetailLink).get(0).props.children).toEqual(shortenString(props.debtOrder.issuanceHash));
+				});
+
+				it('should not render a <MakeRepaymentButton />', () => {
+					props.debtOrder.status = 'pending';
+					wrapper.setProps({ props });
+					detailContainer = wrapper.find(DetailContainer);
+					expect(detailContainer.find(MakeRepaymentButton).length).toEqual(0);
+				});
+
+				it('should render <StatusPending />', () => {
+					expect(detailContainer.find(StatusPending).length).toEqual(1);
+				});
+
+				it('should render <CancelButton />', () => {
+					expect(wrapper.find(PendingActionContainer).find(CancelButton).length).toEqual(1);
+				});
+
+				it('should not render <RepaymentScheduleContainer />', () => {
+					expect(wrapper.find(RepaymentScheduleContainer).length).toEqual(0);
 				});
 			});
 		});
@@ -290,7 +289,7 @@ describe('<ActiveDebtOrder />', () => {
 
 	describe('#onClick Wrapper', () => {
 		it('should call toggleDrawer on click', () => {
-			const props = { debtOrder };
+			const props = { debtOrder, currentTime: 12345 };
 			const spy = jest.spyOn(ActiveDebtOrder.prototype, 'toggleDrawer');
 			const wrapper = shallow(<ActiveDebtOrder {... props} />);
 			wrapper.simulate('click');
@@ -299,7 +298,7 @@ describe('<ActiveDebtOrder />', () => {
 		});
 
 		it('toggleDrawer should call setState', () => {
-			const props = { debtOrder };
+			const props = { debtOrder, currentTime: 12345 };
 			const spy = jest.spyOn(ActiveDebtOrder.prototype, 'setState');
 			const wrapper = shallow(<ActiveDebtOrder {... props} />);
 			const collapse = wrapper.state('collapse');
@@ -311,7 +310,8 @@ describe('<ActiveDebtOrder />', () => {
 
 	describe('#onClick <MakeRepaymentButton />', () => {
 		it('should call makeRepayment', () => {
-			const props = { debtOrder };
+			debtOrder.status = 'active';
+			const props = { debtOrder, currentTime: 12345 };
 			const spy = jest.spyOn(ActiveDebtOrder.prototype, 'handleMakeRepaymentClick');
 			const wrapper = shallow(<ActiveDebtOrder {... props} />);
 			const event = {

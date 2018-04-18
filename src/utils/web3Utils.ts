@@ -14,6 +14,9 @@ class Web3Utils {
      * @returns {Promise<number>}
      */
     public async getCurrentBlockTime(): Promise<number> {
+        if (!this.web3) {
+            return 0;
+        }
         const latestBlock = await promisify(this.web3.eth.getBlock)("latest");
 
         return latestBlock.timestamp;

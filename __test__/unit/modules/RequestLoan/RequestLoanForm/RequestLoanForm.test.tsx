@@ -130,6 +130,9 @@ describe('<RequestLoanForm />', () => {
 					interestRate: 10,
 					amortizationUnit: 'hours',
 					termLength: 10
+				},
+				collateral: {
+					collateralized: false
 				}
 			};
 		});
@@ -185,7 +188,7 @@ describe('<RequestLoanForm />', () => {
 			debtOrder.debtor = props.accounts[0];
 			await wrapper.instance().handleSubmit();
 			const issuanceHash = await dharma.order.getIssuanceHash(debtOrder);
-			expect(spy).toHaveBeenCalledWith({ debtOrder: JSON.stringify(debtOrder), issuanceHash});
+			expect(spy).toHaveBeenCalledWith({ collateralized: formData.collateral.collateralized, debtOrder: JSON.stringify(debtOrder), issuanceHash});
 		});
 
 		it('should call confirmationModalToggle', async () => {

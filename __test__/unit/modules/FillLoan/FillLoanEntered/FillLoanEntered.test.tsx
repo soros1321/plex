@@ -247,22 +247,22 @@ describe('<FillLoanEntered />', () => {
 			spy.mockRestore();
 		});
 
-		it('calls Dharma#fromDebtOrder', async() {
+		it('calls Dharma#getTermsContractType', async() {
 			const wrapper = shallow(<FillLoanEntered {... props} />);
 			const expectedDebtOrder = debtOrderFromJSON(JSON.stringify(props.location.query));
 			delete(expectedDebtOrder.description);
 			delete(expectedDebtOrder.principalTokenSymbol);
 			await wrapper.instance().getDebtOrderDetail(props.dharma, props.location.query);
-			await expect(dharma.adapters.simpleInterestLoan.fromDebtOrder).toHaveBeenCalledWith(expectedDebtOrder);
+			await expect(dharma.contracts.getTermsContractType).toHaveBeenCalledWith(expectedDebtOrder.termsContract);
 		});
 
-		it('calls Dharma#getIssuanceHash', async() {
+		it('calls Dharma#getAdapterByTermsContractAddress', async() {
 			const wrapper = shallow(<FillLoanEntered {... props} />);
 			const expectedDebtOrder = debtOrderFromJSON(JSON.stringify(props.location.query));
 			delete(expectedDebtOrder.description);
 			delete(expectedDebtOrder.principalTokenSymbol);
 			await wrapper.instance().getDebtOrderDetail(props.dharma, props.location.query);
-			await expect(dharma.order.getIssuanceHash).toHaveBeenCalledWith(expectedDebtOrder);
+			await expect(dharma.adapters.getAdapterByTermsContractAddress).toHaveBeenCalledWith(expectedDebtOrder.termsContract);
 		});
 
 		describe('no termsContract or no termsContractParameters', () => {

@@ -15,7 +15,6 @@ import {
 	Title,
 	Schedule,
 	ScheduleIconContainer,
-	ScheduleIcon,
 	Strikethrough,
 	PaymentDate,
 	ShowMore,
@@ -36,8 +35,7 @@ import {
 } from 'src/utils';
 import { BigNumber } from 'bignumber.js';
 import { TokenAmount } from 'src/components';
-const pastIcon = require('src/assets/img/ok_circle.png');
-const futureIcon = require('src/assets/img/circle_outline.png');
+import { ScheduleIcon } from 'src/components/scheduleIcon/scheduleIcon';
 
 describe('<ActiveInvestment />', () => {
 	let investment;
@@ -65,7 +63,7 @@ describe('<ActiveInvestment />', () => {
 		let wrapper;
 		let props;
 		beforeEach(() => {
-			props = { investment };
+			props = { investment, currentTime: 12345 };
 			wrapper = shallow(<ActiveInvestment {... props} />);
 		});
 
@@ -146,18 +144,18 @@ describe('<ActiveInvestment />', () => {
 					expect(wrapper.find(Schedule).first().find(ScheduleIconContainer).length).toEqual(1);
 				});
 
-				it('should render pastIcon <ScheduleIcon />', () => {
+				it('should render <ScheduleIcon state="past" />', () => {
 					props.investment.repaymentSchedule = [0];
 					wrapper.setProps({ investment: props.investment });
 					expect(wrapper.find(Schedule).first().find(ScheduleIconContainer).find(ScheduleIcon).length).toEqual(1);
-					expect(wrapper.find(Schedule).first().find(ScheduleIconContainer).find(ScheduleIcon).prop('src')).toEqual(pastIcon);
+					expect(wrapper.find(Schedule).first().find(ScheduleIconContainer).find(ScheduleIcon).prop('state')).toEqual('past');
 				});
 
-				it('should render futureIcon <ScheduleIcon />', () => {
-					props.investment.repaymentSchedule = [2553557371];
+				it('should render <ScheduleIcon state="future" />', () => {
+					props.investment.repaymentSchedule = [1234567];
 					wrapper.setProps({ investment: props.investment });
 					expect(wrapper.find(Schedule).first().find(ScheduleIconContainer).find(ScheduleIcon).length).toEqual(1);
-					expect(wrapper.find(Schedule).first().find(ScheduleIconContainer).find(ScheduleIcon).prop('src')).toEqual(futureIcon);
+					expect(wrapper.find(Schedule).first().find(ScheduleIconContainer).find(ScheduleIcon).prop('state')).toEqual('future');
 				});
 
 				it('should render time in <PaymentDate />', () => {
@@ -239,7 +237,7 @@ describe('<ActiveInvestment />', () => {
 
 	describe('#onClick Wrapper', () => {
 		it('should call toggleDrawer on click', () => {
-			const props = { investment };
+			const props = { investment, currentTime: 12345 };
 			const spy = jest.spyOn(ActiveInvestment.prototype, 'toggleDrawer');
 			const wrapper = shallow(<ActiveInvestment {... props} />);
 			wrapper.simulate('click');
@@ -247,7 +245,7 @@ describe('<ActiveInvestment />', () => {
 		});
 
 		it('toggleDrawer should call setState', () => {
-			const props = { investment };
+			const props = { investment, currentTime: 12345 };
 			const spy = jest.spyOn(ActiveInvestment.prototype, 'setState');
 			const wrapper = shallow(<ActiveInvestment {... props} />);
 			const collapse = wrapper.state('collapse');

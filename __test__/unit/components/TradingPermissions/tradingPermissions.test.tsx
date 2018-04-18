@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { shallow } from 'enzyme';
 import { TradingPermissions } from '../../../../src/components/TradingPermissions/TradingPermissions';
-import * as Web3 from 'web3';
 import Dharma from '@dharmaprotocol/dharma.js';
 import MockWeb3 from '../../../../__mocks__/web3';
 import MockDharma from '../../../../__mocks__/dharma.js';
@@ -20,13 +19,11 @@ import { Collapse } from 'reactstrap';
 import { Toggle } from '../../../../src/components/Toggle';
 
 describe('TradingPermissions (Unit)', () => {
-	let provider;
 	let web3;
 	let dharma;
 	let props;
 
 	beforeEach(() => {
-		provider = new Web3.providers.HttpProvider("http://localhost:8545");
 		web3 = new MockWeb3();
 		dharma = new MockDharma();
 		props = {
