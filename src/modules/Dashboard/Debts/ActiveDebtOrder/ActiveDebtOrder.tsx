@@ -269,11 +269,11 @@ class ActiveDebtOrder extends React.Component<Props, State> {
 
     render() {
         const { currentTime, debtOrder } = this.props;
-
-        const repaymentSchedule = debtOrder.repaymentSchedule;
         if (!debtOrder || currentTime === undefined) {
             return null;
         }
+
+        const repaymentSchedule = debtOrder.repaymentSchedule;
         const now = currentTime;
 
         const repaymentScheduleItems: JSX.Element[] = [];

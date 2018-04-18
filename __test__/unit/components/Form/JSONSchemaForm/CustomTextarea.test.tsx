@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { shallow } from 'enzyme';
-import { CustomTextarea } from '../../../../../src/components/Form/JSONSchemaForm/CustomTextarea';
-import { PressEnter } from '../../../../../src/components/Form/JSONSchemaForm/styledComponents';
+import { CustomTextarea } from 'src/components/Form/JSONSchemaForm/CustomTextarea';
+import { PressEnter } from 'src/components/Form/JSONSchemaForm/PressEnter';
 
 describe('<CustomTextarea />', () => {
 	let wrapper;
@@ -63,16 +63,6 @@ describe('<CustomTextarea />', () => {
 	it('should render a <PressEnter /> component when options.pressEnter is undefined', () => {
 		wrapper.setProps({ options: {pressEnter: undefined}});
 		expect(wrapper.find(PressEnter).length).toEqual(1);
-	});
-
-	it('<PressEnter /> should not have active class when textarea does not have value', () => {
-		wrapper.setProps({ value: ''});
-		expect(wrapper.find(PressEnter).hasClass('active')).toEqual(false);
-	});
-
-	it('<PressEnter /> should have active class when textarea does have value', () => {
-		wrapper.setProps({ value: 'some value'});
-		expect(wrapper.find(PressEnter).hasClass('active')).toEqual(true);
 	});
 
 	it('calls onChange prop when the textarea is changed', () => {

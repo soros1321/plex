@@ -1,9 +1,13 @@
 import * as React from 'react';
 import { shallow } from 'enzyme';
-import { App } from '../../src/App';
+import { App } from 'src/App';
+import MockWeb3 from '__mocks__/web3';
+jest.mock('react-ga');
 
 it('renders without crashing', () => {
-	const accounts: string[] = [];
-	const web3: any = null;
-	shallow(<App accounts={accounts} web3={web3} />);
+	const props = {
+		web3: new MockWeb3(),
+		accounts: ['account1']
+	};
+	shallow(<App {... props} />);
 });
