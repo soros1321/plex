@@ -85,6 +85,7 @@ export const schema: JSONSchema4 = {
                             type: "number",
                         },
                     },
+                    required: ["collateralAmount", "collateralTokenSymbol", "gracePeriodInDays"],
                 },
             },
         },
