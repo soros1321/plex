@@ -1,8 +1,6 @@
 import { connect } from "react-redux";
 import { Dashboard } from "./Dashboard";
 import { setError } from "../../components/Toast/actions";
-import { setFilledDebtOrders } from "./actions";
-import { DebtOrderEntity } from "../../models";
 import { fillDebtOrder } from "../FillLoan/FillLoanEntered/actions";
 
 const mapStateToProps = (state: any) => {
@@ -10,7 +8,6 @@ const mapStateToProps = (state: any) => {
         dharma: state.dharmaReducer.dharma,
         accounts: state.web3Reducer.accounts,
         pendingDebtOrders: state.debtOrderReducer.pendingDebtOrders,
-        filledDebtOrders: state.debtOrderReducer.filledDebtOrders,
         web3: state.web3Reducer.web3,
     };
 };
@@ -18,8 +15,6 @@ const mapStateToProps = (state: any) => {
 const mapDispatchToProps = (dispatch: any) => {
     return {
         handleSetError: (errorMessage: string) => dispatch(setError(errorMessage)),
-        handleSetFilledDebtOrders: (filledDebtOrders: DebtOrderEntity[]) =>
-            dispatch(setFilledDebtOrders(filledDebtOrders)),
         handleFillDebtOrder: (issuanceHash: string) => dispatch(fillDebtOrder(issuanceHash)),
     };
 };

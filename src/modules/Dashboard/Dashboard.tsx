@@ -12,15 +12,14 @@ const Web3Utils = require("../../utils/web3Utils");
 interface Props {
     dharma: Dharma;
     accounts: string[];
-    filledDebtOrders: DebtOrderEntity[];
     pendingDebtOrders: DebtOrderEntity[];
     handleSetError: (errorMessage: string) => void;
-    handleSetFilledDebtOrders: (filledDebtOrders: DebtOrderEntity[]) => void;
     handleFillDebtOrder: (issuanceHash: string) => void;
     web3: Web3;
 }
 
 interface States {
+    filledDebtOrders: DebtOrderEntity[];
     investments: InvestmentEntity[];
     initiallyLoading: boolean;
     activeTab: string;
@@ -34,6 +33,7 @@ class Dashboard extends React.Component<Props, States> {
         this.toggle = this.toggle.bind(this);
         this.state = {
             activeTab: "1",
+            filledDebtOrders: [],
             investments: [],
             initiallyLoading: true,
         };
@@ -116,7 +116,7 @@ class Dashboard extends React.Component<Props, States> {
                 filledDebtOrders.push(debtOrder);
             }
 
-            this.props.handleSetFilledDebtOrders(filledDebtOrders);
+            this.setState({ filledDebtOrders });
 
             // Check whether any of the pending debt orders is filled
             // Then, we want to remove it from the list
@@ -204,7 +204,7 @@ class Dashboard extends React.Component<Props, States> {
     render() {
         const { pendingDebtOrders } = this.props;
 
-        const debtOrders = pendingDebtOrders.concat(this.props.filledDebtOrders);
+        const debtOrders = pendingDebtOrders.concat(this.state.filledDebtOrders);
         for (const index of Object.keys(debtOrders)) {
             debtOrders[index] = debtOrderFromJSON(JSON.stringify(debtOrders[index]));
         }

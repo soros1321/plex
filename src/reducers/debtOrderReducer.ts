@@ -2,12 +2,10 @@ import { actionsEnums } from "../common/actionsEnums";
 import { DebtOrderEntity } from "../models";
 
 class DebtOrderReducerState {
-    filledDebtOrders: DebtOrderEntity[];
     pendingDebtOrders: DebtOrderEntity[];
     singleDebtOrder: DebtOrderEntity;
 
     constructor() {
-        this.filledDebtOrders = [];
         this.pendingDebtOrders = [];
         this.singleDebtOrder = new DebtOrderEntity();
     }
@@ -39,15 +37,6 @@ const handleRemovePendingDebtOrder = (state: DebtOrderReducerState, payload: str
     };
 };
 
-const handleSetFilledDebtOrders = (state: DebtOrderReducerState, action: any) => {
-    const { filledDebtOrders } = action;
-
-    return {
-        ...state,
-        filledDebtOrders,
-    };
-};
-
 export const debtOrderReducer = (
     state: DebtOrderReducerState = new DebtOrderReducerState(),
     action: any,
@@ -60,8 +49,6 @@ export const debtOrderReducer = (
         case actionsEnums.FILL_DEBT_ORDER:
         case actionsEnums.CANCEL_DEBT_ORDER:
             return handleRemovePendingDebtOrder(state, action.payload);
-        case actionsEnums.SET_FILLED_DEBT_ORDERS:
-            return handleSetFilledDebtOrders(state, action);
         default:
             return state;
     }
