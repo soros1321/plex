@@ -44,8 +44,8 @@ describe('<FillLoanEmpty />', () => {
 				expect(instructions.find(Title).length).toEqual(1);
 			});
 
-			it('should render 2 <StyledLink />', () => {
-				expect(instructions.find(StyledLink).length).toEqual(2);
+			it('should render a <StyledLink />', () => {
+				expect(instructions.find(StyledLink).length).toEqual(1);
 			});
 		});
 	});

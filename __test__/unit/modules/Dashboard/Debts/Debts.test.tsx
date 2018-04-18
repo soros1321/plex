@@ -1,43 +1,83 @@
 import * as React from 'react';
 import { shallow, mount } from 'enzyme';
-import { Debts } from '../../../../../src/modules/Dashboard/Debts/Debts';
-import { Header, MainWrapper } from '../../../../../src/components';
-import { DebtsMetricsContainer } from '../../../../../src/modules/Dashboard/Debts/DebtsMetrics/DebtsMetricsContainer';
-import { ActiveDebtOrderContainer } from '../../../../../src/modules/Dashboard/Debts/ActiveDebtOrder/ActiveDebtOrderContainer';
-import { DebtOrderHistory } from '../../../../../src/modules/Dashboard/Debts/DebtOrderHistory';
+import { Debts } from 'src/modules/Dashboard/Debts/Debts';
+import { Header, MainWrapper } from 'src/components';
+import { DebtsMetricsContainer } from 'src/modules/Dashboard/Debts/DebtsMetrics/DebtsMetricsContainer';
+import { ActiveDebtOrderContainer } from 'src/modules/Dashboard/Debts/ActiveDebtOrder/ActiveDebtOrderContainer';
+import { DebtOrderHistory } from 'src/modules/Dashboard/Debts/DebtOrderHistory';
 import { BigNumber } from 'bignumber.js';
-import { debtOrderFromJSON } from '../../../../../src/utils';
+import { debtOrderFromJSON } from 'src/utils';
+import { BarLoader } from 'react-spinners';
 
 describe('<Debts />', () => {
 	describe('#render', () => {
-		let wrapper;
-		let props;
+		describe('#initializing true', () => {
+			let wrapper;
+			let props;
 
-		beforeEach(() => {
-			props = {
-				debtOrders: []
-			};
-			wrapper = shallow(<Debts {... props} />);
+			beforeEach(() => {
+				props = {
+					debtOrders: [],
+					initializing: true
+				};
+				wrapper = shallow(<Debts {... props} />);
+			});
+
+			it('should render successfully', () => {
+				expect(wrapper.length).toEqual(1);
+			});
+
+			it('should render a <Header />', () => {
+				expect(wrapper.find(MainWrapper).find(Header).length).toEqual(1);
+			});
+
+			it('should render a <BarLoader />', () => {
+				expect(wrapper.find(MainWrapper).find(BarLoader).length).toEqual(1);
+			});
+
+			it('should not render <DebtsMetricsContainer />, <ActiveDebtOrderContainer />, and <DebtOrderHistory />', () => {
+				expect(wrapper.find(MainWrapper).find(DebtsMetricsContainer).length).toEqual(0);
+				expect(wrapper.find(MainWrapper).find(ActiveDebtOrderContainer).length).toEqual(0);
+				expect(wrapper.find(MainWrapper).find(DebtOrderHistory).length).toEqual(0);
+			});
 		});
 
-		it('should render successfully', () => {
-			expect(wrapper.length).toEqual(1);
-		});
+		describe('#initializing false', () => {
+			let wrapper;
+			let props;
 
-		it('should render a <Header />', () => {
-			expect(wrapper.find(MainWrapper).find(Header).length).toEqual(1);
-		});
+			beforeEach(() => {
+				props = {
+					debtOrders: [],
+					initializing: false,
+					currentTime: 12345
+				};
+				wrapper = shallow(<Debts {... props} />);
+			});
 
-		it('should render a <DebtsMetricsContainer />', () => {
-			expect(wrapper.find(MainWrapper).find(DebtsMetricsContainer).length).toEqual(1);
-		});
+			it('should render successfully', () => {
+				expect(wrapper.length).toEqual(1);
+			});
 
-		it('should render 0 <ActiveDebtOrderContainer />', () => {
-			expect(wrapper.find(MainWrapper).find(ActiveDebtOrderContainer).length).toEqual(0);
-		});
+			it('should render a <Header />', () => {
+				expect(wrapper.find(MainWrapper).find(Header).length).toEqual(1);
+			});
 
-		it('should render a <DebtOrderHistory />', () => {
-			expect(wrapper.find(MainWrapper).find(DebtOrderHistory).length).toEqual(1);
+			it('should render a <DebtsMetricsContainer />', () => {
+				expect(wrapper.find(MainWrapper).find(DebtsMetricsContainer).length).toEqual(1);
+			});
+
+			it('should render 0 <ActiveDebtOrderContainer />', () => {
+				expect(wrapper.find(MainWrapper).find(ActiveDebtOrderContainer).length).toEqual(0);
+			});
+
+			it('should render a <DebtOrderHistory />', () => {
+				expect(wrapper.find(MainWrapper).find(DebtOrderHistory).length).toEqual(1);
+			});
+
+			it('should not render <BarLoader />', () => {
+				expect(wrapper.find(MainWrapper).find(BarLoader).length).toEqual(0);
+			});
 		});
 	});
 
@@ -52,7 +92,7 @@ describe('<Debts />', () => {
 		});
 	});
 
-	describe('#componentWillReceiveProps', () => {
+	describe('#componentDidUpdate', () => {
 		it('should not call getDebtOrderDetails when debtOrders is null', () => {
 			const props = {
 				debtOrders: []
@@ -116,14 +156,14 @@ describe('<Debts />', () => {
 			};
 			return expectedState;
 		};
-		it('returns without setting state if debtOrders is empty', () => {
+		it('returns without setting state if debtOrders is null', () => {
 			const props = {
 				debtOrders: []
 			};
 			const wrapper = shallow(<Debts {... props} />);
 			const spy = jest.spyOn(wrapper.instance(), 'setState');
 
-			wrapper.instance().getDebtOrdersDetails([]);
+			wrapper.instance().getDebtOrdersDetails(null);
 			expect(spy).not.toHaveBeenCalled();
 			spy.mockRestore();
 		});

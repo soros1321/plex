@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { shallow } from 'enzyme';
-import { ActiveInvestment } from '../../../../../../src/modules/Dashboard/Investments/ActiveInvestment/ActiveInvestment';
+import { ActiveInvestment } from 'src/modules/Dashboard/Investments/ActiveInvestment/ActiveInvestment';
 import {
 	Wrapper,
 	ImageContainer,
@@ -15,7 +15,6 @@ import {
 	Title,
 	Schedule,
 	ScheduleIconContainer,
-	ScheduleIcon,
 	Strikethrough,
 	PaymentDate,
 	ShowMore,
@@ -25,7 +24,7 @@ import {
 	InfoItemTitle,
 	InfoItemContent,
 	TransferButton
-} from '../../../../../../src/modules/Dashboard/Investments/ActiveInvestment/styledComponents';
+} from 'src/modules/Dashboard/Investments/ActiveInvestment/styledComponents';
 import { Collapse } from 'reactstrap';
 import {
 	formatDate,
@@ -33,10 +32,10 @@ import {
 	getIdenticonImgSrc,
 	shortenString,
 	amortizationUnitToFrequency
-} from '../../../../../../src/utils';
+} from 'src/utils';
 import { BigNumber } from 'bignumber.js';
-const pastIcon = require('../../../../../../src/assets/img/ok_circle.png');
-const futureIcon = require('../../../../../../src/assets/img/circle_outline.png');
+import { TokenAmount } from 'src/components';
+import { ScheduleIcon } from 'src/components/scheduleIcon/scheduleIcon';
 
 describe('<ActiveInvestment />', () => {
 	let investment;
@@ -64,7 +63,7 @@ describe('<ActiveInvestment />', () => {
 		let wrapper;
 		let props;
 		beforeEach(() => {
-			props = { investment };
+			props = { investment, currentTime: 12345 };
 			wrapper = shallow(<ActiveInvestment {... props} />);
 		});
 
@@ -100,9 +99,9 @@ describe('<ActiveInvestment />', () => {
 			});
 
 			it('should render correct <Amount />', () => {
-				const amount = investment.principalAmount.toNumber() + ' ' + props.investment.principalTokenSymbol;
 				expect(detailContainer.find(Amount).length).toEqual(1);
-				expect(detailContainer.find(Amount).get(0).props.children).toEqual(amount);
+				expect(detailContainer.find(Amount).find(TokenAmount).prop('tokenAmount')).toEqual(props.investment.principalAmount);
+				expect(detailContainer.find(Amount).find(TokenAmount).prop('tokenSymbol')).toEqual(props.investment.principalTokenSymbol);
 			});
 
 			it('should render correct <DetailLink />', () => {
@@ -111,19 +110,8 @@ describe('<ActiveInvestment />', () => {
 				expect(detailContainer.find(Url).find(DetailLink).get(0).props.children).toEqual(shortenString(props.investment.issuanceHash));
 			});
 
-			it('should render a <TransferButton /> if status active', () => {
-				expect(detailContainer.find(TransferButton).length).toEqual(1);
-			});
-
 			it('should render <StatusActive /> if active', () => {
 				expect(detailContainer.find(StatusActive).length).toEqual(1);
-			});
-
-			it('should not render a <TransferButton /> if status not active', () => {
-				props.investment.status = 'defaulted';
-				wrapper.setProps({ props });
-				detailContainer = wrapper.find(DetailContainer);
-				expect(detailContainer.find(TransferButton).length).toEqual(0);
 			});
 
 			it('should render <StatusDefaulted /> if status defaulted', () => {
@@ -156,18 +144,18 @@ describe('<ActiveInvestment />', () => {
 					expect(wrapper.find(Schedule).first().find(ScheduleIconContainer).length).toEqual(1);
 				});
 
-				it('should render pastIcon <ScheduleIcon />', () => {
+				it('should render <ScheduleIcon state="past" />', () => {
 					props.investment.repaymentSchedule = [0];
 					wrapper.setProps({ investment: props.investment });
 					expect(wrapper.find(Schedule).first().find(ScheduleIconContainer).find(ScheduleIcon).length).toEqual(1);
-					expect(wrapper.find(Schedule).first().find(ScheduleIconContainer).find(ScheduleIcon).prop('src')).toEqual(pastIcon);
+					expect(wrapper.find(Schedule).first().find(ScheduleIconContainer).find(ScheduleIcon).prop('state')).toEqual('past');
 				});
 
-				it('should render futureIcon <ScheduleIcon />', () => {
-					props.investment.repaymentSchedule = [2553557371];
+				it('should render <ScheduleIcon state="future" />', () => {
+					props.investment.repaymentSchedule = [1234567];
 					wrapper.setProps({ investment: props.investment });
 					expect(wrapper.find(Schedule).first().find(ScheduleIconContainer).find(ScheduleIcon).length).toEqual(1);
-					expect(wrapper.find(Schedule).first().find(ScheduleIconContainer).find(ScheduleIcon).prop('src')).toEqual(futureIcon);
+					expect(wrapper.find(Schedule).first().find(ScheduleIconContainer).find(ScheduleIcon).prop('state')).toEqual('future');
 				});
 
 				it('should render time in <PaymentDate />', () => {
@@ -210,18 +198,18 @@ describe('<ActiveInvestment />', () => {
 				expect(collapse.find(InfoItem).length).toEqual(5);
 			});
 
-			it('1st <InfoItem /> should render Lended info', () => {
+			it('1st <InfoItem /> should render Lent info', () => {
 				const elm = collapse.find(InfoItem).at(0);
-				expect(elm.find(InfoItemTitle).get(0).props.children).toEqual('Lended');
-				const content = investment.principalAmount.toNumber() + ' ' + props.investment.principalTokenSymbol;
-				expect(elm.find(InfoItemContent).get(0).props.children).toEqual(content);
+				expect(elm.find(InfoItemTitle).get(0).props.children).toEqual('Lent');
+				expect(elm.find(InfoItemContent).find(TokenAmount).prop('tokenAmount')).toEqual(props.investment.principalAmount);
+				expect(elm.find(InfoItemContent).find(TokenAmount).prop('tokenSymbol')).toEqual(props.investment.principalTokenSymbol);
 			});
 
 			it('2nd <InfoItem /> should render Earned info', () => {
 				const elm = collapse.find(InfoItem).at(1);
 				expect(elm.find(InfoItemTitle).get(0).props.children).toEqual('Earned');
-				const content = props.investment.earnedAmount.toNumber() + ' ' + props.investment.principalTokenSymbol;
-				expect(elm.find(InfoItemContent).get(0).props.children).toEqual(content);
+				expect(elm.find(InfoItemContent).find(TokenAmount).prop('tokenAmount')).toEqual(props.investment.earnedAmount);
+				expect(elm.find(InfoItemContent).find(TokenAmount).prop('tokenSymbol')).toEqual(props.investment.principalTokenSymbol);
 			});
 
 			it('3rd <InfoItem /> should render Term Length info', () => {
@@ -249,7 +237,7 @@ describe('<ActiveInvestment />', () => {
 
 	describe('#onClick Wrapper', () => {
 		it('should call toggleDrawer on click', () => {
-			const props = { investment };
+			const props = { investment, currentTime: 12345 };
 			const spy = jest.spyOn(ActiveInvestment.prototype, 'toggleDrawer');
 			const wrapper = shallow(<ActiveInvestment {... props} />);
 			wrapper.simulate('click');
@@ -257,28 +245,12 @@ describe('<ActiveInvestment />', () => {
 		});
 
 		it('toggleDrawer should call setState', () => {
-			const props = { investment };
+			const props = { investment, currentTime: 12345 };
 			const spy = jest.spyOn(ActiveInvestment.prototype, 'setState');
 			const wrapper = shallow(<ActiveInvestment {... props} />);
 			const collapse = wrapper.state('collapse');
 			wrapper.simulate('click');
 			expect(spy).toHaveBeenCalledWith({collapse: !collapse});
-		});
-	});
-
-	describe('#onClick <TransferButton />', () => {
-		it('should call handleTransfer', () => {
-			const props = { investment };
-			props.investment.status = 'active';
-			const spy = jest.spyOn(ActiveInvestment.prototype, 'handleTransfer');
-			const wrapper = shallow(<ActiveInvestment {... props} />);
-			const event = {
-				stopPropagation: jest.fn()
-			};
-			expect(wrapper.find(TransferButton).length).toEqual(1);
-
-			wrapper.find(TransferButton).simulate('click', event);
-			expect(spy).toHaveBeenCalledWith(event);
 		});
 	});
 });
