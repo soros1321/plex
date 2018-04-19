@@ -203,6 +203,9 @@ class Dashboard extends React.Component<Props, States> {
 
     render() {
         const { pendingDebtOrders, filledDebtOrders, investments } = this.props;
+        if (!pendingDebtOrders || !filledDebtOrders || !investments) {
+            return null;
+        }
 
         const debtOrders = pendingDebtOrders.concat(filledDebtOrders);
         for (const index of Object.keys(debtOrders)) {
@@ -214,7 +217,7 @@ class Dashboard extends React.Component<Props, States> {
             {
                 id: "1",
                 titleFirstWord: "Your ",
-                titleRest: "Debts (" + (debtOrders && debtOrders.length) + ")",
+                titleRest: "Debts (" + debtOrders.length + ")",
                 content: (
                     <DebtsContainer
                         currentTime={currentTime}
@@ -227,7 +230,7 @@ class Dashboard extends React.Component<Props, States> {
             {
                 id: "2",
                 titleFirstWord: "Your ",
-                titleRest: "Investments (" + (investments && investments.length) + ")",
+                titleRest: "Investments (" + investments.length + ")",
                 content: (
                     <InvestmentsContainer
                         currentTime={currentTime}
