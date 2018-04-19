@@ -5,7 +5,6 @@ import { toastReducer } from "./toastReducer";
 import { debtOrderReducer } from "./debtOrderReducer";
 import { tokenReducer } from "./tokenReducer";
 import { plexReducer } from "./plexReducer";
-import { investmentReducer } from "./investmentReducer";
 import { routerReducer } from "react-router-redux";
 
 export const reducers = combineReducers({
@@ -15,6 +14,5 @@ export const reducers = combineReducers({
     toastReducer,
     tokenReducer,
     plexReducer,
-    investmentReducer,
     routing: routerReducer,
 });

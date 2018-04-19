@@ -18,15 +18,14 @@ interface Props {
     handleFillDebtOrder: (issuanceHash: string) => void;
     web3: Web3;
     filledDebtOrders: DebtOrderEntity[];
-    investments: InvestmentEntity[];
     handleSetFilledDebtOrders: (filledDebtOrders: DebtOrderEntity[]) => void;
-    handleSetInvestments: (investments: InvestmentEntity[]) => void;
 }
 
 interface States {
     initiallyLoading: boolean;
     activeTab: string;
     currentTime?: number;
+    investments: InvestmentEntity[];
 }
 
 class Dashboard extends React.Component<Props, States> {
@@ -37,6 +36,7 @@ class Dashboard extends React.Component<Props, States> {
         this.state = {
             activeTab: "1",
             initiallyLoading: true,
+            investments: [],
         };
     }
 
@@ -193,7 +193,7 @@ class Dashboard extends React.Component<Props, States> {
 
                 investments.push(investment);
             }
-            this.props.handleSetInvestments(investments);
+            this.setState({ investments });
         } catch (e) {
             // this.props.handleSetError('Unable to get investments info');
             this.props.handleSetError(e.message);
@@ -209,8 +209,8 @@ class Dashboard extends React.Component<Props, States> {
     }
 
     render() {
-        const { pendingDebtOrders, filledDebtOrders, investments } = this.props;
-        if (!pendingDebtOrders || !filledDebtOrders || !investments) {
+        const { pendingDebtOrders, filledDebtOrders } = this.props;
+        if (!pendingDebtOrders || !filledDebtOrders) {
             return null;
         }
 
@@ -219,7 +219,7 @@ class Dashboard extends React.Component<Props, States> {
             debtOrders[index] = debtOrderFromJSON(JSON.stringify(debtOrders[index]));
         }
 
-        const { activeTab, initiallyLoading, currentTime } = this.state;
+        const { investments, activeTab, initiallyLoading, currentTime } = this.state;
         const tabs = [
             {
                 id: "1",
