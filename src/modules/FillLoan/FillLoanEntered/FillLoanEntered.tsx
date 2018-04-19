@@ -120,7 +120,7 @@ class FillLoanEntered extends React.Component<Props, States> {
                     initializing: false,
                 });
 
-                if (termsContractType === "CollateralizedSimpleInterestTermsContractContract") {
+                if (termsContractType === "CollateralizedSimpleInterestLoan") {
                     this.setState({
                         collateralAmount: fromDebtOrder.collateralAmount,
                         collateralized: true,

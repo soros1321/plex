@@ -3,12 +3,12 @@ import { PaperLayout } from "../../../layouts";
 import { browserHistory } from "react-router";
 import { schema, uiSchema } from "./schema";
 import { Header, JSONSchemaForm, MainWrapper, Bold, ConfirmationModal } from "../../../components";
-import { DebtOrderEntity } from "../../../models";
+import { DebtOrderEntity, TokenEntity } from "../../../models";
 import * as Web3 from "web3";
 import Dharma from "@dharmaprotocol/dharma.js";
 import { BigNumber } from "bignumber.js";
 import { encodeUrlParams, debtOrderFromJSON, normalizeDebtOrder, withCommas } from "../../../utils";
-import { validateTermLength, validateInterestRate } from "./validator";
+import { validateTermLength, validateInterestRate, validateCollateral } from "./validator";
 const BitlyClient = require("bitly");
 import { web3Errors } from "../../../common/web3Errors";
 
@@ -16,6 +16,7 @@ interface Props {
     web3: Web3;
     accounts: string[];
     dharma: Dharma;
+    tokens: TokenEntity[];
     handleRequestDebtOrder: (debtOrder: DebtOrderEntity) => void;
     handleSetError: (errorMessage: string) => void;
 }
@@ -264,6 +265,12 @@ class RequestLoanForm extends React.Component<Props, State> {
             const error = validateInterestRate(formData.terms.interestRate);
             if (error) {
                 errors.terms.interestRate.addError(error);
+            }
+        }
+        if (formData.collateral.collateralized) {
+            const response = validateCollateral(this.props.tokens, formData.collateral);
+            if (response.error) {
+                errors.collateral[response.fieldName].addError(response.error);
             }
         }
         return errors;

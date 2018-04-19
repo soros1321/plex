@@ -278,6 +278,9 @@ describe('<RequestLoanForm />', () => {
 			const formData = {
 				terms: {
 					termLength: 10.2
+				},
+				collateral: {
+					collateralized: false
 				}
 			};
 			const wrapper = shallow(<RequestLoanForm {... props} />);
@@ -296,6 +299,9 @@ describe('<RequestLoanForm />', () => {
 			const formData = {
 				terms: {
 					termLength: 10
+				},
+				collateral: {
+					collateralized: false
 				}
 			};
 			const wrapper = shallow(<RequestLoanForm {... props} />);
