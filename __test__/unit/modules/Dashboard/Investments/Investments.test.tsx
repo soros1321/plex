@@ -51,18 +51,8 @@ describe('<Investments />', () => {
 		});
 	});
 
-	describe('#componentWillReceiveProps', () => {
-		it('should not call getInvestmentsDetails when investments is null', () => {
-			const props = {
-				investments: []
-			};
-			const wrapper = shallow(<Investments {... props} />);
-			const spy = jest.spyOn(wrapper.instance(), 'getInvestmentsDetails');
-			wrapper.setProps({ investments: null });
-			expect(spy).toHaveBeenCalledWith(null);
-		});
-
-		it('should call getInvestmentsDetails when investments is avail', () => {
+	describe('#componentDidUpdate', () => {
+		it('should call getInvestmentsDetails', () => {
 			const props = {
 				investments: null
 			};
@@ -126,14 +116,14 @@ describe('<Investments />', () => {
 			}
 		];
 
-		it('returns without setting state if investments is empty', () => {
+		it('returns without setting state if investments is null', () => {
 			const props = {
-				investments: []
+				investments: null
 			};
 			const wrapper = shallow(<Investments {... props} />);
 			const spy = jest.spyOn(wrapper.instance(), 'setState');
 
-			wrapper.instance().getInvestmentsDetails([]);
+			wrapper.instance().getInvestmentsDetails(null);
 			expect(spy).not.toHaveBeenCalled();
 			spy.mockRestore();
 		});

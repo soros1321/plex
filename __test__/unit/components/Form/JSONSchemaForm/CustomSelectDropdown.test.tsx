@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { shallow } from 'enzyme';
-import { CustomSelectDropdown } from '../../../../../src/components/Form/JSONSchemaForm/CustomSelectDropdown';
-import { PressEnter } from '../../../../../src/components/Form/JSONSchemaForm/styledComponents';
+import { CustomSelectDropdown } from 'src/components/Form/JSONSchemaForm/CustomSelectDropdown';
+import { PressEnter } from 'src/components/Form/JSONSchemaForm/PressEnter';
 import Select from 'react-select';
 
 describe('<CustomSelectDropdown />', () => {
@@ -43,16 +43,6 @@ describe('<CustomSelectDropdown />', () => {
 		newOptions.pressEnter = undefined;
 		wrapper.setProps({ options: newOptions});
 		expect(wrapper.find(PressEnter).length).toEqual(1);
-	});
-
-	it('<PressEnter /> should not have active class when Select does not have value', () => {
-		wrapper.setProps({ value: ''});
-		expect(wrapper.find(PressEnter).hasClass('active')).toEqual(false);
-	});
-
-	it('<PressEnter /> should have active class when Select does have value', () => {
-		wrapper.setProps({ value: 'option1'});
-		expect(wrapper.find(PressEnter).hasClass('active')).toEqual(true);
 	});
 
 	it('calls onChange prop when Select is changed', () => {

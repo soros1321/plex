@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { shallow } from 'enzyme';
-import { InvestmentHistory } from '../../../../../../src/modules/Dashboard/Investments/InvestmentHistory';
-import { InvestmentRow } from '../../../../../../src/modules/Dashboard/Investments/InvestmentHistory/InvestmentRow';
+import { InvestmentHistory } from 'src/modules/Dashboard/Investments/InvestmentHistory';
+import { InvestmentRowContainer } from 'src/modules/Dashboard/Investments/InvestmentHistory/InvestmentRowContainer';
 import {
 	Wrapper,
 	Title,
 	TableHeaderRow
-} from '../../../../../../src/modules/Dashboard/Investments/InvestmentHistory/styledComponents';
+} from 'src/modules/Dashboard/Investments/InvestmentHistory/styledComponents';
 import { Col } from 'reactstrap';
 import { BigNumber } from 'bignumber.js';
 
@@ -58,12 +58,12 @@ describe('<InvestmentHistory />', () => {
 		});
 	});
 
-	describe('<InvestmentRow />', () => {
-		it('should render 0 <InvestmentRow />', () => {
-			expect(wrapper.find(InvestmentRow).length).toEqual(0);
+	describe('<InvestmentRowContainer />', () => {
+		it('should render 0 <InvestmentRowContainer />', () => {
+			expect(wrapper.find(InvestmentRowContainer).length).toEqual(0);
 		});
 
-		it('should render 3 <InvestmentRow />', () => {
+		it('should render 3 <InvestmentRowContainer />', () => {
 			investments = [
 				{
 					creditor: '0x431194c3e0f35bc7f1266ec6bb85e0c5ec554935',
@@ -115,7 +115,7 @@ describe('<InvestmentHistory />', () => {
 				}
 			];
 			wrapper.setProps({ investments });
-			expect(wrapper.find(InvestmentRow).length).toEqual(3);
+			expect(wrapper.find(InvestmentRowContainer).length).toEqual(3);
 		});
 	});
 });
