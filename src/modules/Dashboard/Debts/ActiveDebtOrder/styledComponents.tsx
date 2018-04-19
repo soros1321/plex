@@ -443,7 +443,7 @@ export const MakeRepaymentButton = StyledButton.extend`
 `;
 
 export const CancelButton = MakeRepaymentButton.extend`
-    border-color: #1cc1cc !important;
+    border-color: #e93d59 !important;
 
     @media only screen and (max-width: 568px) {
         font-size: 10px !important;
@@ -494,6 +494,4 @@ export const ShareButton = styled(Link)`
     }
 `;
 
-export const BitlyLink = A.extend`
->>>>>>> master
-`;
+export const BitlyLink = A.extend``;
