@@ -106,7 +106,7 @@ class Dashboard extends React.Component<Props, States> {
                     status,
                     creditor: debtRegistryEntry.beneficiary,
                 };
-                if (termsContractType === "CollateralizedSimpleInterestTermsContractContract") {
+                if (termsContractType === "CollateralizedSimpleInterestLoan") {
                     debtOrder.collateralAmount = dharmaDebtOrder.collateralAmount;
                     debtOrder.collateralized = true;
                     debtOrder.collateralTokenSymbol = dharmaDebtOrder.collateralTokenSymbol;
@@ -177,7 +177,7 @@ class Dashboard extends React.Component<Props, States> {
                     repaymentSchedule,
                     status,
                 };
-                if (termsContractType === "CollateralizedSimpleInterestTermsContractContract") {
+                if (termsContractType === "CollateralizedSimpleInterestLoan") {
                     investment.collateralAmount = dharmaDebtOrder.collateralAmount;
                     investment.collateralized = true;
                     investment.collateralTokenSymbol = dharmaDebtOrder.collateralTokenSymbol;

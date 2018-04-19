@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@dharmaprotocol/contracts": "0.0.32",
-    "@dharmaprotocol/dharma.js": "0.0.41",
+    "@dharmaprotocol/dharma.js": "0.0.43",
     "@types/bignumber.js": "^5.0.0",
     "@types/deep-diff": "^0.0.31",
     "@types/enzyme": "^3.1.9",
