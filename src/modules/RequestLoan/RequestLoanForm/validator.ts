@@ -1,3 +1,6 @@
+import { TokenEntity } from "src/models";
+import { BigNumber } from "bignumber.js";
+
 export const validateTermLength = (termLength: number) => {
     const maxAmount = 65535;
     let error: string = "";
@@ -26,4 +29,23 @@ export const validateInterestRate = (interestRate: number) => {
         error = `Interest amount cannot have more than ${maxDecimalPlaces} decimal places`;
     }
     return error;
+};
+
+export const validateCollateral = (tokens: TokenEntity[], collateral: any) => {
+    let response = { fieldName: "", error: "" };
+    const selectedToken = tokens.find(function(token: TokenEntity) {
+        return token.tokenSymbol === collateral.collateralTokenSymbol;
+    });
+    if (!selectedToken) {
+        response = {
+            fieldName: "collateralTokenSymbol",
+            error: `${collateral.collateralTokenSymbol} is currently not supported`,
+        };
+    } else if (
+        !selectedToken.tradingPermitted ||
+        selectedToken.balance.lt(new BigNumber(collateral.collateralAmount * 10 ** 18))
+    ) {
+        response = { fieldName: "collateralAmount", error: `Token allowance is insufficient` };
+    }
+    return response;
 };
