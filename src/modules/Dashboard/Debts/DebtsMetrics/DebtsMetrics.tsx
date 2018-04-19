@@ -50,7 +50,6 @@ class DebtsMetrics extends React.Component<Props, State> {
         }
         for (let debtOrder of debtOrders) {
             if (tokenBalances[debtOrder.principalTokenSymbol]) {
-                // TODO: Should we exclude pending debt orders?
                 tokenBalances[debtOrder.principalTokenSymbol].totalRequested = tokenBalances[
                     debtOrder.principalTokenSymbol
                 ].totalRequested.plus(debtOrder.principalAmount);

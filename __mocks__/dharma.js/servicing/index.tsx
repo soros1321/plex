@@ -23,3 +23,13 @@ export const mockGetExpectedValueRepaid = jest.fn(async (issuanceHash, paymentTi
 			return 999999999999;
 	}
 });
+
+export const mockGetTotalExpectedRepayment = jest.fn(async (issuanceHash) => {
+	switch (issuanceHash) {
+		case 'paid':
+			return 0;
+		case 'delinquent':
+		default:
+			return 999999999999;
+	}
+});

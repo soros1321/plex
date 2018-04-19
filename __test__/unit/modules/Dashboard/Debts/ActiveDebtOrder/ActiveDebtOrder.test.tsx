@@ -9,7 +9,6 @@ import {
 	Amount,
 	Url,
 	StatusActive,
-	StatusPending,
 	Terms,
 	RepaymentScheduleContainer,
 	Title,
@@ -190,41 +189,6 @@ describe('<ActiveDebtOrder />', () => {
 					props.debtOrder.repaymentSchedule = [1553557371, 1553657371, 1553757371, 1553857371, 1553957371, 1554-57371];
 					wrapper.setProps({ debtOrder: props.debtOrder });
 					expect(wrapper.find(Schedule).last().find(ShowMore).length).toEqual(1);
-				});
-			});
-
-			describe('#status pending', () => {
-				let detailContainer;
-
-				beforeAll(() => {
-					props.debtOrder.status = 'pending';
-					wrapper.setProps({ debtOrder: props.debtOrder });
-					detailContainer = wrapper.find(DetailContainer);
-				});
-
-				it('should render correct <Url />', () => {
-					expect(detailContainer.find(Url).find(DetailLink).length).toEqual(1);
-					expect(detailContainer.find(Url).find(DetailLink).prop('to')).toEqual('/request/success/' + props.debtOrder.issuanceHash);
-					expect(detailContainer.find(Url).find(DetailLink).get(0).props.children).toEqual(shortenString(props.debtOrder.issuanceHash));
-				});
-
-				it('should not render a <MakeRepaymentButton />', () => {
-					props.debtOrder.status = 'pending';
-					wrapper.setProps({ props });
-					detailContainer = wrapper.find(DetailContainer);
-					expect(detailContainer.find(MakeRepaymentButton).length).toEqual(0);
-				});
-
-				it('should render <StatusPending />', () => {
-					expect(detailContainer.find(StatusPending).length).toEqual(1);
-				});
-
-				it('should render <CancelButton />', () => {
-					expect(wrapper.find(PendingActionContainer).find(CancelButton).length).toEqual(1);
-				});
-
-				it('should not render <RepaymentScheduleContainer />', () => {
-					expect(wrapper.find(RepaymentScheduleContainer).length).toEqual(0);
 				});
 			});
 		});

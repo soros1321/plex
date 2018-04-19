@@ -13,10 +13,3 @@ export const successfulRepayment = (
         repaymentTokenSymbol,
     };
 };
-
-export const cancelDebtOrder = (issuanceHash: string) => {
-    return {
-        type: actionsEnums.CANCEL_DEBT_ORDER,
-        payload: issuanceHash,
-    };
-};
