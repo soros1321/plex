@@ -69,12 +69,10 @@ export const schema: JSONSchema4 = {
                 collateralized: {
                     type: "boolean",
                     title: "Collateralized",
-                    description: singleLineString`Collateralization occurs when you, the borrower,
-                    pledge an asset as recourse to the lender in the event that you, the borrower,
-                    default on the original loan. Collateralization of assets gives lenders a
-                    sufficient level of reassurance against default risk. It also helps you, the
-                    borrower, receive loans that you might not otherwise receive given your credit
-                    history or lack thereof.`,
+                    description: singleLineString`Collateral is an item of value that the borrower
+                    puts up for possible seizure in the case that they’re unable to pay back the
+                    loan. Collateral acts as an insurance policy against loan default and helps
+                    reduce the risk involved in a debt agreement.`,
                 },
             },
             dependencies: {
