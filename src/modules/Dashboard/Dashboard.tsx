@@ -16,11 +16,13 @@ interface Props {
     handleSetError: (errorMessage: string) => void;
     handleFillDebtOrder: (issuanceHash: string) => void;
     web3: Web3;
+    filledDebtOrders: DebtOrderEntity[];
+    investments: InvestmentEntity[];
+    handleSetFilledDebtOrders: (filledDebtOrders: DebtOrderEntity[]) => void;
+    handleSetInvestments: (investments: InvestmentEntity[]) => void;
 }
 
 interface States {
-    filledDebtOrders: DebtOrderEntity[];
-    investments: InvestmentEntity[];
     initiallyLoading: boolean;
     activeTab: string;
     currentTime?: number;
@@ -33,8 +35,6 @@ class Dashboard extends React.Component<Props, States> {
         this.toggle = this.toggle.bind(this);
         this.state = {
             activeTab: "1",
-            filledDebtOrders: [],
-            investments: [],
             initiallyLoading: true,
         };
     }
@@ -116,7 +116,7 @@ class Dashboard extends React.Component<Props, States> {
                 filledDebtOrders.push(debtOrder);
             }
 
-            this.setState({ filledDebtOrders });
+            this.props.handleSetFilledDebtOrders(filledDebtOrders);
 
             // Check whether any of the pending debt orders is filled
             // Then, we want to remove it from the list
@@ -186,7 +186,7 @@ class Dashboard extends React.Component<Props, States> {
 
                 investments.push(investment);
             }
-            this.setState({ investments });
+            this.props.handleSetInvestments(investments);
         } catch (e) {
             // this.props.handleSetError('Unable to get investments info');
             this.props.handleSetError(e.message);
@@ -202,14 +202,14 @@ class Dashboard extends React.Component<Props, States> {
     }
 
     render() {
-        const { pendingDebtOrders } = this.props;
+        const { pendingDebtOrders, filledDebtOrders, investments } = this.props;
 
-        const debtOrders = pendingDebtOrders.concat(this.state.filledDebtOrders);
+        const debtOrders = pendingDebtOrders.concat(filledDebtOrders);
         for (const index of Object.keys(debtOrders)) {
             debtOrders[index] = debtOrderFromJSON(JSON.stringify(debtOrders[index]));
         }
 
-        const { investments, activeTab, initiallyLoading, currentTime } = this.state;
+        const { activeTab, initiallyLoading, currentTime } = this.state;
         const tabs = [
             {
                 id: "1",

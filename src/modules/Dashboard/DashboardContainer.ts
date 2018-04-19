@@ -2,6 +2,8 @@ import { connect } from "react-redux";
 import { Dashboard } from "./Dashboard";
 import { setError } from "../../components/Toast/actions";
 import { fillDebtOrder } from "../FillLoan/FillLoanEntered/actions";
+import { DebtOrderEntity, InvestmentEntity } from "src/models";
+import { setFilledDebtOrders, setInvestments } from "./actions";
 
 const mapStateToProps = (state: any) => {
     return {
@@ -9,6 +11,8 @@ const mapStateToProps = (state: any) => {
         accounts: state.web3Reducer.accounts,
         pendingDebtOrders: state.debtOrderReducer.pendingDebtOrders,
         web3: state.web3Reducer.web3,
+        filledDebtOrders: state.debtOrderReducer.filledDebtOrders,
+        investments: state.investmentReducer.investments,
     };
 };
 
@@ -16,6 +20,10 @@ const mapDispatchToProps = (dispatch: any) => {
     return {
         handleSetError: (errorMessage: string) => dispatch(setError(errorMessage)),
         handleFillDebtOrder: (issuanceHash: string) => dispatch(fillDebtOrder(issuanceHash)),
+        handleSetFilledDebtOrders: (filledDebtOrders: DebtOrderEntity[]) =>
+            dispatch(setFilledDebtOrders(filledDebtOrders)),
+        handleSetInvestments: (investments: InvestmentEntity[]) =>
+            dispatch(setInvestments(investments)),
     };
 };
 

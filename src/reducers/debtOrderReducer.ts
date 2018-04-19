@@ -4,10 +4,12 @@ import { DebtOrderEntity } from "../models";
 class DebtOrderReducerState {
     pendingDebtOrders: DebtOrderEntity[];
     singleDebtOrder: DebtOrderEntity;
+    filledDebtOrders: DebtOrderEntity[];
 
     constructor() {
         this.pendingDebtOrders = [];
         this.singleDebtOrder = new DebtOrderEntity();
+        this.filledDebtOrders = [];
     }
 }
 
@@ -37,6 +39,16 @@ const handleRemovePendingDebtOrder = (state: DebtOrderReducerState, payload: str
     };
 };
 
+const handleSetFilledDebtOrders = (
+    state: DebtOrderReducerState,
+    filledDebtOrders: DebtOrderEntity[],
+) => {
+    return {
+        ...state,
+        filledDebtOrders,
+    };
+};
+
 export const debtOrderReducer = (
     state: DebtOrderReducerState = new DebtOrderReducerState(),
     action: any,
@@ -49,6 +61,8 @@ export const debtOrderReducer = (
         case actionsEnums.FILL_DEBT_ORDER:
         case actionsEnums.CANCEL_DEBT_ORDER:
             return handleRemovePendingDebtOrder(state, action.payload);
+        case actionsEnums.SET_FILLED_DEBT_ORDERS:
+            return handleSetFilledDebtOrders(state, action.payload);
         default:
             return state;
     }
