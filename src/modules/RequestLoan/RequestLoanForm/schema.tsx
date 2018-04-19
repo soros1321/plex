@@ -69,10 +69,12 @@ export const schema: JSONSchema4 = {
                 collateralized: {
                     type: "boolean",
                     title: "Collateralized",
-                    description: singleLineString`Collateral is an item of value that the borrower
-                    puts up for possible seizure in the case that they’re unable to pay back the
-                    loan. Collateral acts as an insurance policy against loan default and helps
-                    reduce the risk involved in a debt agreement.`,
+                    description: singleLineString`Collateral is an item of value that a borrower
+                    puts up for possible seizure in the event that they do not pay back the full
+                    value of their loan. Collateral protects lenders from borrower default by
+                    reducing the risk involved in a debt agreement. In addition, collateral helps
+                    borrowers obtain loans they might not otherwise receive given their credit
+                    history (or lack thereof).`,
                 },
             },
             dependencies: {
