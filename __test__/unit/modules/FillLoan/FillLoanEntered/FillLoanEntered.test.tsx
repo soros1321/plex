@@ -33,6 +33,7 @@ import { debtOrderFromJSON } from 'src/utils';
 const compact = require('lodash.compact');
 const ABIDecoder = require('abi-decoder');
 ABIDecoder.addABI(DebtKernel.abi);
+import { BarLoader } from "react-spinners";
 
 describe('<FillLoanEntered />', () => {
 	let web3;
@@ -91,97 +92,117 @@ describe('<FillLoanEntered />', () => {
 			expect(wrapper.length).toEqual(1);
 		});
 
-		it('should render a <Header />', () => {
-			expect(wrapper.find(PaperLayout).find(MainWrapper).find(Header).length).toEqual(1);
-		});
-
-		describe('<LoanInfoContainer />', () => {
-			let loanInfoContainer;
+		describe('#initializing === true', () => {
 			beforeEach(() => {
-				loanInfoContainer = wrapper.find(PaperLayout).find(MainWrapper).find(LoanInfoContainer);
+				wrapper.setState({ initializing: true });
 			});
 
-			it('should render', () => {
-				expect(loanInfoContainer.length).toEqual(1);
+			it('should render a <Header />', () => {
+				expect(wrapper.find(PaperLayout).find(MainWrapper).find(Header).length).toEqual(1);
 			});
 
-			it('should render 2 <HalfCol />', () => {
-				expect(loanInfoContainer.find(HalfCol).length).toEqual(2);
-			});
-
-			describe('1st <HalfCol />', () => {
-				let firstHalfCol;
-				beforeEach(() => {
-					firstHalfCol = loanInfoContainer.find(HalfCol).first();
-				});
-
-				it('should render 2 <InfoItem />', () => {
-					expect(firstHalfCol.find(InfoItem).length).toEqual(2);
-				});
-
-				it('1st <InfoItem /> should render Principal info', () => {
-					expect(firstHalfCol.find(InfoItem).first().find(Title).get(0).props.children).toEqual('Principal');
-				});
-
-				it('2nd <InfoItem /> should render Term Length info', () => {
-					expect(firstHalfCol.find(InfoItem).last().find(Title).get(0).props.children).toEqual('Term Length');
-				});
-			});
-
-			describe('2nd <HalfCol />', () => {
-				let lastHalfCol;
-				beforeEach(() => {
-					lastHalfCol = loanInfoContainer.find(HalfCol).last();
-				});
-
-				it('should render 2 <InfoItem />', () => {
-					expect(lastHalfCol.find(InfoItem).length).toEqual(2);
-				});
-
-				it('1st <InfoItem /> should render Interest Rate info', () => {
-					expect(lastHalfCol.find(InfoItem).first().find(Title).get(0).props.children).toEqual('Interest Rate');
-				});
-
-				it('2nd <InfoItem /> should render Installment Frequency info', () => {
-					expect(lastHalfCol.find(InfoItem).last().find(Title).get(0).props.children).toEqual('Installment Frequency');
-				});
-			});
-
-			it('should render Description info', () => {
-				expect(loanInfoContainer.find(InfoItem).last().find(Title).get(0).props.children).toEqual('Description');
+			it('should render a <BarLoader />', () => {
+				expect(wrapper.find(PaperLayout).find(MainWrapper).find(BarLoader).length).toEqual(1);
 			});
 		});
 
-		describe('<ButtonContainer />', () => {
-			let buttonContainer;
+		describe('#initializing === false', () => {
 			beforeEach(() => {
-				buttonContainer = wrapper.find(PaperLayout).find(MainWrapper).find(ButtonContainer);
+				wrapper.setState({ initializing: false});
 			});
 
-			it('should render', () => {
-				expect(buttonContainer.length).toEqual(1);
+			it('should render a <Header />', () => {
+				expect(wrapper.find(PaperLayout).find(MainWrapper).find(Header).length).toEqual(1);
 			});
 
-			it('should render a <Link />', () => {
-				expect(buttonContainer.find(Link).length).toEqual(1);
-				expect(buttonContainer.find(Link).prop('to')).toEqual('/fill');
+			describe('<LoanInfoContainer />', () => {
+				let loanInfoContainer;
+				beforeEach(() => {
+					loanInfoContainer = wrapper.find(PaperLayout).find(MainWrapper).find(LoanInfoContainer);
+				});
+
+				it('should render', () => {
+					expect(loanInfoContainer.length).toEqual(1);
+				});
+
+				it('should render 2 <HalfCol />', () => {
+					expect(loanInfoContainer.find(HalfCol).length).toEqual(2);
+				});
+
+				describe('1st <HalfCol />', () => {
+					let firstHalfCol;
+					beforeEach(() => {
+						firstHalfCol = loanInfoContainer.find(HalfCol).first();
+					});
+
+					it('should render 2 <InfoItem />', () => {
+						expect(firstHalfCol.find(InfoItem).length).toEqual(2);
+					});
+
+					it('1st <InfoItem /> should render Principal info', () => {
+						expect(firstHalfCol.find(InfoItem).first().find(Title).get(0).props.children).toEqual('Principal');
+					});
+
+					it('2nd <InfoItem /> should render Term Length info', () => {
+						expect(firstHalfCol.find(InfoItem).last().find(Title).get(0).props.children).toEqual('Term Length');
+					});
+				});
+
+				describe('2nd <HalfCol />', () => {
+					let lastHalfCol;
+					beforeEach(() => {
+						lastHalfCol = loanInfoContainer.find(HalfCol).last();
+					});
+
+					it('should render 2 <InfoItem />', () => {
+						expect(lastHalfCol.find(InfoItem).length).toEqual(2);
+					});
+
+					it('1st <InfoItem /> should render Interest Rate info', () => {
+						expect(lastHalfCol.find(InfoItem).first().find(Title).get(0).props.children).toEqual('Interest Rate');
+					});
+
+					it('2nd <InfoItem /> should render Installment Frequency info', () => {
+						expect(lastHalfCol.find(InfoItem).last().find(Title).get(0).props.children).toEqual('Installment Frequency');
+					});
+				});
+
+				it('should render Description info', () => {
+					expect(loanInfoContainer.find(InfoItem).last().find(Title).get(0).props.children).toEqual('Description');
+				});
 			});
 
-			it('should render a <DeclineButton />', () => {
-				expect(buttonContainer.find(Link).find(DeclineButton).length).toEqual(1);
+			describe('<ButtonContainer />', () => {
+				let buttonContainer;
+				beforeEach(() => {
+					buttonContainer = wrapper.find(PaperLayout).find(MainWrapper).find(ButtonContainer);
+				});
+
+				it('should render', () => {
+					expect(buttonContainer.length).toEqual(1);
+				});
+
+				it('should render a <Link />', () => {
+					expect(buttonContainer.find(Link).length).toEqual(1);
+					expect(buttonContainer.find(Link).prop('to')).toEqual('/fill');
+				});
+
+				it('should render a <DeclineButton />', () => {
+					expect(buttonContainer.find(Link).find(DeclineButton).length).toEqual(1);
+				});
+
+				it('should render a <FillLoanButton />', () => {
+					expect(buttonContainer.find(FillLoanButton).length).toEqual(1);
+				});
 			});
 
-			it('should render a <FillLoanButton />', () => {
-				expect(buttonContainer.find(FillLoanButton).length).toEqual(1);
+			it('should render a <ConfirmationModal />', () => {
+				expect(wrapper.find(PaperLayout).find(MainWrapper).find(ConfirmationModal).length).toEqual(1);
 			});
-		});
 
-		it('should render a <ConfirmationModal />', () => {
-			expect(wrapper.find(PaperLayout).find(MainWrapper).find(ConfirmationModal).length).toEqual(1);
-		});
-
-		it('should render a <SuccessModal />', () => {
-			expect(wrapper.find(PaperLayout).find(MainWrapper).find(SuccessModal).length).toEqual(1);
+			it('should render a <SuccessModal />', () => {
+				expect(wrapper.find(PaperLayout).find(MainWrapper).find(SuccessModal).length).toEqual(1);
+			});
 		});
 	});
 
