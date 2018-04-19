@@ -77,6 +77,7 @@ class FillLoanEntered extends React.Component<Props, States> {
         this.successModalToggle = this.successModalToggle.bind(this);
         this.handleFillOrder = this.handleFillOrder.bind(this);
         this.handleRedirect = this.handleRedirect.bind(this);
+        this.validateLoanFillability = this.validateLoanFillability.bind(this);
     }
 
     async componentDidMount() {
@@ -211,6 +212,33 @@ class FillLoanEntered extends React.Component<Props, States> {
         browserHistory.push("/dashboard");
     }
 
+    validateLoanFillability() {
+        try {
+            this.props.handleSetError("");
+            const { tokens } = this.props;
+            const { debtOrder, principalTokenSymbol } = this.state;
+            const tokenToFill = tokens.find(function(token: TokenEntity) {
+                return token.tokenSymbol === principalTokenSymbol;
+            });
+            let error: string = "";
+            if (!tokenToFill) {
+                error = `${principalTokenSymbol} is currently not supported`;
+            } else if (
+                !tokenToFill.tradingPermitted ||
+                (debtOrder.principalAmount && tokenToFill.balance.lt(debtOrder.principalAmount))
+            ) {
+                error = "Creditor allowance is insufficient";
+            }
+            if (error) {
+                this.props.handleSetError(error);
+            } else {
+                this.confirmationModalToggle();
+            }
+        } catch (e) {
+            this.props.handleSetError(e.message);
+        }
+    }
+
     render() {
         const {
             collateralAmount,
@@ -336,7 +364,7 @@ class FillLoanEntered extends React.Component<Props, States> {
                                 <DeclineButton>Decline</DeclineButton>
                             </Link>
                             <FillLoanButton
-                                onClick={this.confirmationModalToggle}
+                                onClick={this.validateLoanFillability}
                                 disabled={this.state.awaitingTransaction}
                             >
                                 Fill Loan
