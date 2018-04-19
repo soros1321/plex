@@ -9,6 +9,7 @@ import Dharma from "@dharmaprotocol/dharma.js";
 import { debtOrderFromJSON } from "../../utils";
 const Web3Utils = require("../../utils/web3Utils");
 import { BigNumber } from "bignumber.js";
+import { OpenOrders } from "./OpenOrders";
 
 interface Props {
     dharma: Dharma;
@@ -209,32 +210,42 @@ class Dashboard extends React.Component<Props, States> {
     }
 
     render() {
-        const { pendingDebtOrders } = this.props;
+        const { pendingDebtOrders, filledDebtOrders } = this.props;
+        if (!pendingDebtOrders || !filledDebtOrders) {
+            return null;
+        }
 
-        const debtOrders = pendingDebtOrders.concat(this.props.filledDebtOrders);
-        for (const index of Object.keys(debtOrders)) {
-            debtOrders[index] = debtOrderFromJSON(JSON.stringify(debtOrders[index]));
+        for (const index of Object.keys(pendingDebtOrders)) {
+            pendingDebtOrders[index] = debtOrderFromJSON(JSON.stringify(pendingDebtOrders[index]));
         }
 
         const { investments, activeTab, initiallyLoading, currentTime } = this.state;
         const tabs = [
             {
                 id: "1",
-                titleFirstWord: "Your ",
-                titleRest: "Debts (" + (debtOrders && debtOrders.length) + ")",
+                titleFirstWord: "",
+                titleRest: "Open Orders (" + pendingDebtOrders.length + ")",
                 content: (
-                    <DebtsContainer
-                        currentTime={currentTime}
-                        dharma={this.props.dharma}
-                        debtOrders={debtOrders}
-                        initializing={initiallyLoading}
-                    />
+                    <OpenOrders debtOrders={pendingDebtOrders} initializing={initiallyLoading} />
                 ),
             },
             {
                 id: "2",
                 titleFirstWord: "Your ",
-                titleRest: "Investments (" + (investments && investments.length) + ")",
+                titleRest: "Debts (" + filledDebtOrders.length + ")",
+                content: (
+                    <DebtsContainer
+                        currentTime={currentTime}
+                        dharma={this.props.dharma}
+                        debtOrders={filledDebtOrders}
+                        initializing={initiallyLoading}
+                    />
+                ),
+            },
+            {
+                id: "3",
+                titleFirstWord: "Your ",
+                titleRest: "Investments (" + investments.length + ")",
                 content: (
                     <InvestmentsContainer
                         currentTime={currentTime}

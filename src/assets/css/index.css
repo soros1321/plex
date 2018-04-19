@@ -353,7 +353,7 @@ button:focus {
 		width: 280px;
 	}
 	.nav.nav-tabs .nav-item .nav-link {
-		font-size: 13px;
+		font-size: 11px;
 		padding: 12px 0px;
 	}
 	.nav.nav-tabs .nav-item .nav-link.active {

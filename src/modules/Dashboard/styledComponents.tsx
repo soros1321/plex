@@ -10,7 +10,7 @@ export const Wrapper = styled.div`
 
 export const StyledNavItem = styled(NavItem)`
     @media only screen and (max-width: 480px) {
-        width: 50%;
+        width: 33.33%;
     }
 `;
 
