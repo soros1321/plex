@@ -5,7 +5,6 @@ import { Row, Col, Collapse } from "reactstrap";
 import { StyledRow, Drawer, InfoItem, InfoItemTitle, InfoItemContent } from "./styledComponents";
 import { TokenAmount } from "src/components";
 import Dharma from "@dharmaprotocol/dharma.js";
-import * as moment from "moment";
 import { BigNumber } from "bignumber.js";
 
 interface Props {
@@ -44,15 +43,11 @@ class DebtOrderRow extends React.Component<Props, State> {
             return;
         }
         const valueRepaid = await dharma.servicing.getValueRepaid(debtOrder.issuanceHash);
-        const termEndTimestamp = debtOrder.repaymentSchedule.length
-            ? debtOrder.repaymentSchedule[debtOrder.repaymentSchedule.length - 1]
-            : moment().unix();
-        const expectedRepaidAmount = await dharma.servicing.getExpectedValueRepaid(
+        const totalExpectedRepayment = await dharma.servicing.getTotalExpectedRepayment(
             debtOrder.issuanceHash,
-            termEndTimestamp,
         );
         this.setState({
-            status: new BigNumber(valueRepaid).lt(new BigNumber(expectedRepaidAmount))
+            status: new BigNumber(valueRepaid).lt(new BigNumber(totalExpectedRepayment))
                 ? "Delinquent"
                 : "Paid",
         });

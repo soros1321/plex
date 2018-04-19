@@ -8,7 +8,6 @@ import { Wrapper, StyledNavItem, TitleFirstWord, TitleRest } from "./styledCompo
 import Dharma from "@dharmaprotocol/dharma.js";
 import { debtOrderFromJSON } from "../../utils";
 const Web3Utils = require("../../utils/web3Utils");
-import * as moment from "moment";
 import { BigNumber } from "bignumber.js";
 
 interface Props {
@@ -87,15 +86,13 @@ class Dashboard extends React.Component<Props, States> {
                     debtRegistryEntry,
                 )) as any;
                 const repaymentSchedule = await adapter.getRepaymentSchedule(debtRegistryEntry);
-                const termEndTimestamp = repaymentSchedule.length
-                    ? repaymentSchedule[repaymentSchedule.length - 1]
-                    : moment().unix();
                 const repaidAmount = await dharma.servicing.getValueRepaid(issuanceHash);
-                const expectedRepaidAmount = await dharma.servicing.getExpectedValueRepaid(
+                const totalExpectedRepayment = await dharma.servicing.getTotalExpectedRepayment(
                     issuanceHash,
-                    termEndTimestamp,
                 );
-                const status = new BigNumber(repaidAmount).gte(new BigNumber(expectedRepaidAmount))
+                const status = new BigNumber(repaidAmount).gte(
+                    new BigNumber(totalExpectedRepayment),
+                )
                     ? "inactive"
                     : "active";
                 const debtOrder: DebtOrderEntity = {
@@ -164,15 +161,11 @@ class Dashboard extends React.Component<Props, States> {
                     debtRegistryEntry,
                 )) as any;
                 const repaymentSchedule = await adapter.getRepaymentSchedule(debtRegistryEntry);
-                const termEndTimestamp = repaymentSchedule.length
-                    ? repaymentSchedule[repaymentSchedule.length - 1]
-                    : moment().unix();
                 const earnedAmount = await dharma.servicing.getValueRepaid(issuanceHash);
-                const expectedEarnedAmount = await dharma.servicing.getExpectedValueRepaid(
+                const totalExpectedEarning = await dharma.servicing.getTotalExpectedRepayment(
                     issuanceHash,
-                    termEndTimestamp,
                 );
-                const status = new BigNumber(earnedAmount).gte(new BigNumber(expectedEarnedAmount))
+                const status = new BigNumber(earnedAmount).gte(new BigNumber(totalExpectedEarning))
                     ? "inactive"
                     : "active";
                 const investment: InvestmentEntity = {
