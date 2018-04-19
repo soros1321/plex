@@ -82,10 +82,8 @@
   },
   "scripts": {
     "contracts:migrate": "bash contract-scripts/migrate_dharma_contracts.sh",
-    "chain":
-      "ganache-cli -m 'pink proof foil skull tide narrow audit card rotate forget liar favorite'",
-    "deploy":
-      "npm run build && aws s3 sync build s3://plex.dharma.io --cache-control 'no-cache, no-store' --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers",
+    "chain": "ganache-cli -m 'pink proof foil skull tide narrow audit card rotate forget liar favorite'",
+    "deploy": "npm run build && aws s3 sync build s3://plex.dharma.io --cache-control 'no-cache, no-store' --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers",
     "start": "node scripts/start.js --history-api-fallback",
     "build": "node scripts/build.js",
     "test:watch": "jest --watch --runInBand",
@@ -97,6 +95,7 @@
   "devDependencies": {
     "enzyme": "^3.3.0",
     "enzyme-adapter-react-16": "^1.1.1",
+    "ganache-cli": "^6.1.0",
     "husky": "^0.14.3",
     "jest-enzyme": "^4.2.0",
     "prettier": "1.11.1",
@@ -110,15 +109,26 @@
       ".(ts|tsx)": "<rootDir>/node_modules/ts-jest/preprocessor.js"
     },
     "testRegex": "(/__test__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
-    "moduleFileExtensions": ["ts", "tsx", "js"],
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js"
+    ],
     "moduleNameMapper": {
-      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$":
-        "<rootDir>/__mocks__/fileMock.js",
+      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/fileMock.js",
       "\\.(css|less)$": "<rootDir>/__mocks__/styleMock.js"
     },
-    "modulePaths": ["<rootDir>/"],
-    "coveragePathIgnorePatterns": ["/node_modules/", "/test/"],
-    "testPathIgnorePatterns": ["<rootDir>/__test__/setup.js", "/build/dist/"],
+    "modulePaths": [
+      "<rootDir>/"
+    ],
+    "coveragePathIgnorePatterns": [
+      "/node_modules/",
+      "/test/"
+    ],
+    "testPathIgnorePatterns": [
+      "<rootDir>/__test__/setup.js",
+      "/build/dist/"
+    ],
     "coverageThreshold": {
       "global": {
         "branches": 90,
@@ -144,7 +154,11 @@
     ],
     "mapCoverage": true,
     "setupTestFrameworkScriptFile": "./__test__/setup.js",
-    "unmockedModulePathPatterns": ["react", "enzyme", "jest-enzyme"],
+    "unmockedModulePathPatterns": [
+      "react",
+      "enzyme",
+      "jest-enzyme"
+    ],
     "testURL": "http://localhost"
   }
 }
