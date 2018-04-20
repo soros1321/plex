@@ -1,4 +1,5 @@
 import { JSONSchema4 } from "json-schema";
+const singleLineString = require("single-line-string");
 
 export const schema: JSONSchema4 = {
     type: "object",
@@ -63,13 +64,17 @@ export const schema: JSONSchema4 = {
         },
         collateral: {
             type: "object",
-            title: "Do you want it collateralized?",
+            title: "Will you offer collateral?",
             properties: {
                 collateralized: {
                     type: "boolean",
                     title: "Collateralized",
-                    description:
-                        "A quick, layman's definition of what collateralized means and why it's a smart idea goes here.",
+                    description: singleLineString`Collateral is an item of value that a borrower
+                    puts up for possible seizure in the event that they do not pay back the full
+                    value of their loan. Collateral protects lenders from borrower default by
+                    reducing the risk involved in a debt agreement. In addition, collateral helps
+                    borrowers obtain loans they might not otherwise receive given their credit
+                    history (or lack thereof).`,
                 },
             },
             dependencies: {

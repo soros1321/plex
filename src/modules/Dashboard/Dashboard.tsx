@@ -8,23 +8,24 @@ import { Wrapper, StyledNavItem, TitleFirstWord, TitleRest } from "./styledCompo
 import Dharma from "@dharmaprotocol/dharma.js";
 import { debtOrderFromJSON } from "../../utils";
 const Web3Utils = require("../../utils/web3Utils");
+import { BigNumber } from "bignumber.js";
 
 interface Props {
     dharma: Dharma;
     accounts: string[];
-    filledDebtOrders: DebtOrderEntity[];
     pendingDebtOrders: DebtOrderEntity[];
     handleSetError: (errorMessage: string) => void;
-    handleSetFilledDebtOrders: (filledDebtOrders: DebtOrderEntity[]) => void;
     handleFillDebtOrder: (issuanceHash: string) => void;
     web3: Web3;
+    filledDebtOrders: DebtOrderEntity[];
+    handleSetFilledDebtOrders: (filledDebtOrders: DebtOrderEntity[]) => void;
 }
 
 interface States {
-    investments: InvestmentEntity[];
     initiallyLoading: boolean;
     activeTab: string;
     currentTime?: number;
+    investments: InvestmentEntity[];
 }
 
 class Dashboard extends React.Component<Props, States> {
@@ -34,8 +35,8 @@ class Dashboard extends React.Component<Props, States> {
         this.toggle = this.toggle.bind(this);
         this.state = {
             activeTab: "1",
-            investments: [],
             initiallyLoading: true,
+            investments: [],
         };
     }
 
@@ -86,9 +87,14 @@ class Dashboard extends React.Component<Props, States> {
                 )) as any;
                 const repaymentSchedule = await adapter.getRepaymentSchedule(debtRegistryEntry);
                 const repaidAmount = await dharma.servicing.getValueRepaid(issuanceHash);
-                const status = repaidAmount.lt(dharmaDebtOrder.principalAmount)
-                    ? "active"
-                    : "inactive";
+                const totalExpectedRepayment = await dharma.servicing.getTotalExpectedRepayment(
+                    issuanceHash,
+                );
+                const status = new BigNumber(repaidAmount).gte(
+                    new BigNumber(totalExpectedRepayment),
+                )
+                    ? "inactive"
+                    : "active";
                 const debtOrder: DebtOrderEntity = {
                     debtor: accounts[0],
                     termsContract: debtRegistryEntry.termsContract,
@@ -154,13 +160,14 @@ class Dashboard extends React.Component<Props, States> {
                 const dharmaDebtOrder = (await adapter.fromDebtRegistryEntry(
                     debtRegistryEntry,
                 )) as any;
+                const repaymentSchedule = await adapter.getRepaymentSchedule(debtRegistryEntry);
                 const earnedAmount = await dharma.servicing.getValueRepaid(issuanceHash);
-                const repaymentSchedule = await dharma.adapters.simpleInterestLoan.getRepaymentSchedule(
-                    debtRegistryEntry,
+                const totalExpectedEarning = await dharma.servicing.getTotalExpectedRepayment(
+                    issuanceHash,
                 );
-                const status = earnedAmount.lt(dharmaDebtOrder.principalAmount)
-                    ? "active"
-                    : "inactive";
+                const status = new BigNumber(earnedAmount).gte(new BigNumber(totalExpectedEarning))
+                    ? "inactive"
+                    : "active";
                 const investment: InvestmentEntity = {
                     creditor: debtRegistryEntry.beneficiary,
                     termsContract: debtRegistryEntry.termsContract,
@@ -202,9 +209,12 @@ class Dashboard extends React.Component<Props, States> {
     }
 
     render() {
-        const { pendingDebtOrders } = this.props;
+        const { pendingDebtOrders, filledDebtOrders } = this.props;
+        if (!pendingDebtOrders || !filledDebtOrders) {
+            return null;
+        }
 
-        const debtOrders = pendingDebtOrders.concat(this.props.filledDebtOrders);
+        const debtOrders = pendingDebtOrders.concat(filledDebtOrders);
         for (const index of Object.keys(debtOrders)) {
             debtOrders[index] = debtOrderFromJSON(JSON.stringify(debtOrders[index]));
         }
@@ -214,7 +224,7 @@ class Dashboard extends React.Component<Props, States> {
             {
                 id: "1",
                 titleFirstWord: "Your ",
-                titleRest: "Debts (" + (debtOrders && debtOrders.length) + ")",
+                titleRest: "Debts (" + debtOrders.length + ")",
                 content: (
                     <DebtsContainer
                         currentTime={currentTime}
@@ -227,7 +237,7 @@ class Dashboard extends React.Component<Props, States> {
             {
                 id: "2",
                 titleFirstWord: "Your ",
-                titleRest: "Investments (" + (investments && investments.length) + ")",
+                titleRest: "Investments (" + investments.length + ")",
                 content: (
                     <InvestmentsContainer
                         currentTime={currentTime}
