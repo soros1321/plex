@@ -35,6 +35,7 @@ interface Props {
     handleSetError: (errorMessage: string) => void;
     handleFillDebtOrder: (issuanceHash: string) => void;
     updateTokenBalance: (tokenAddress: string, balance: BigNumber) => void;
+    handleClearToast: () => void;
 }
 
 interface States {
@@ -143,7 +144,7 @@ class FillLoanEntered extends React.Component<Props, States> {
 
     async handleFillOrder() {
         try {
-            this.props.handleSetError("");
+            this.props.handleClearToast();
             const { dharma, accounts } = this.props;
             if (!dharma) {
                 this.props.handleSetError(web3Errors.UNABLE_TO_FIND_CONTRACTS);
@@ -214,7 +215,7 @@ class FillLoanEntered extends React.Component<Props, States> {
 
     validateLoanFillability() {
         try {
-            this.props.handleSetError("");
+            this.props.handleClearToast();
             const { tokens } = this.props;
             const { debtOrder, principalTokenSymbol } = this.state;
             const tokenToFill = tokens.find(function(token: TokenEntity) {

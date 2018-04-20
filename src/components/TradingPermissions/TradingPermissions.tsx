@@ -31,6 +31,7 @@ interface Props {
     handleFaucetRequest: (tokenAddress: string, userAddress: string, dharma: Dharma) => void;
     toggleTokenLoadingSpinner: (tokenAddress: string, loading: boolean) => void;
     agreeToTerms: boolean;
+    handleClearToast: () => void;
 }
 
 interface State {
@@ -141,7 +142,7 @@ class TradingPermissions extends React.Component<Props, State> {
         this.props.toggleTokenLoadingSpinner(tokenAddress, true);
 
         try {
-            this.props.handleSetError("");
+            this.props.handleClearToast();
             const { tokens, dharma } = this.props;
             if (!dharma) {
                 this.props.handleSetError(web3Errors.UNABLE_TO_FIND_CONTRACTS);
@@ -201,7 +202,7 @@ class TradingPermissions extends React.Component<Props, State> {
     }
 
     async handleFaucet(tokenAddress: string) {
-        this.props.handleSetError("");
+        this.props.handleClearToast();
         const { dharma, web3 } = this.props;
         if (!dharma || !web3) {
             this.props.handleSetError(web3Errors.UNABLE_TO_FIND_CONTRACTS);

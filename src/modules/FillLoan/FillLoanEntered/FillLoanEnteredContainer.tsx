@@ -1,6 +1,6 @@
 import { connect } from "react-redux";
 import { FillLoanEntered } from "./FillLoanEntered";
-import { setError } from "../../../components/Toast/actions";
+import { setError, clearToast } from "../../../components/Toast/actions";
 import { setTokenBalance } from "../../../components/TradingPermissions/actions";
 import { fillDebtOrder } from "./actions";
 import { BigNumber } from "bignumber.js";
@@ -20,6 +20,7 @@ const mapDispatchToProps = (dispatch: any) => {
         handleFillDebtOrder: (issuanceHash: string) => dispatch(fillDebtOrder(issuanceHash)),
         updateTokenBalance: (tokenAddress: string, balance: BigNumber) =>
             dispatch(setTokenBalance(tokenAddress, balance)),
+        handleClearToast: () => dispatch(clearToast()),
     };
 };
 

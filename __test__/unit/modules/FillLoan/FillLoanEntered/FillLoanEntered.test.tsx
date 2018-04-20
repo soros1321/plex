@@ -30,9 +30,6 @@ import { createStore } from 'redux';
 import { fillDebtOrder } from 'src/modules/FillLoan/FillLoanEntered/actions';
 import { DebtKernel } from '@dharmaprotocol/contracts';
 import { debtOrderFromJSON } from 'src/utils';
-const compact = require('lodash.compact');
-const ABIDecoder = require('abi-decoder');
-ABIDecoder.addABI(DebtKernel.abi);
 import { BarLoader } from "react-spinners";
 
 describe('<FillLoanEntered />', () => {
@@ -78,7 +75,8 @@ describe('<FillLoanEntered />', () => {
 			tokens: [],
 			handleSetError: jest.fn(),
 			handleFillDebtOrder: jest.fn(),
-			updateTokenBalance: jest.fn()
+			updateTokenBalance: jest.fn(),
+			handleClearToast: jest.fn()
 		};
 	});
 
@@ -307,17 +305,12 @@ describe('<FillLoanEntered />', () => {
 				debtOrder = debtOrderFromJSON(JSON.stringify(props.location.query));
 				delete(debtOrder.description);
 				delete(debtOrder.principalTokenSymbol);
-				ABIDecoder.decodeLogs = jest.fn((logs) => [{name: 'LogDebtOrderFilled'}]);
 			});
 
-			afterEach(() => {
-				ABIDecoder.decodeLogs.mockRestore();
-			});
-
-			it('should call props handleSetError', async () => {
+			it('should call props handleClearToast', async () => {
 				const wrapper = shallow(<FillLoanEntered {... props} />);
 				await wrapper.instance().handleFillOrder();
-				await expect(props.handleSetError).toHaveBeenCalledWith('');
+				await expect(props.handleClearToast).toHaveBeenCalled();
 			});
 
 			it('calls Dharma#fillAsync', async () => {
@@ -352,16 +345,6 @@ describe('<FillLoanEntered />', () => {
 				const wrapper = shallow(<FillLoanEntered {... props} />);
 				await wrapper.instance().handleFillOrder();
 				await expect(spy).toHaveBeenCalled();
-			});
-		});
-
-		describe('#ABIDecoder.decodeLogs does\'t return LogDebtOrderFilled event', () => {
-			it('should call props.handleSetError', async () => {
-				ABIDecoder.decodeLogs = jest.fn((logs) => [{name: ''}]);
-				const wrapper = shallow(<FillLoanEntered {... props} />);
-				await wrapper.instance().handleFillOrder();
-				await expect(props.handleSetError).toHaveBeenCalled();
-				ABIDecoder.decodeLogs.mockRestore();
 			});
 		});
 

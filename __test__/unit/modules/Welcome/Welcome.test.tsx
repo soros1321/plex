@@ -16,7 +16,8 @@ describe('<Welcome />', () => {
 		let wrapper;
 		const props = {
 			handleSetError: jest.fn(),
-			handleAgreeToTerms: jest.fn()
+			handleAgreeToTerms: jest.fn(),
+			handleClearToast: jest.fn()
 		};
 		beforeEach(() => {
 			wrapper = shallow(<Welcome {... props} />);
@@ -51,7 +52,8 @@ describe('<Welcome />', () => {
 		it('should update agreeToTermsOfUse when checkbox is toggled', () => {
 			const props = {
 				handleSetError: jest.fn(),
-				handleAgreeToTerms: jest.fn()
+				handleAgreeToTerms: jest.fn(),
+				handleClearToast: jest.fn()
 			};
 			const spy = jest.spyOn(Welcome.prototype, 'setState');
 			const wrapper = shallow(<Welcome {... props} />);
@@ -66,18 +68,20 @@ describe('<Welcome />', () => {
 		it('should call props handleSetError if checkbox is not checked', () => {
 			const props = {
 				handleSetError: jest.fn(),
-				handleAgreeToTerms: jest.fn()
+				handleAgreeToTerms: jest.fn(),
+				handleClearToast: jest.fn()
 			};
 			const wrapper = shallow(<Welcome {... props} />);
 			wrapper.find(NextButton).simulate('click');
-			expect(props.handleSetError.mock.calls.length).toBe(2);
+			expect(props.handleSetError.mock.calls.length).toBe(1);
 		});
 
 		it('should redirect to request if checkbox is checked', () => {
 			const spy = jest.spyOn(browserHistory, 'push');
 			const props = {
 				handleSetError: jest.fn(),
-				handleAgreeToTerms: jest.fn()
+				handleAgreeToTerms: jest.fn(),
+				handleClearToast: jest.fn()
 			};
 			const wrapper = shallow(<Welcome {... props} />);
 			wrapper.find(Checkbox).simulate('change', true);

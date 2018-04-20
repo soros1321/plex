@@ -19,6 +19,7 @@ interface Props {
     tokens: TokenEntity[];
     handleRequestDebtOrder: (debtOrder: DebtOrderEntity) => void;
     handleSetError: (errorMessage: string) => void;
+    handleClearToast: () => void;
 }
 
 interface State {
@@ -87,7 +88,7 @@ class RequestLoanForm extends React.Component<Props, State> {
 
     async handleSubmit() {
         try {
-            this.props.handleSetError("");
+            this.props.handleClearToast();
             const { principalAmount, principalTokenSymbol } = this.state.formData.loan;
             const { interestRate, amortizationUnit, termLength } = this.state.formData.terms;
             const {
@@ -146,7 +147,7 @@ class RequestLoanForm extends React.Component<Props, State> {
 
     async handleSignDebtOrder() {
         try {
-            this.props.handleSetError("");
+            this.props.handleClearToast();
             if (!this.state.debtOrder) {
                 this.props.handleSetError("No Debt Order has been generated yet");
                 return;

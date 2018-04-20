@@ -15,6 +15,7 @@ interface Props {
     agreeToTerms: boolean;
     handleSetError: (errorMessage: string) => void;
     handleAgreeToTerms: (agree: boolean) => void;
+    handleClearToast: () => void;
 }
 
 interface State {
@@ -50,7 +51,7 @@ class Welcome extends React.Component<Props, State> {
     }
 
     checkAgree() {
-        this.props.handleSetError("");
+        this.props.handleClearToast();
         if (!this.state.agreeToTermsOfUse) {
             this.props.handleSetError("You have to agree to the terms of use to continue");
             return;

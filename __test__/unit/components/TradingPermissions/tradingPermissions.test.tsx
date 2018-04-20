@@ -35,7 +35,8 @@ describe('TradingPermissions (Unit)', () => {
 			handleSetError: jest.fn(),
 			handleFaucetRequest: jest.fn(),
 			toggleTokenLoadingSpinner: jest.fn(),
-			agreeToTerms: true
+			agreeToTerms: true,
+			handleClearToast: jest.fn()
 		};
 	});
 

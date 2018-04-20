@@ -2,7 +2,7 @@ import { connect } from "react-redux";
 import { RequestLoanForm } from "./RequestLoanForm";
 import { userRequestDebtOrder } from "./actions";
 import { DebtOrderEntity } from "../../../models";
-import { setError } from "../../../components/Toast/actions";
+import { setError, clearToast } from "../../../components/Toast/actions";
 
 const mapStateToProps = (state: any) => {
     return {
@@ -18,6 +18,7 @@ const mapDispatchToProps = (dispatch: any) => {
         handleRequestDebtOrder: (debtOrder: DebtOrderEntity) =>
             dispatch(userRequestDebtOrder(debtOrder)),
         handleSetError: (errorMessage: string) => dispatch(setError(errorMessage)),
+        handleClearToast: () => dispatch(clearToast()),
     };
 };
 

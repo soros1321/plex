@@ -7,7 +7,7 @@ import {
     toggleTokenLoadingSpinner,
     setTokenBalance,
 } from "./actions";
-import { setError } from "../../components/Toast/actions";
+import { setError, clearToast } from "../../components/Toast/actions";
 
 import Dharma from "@dharmaprotocol/dharma.js";
 import { BigNumber } from "bignumber.js";
@@ -30,6 +30,7 @@ const mapDispatchToProps = (dispatch: any) => {
         handleToggleTokenTradingPermission: (tokenAddress: string, permission: boolean) =>
             dispatch(toggleTokenTradingPermission(tokenAddress, permission)),
         handleSetError: (errorMessage: string) => dispatch(setError(errorMessage)),
+        handleClearToast: () => dispatch(clearToast()),
         handleFaucetRequest: (tokenAddress: string, userAddress: string, dharma: Dharma) => {
             dispatch(toggleTokenLoadingSpinner(tokenAddress, true));
 

@@ -33,7 +33,8 @@ describe('<RequestLoanForm />', () => {
 			accounts: ['accounts1'],
 			dharma,
 			handleRequestDebtOrder: jest.fn(),
-			handleSetError: jest.fn()
+			handleSetError: jest.fn(),
+			handleClearToast: jest.fn()
 		};
 	});
 
@@ -140,7 +141,7 @@ describe('<RequestLoanForm />', () => {
 			const wrapper = shallow(<RequestLoanForm {... props} />);
 			wrapper.instance().handleChange(formData);
 			await wrapper.instance().handleSubmit();
-			expect(props.handleSetError).toHaveBeenCalledWith('');
+			expect(props.handleClearToast).toHaveBeenCalled();
 		});
 
 		it('should call Dharma#toDebtOrder', async () => {
@@ -218,7 +219,7 @@ describe('<RequestLoanForm />', () => {
 		it('should clear error', async () => {
 			const wrapper = shallow(<RequestLoanForm {... props} />);
 			await wrapper.instance().handleSignDebtOrder();
-			expect(props.handleSetError).toHaveBeenCalledWith('');
+			expect(props.handleClearToast).toHaveBeenCalled();
 		});
 
 		it('should set error when there is no debtOrder', async () => {
