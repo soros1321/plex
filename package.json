@@ -95,6 +95,7 @@
   "devDependencies": {
     "enzyme": "^3.3.0",
     "enzyme-adapter-react-16": "^1.1.1",
+    "ganache-cli": "^6.1.0",
     "husky": "^0.14.3",
     "jest-enzyme": "^4.2.0",
     "prettier": "1.11.1",
@@ -130,10 +131,10 @@
     ],
     "coverageThreshold": {
       "global": {
-        "branches": 90,
-        "functions": 95,
-        "lines": 95,
-        "statements": 95
+        "branches": 35,
+        "functions": 45,
+        "lines": 40,
+        "statements": 45
       }
     },
     "collectCoverage": true,

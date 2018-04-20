@@ -20,7 +20,7 @@ import {
 	mockGetValueRepaid,
 	mockGetDebtRegistryEntry,
 	mockGetExpectedValueRepaid,
-	mockGetTotalExpectedRepayment
+    mockGetTotalExpectedRepayment
 } from './servicing';
 import {
 	mockAwaitTransactionMinedAsync,

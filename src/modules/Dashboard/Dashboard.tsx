@@ -14,19 +14,19 @@ import { OpenOrders } from "./OpenOrders";
 interface Props {
     dharma: Dharma;
     accounts: string[];
-    filledDebtOrders: DebtOrderEntity[];
     pendingDebtOrders: DebtOrderEntity[];
     handleSetError: (errorMessage: string) => void;
-    handleSetFilledDebtOrders: (filledDebtOrders: DebtOrderEntity[]) => void;
     handleFillDebtOrder: (issuanceHash: string) => void;
     web3: Web3;
+    filledDebtOrders: DebtOrderEntity[];
+    handleSetFilledDebtOrders: (filledDebtOrders: DebtOrderEntity[]) => void;
 }
 
 interface States {
-    investments: InvestmentEntity[];
     initiallyLoading: boolean;
     activeTab: string;
     currentTime?: number;
+    investments: InvestmentEntity[];
 }
 
 class Dashboard extends React.Component<Props, States> {
@@ -36,8 +36,8 @@ class Dashboard extends React.Component<Props, States> {
         this.toggle = this.toggle.bind(this);
         this.state = {
             activeTab: "1",
-            investments: [],
             initiallyLoading: true,
+            investments: [],
         };
     }
 
