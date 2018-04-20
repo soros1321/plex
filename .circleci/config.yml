@@ -14,4 +14,4 @@ jobs:
         - run: sleep 6
         - run: yarn contracts:migrate
         - run: yarn migrations:loans
-        - run: yarn jest
+        - run: yarn jest --maxWorkers 2
