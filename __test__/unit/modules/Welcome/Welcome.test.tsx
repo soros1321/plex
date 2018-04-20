@@ -1,15 +1,15 @@
-import * as React from 'react';
-import { shallow } from 'enzyme';
-import { Welcome } from '../../../../src/modules/Welcome/Welcome';
-import { MainWrapper, Checkbox } from '../../../../src/components';
+import * as React from "react";
+import { shallow } from "enzyme";
+import { Welcome } from "../../../../src/modules/Welcome/Welcome";
+import { MainWrapper, Checkbox } from "../../../../src/components";
 import {
-	BannerContainer,
-	Header,
-	Description,
-	ButtonContainer,
-	NextButton
-} from '../../../../src/modules/Welcome/styledComponents';
-import { browserHistory } from 'react-router';
+    BannerContainer,
+    Header,
+    Description,
+    ButtonContainer,
+    NextButton,
+} from "../../../../src/modules/Welcome/styledComponents";
+import { browserHistory } from "react-router";
 
 describe('<Welcome />', () => {
 	describe('#render', () => {
@@ -23,30 +23,35 @@ describe('<Welcome />', () => {
 			wrapper = shallow(<Welcome {... props} />);
 		});
 
-		it('should render the component', () => {
-			expect(wrapper.length).toEqual(1);
-		});
+        it("should render the component", () => {
+            expect(wrapper.length).toEqual(1);
+        });
 
-		it('should render a <BannerContainer />', () => {
-			expect(wrapper.find(Header).length).toEqual(1);
-		});
+        it("should render a <BannerContainer />", () => {
+            expect(wrapper.find(Header).length).toEqual(1);
+        });
 
-		it('should render a <Header />', () => {
-			expect(wrapper.find(MainWrapper).find(Header).length).toEqual(1);
-		});
+        it("should render a <Header />", () => {
+            expect(wrapper.find(MainWrapper).find(Header).length).toEqual(1);
+        });
 
-		it('should render a <Description />', () => {
-			expect(wrapper.find(MainWrapper).find(Description).length).toEqual(1);
-		});
+        it("should render a <Description />", () => {
+            expect(wrapper.find(MainWrapper).find(Description).length).toEqual(1);
+        });
 
-		it('should render a <Checkbox />', () => {
-			expect(wrapper.find(MainWrapper).find(Checkbox).length).toEqual(1);
-		});
+        it("should render a <Checkbox />", () => {
+            expect(wrapper.find(MainWrapper).find(Checkbox).length).toEqual(1);
+        });
 
-		it('should render a <NextButton />', () => {
-			expect(wrapper.find(MainWrapper).find(ButtonContainer).find(NextButton).length).toEqual(1);
-		});
-	});
+        it("should render a <NextButton />", () => {
+            expect(
+                wrapper
+                    .find(MainWrapper)
+                    .find(ButtonContainer)
+                    .find(NextButton).length,
+            ).toEqual(1);
+        });
+    });
 
 	describe('#Checkbox', () => {
 		it('should update agreeToTermsOfUse when checkbox is toggled', () => {
