@@ -152,11 +152,10 @@ class FillLoanEntered extends React.Component<Props, States> {
                 return;
             }
             const { debtOrder, issuanceHash } = this.state;
+            this.setState({ awaitingTransaction: true });
 
             debtOrder.creditor = accounts[0];
             const txHash = await dharma.order.fillAsync(debtOrder, { from: accounts[0] });
-
-            this.setState({ awaitingTransaction: true });
 
             await dharma.blockchain.awaitTransactionMinedAsync(txHash, 1000, 60000);
 
@@ -188,6 +187,7 @@ class FillLoanEntered extends React.Component<Props, States> {
 
             this.setState({
                 confirmationModal: false,
+                awaitingTransaction: false,
             });
         }
     }
@@ -362,6 +362,8 @@ class FillLoanEntered extends React.Component<Props, States> {
                             submitButtonText={
                                 this.state.awaitingTransaction ? "Filling order..." : "Fill Order"
                             }
+                            awaitingTx={this.state.awaitingTransaction}
+                            displayMetamaskDependencies={true}
                         />
                         <SuccessModal
                             modal={this.state.successModal}
