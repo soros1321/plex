@@ -79,15 +79,18 @@ describe('<DebtOrderRow />', () => {
 				expect(styledRow.find(Col).at(1).get(0).props.children).toEqual(content);
 			});
 
-			it('3rd <Col /> should render correct status info', async () => {
+			it('3rd <Col /> should render correct status info when paid', async () => {
 				props.debtOrder.issuanceHash = 'paid';
 				wrapper.setProps(props);
 				await wrapper.instance().determineStatus(props.dharma);
 				await expect(wrapper.state('status')).toEqual('Paid');
-				props.debtOrder.issuanceHash = 'delinquent';
-				wrapper.setProps(props);
-				await wrapper.instance().determineStatus(props.dharma);
-				await expect(wrapper.state('status')).toEqual('Delinquent');
+			});
+
+			it('3rd <Col /> should render correct status info when delinquent', async () => {
+                props.debtOrder.issuanceHash = 'delinquent';
+                wrapper.setProps(props);
+                await wrapper.instance().determineStatus(props.dharma);
+                await expect(wrapper.state('status')).toEqual('Delinquent');
 			});
 
 			it('4th <Col /> should render terms info', () => {
