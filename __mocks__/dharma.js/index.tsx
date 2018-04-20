@@ -19,7 +19,8 @@ import {
 import {
 	mockGetValueRepaid,
 	mockGetDebtRegistryEntry,
-	mockGetExpectedValueRepaid
+	mockGetExpectedValueRepaid,
+    mockGetTotalExpectedRepayment
 } from './servicing';
 import {
 	mockAwaitTransactionMinedAsync,
@@ -57,7 +58,8 @@ const adapters = {
 const servicing = {
 	getValueRepaid: mockGetValueRepaid,
 	getDebtRegistryEntry: mockGetDebtRegistryEntry,
-	getExpectedValueRepaid: mockGetExpectedValueRepaid
+	getExpectedValueRepaid: mockGetExpectedValueRepaid,
+	getTotalExpectedRepayment: mockGetTotalExpectedRepayment
 };
 
 const blockchain = {
