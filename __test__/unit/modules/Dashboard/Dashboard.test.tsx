@@ -1,21 +1,27 @@
 import * as React from 'react';
 import { shallow } from 'enzyme';
-import { Dashboard } from '../../../../src/modules/Dashboard/Dashboard';
-import { DebtsContainer } from '../../../../src/modules/Dashboard/Debts/DebtsContainer';
-import { InvestmentsContainer } from '../../../../src/modules/Dashboard/Investments/InvestmentsContainer';
+import { Dashboard } from 'src/modules/Dashboard/Dashboard';
+import { DebtsContainer } from 'src/modules/Dashboard/Debts/DebtsContainer';
+import { InvestmentsContainer } from 'src/modules/Dashboard/Investments/InvestmentsContainer';
 import { Nav, NavLink, TabPane, TabContent } from 'reactstrap';
 import {
 	StyledNavItem,
 	TitleFirstWord,
 	TitleRest
-} from '../../../../src/modules/Dashboard/styledComponents';
+} from 'src/modules/Dashboard/styledComponents';
+import MockDharma from '__mocks__/dharma.js';
 
 describe('<Dashboard />', () => {
 	describe('#render', () => {
 		let wrapper;
 		const props = {
-			debtOrders: [],
-			investments: []
+			dharma: new MockDharma(),
+			accounts: [],
+			filledDebtOrders: [],
+			pendingDebtOrders: [],
+			handleSetError: jest.fn(),
+			handleSetFilledDebtOrders: jest.fn(),
+			handleFilledDebtOrder: jest.fn()
 		};
 		beforeEach(() => {
 			wrapper = shallow(<Dashboard {... props} />);
@@ -56,8 +62,13 @@ describe('<Dashboard />', () => {
 	describe('#toggle', () => {
 		it('should call toggle when <NavLink /> is clicked', () => {
 			const props = {
-				debtOrders: [],
-				investments: []
+				dharma: new MockDharma(),
+				accounts: [],
+				filledDebtOrders: [],
+				pendingDebtOrders: [],
+				handleSetError: jest.fn(),
+				handleSetFilledDebtOrders: jest.fn(),
+				handleFilledDebtOrder: jest.fn()
 			};
 			const spy = jest.spyOn(Dashboard.prototype, 'toggle');
 			const wrapper = shallow(<Dashboard {... props} />);
@@ -69,8 +80,13 @@ describe('<Dashboard />', () => {
 
 		it('toggle should call set the correct state', () => {
 			const props = {
-				debtOrders: [],
-				investments: []
+				dharma: new MockDharma(),
+				accounts: [],
+				filledDebtOrders: [],
+				pendingDebtOrders: [],
+				handleSetError: jest.fn(),
+				handleSetFilledDebtOrders: jest.fn(),
+				handleFilledDebtOrder: jest.fn()
 			};
 			const spy = jest.spyOn(Dashboard.prototype, 'setState');
 			const wrapper = shallow(<Dashboard {... props} />);

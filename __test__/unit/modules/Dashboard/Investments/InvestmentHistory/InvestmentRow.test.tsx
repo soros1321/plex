@@ -1,16 +1,18 @@
 import * as React from 'react';
 import { shallow } from 'enzyme';
-import { InvestmentRow } from '../../../../../../src/modules/Dashboard/Investments/InvestmentHistory/InvestmentRow';
-import { shortenString, amortizationUnitToFrequency } from '../../../../../../src/utils';
+import { InvestmentRow } from 'src/modules/Dashboard/Investments/InvestmentHistory/InvestmentRow';
+import { shortenString, amortizationUnitToFrequency } from 'src/utils';
 import {
 	StyledRow,
 	Drawer,
 	InfoItem,
 	InfoItemTitle,
 	InfoItemContent
-} from '../../../../../../src/modules/Dashboard/Investments/InvestmentHistory/styledComponents';
+} from 'src/modules/Dashboard/Investments/InvestmentHistory/styledComponents';
 import { BigNumber } from 'bignumber.js';
 import { Col, Collapse } from 'reactstrap';
+import { TokenAmount } from 'src/components';
+import MockDharma from '__mocks__/dharma.js';
 
 describe('<InvestmentRow />', () => {
 	const investment = {
@@ -34,7 +36,10 @@ describe('<InvestmentRow />', () => {
 		let wrapper;
 		let props;
 		beforeEach(() => {
-			props = { investment };
+			props = {
+				dharma: new MockDharma(),
+				investment
+			};
 			wrapper = shallow(<InvestmentRow {... props} />);
 		});
 
@@ -62,8 +67,8 @@ describe('<InvestmentRow />', () => {
 			});
 
 			it('1st <Col /> should render principal info', () => {
-				const content = investment.principalAmount.toNumber() + ' ' + props.investment.principalTokenSymbol;
-				expect(styledRow.find(Col).at(0).get(0).props.children).toEqual(content);
+				expect(styledRow.find(Col).at(0).find(TokenAmount).prop('tokenAmount')).toEqual(props.investment.principalAmount);
+				expect(styledRow.find(Col).at(0).find(TokenAmount).prop('tokenSymbol')).toEqual(props.investment.principalTokenSymbol);
 			});
 
 			it('2nd <Col /> should render issuance hash info', () => {
@@ -71,12 +76,16 @@ describe('<InvestmentRow />', () => {
 				expect(styledRow.find(Col).at(1).get(0).props.children).toEqual(content);
 			});
 
-			it('3rd <Col /> should render status info', () => {
-				expect(styledRow.find(Col).at(2).get(0).props.children).toEqual('Delinquent');
-				props.investment.earnedAmount = investment.principalAmount;
+			it('3rd <Col /> should render status info', async () => {
+				props.investment.issuanceHash = 'paid';
 				wrapper.setProps(props);
-				styledRow = wrapper.find(StyledRow);
-				expect(styledRow.find(Col).at(2).get(0).props.children).toEqual('Paid');
+				await wrapper.instance().determineStatus(props.dharma);
+				await expect(wrapper.state('status')).toEqual('Paid');
+				props.investment.issuanceHash = 'delinquent';
+				wrapper.setProps(props);
+				await wrapper.instance().determineStatus(props.dharma);
+				await expect(wrapper.state('status')).toEqual('Delinquent');
+
 			});
 
 			it('4th <Col /> should render terms info', () => {

@@ -1,15 +1,15 @@
 import * as React from 'react';
 import { shallow, mount } from 'enzyme';
-import { FillLoanEntered } from '../../../../../src/modules/FillLoan/FillLoanEntered/FillLoanEntered';
-import { FillLoanEnteredContainer } from '../../../../../src/modules/FillLoan/FillLoanEntered/FillLoanEnteredContainer';
-import { PaperLayout } from '../../../../../src/layouts';
+import { FillLoanEntered } from 'src/modules/FillLoan/FillLoanEntered/FillLoanEntered';
+import { FillLoanEnteredContainer } from 'src/modules/FillLoan/FillLoanEntered/FillLoanEnteredContainer';
+import { PaperLayout } from 'src/layouts';
 import {
 	Header,
 	ConfirmationModal,
 	MainWrapper
-} from '../../../../../src/components';
+} from 'src/components';
 import { Col } from 'reactstrap';
-import { SuccessModal } from '../../../../../src/modules/FillLoan/FillLoanEntered/SuccessModal';
+import { SuccessModal } from 'src/modules/FillLoan/FillLoanEntered/SuccessModal';
 import {
 	LoanInfoContainer,
 	HalfCol,
@@ -19,20 +19,21 @@ import {
 	ButtonContainer,
 	DeclineButton,
 	FillLoanButton
-} from '../../../../../src/modules/FillLoan/FillLoanEntered/styledComponents';
-import MockWeb3 from '../../../../../__mocks__/web3';
-import MockDharma from '../../../../../__mocks__/dharma.js';
+} from 'src/modules/FillLoan/FillLoanEntered/styledComponents';
+import MockWeb3 from '__mocks__/web3';
+import MockDharma from '__mocks__/dharma.js';
 import { BigNumber } from 'bignumber.js';
 import { Link, browserHistory } from 'react-router';
 import configureStore from 'redux-mock-store';
 import { Provider } from 'react-redux';
 import { createStore } from 'redux';
-import { fillDebtOrder } from '../../../../../src/modules/FillLoan/FillLoanEntered/actions';
+import { fillDebtOrder } from 'src/modules/FillLoan/FillLoanEntered/actions';
 import { DebtKernel } from '@dharmaprotocol/contracts';
-import { debtOrderFromJSON } from '../../../../../src/utils';
+import { debtOrderFromJSON } from 'src/utils';
 const compact = require('lodash.compact');
 const ABIDecoder = require('abi-decoder');
 ABIDecoder.addABI(DebtKernel.abi);
+import { BarLoader } from "react-spinners";
 
 describe('<FillLoanEntered />', () => {
 	let web3;
@@ -76,7 +77,8 @@ describe('<FillLoanEntered />', () => {
 			dharma,
 			tokens: [],
 			handleSetError: jest.fn(),
-			handleFillDebtOrder: jest.fn()
+			handleFillDebtOrder: jest.fn(),
+			updateTokenBalance: jest.fn()
 		};
 	});
 
@@ -90,119 +92,130 @@ describe('<FillLoanEntered />', () => {
 			expect(wrapper.length).toEqual(1);
 		});
 
-		it('should render a <Header />', () => {
-			expect(wrapper.find(PaperLayout).find(MainWrapper).find(Header).length).toEqual(1);
-		});
-
-		describe('<LoanInfoContainer />', () => {
-			let loanInfoContainer;
+		describe('#initializing === true', () => {
 			beforeEach(() => {
-				loanInfoContainer = wrapper.find(PaperLayout).find(MainWrapper).find(LoanInfoContainer);
+				wrapper.setState({ initializing: true });
 			});
 
-			it('should render', () => {
-				expect(loanInfoContainer.length).toEqual(1);
+			it('should render a <Header />', () => {
+				expect(wrapper.find(PaperLayout).find(MainWrapper).find(Header).length).toEqual(1);
 			});
 
-			it('should render 2 <HalfCol />', () => {
-				expect(loanInfoContainer.find(HalfCol).length).toEqual(2);
-			});
-
-			describe('1st <HalfCol />', () => {
-				let firstHalfCol;
-				beforeEach(() => {
-					firstHalfCol = loanInfoContainer.find(HalfCol).first();
-				});
-
-				it('should render 2 <InfoItem />', () => {
-					expect(firstHalfCol.find(InfoItem).length).toEqual(2);
-				});
-
-				it('1st <InfoItem /> should render Principal info', () => {
-					expect(firstHalfCol.find(InfoItem).first().find(Title).get(0).props.children).toEqual('Principal');
-				});
-
-				it('2nd <InfoItem /> should render Term Length info', () => {
-					expect(firstHalfCol.find(InfoItem).last().find(Title).get(0).props.children).toEqual('Term Length');
-				});
-			});
-
-			describe('2nd <HalfCol />', () => {
-				let lastHalfCol;
-				beforeEach(() => {
-					lastHalfCol = loanInfoContainer.find(HalfCol).last();
-				});
-
-				it('should render 2 <InfoItem />', () => {
-					expect(lastHalfCol.find(InfoItem).length).toEqual(2);
-				});
-
-				it('1st <InfoItem /> should render Interest Rate info', () => {
-					expect(lastHalfCol.find(InfoItem).first().find(Title).get(0).props.children).toEqual('Interest Rate');
-				});
-
-				it('2nd <InfoItem /> should render Installment Frequency info', () => {
-					expect(lastHalfCol.find(InfoItem).last().find(Title).get(0).props.children).toEqual('Installment Frequency');
-				});
-			});
-
-			it('should render Description info', () => {
-				expect(loanInfoContainer.find(InfoItem).last().find(Title).get(0).props.children).toEqual('Description');
+			it('should render a <BarLoader />', () => {
+				expect(wrapper.find(PaperLayout).find(MainWrapper).find(BarLoader).length).toEqual(1);
 			});
 		});
 
-		describe('<ButtonContainer />', () => {
-			let buttonContainer;
+		describe('#initializing === false', () => {
 			beforeEach(() => {
-				buttonContainer = wrapper.find(PaperLayout).find(MainWrapper).find(ButtonContainer);
+				wrapper.setState({ initializing: false});
 			});
 
-			it('should render', () => {
-				expect(buttonContainer.length).toEqual(1);
+			it('should render a <Header />', () => {
+				expect(wrapper.find(PaperLayout).find(MainWrapper).find(Header).length).toEqual(1);
 			});
 
-			it('should render a <Link />', () => {
-				expect(buttonContainer.find(Link).length).toEqual(1);
-				expect(buttonContainer.find(Link).prop('to')).toEqual('/fill');
+			describe('<LoanInfoContainer />', () => {
+				let loanInfoContainer;
+				beforeEach(() => {
+					loanInfoContainer = wrapper.find(PaperLayout).find(MainWrapper).find(LoanInfoContainer);
+				});
+
+				it('should render', () => {
+					expect(loanInfoContainer.length).toEqual(1);
+				});
+
+				it('should render 2 <HalfCol />', () => {
+					expect(loanInfoContainer.find(HalfCol).length).toEqual(2);
+				});
+
+				describe('1st <HalfCol />', () => {
+					let firstHalfCol;
+					beforeEach(() => {
+						firstHalfCol = loanInfoContainer.find(HalfCol).first();
+					});
+
+					it('should render 2 <InfoItem />', () => {
+						expect(firstHalfCol.find(InfoItem).length).toEqual(2);
+					});
+
+					it('1st <InfoItem /> should render Principal info', () => {
+						expect(firstHalfCol.find(InfoItem).first().find(Title).get(0).props.children).toEqual('Principal');
+					});
+
+					it('2nd <InfoItem /> should render Term Length info', () => {
+						expect(firstHalfCol.find(InfoItem).last().find(Title).get(0).props.children).toEqual('Term Length');
+					});
+				});
+
+				describe('2nd <HalfCol />', () => {
+					let lastHalfCol;
+					beforeEach(() => {
+						lastHalfCol = loanInfoContainer.find(HalfCol).last();
+					});
+
+					it('should render 2 <InfoItem />', () => {
+						expect(lastHalfCol.find(InfoItem).length).toEqual(2);
+					});
+
+					it('1st <InfoItem /> should render Interest Rate info', () => {
+						expect(lastHalfCol.find(InfoItem).first().find(Title).get(0).props.children).toEqual('Interest Rate');
+					});
+
+					it('2nd <InfoItem /> should render Installment Frequency info', () => {
+						expect(lastHalfCol.find(InfoItem).last().find(Title).get(0).props.children).toEqual('Installment Frequency');
+					});
+				});
+
+				it('should render Description info', () => {
+					expect(loanInfoContainer.find(InfoItem).last().find(Title).get(0).props.children).toEqual('Description');
+				});
 			});
 
-			it('should render a <DeclineButton />', () => {
-				expect(buttonContainer.find(Link).find(DeclineButton).length).toEqual(1);
+			describe('<ButtonContainer />', () => {
+				let buttonContainer;
+				beforeEach(() => {
+					buttonContainer = wrapper.find(PaperLayout).find(MainWrapper).find(ButtonContainer);
+				});
+
+				it('should render', () => {
+					expect(buttonContainer.length).toEqual(1);
+				});
+
+				it('should render a <Link />', () => {
+					expect(buttonContainer.find(Link).length).toEqual(1);
+					expect(buttonContainer.find(Link).prop('to')).toEqual('/fill');
+				});
+
+				it('should render a <DeclineButton />', () => {
+					expect(buttonContainer.find(Link).find(DeclineButton).length).toEqual(1);
+				});
+
+				it('should render a <FillLoanButton />', () => {
+					expect(buttonContainer.find(FillLoanButton).length).toEqual(1);
+				});
 			});
 
-			it('should render a <FillLoanButton />', () => {
-				expect(buttonContainer.find(FillLoanButton).length).toEqual(1);
+			it('should render a <ConfirmationModal />', () => {
+				expect(wrapper.find(PaperLayout).find(MainWrapper).find(ConfirmationModal).length).toEqual(1);
 			});
-		});
 
-		it('should render a <ConfirmationModal />', () => {
-			expect(wrapper.find(PaperLayout).find(MainWrapper).find(ConfirmationModal).length).toEqual(1);
-		});
-
-		it('should render a <SuccessModal />', () => {
-			expect(wrapper.find(PaperLayout).find(MainWrapper).find(SuccessModal).length).toEqual(1);
+			it('should render a <SuccessModal />', () => {
+				expect(wrapper.find(PaperLayout).find(MainWrapper).find(SuccessModal).length).toEqual(1);
+			});
 		});
 	});
 
-	describe('#componentDidMount', async () => {
+	describe('#componentDidMount', () => {
 		it('should call getDebtOrderDetail', async () => {
 			const spy = jest.spyOn(FillLoanEntered.prototype, 'getDebtOrderDetail');
 			const wrapper = shallow(<FillLoanEntered {... props} />);
 			await expect(spy).toHaveBeenCalled();
 			spy.mockRestore();
 		});
-
-		it('should not call getDebtOrderDetail when there is no dharma and no location.query', async () => {
-			props.dharma = null;
-			props.location.query = null;
-			const spy = jest.spyOn(FillLoanEntered.prototype, 'getDebtOrderDetail');
-			const wrapper = shallow(<FillLoanEntered {... props} />);
-			expect(spy).not.toHaveBeenCalled();
-			spy.mockRestore();
-		});
 	});
 
-	describe('#componentWillReceiveProps', async () => {
+	describe('#componentDidUpdate', () => {
 		it('should call getDebtOrderDetail', async () => {
 			props.location.query = null;
 			props.dharma = null;
@@ -211,19 +224,7 @@ describe('<FillLoanEntered />', () => {
 			props.location.query = query;
 			props.dharma = dharma;
 			wrapper.setProps(props);
-			expect(spy).toHaveBeenCalledWith(props.dharma, props.location.query);
-			spy.mockRestore();
-		});
-
-		it('should not call getDebtOrderDetail when there is no dharma and no location.query', async () => {
-			props.location.query = null;
-			props.dharma = null;
-			const spy = jest.spyOn(FillLoanEntered.prototype, 'getDebtOrderDetail');
-			const wrapper = shallow(<FillLoanEntered {... props} />);
-			props.dharma = null;
-			props.location.query = null;
-			wrapper.setProps(props);
-			expect(spy).not.toHaveBeenCalled();
+			expect(spy).toHaveBeenCalledWith(props.dharma);
 			spy.mockRestore();
 		});
 	});
@@ -267,22 +268,22 @@ describe('<FillLoanEntered />', () => {
 			spy.mockRestore();
 		});
 
-		it('calls Dharma#fromDebtOrder', async() {
+		it('calls Dharma#getTermsContractType', async() {
 			const wrapper = shallow(<FillLoanEntered {... props} />);
 			const expectedDebtOrder = debtOrderFromJSON(JSON.stringify(props.location.query));
 			delete(expectedDebtOrder.description);
 			delete(expectedDebtOrder.principalTokenSymbol);
 			await wrapper.instance().getDebtOrderDetail(props.dharma, props.location.query);
-			await expect(dharma.adapters.simpleInterestLoan.fromDebtOrder).toHaveBeenCalledWith(expectedDebtOrder);
+			await expect(dharma.contracts.getTermsContractType).toHaveBeenCalledWith(expectedDebtOrder.termsContract);
 		});
 
-		it('calls Dharma#getIssuanceHash', async() {
+		it('calls Dharma#getAdapterByTermsContractAddress', async() {
 			const wrapper = shallow(<FillLoanEntered {... props} />);
 			const expectedDebtOrder = debtOrderFromJSON(JSON.stringify(props.location.query));
 			delete(expectedDebtOrder.description);
 			delete(expectedDebtOrder.principalTokenSymbol);
 			await wrapper.instance().getDebtOrderDetail(props.dharma, props.location.query);
-			await expect(dharma.order.getIssuanceHash).toHaveBeenCalledWith(expectedDebtOrder);
+			await expect(dharma.adapters.getAdapterByTermsContractAddress).toHaveBeenCalledWith(expectedDebtOrder.termsContract);
 		});
 
 		describe('no termsContract or no termsContractParameters', () => {
@@ -329,7 +330,7 @@ describe('<FillLoanEntered />', () => {
 				const wrapper = shallow(<FillLoanEntered {... props} />);
 				await wrapper.instance().handleFillOrder();
 				const expectedTxHash = await dharma.order.fillAsync(debtOrder);
-				await expect(dharma.blockchain.awaitTransactionMinedAsync).toHaveBeenCalledWith(expectedTxHash, 1000, 10000);
+				await expect(dharma.blockchain.awaitTransactionMinedAsync).toHaveBeenCalledWith(expectedTxHash, 1000, 60000);
 			});
 
 			it('calls Dharma#getErrorLogs', async () => {
@@ -338,14 +339,6 @@ describe('<FillLoanEntered />', () => {
 				const expectedTxHash = await dharma.order.fillAsync(debtOrder);
 				const expectedErrorLogs = await dharma.blockchain.getErrorLogs(expectedTxHash);
 				await expect(dharma.blockchain.getErrorLogs).toHaveBeenCalledWith(expectedTxHash);
-			});
-
-			it('calls ABIDecoder.decodeLogs', async () => {
-				const spy = jest.spyOn(ABIDecoder, 'decodeLogs');
-				const wrapper = shallow(<FillLoanEntered {... props} />);
-				await wrapper.instance().handleFillOrder();
-				await expect(spy).toHaveBeenCalled();
-				await expect(ABIDecoder.decodeLogs).toHaveBeenCalled();
 			});
 
 			it('calls props handleFillDebtOrder', async () => {
@@ -400,92 +393,6 @@ describe('<FillLoanEntered />', () => {
 			const wrapper = shallow(<FillLoanEntered {... props} />);
 			wrapper.instance().handleRedirect();
 			expect(spy).toHaveBeenCalledWith('/dashboard');
-		});
-	});
-
-	describe('#validateFillOrder', () => {
-		it('should call clear error', () => {
-			const wrapper = shallow(<FillLoanEntered {... props} />);
-			wrapper.instance().validateFillOrder();
-			expect(props.handleSetError).toHaveBeenCalledWith('');
-		});
-
-		describe('no token', () => {
-			it('should set error', () => {
-				const wrapper = shallow(<FillLoanEntered {... props} />);
-				wrapper.instance().validateFillOrder();
-				const errorMessage = props.location.query.principalTokenSymbol + ' is currently disabled for trading';
-				expect(props.handleSetError).toHaveBeenCalledWith(errorMessage);
-			});
-		});
-
-		describe('token is not permitted for trading', () => {
-			it('should set error', () => {
-				props.tokens = [
-					{
-						address: '0x07e93e27ac8a1c114f1931f65e3c8b5186b9b77e',
-						tokenSymbol: 'MKR',
-						tradingPermitted: false,
-						balance: new BigNumber(0)
-					}
-				];
-				const wrapper = shallow(<FillLoanEntered {... props} />);
-				wrapper.instance().validateFillOrder();
-				const errorMessage = props.location.query.principalTokenSymbol + ' is currently disabled for trading';
-				expect(props.handleSetError).toHaveBeenCalledWith(errorMessage);
-			});
-		});
-
-		describe('token is permitted for trading', () => {
-			it('should call confirmationModalToggle', () => {
-				props.tokens = [
-					{
-						address: '0x07e93e27ac8a1c114f1931f65e3c8b5186b9b77e',
-						tokenSymbol: 'MKR',
-						tradingPermitted: true,
-						balance: new BigNumber(1000000)
-					}
-				];
-				const wrapper = shallow(<FillLoanEntered {... props} />);
-				const spy = jest.spyOn(wrapper.instance(), 'confirmationModalToggle');
-				wrapper.instance().validateFillOrder();
-				expect(spy).toHaveBeenCalled();
-			});
-		});
-
-		describe('no token match', () => {
-			it('should set error', () => {
-				props.tokens = [
-					{
-						address: '0x00000',
-						tokenSymbol: 'REP',
-						tradingPermitted: true,
-						balance: new BigNumber(1000000)
-					}
-				];
-				const wrapper = shallow(<FillLoanEntered {... props} />);
-				wrapper.instance().validateFillOrder();
-				const errorMessage = props.location.query.principalTokenSymbol + ' is currently disabled for trading';
-				expect(props.handleSetError).toHaveBeenCalledWith(errorMessage);
-			});
-		});
-
-		describe('no principalAmount', () => {
-			it('should set error', () => {
-				props.tokens = [
-					{
-						address: '0x07e93e27ac8a1c114f1931f65e3c8b5186b9b77e',
-						tokenSymbol: 'MKR',
-						tradingPermitted: true,
-						balance: new BigNumber(1000000)
-					}
-				];
-				props.location.query.principalAmount = null;
-				const wrapper = shallow(<FillLoanEntered {... props} />);
-				wrapper.instance().validateFillOrder();
-				const errorMessage = 'Invalid debt order';
-				expect(props.handleSetError).toHaveBeenCalledWith(errorMessage);
-			});
 		});
 	});
 });

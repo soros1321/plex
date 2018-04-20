@@ -24,6 +24,7 @@ import { DebtOrder } from "@dharmaprotocol/dharma.js/dist/types/src/types";
 import { BigNumber } from "bignumber.js";
 import { TokenEntity } from "../../../models";
 import { web3Errors } from "src/common/web3Errors";
+import { BarLoader } from "react-spinners";
 
 interface Props {
     location?: any;
@@ -52,6 +53,7 @@ interface States {
     principalTokenSymbol: string;
     successModal: boolean;
     termLength: BigNumber;
+    initializing: boolean;
 }
 
 class FillLoanEntered extends React.Component<Props, States> {
@@ -69,6 +71,7 @@ class FillLoanEntered extends React.Component<Props, States> {
             termLength: new BigNumber(0),
             amortizationUnit: "",
             issuanceHash: "",
+            initializing: true,
         };
         this.confirmationModalToggle = this.confirmationModalToggle.bind(this);
         this.successModalToggle = this.successModalToggle.bind(this);
@@ -114,9 +117,10 @@ class FillLoanEntered extends React.Component<Props, States> {
                     termLength: fromDebtOrder.termLength,
                     amortizationUnit: fromDebtOrder.amortizationUnit,
                     issuanceHash: issuanceHash,
+                    initializing: false,
                 });
 
-                if (termsContractType === "CollateralizedSimpleInterestTermsContractContract") {
+                if (termsContractType === "CollateralizedSimpleInterestLoan") {
                     this.setState({
                         collateralAmount: fromDebtOrder.collateralAmount,
                         collateralized: true,
@@ -220,143 +224,155 @@ class FillLoanEntered extends React.Component<Props, States> {
             amortizationUnit,
             principalTokenSymbol,
             issuanceHash,
+            initializing,
         } = this.state;
 
-        const leftInfoItems = [
-            {
-                title: "Principal",
-                content: debtOrder.principalAmount ? (
-                    <TokenAmount
-                        tokenAmount={debtOrder.principalAmount}
-                        tokenSymbol={principalTokenSymbol}
-                    />
-                ) : (
-                    ""
-                ),
-            },
-            {
-                title: "Term Length",
-                content:
-                    termLength && amortizationUnit
-                        ? termLength.toNumber() + " " + amortizationUnit
-                        : "-",
-            },
-        ];
-        const rightInfoItems = [
-            { title: "Interest Rate", content: interestRate.toNumber() + "%" },
-            {
-                title: "Installment Frequency",
-                content: amortizationUnit ? amortizationUnitToFrequency(amortizationUnit) : "-",
-            },
-        ];
-
-        if (
-            collateralized &&
-            collateralAmount != null &&
-            collateralTokenSymbol != null &&
-            gracePeriodInDays != null
-        ) {
-            leftInfoItems.push({
-                title: "Collateral",
-                content: `${collateralAmount} ${collateralTokenSymbol}`,
-            });
-            rightInfoItems.push({
-                title: "Grace period",
-                content: `${gracePeriodInDays.toNumber()} days`,
-            });
-        }
-
-        const leftInfoItemRows = leftInfoItems.map((item) => (
-            <InfoItem key={item.title}>
-                <Title>{item.title}</Title>
-                <Content>{item.content}</Content>
-            </InfoItem>
-        ));
-        const rightInfoItemRows = rightInfoItems.map((item) => (
-            <InfoItem key={item.title}>
-                <Title>{item.title}</Title>
-                <Content>{item.content}</Content>
-            </InfoItem>
-        ));
-
-        const confirmationModalContent = (
-            <span>
-                You will fill this debt order <Bold>{shortenString(issuanceHash)}</Bold>. This
-                operation will debit{" "}
-                <Bold>
-                    {debtOrder.principalAmount ? (
+        if (initializing) {
+            return (
+                <PaperLayout>
+                    <MainWrapper>
+                        <Header title={"Fill a Loan"} />
+                        <BarLoader width={200} height={10} color={"#1cc1cc"} loading={true} />
+                    </MainWrapper>
+                </PaperLayout>
+            );
+        } else {
+            const leftInfoItems = [
+                {
+                    title: "Principal",
+                    content: debtOrder.principalAmount ? (
                         <TokenAmount
                             tokenAmount={debtOrder.principalAmount}
                             tokenSymbol={principalTokenSymbol}
                         />
                     ) : (
                         ""
-                    )}
-                </Bold>{" "}
-                from your account.
-            </span>
-        );
-        const descriptionContent = (
-            <span>
-                Here are the details of loan request <Bold>{issuanceHash}</Bold>. If the terms look
-                fair to you, fill the loan and your transaction will be completed.
-            </span>
-        );
-        return (
-            <PaperLayout>
-                <MainWrapper>
-                    <Header title={"Fill a Loan"} description={descriptionContent} />
-                    <LoanInfoContainer>
-                        <HalfCol>{leftInfoItemRows}</HalfCol>
-                        <HalfCol>{rightInfoItemRows}</HalfCol>
-                        <Col xs="12">
-                            <InfoItem>
-                                <Title>Description</Title>
-                                <Content>{description}</Content>
-                            </InfoItem>
-                        </Col>
-                    </LoanInfoContainer>
-                    <ButtonContainer>
-                        <Link to="/fill">
-                            <DeclineButton>Decline</DeclineButton>
-                        </Link>
-                        <FillLoanButton
-                            onClick={this.confirmationModalToggle}
+                    ),
+                },
+                {
+                    title: "Term Length",
+                    content:
+                        termLength && amortizationUnit
+                            ? termLength.toNumber() + " " + amortizationUnit
+                            : "-",
+                },
+            ];
+            const rightInfoItems = [
+                { title: "Interest Rate", content: interestRate.toNumber() + "%" },
+                {
+                    title: "Installment Frequency",
+                    content: amortizationUnit ? amortizationUnitToFrequency(amortizationUnit) : "-",
+                },
+            ];
+
+            if (
+                collateralized &&
+                collateralAmount != null &&
+                collateralTokenSymbol != null &&
+                gracePeriodInDays != null
+            ) {
+                leftInfoItems.push({
+                    title: "Collateral",
+                    content: `${collateralAmount} ${collateralTokenSymbol}`,
+                });
+                rightInfoItems.push({
+                    title: "Grace period",
+                    content: `${gracePeriodInDays.toNumber()} days`,
+                });
+            }
+
+            const leftInfoItemRows = leftInfoItems.map((item) => (
+                <InfoItem key={item.title}>
+                    <Title>{item.title}</Title>
+                    <Content>{item.content}</Content>
+                </InfoItem>
+            ));
+            const rightInfoItemRows = rightInfoItems.map((item) => (
+                <InfoItem key={item.title}>
+                    <Title>{item.title}</Title>
+                    <Content>{item.content}</Content>
+                </InfoItem>
+            ));
+
+            const confirmationModalContent = (
+                <span>
+                    You will fill this debt order <Bold>{shortenString(issuanceHash)}</Bold>. This
+                    operation will debit{" "}
+                    <Bold>
+                        {debtOrder.principalAmount ? (
+                            <TokenAmount
+                                tokenAmount={debtOrder.principalAmount}
+                                tokenSymbol={principalTokenSymbol}
+                            />
+                        ) : (
+                            ""
+                        )}
+                    </Bold>{" "}
+                    from your account.
+                </span>
+            );
+            const descriptionContent = (
+                <span>
+                    Here are the details of loan request <Bold>{issuanceHash}</Bold>. If the terms
+                    look fair to you, fill the loan and your transaction will be completed.
+                </span>
+            );
+            return (
+                <PaperLayout>
+                    <MainWrapper>
+                        <Header title={"Fill a Loan"} description={descriptionContent} />
+                        <LoanInfoContainer>
+                            <HalfCol>{leftInfoItemRows}</HalfCol>
+                            <HalfCol>{rightInfoItemRows}</HalfCol>
+                            <Col xs="12">
+                                <InfoItem>
+                                    <Title>Description</Title>
+                                    <Content>{description}</Content>
+                                </InfoItem>
+                            </Col>
+                        </LoanInfoContainer>
+                        <ButtonContainer>
+                            <Link to="/fill">
+                                <DeclineButton>Decline</DeclineButton>
+                            </Link>
+                            <FillLoanButton
+                                onClick={this.confirmationModalToggle}
+                                disabled={this.state.awaitingTransaction}
+                            >
+                                Fill Loan
+                            </FillLoanButton>
+                        </ButtonContainer>
+
+                        {this.state.awaitingTransaction && (
+                            <Content style={{ textAlign: "center" }}>
+                                <LoaderContainer>
+                                    <ClipLoader size={18} color={"#1cc1cc"} loading={true} />
+                                </LoaderContainer>
+                            </Content>
+                        )}
+
+                        <ConfirmationModal
                             disabled={this.state.awaitingTransaction}
-                        >
-                            Fill Loan
-                        </FillLoanButton>
-                    </ButtonContainer>
-
-                    {this.state.awaitingTransaction && (
-                        <Content style={{ textAlign: "center" }}>
-                            <LoaderContainer>
-                                <ClipLoader size={18} color={"#1cc1cc"} loading={true} />
-                            </LoaderContainer>
-                        </Content>
-                    )}
-
-                    <ConfirmationModal
-                        disabled={this.state.awaitingTransaction}
-                        modal={this.state.confirmationModal}
-                        title="Please confirm"
-                        content={confirmationModalContent}
-                        onToggle={this.confirmationModalToggle}
-                        onSubmit={this.handleFillOrder}
-                        closeButtonText="Cancel"
-                        submitButtonText={
-                            this.state.awaitingTransaction ? "Filling order..." : "Fill Order"
-                        }
-                    />
-                    <SuccessModal
-                        modal={this.state.successModal}
-                        onToggle={this.successModalToggle}
-                        issuanceHash={issuanceHash}
-                        onRedirect={this.handleRedirect}
-                    />
-                </MainWrapper>
-            </PaperLayout>
-        );
+                            modal={this.state.confirmationModal}
+                            title="Please confirm"
+                            content={confirmationModalContent}
+                            onToggle={this.confirmationModalToggle}
+                            onSubmit={this.handleFillOrder}
+                            closeButtonText="Cancel"
+                            submitButtonText={
+                                this.state.awaitingTransaction ? "Filling order..." : "Fill Order"
+                            }
+                        />
+                        <SuccessModal
+                            modal={this.state.successModal}
+                            onToggle={this.successModalToggle}
+                            issuanceHash={issuanceHash}
+                            onRedirect={this.handleRedirect}
+                        />
+                    </MainWrapper>
+                </PaperLayout>
+            );
+        }
     }
 }
 

@@ -1,7 +1,11 @@
-import { mockGetAccounts } from './eth';
+import {
+	mockGetAccounts,
+	mockGetBlock
+} from './eth';
 
 const eth = {
-  getAccounts: mockGetAccounts
+	getAccounts: mockGetAccounts,
+	getBlock: mockGetBlock
 };
 
 const mockFromWei = jest.fn((value, to) => {
@@ -9,10 +13,10 @@ const mockFromWei = jest.fn((value, to) => {
 });
 
 const mockWeb3 = jest.fn().mockImplementation(() => {
-  return {
-    eth,
+	return {
+		eth,
 		fromWei: mockFromWei
-  };
+	};
 });
 
 export default mockWeb3;

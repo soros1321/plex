@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { shallow } from 'enzyme';
-import { CustomBaseInput } from '../../../../../src/components/Form/JSONSchemaForm/CustomBaseInput';
-import { PressEnter } from '../../../../../src/components/Form/JSONSchemaForm/styledComponents';
+import { CustomBaseInput } from 'src/components/Form/JSONSchemaForm/CustomBaseInput';
+import { PressEnter } from 'src/components/Form/JSONSchemaForm/PressEnter';
 
 describe('<CustomBaseInput />', () => {
 	let wrapper;
@@ -58,16 +58,6 @@ describe('<CustomBaseInput />', () => {
 	it('should render a <PressEnter /> component when options.pressEnter is undefined', () => {
 		wrapper.setProps({ options: {pressEnter: undefined}});
 		expect(wrapper.find(PressEnter).length).toEqual(1);
-	});
-
-	it('<PressEnter /> should not have active class when input does not have value', () => {
-		wrapper.setProps({ value: ''});
-		expect(wrapper.find(PressEnter).hasClass('active')).toEqual(false);
-	});
-
-	it('<PressEnter /> should have active class when input does have value', () => {
-		wrapper.setProps({ value: 'some value'});
-		expect(wrapper.find(PressEnter).hasClass('active')).toEqual(true);
 	});
 
 	it('calls onChange prop when the input is changed', () => {

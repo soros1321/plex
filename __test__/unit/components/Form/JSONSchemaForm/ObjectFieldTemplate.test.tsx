@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { shallow } from 'enzyme';
-import { ObjectFieldTemplate } from '../../../../../src/components/Form/JSONSchemaForm/ObjectFieldTemplate';
+import { ObjectFieldTemplate } from 'src/components/Form/JSONSchemaForm/ObjectFieldTemplate';
 import {
 	GroupWrapper,
 	Title,
 	Description,
 	InputContainerBorder,
-	PressEnter
-} from '../../../../../src/components/Form/JSONSchemaForm/styledComponents';
+} from 'src/components/Form/JSONSchemaForm/styledComponents';
+import { PressEnter } from 'src/components/Form/JSONSchemaForm/PressEnter';
 
 describe('<ObjectFieldTemplate />', () => {
 	let wrapper;
@@ -17,7 +17,10 @@ describe('<ObjectFieldTemplate />', () => {
 		properties: [
 			{content: 'Some content'},
 			{content: 'Another content'}
-		]
+		],
+		idSchema: {
+			$id: 'some-identifier'
+		}
 	};
 
 	beforeEach(() => {

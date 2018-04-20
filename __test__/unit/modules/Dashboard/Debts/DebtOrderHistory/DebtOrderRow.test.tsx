@@ -1,16 +1,18 @@
 import * as React from 'react';
 import { shallow } from 'enzyme';
-import { DebtOrderRow } from '../../../../../../src/modules/Dashboard/Debts/DebtOrderHistory/DebtOrderRow';
-import { shortenString, amortizationUnitToFrequency } from '../../../../../../src/utils';
+import { DebtOrderRow } from 'src/modules/Dashboard/Debts/DebtOrderHistory/DebtOrderRow';
+import { shortenString, amortizationUnitToFrequency } from 'src/utils';
 import {
 	StyledRow,
 	Drawer,
 	InfoItem,
 	InfoItemTitle,
 	InfoItemContent
-} from '../../../../../../src/modules/Dashboard/Debts/DebtOrderHistory/styledComponents';
+} from 'src/modules/Dashboard/Debts/DebtOrderHistory/styledComponents';
 import { BigNumber } from 'bignumber.js';
 import { Col, Collapse } from 'reactstrap';
+import { TokenAmount } from 'src/components';
+import MockDharma from '__mocks__/dharma.js';
 
 describe('<DebtOrderRow />', () => {
 	const debtOrder = {
@@ -38,7 +40,10 @@ describe('<DebtOrderRow />', () => {
 		let wrapper;
 		let props;
 		beforeEach(() => {
-			props = { debtOrder };
+			props = {
+				dharma: new MockDharma(),
+				debtOrder
+			};
 			wrapper = shallow(<DebtOrderRow {... props} />);
 		});
 
@@ -65,8 +70,8 @@ describe('<DebtOrderRow />', () => {
 			});
 
 			it('1st <Col /> should render principal info', () => {
-				const content = debtOrder.principalAmount.toNumber() + ' ' + props.debtOrder.principalTokenSymbol;
-				expect(styledRow.find(Col).at(0).get(0).props.children).toEqual(content);
+				expect(styledRow.find(Col).at(0).find(TokenAmount).prop('tokenAmount')).toEqual(props.debtOrder.principalAmount);
+				expect(styledRow.find(Col).at(0).find(TokenAmount).prop('tokenSymbol')).toEqual(props.debtOrder.principalTokenSymbol);
 			});
 
 			it('2nd <Col /> should render issuance hash info', () => {
@@ -74,12 +79,15 @@ describe('<DebtOrderRow />', () => {
 				expect(styledRow.find(Col).at(1).get(0).props.children).toEqual(content);
 			});
 
-			it('3rd <Col /> should render status info', () => {
-				expect(styledRow.find(Col).at(2).get(0).props.children).toEqual('Delinquent');
-				props.debtOrder.repaidAmount = debtOrder.principalAmount;
+			it('3rd <Col /> should render correct status info', async () => {
+				props.debtOrder.issuanceHash = 'paid';
 				wrapper.setProps(props);
-				styledRow = wrapper.find(StyledRow);
-				expect(styledRow.find(Col).at(2).get(0).props.children).toEqual('Paid');
+				await wrapper.instance().determineStatus(props.dharma);
+				await expect(wrapper.state('status')).toEqual('Paid');
+				props.debtOrder.issuanceHash = 'delinquent';
+				wrapper.setProps(props);
+				await wrapper.instance().determineStatus(props.dharma);
+				await expect(wrapper.state('status')).toEqual('Delinquent');
 			});
 
 			it('4th <Col /> should render terms info', () => {

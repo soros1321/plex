@@ -38,25 +38,33 @@ describe('Toggle Component (Unit)', () => {
 		expect(wrapper.find(ToggleLabel).find(ToggleName).get(0).props.children).toBe(props.label);
 	});
 
-  test('calls onChange prop on click', () => {
-    const event = {
-      currentTarget: {
-        checked: true
-      }
-    };
-    wrapper.instance().handleChange(event);
-    expect(props.onChange.mock.calls.length).toBe(1);
-  });
-
-	it('should have the same disabled state as the props', () => {
-		props.disabled = true;
-		wrapper = shallow(<Toggle {... props} />);
-		expect(wrapper.state('disabled')).toBe(props.disabled);
-	});
-
 	it('should have the correct id', () => {
 		props.prepend = 'prepend';
 		wrapper = shallow(<Toggle {... props} />);
 		expect(wrapper.find(ReactToggle).prop('id')).toEqual(props.prepend + '-' + props.name);
+	});
+
+	describe('#handleChange', () => {
+		it('calls onChange prop on click', () => {
+			const event = {
+				currentTarget: {
+					checked: true
+				}
+			};
+			wrapper.instance().handleChange(event);
+			expect(props.onChange.mock.calls.length).toBe(1);
+		});
+
+		it('should setState twice', () => {
+			const spy = jest.spyOn(Toggle.prototype, 'setState');
+			const event = {
+				currentTarget: {
+					checked: true
+				}
+			};
+			wrapper.instance().handleChange(event);
+			expect(spy).toHaveBeenCalledTimes(2);
+			expect(spy).toHaveBeenLastCalledWith({ transactionUnderway: false });
+		});
 	});
 });

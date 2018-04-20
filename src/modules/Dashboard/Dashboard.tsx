@@ -1,4 +1,5 @@
 import * as React from "react";
+import * as Web3 from "web3";
 import { DebtOrderEntity, InvestmentEntity } from "../../models";
 import { Nav, NavLink, TabContent, TabPane } from "reactstrap";
 import { DebtsContainer } from "./Debts/DebtsContainer";
@@ -6,21 +7,25 @@ import { InvestmentsContainer } from "./Investments/InvestmentsContainer";
 import { Wrapper, StyledNavItem, TitleFirstWord, TitleRest } from "./styledComponents";
 import Dharma from "@dharmaprotocol/dharma.js";
 import { debtOrderFromJSON } from "../../utils";
+const Web3Utils = require("../../utils/web3Utils");
+import { BigNumber } from "bignumber.js";
 
 interface Props {
     dharma: Dharma;
     accounts: string[];
-    filledDebtOrders: DebtOrderEntity[];
     pendingDebtOrders: DebtOrderEntity[];
     handleSetError: (errorMessage: string) => void;
-    handleSetFilledDebtOrders: (filledDebtOrders: DebtOrderEntity[]) => void;
     handleFillDebtOrder: (issuanceHash: string) => void;
+    web3: Web3;
+    filledDebtOrders: DebtOrderEntity[];
+    handleSetFilledDebtOrders: (filledDebtOrders: DebtOrderEntity[]) => void;
 }
 
 interface States {
-    investments: InvestmentEntity[];
     initiallyLoading: boolean;
     activeTab: string;
+    currentTime?: number;
+    investments: InvestmentEntity[];
 }
 
 class Dashboard extends React.Component<Props, States> {
@@ -30,8 +35,8 @@ class Dashboard extends React.Component<Props, States> {
         this.toggle = this.toggle.bind(this);
         this.state = {
             activeTab: "1",
-            investments: [],
             initiallyLoading: true,
+            investments: [],
         };
     }
 
@@ -39,6 +44,7 @@ class Dashboard extends React.Component<Props, States> {
         if (this.props.dharma) {
             await this.getDebtsAsync(this.props.dharma);
             await this.getInvestmentsAsync(this.props.dharma);
+            await this.getBlockchainTime();
             this.setState({ initiallyLoading: false });
         }
     }
@@ -47,8 +53,15 @@ class Dashboard extends React.Component<Props, States> {
         if (this.props.dharma !== prevProps.dharma) {
             await this.getDebtsAsync(this.props.dharma);
             await this.getInvestmentsAsync(this.props.dharma);
+            await this.getBlockchainTime();
             this.setState({ initiallyLoading: false });
         }
+    }
+
+    async getBlockchainTime() {
+        const web3Utils = new Web3Utils(this.props.web3);
+        const currentTime = await web3Utils.getCurrentBlockTime();
+        this.setState({ currentTime });
     }
 
     async getDebtsAsync(dharma: Dharma) {
@@ -74,9 +87,14 @@ class Dashboard extends React.Component<Props, States> {
                 )) as any;
                 const repaymentSchedule = await adapter.getRepaymentSchedule(debtRegistryEntry);
                 const repaidAmount = await dharma.servicing.getValueRepaid(issuanceHash);
-                const status = repaidAmount.lt(dharmaDebtOrder.principalAmount)
-                    ? "active"
-                    : "inactive";
+                const totalExpectedRepayment = await dharma.servicing.getTotalExpectedRepayment(
+                    issuanceHash,
+                );
+                const status = new BigNumber(repaidAmount).gte(
+                    new BigNumber(totalExpectedRepayment),
+                )
+                    ? "inactive"
+                    : "active";
                 const debtOrder: DebtOrderEntity = {
                     debtor: accounts[0],
                     termsContract: debtRegistryEntry.termsContract,
@@ -94,7 +112,7 @@ class Dashboard extends React.Component<Props, States> {
                     status,
                     creditor: debtRegistryEntry.beneficiary,
                 };
-                if (termsContractType === "CollateralizedSimpleInterestTermsContractContract") {
+                if (termsContractType === "CollateralizedSimpleInterestLoan") {
                     debtOrder.collateralAmount = dharmaDebtOrder.collateralAmount;
                     debtOrder.collateralized = true;
                     debtOrder.collateralTokenSymbol = dharmaDebtOrder.collateralTokenSymbol;
@@ -142,13 +160,14 @@ class Dashboard extends React.Component<Props, States> {
                 const dharmaDebtOrder = (await adapter.fromDebtRegistryEntry(
                     debtRegistryEntry,
                 )) as any;
+                const repaymentSchedule = await adapter.getRepaymentSchedule(debtRegistryEntry);
                 const earnedAmount = await dharma.servicing.getValueRepaid(issuanceHash);
-                const repaymentSchedule = await dharma.adapters.simpleInterestLoan.getRepaymentSchedule(
-                    debtRegistryEntry,
+                const totalExpectedEarning = await dharma.servicing.getTotalExpectedRepayment(
+                    issuanceHash,
                 );
-                const status = earnedAmount.lt(dharmaDebtOrder.principalAmount)
-                    ? "active"
-                    : "inactive";
+                const status = new BigNumber(earnedAmount).gte(new BigNumber(totalExpectedEarning))
+                    ? "inactive"
+                    : "active";
                 const investment: InvestmentEntity = {
                     creditor: debtRegistryEntry.beneficiary,
                     termsContract: debtRegistryEntry.termsContract,
@@ -165,7 +184,7 @@ class Dashboard extends React.Component<Props, States> {
                     repaymentSchedule,
                     status,
                 };
-                if (termsContractType === "CollateralizedSimpleInterestTermsContractContract") {
+                if (termsContractType === "CollateralizedSimpleInterestLoan") {
                     investment.collateralAmount = dharmaDebtOrder.collateralAmount;
                     investment.collateralized = true;
                     investment.collateralTokenSymbol = dharmaDebtOrder.collateralTokenSymbol;
@@ -190,21 +209,25 @@ class Dashboard extends React.Component<Props, States> {
     }
 
     render() {
-        const { pendingDebtOrders } = this.props;
+        const { pendingDebtOrders, filledDebtOrders } = this.props;
+        if (!pendingDebtOrders || !filledDebtOrders) {
+            return null;
+        }
 
-        const debtOrders = pendingDebtOrders.concat(this.props.filledDebtOrders);
+        const debtOrders = pendingDebtOrders.concat(filledDebtOrders);
         for (const index of Object.keys(debtOrders)) {
             debtOrders[index] = debtOrderFromJSON(JSON.stringify(debtOrders[index]));
         }
 
-        const { investments, activeTab, initiallyLoading } = this.state;
+        const { investments, activeTab, initiallyLoading, currentTime } = this.state;
         const tabs = [
             {
                 id: "1",
                 titleFirstWord: "Your ",
-                titleRest: "Debts (" + (debtOrders && debtOrders.length) + ")",
+                titleRest: "Debts (" + debtOrders.length + ")",
                 content: (
                     <DebtsContainer
+                        currentTime={currentTime}
                         dharma={this.props.dharma}
                         debtOrders={debtOrders}
                         initializing={initiallyLoading}
@@ -214,9 +237,10 @@ class Dashboard extends React.Component<Props, States> {
             {
                 id: "2",
                 titleFirstWord: "Your ",
-                titleRest: "Investments (" + (investments && investments.length) + ")",
+                titleRest: "Investments (" + investments.length + ")",
                 content: (
                     <InvestmentsContainer
+                        currentTime={currentTime}
                         investments={investments}
                         initializing={initiallyLoading}
                     />

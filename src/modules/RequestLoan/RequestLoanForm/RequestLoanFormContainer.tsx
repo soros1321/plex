@@ -9,6 +9,7 @@ const mapStateToProps = (state: any) => {
         web3: state.web3Reducer.web3,
         accounts: state.web3Reducer.accounts,
         dharma: state.dharmaReducer.dharma,
+        tokens: state.tokenReducer.tokens,
     };
 };
 

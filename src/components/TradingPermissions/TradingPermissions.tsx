@@ -17,7 +17,7 @@ import { TokenEntity } from "../../models";
 const promisify = require("tiny-promisify");
 import { Collapse } from "reactstrap";
 import { ClipLoader } from "react-spinners";
-import { truncate } from "src/utils/webUtils";
+import { displayBalance } from "src/utils/webUtils";
 import { web3Errors } from "../../common/web3Errors";
 
 interface Props {
@@ -60,14 +60,19 @@ class TradingPermissions extends React.Component<Props, State> {
     }
 
     async getTokenAllowance(tokenAddress: string) {
-        const accounts = await promisify(this.props.web3.eth.getAccounts)();
+        const { web3, dharma } = this.props;
+        if (!web3 || !dharma) {
+            return new BigNumber(-1);
+        }
+
+        const accounts = await promisify(web3.eth.getAccounts)();
         // TODO: handle account retrieval error more robustly
         if (!accounts || !accounts[0]) {
             return new BigNumber(-1);
         }
 
         const ownerAddress = accounts[0];
-        const tokenAllowance = await this.props.dharma.token.getProxyAllowanceAsync(
+        const tokenAllowance = await dharma.token.getProxyAllowanceAsync(
             tokenAddress,
             ownerAddress,
         );
@@ -77,6 +82,10 @@ class TradingPermissions extends React.Component<Props, State> {
     async getTokenBalance(tokenAddress: string) {
         try {
             const { dharma, web3 } = this.props;
+            if (!web3) {
+                return new BigNumber(-1);
+            }
+
             const accounts = await promisify(web3.eth.getAccounts)();
             // TODO: handle account retrieval error more robustly
             if (!accounts || !accounts[0]) {
@@ -193,13 +202,13 @@ class TradingPermissions extends React.Component<Props, State> {
 
     async handleFaucet(tokenAddress: string) {
         this.props.handleSetError("");
-        const { dharma } = this.props;
-        if (!dharma) {
+        const { dharma, web3 } = this.props;
+        if (!dharma || !web3) {
             this.props.handleSetError(web3Errors.UNABLE_TO_FIND_CONTRACTS);
             return;
         }
 
-        const accounts = await promisify(this.props.web3.eth.getAccounts)();
+        const accounts = await promisify(web3.eth.getAccounts)();
         if (!accounts.length) {
             this.props.handleSetError(web3Errors.UNABLE_TO_FIND_ACCOUNTS);
             return;
@@ -216,22 +225,23 @@ class TradingPermissions extends React.Component<Props, State> {
         if (!this.props.tokens || !this.props.tokens.length) {
             return null;
         }
-        const { web3, tokens, agreeToTerms } = this.props;
+        const { tokens, agreeToTerms } = this.props;
         let tokenItems: JSX.Element[] = [];
         let tokenItemsMore: JSX.Element[] = [];
 
         let count: number = 0;
         for (let token of tokens) {
-            const truncatedTokenBalance = truncate(
-                web3.fromWei(token.balance, "ether").toNumber(),
-                5,
-            );
+            // The number of decimals associated with this token.
+            // TODO: Fetch from contracts.
+            const numDecimals = 18;
+
+            const displayableBalance = displayBalance(token.balance, numDecimals);
 
             const tokenLabel = (
                 <div>
                     <TokenSymbol>{token.tokenSymbol}</TokenSymbol>
                     {token.balance.gt(0) ? (
-                        <TokenBalance>({truncatedTokenBalance})</TokenBalance>
+                        <TokenBalance>({displayableBalance})</TokenBalance>
                     ) : (
                         <FaucetButton
                             onClick={(e) => this.handleFaucet(token.address)}

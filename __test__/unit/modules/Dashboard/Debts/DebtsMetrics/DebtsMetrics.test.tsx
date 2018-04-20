@@ -1,14 +1,15 @@
 import * as React from 'react';
 import { shallow, mount } from 'enzyme';
-import { DebtsMetrics } from '../../../../../../src/modules/Dashboard/Debts/DebtsMetrics/DebtsMetrics';
-import { TokenEntity, DebtOrderEntity } from '../../../../../../src/models';
+import { DebtsMetrics } from 'src/modules/Dashboard/Debts/DebtsMetrics/DebtsMetrics';
+import { TokenEntity, DebtOrderEntity } from 'src/models';
 import { BigNumber } from 'bignumber.js';
 import {
 	HalfCol,
 	Value,
 	TokenWrapper,
 	Label
-} from '../../../../../../src/modules/Dashboard/Debts/DebtsMetrics/styledComponents';
+} from 'src/modules/Dashboard/Debts/DebtsMetrics/styledComponents';
+import { TokenAmount } from 'src/components';
 
 describe('<DebtsMetrics />', () => {
 	let debtOrders;
@@ -59,9 +60,11 @@ describe('<DebtsMetrics />', () => {
 		it('should render correct Total Owed and Total Repaid value', () => {
 			const wrapper = shallow(<DebtsMetrics {... props} />);
 			expect(wrapper.find(HalfCol).length).toEqual(2);
-			expect(wrapper.find(HalfCol).first().find(Value).find(TokenWrapper).get(0).props.children).toEqual('10 REP');
+			expect(wrapper.find(HalfCol).first().find(Value).find(TokenWrapper).at(0).find(TokenAmount).prop('tokenAmount')).toEqual(new BigNumber(10));
+			expect(wrapper.find(HalfCol).first().find(Value).find(TokenWrapper).at(0).find(TokenAmount).prop('tokenSymbol')).toEqual('REP');
 			expect(wrapper.find(HalfCol).first().find(Label).get(0).props.children).toEqual('Total Owed');
-			expect(wrapper.find(HalfCol).last().find(Value).find(TokenWrapper).get(0).props.children).toEqual('4 REP');
+			expect(wrapper.find(HalfCol).last().find(Value).find(TokenWrapper).at(0).find(TokenAmount).prop('tokenAmount')).toEqual(new BigNumber(4));
+			expect(wrapper.find(HalfCol).last().find(Value).find(TokenWrapper).at(0).find(TokenAmount).prop('tokenSymbol')).toEqual('REP');
 			expect(wrapper.find(HalfCol).last().find(Label).get(0).props.children).toEqual('Total Repaid');
 		});
 
@@ -93,7 +96,7 @@ describe('<DebtsMetrics />', () => {
 		it('should call initiateTokenBalance', () => {
 			const spy = jest.spyOn(DebtsMetrics.prototype, 'initiateTokenBalance');
 			const wrapper = shallow(<DebtsMetrics {... props} />);
-			expect(spy).toHaveBeenCalledWith(props.tokens, props.debtOrders);
+			expect(spy).toHaveBeenCalledWith(props.tokens);
 		});
 
 		it('should set the correct token balance', () => {
@@ -103,20 +106,13 @@ describe('<DebtsMetrics />', () => {
 		});
 	});
 
-	describe('#componentWillReceiveProps', () => {
-		it('should call initiateTokenBalance when there is debtOrders and tokens', () => {
+	describe('#componentDidUpdate', () => {
+		it('should call initiateTokenBalance', () => {
 			const wrapper = shallow(<DebtsMetrics />);
 			const spy = jest.spyOn(wrapper.instance(), 'initiateTokenBalance');
 			wrapper.setProps({ debtOrders, tokens });
-			expect(spy).toHaveBeenCalledWith(tokens, debtOrders);
+			expect(spy).toHaveBeenCalledWith(tokens);
 			spy.mockRestore();
-		});
-
-		it('should not call initiateTokenBalance when there is no debtOrders and no tokens', () => {
-			const wrapper = shallow(<DebtsMetrics />);
-			const spy = jest.spyOn(wrapper.instance(), 'initiateTokenBalance');
-			wrapper.setProps({ debtOrders: null, tokens: null });
-			expect(spy).not.toHaveBeenCalled();
 		});
 	});
 
@@ -580,15 +576,18 @@ describe('<DebtsMetrics />', () => {
 			const wrapper = shallow(<DebtsMetrics {... props} />);
 			expect(tokens.length).toEqual(3);
 			expect(wrapper.find(HalfCol).last().find(TokenWrapper).length).toEqual(1);
-			expect(wrapper.find(HalfCol).last().find(TokenWrapper).get(0).props.children).toEqual('4 REP');
+			expect(wrapper.find(HalfCol).last().find(TokenWrapper).at(0).find(TokenAmount).prop('tokenAmount')).toEqual(new BigNumber(4));
+			expect(wrapper.find(HalfCol).last().find(TokenWrapper).at(0).find(TokenAmount).prop('tokenSymbol')).toEqual('REP');
 		});
 
 		it('should render 10 MKR and 10 REP in Total Owed section', () => {
 			const wrapper = shallow(<DebtsMetrics {... props} />);
 			expect(tokens.length).toEqual(3);
 			expect(wrapper.find(HalfCol).first().find(TokenWrapper).length).toEqual(2);
-			expect(wrapper.find(HalfCol).first().find(TokenWrapper).first().get(0).props.children).toEqual('10 MKR');
-			expect(wrapper.find(HalfCol).first().find(TokenWrapper).last().get(0).props.children).toEqual('10 REP');
+			expect(wrapper.find(HalfCol).first().find(TokenWrapper).first().find(TokenAmount).prop('tokenAmount')).toEqual(new BigNumber(10));
+			expect(wrapper.find(HalfCol).first().find(TokenWrapper).first().find(TokenAmount).prop('tokenSymbol')).toEqual('MKR');
+			expect(wrapper.find(HalfCol).first().find(TokenWrapper).last().find(TokenAmount).prop('tokenAmount')).toEqual(new BigNumber(10));
+			expect(wrapper.find(HalfCol).first().find(TokenWrapper).last().find(TokenAmount).prop('tokenSymbol')).toEqual('REP');
 		});
 	});
 });

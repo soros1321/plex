@@ -57,7 +57,7 @@ describe('<ConfirmationModal />', () => {
 	});
 
 	it('should have the correct submit button text', () => {
-		expect(wrapper.find(ModalFooter).find(Button).get(1).props.children).toBe(props.submitButtonText);
+		expect(wrapper.find(ModalFooter).find(Button).get(1).props.children[0]).toBe(props.submitButtonText);
 	});
 
 	it('calls onToggle prop when the close button is clicked', () => {

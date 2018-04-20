@@ -30,7 +30,7 @@ describe('<RequestLoanForm />', () => {
 
 		props = {
 			web3,
-			accounts: [],
+			accounts: ['accounts1'],
 			dharma,
 			handleRequestDebtOrder: jest.fn(),
 			handleSetError: jest.fn()
@@ -130,6 +130,9 @@ describe('<RequestLoanForm />', () => {
 					interestRate: 10,
 					amortizationUnit: 'hours',
 					termLength: 10
+				},
+				collateral: {
+					collateralized: false
 				}
 			};
 		});
@@ -145,7 +148,7 @@ describe('<RequestLoanForm />', () => {
 			wrapper.instance().handleChange(formData);
 			const expectedSimpleInterestLoan = {
 				principalTokenSymbol: formData.loan.principalTokenSymbol,
-				principalAmount: new BigNumber(formData.loan.principalAmount),
+				principalAmount: new BigNumber(formData.loan.principalAmount * 10 ** 18),
 				interestRate: new BigNumber(formData.terms.interestRate),
 				amortizationUnit: formData.terms.amortizationUnit,
 				termLength: new BigNumber(formData.terms.termLength)
@@ -165,10 +168,8 @@ describe('<RequestLoanForm />', () => {
 				termLength: new BigNumber(formData.terms.termLength)
 			};
 			const debtOrder = await dharma.adapters.simpleInterestLoan.toDebtOrder(simpleInterestLoan);
-			const accounts = ['account1'];
-			wrapper.setProps({ accounts });
+			debtOrder.debtor = props.accounts[0];
 			await wrapper.instance().handleSubmit();
-			debtOrder.debtor = accounts[0];
 			await expect(dharma.order.getIssuanceHash).toHaveBeenCalledWith(debtOrder);
 		});
 
@@ -184,12 +185,10 @@ describe('<RequestLoanForm />', () => {
 				termLength: new BigNumber(formData.terms.termLength)
 			};
 			const debtOrder = await dharma.adapters.simpleInterestLoan.toDebtOrder(simpleInterestLoan);
-			const accounts = ['account1'];
-			wrapper.setProps({ accounts });
+			debtOrder.debtor = props.accounts[0];
 			await wrapper.instance().handleSubmit();
-			debtOrder.debtor = accounts[0];
 			const issuanceHash = await dharma.order.getIssuanceHash(debtOrder);
-			expect(spy).toHaveBeenCalledWith({ debtOrder: JSON.stringify(debtOrder), issuanceHash});
+			expect(spy).toHaveBeenCalledWith({ collateralized: formData.collateral.collateralized, debtOrder: JSON.stringify(debtOrder), issuanceHash});
 		});
 
 		it('should call confirmationModalToggle', async () => {
@@ -201,11 +200,11 @@ describe('<RequestLoanForm />', () => {
 		});
 
 		it('should call handleSetError when there is an error', async () => {
-			dharma.adapters.simpleInterestLoan.toDebtOrder = jest.fn(async (simpleInterestLoan) => throw new Error());
+			dharma.adapters.simpleInterestLoan.toDebtOrder = jest.fn(async (simpleInterestLoan) => throw new Error('Some error message'));
 			const wrapper = shallow(<RequestLoanForm {... props} />);
 			wrapper.instance().handleChange(formData);
 			await wrapper.instance().handleSubmit();
-			expect(props.handleSetError).toHaveBeenCalledWith('Unable to generate Debt Order');
+			expect(props.handleSetError).toHaveBeenCalledWith('Some error message');
 			dharma.adapters.simpleInterestLoan.toDebtOrder = jest.fn(async (simpleInterestLoan) => return {});
 		});
 	});
@@ -279,11 +278,14 @@ describe('<RequestLoanForm />', () => {
 			const formData = {
 				terms: {
 					termLength: 10.2
+				},
+				collateral: {
+					collateralized: false
 				}
 			};
 			const wrapper = shallow(<RequestLoanForm {... props} />);
 			wrapper.instance().validateForm(formData, errors);
-			expect(errors.terms.termLength.addError).toHaveBeenCalledWith('Term length can not have decimals.');
+			expect(errors.terms.termLength.addError).toHaveBeenCalledWith('Term length value cannot have decimals');
 		});
 
 		it('should not call addError if there is no error', () => {
@@ -297,6 +299,9 @@ describe('<RequestLoanForm />', () => {
 			const formData = {
 				terms: {
 					termLength: 10
+				},
+				collateral: {
+					collateralized: false
 				}
 			};
 			const wrapper = shallow(<RequestLoanForm {... props} />);

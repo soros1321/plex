@@ -1,4 +1,5 @@
 import * as React from "react";
+import Dharma from "@dharmaprotocol/dharma.js";
 import { InvestmentEntity } from "../../../../models";
 import {
     formatDate,
@@ -20,7 +21,6 @@ import {
     RepaymentScheduleContainer,
     Schedule,
     ScheduleIconContainer,
-    ScheduleIcon,
     Strikethrough,
     PaymentDate,
     ShowMore,
@@ -32,15 +32,19 @@ import {
     InfoItemContent,
     // TransferButton
 } from "./styledComponents";
+import { ScheduleIcon } from "../../../../components/scheduleIcon/scheduleIcon";
 import { Row, Col, Collapse } from "reactstrap";
 import { TokenAmount } from "src/components";
 
 interface Props {
+    currentTime?: number;
+    dharma: Dharma;
     investment: InvestmentEntity;
 }
 
 interface State {
     collapse: boolean;
+    missedPayments: object;
     repaymentSchedule: number[];
 }
 
@@ -49,10 +53,15 @@ class ActiveInvestment extends React.Component<Props, State> {
         super(props);
         this.state = {
             collapse: false,
+            missedPayments: {},
             repaymentSchedule: [],
         };
         this.handleTransfer = this.handleTransfer.bind(this);
         this.toggleDrawer = this.toggleDrawer.bind(this);
+    }
+
+    componentDidMount() {
+        this.calculatePaymentsMissed();
     }
 
     handleTransfer(event: React.MouseEvent<HTMLElement>) {
@@ -65,26 +74,59 @@ class ActiveInvestment extends React.Component<Props, State> {
         this.setState({ collapse: !this.state.collapse });
     }
 
+    async calculatePaymentsMissed() {
+        const { dharma } = this.props;
+        if (!dharma) {
+            return;
+        }
+        const { issuanceHash, earnedAmount, repaymentSchedule } = this.props.investment;
+
+        let missedPayments = {};
+        let paymentDate;
+        let expectedRepaidAmount;
+
+        for (let i = 0; i < repaymentSchedule.length; i++) {
+            paymentDate = repaymentSchedule[i];
+            expectedRepaidAmount = await dharma.servicing.getExpectedValueRepaid(
+                issuanceHash,
+                paymentDate,
+            );
+            missedPayments[paymentDate] = earnedAmount < expectedRepaidAmount;
+        }
+
+        this.setState({ missedPayments });
+    }
+
     render() {
-        const { investment } = this.props;
-        if (!investment) {
+        const { currentTime, investment } = this.props;
+        if (!investment || currentTime === undefined) {
             return null;
         }
         const repaymentSchedule = investment.repaymentSchedule;
-        const now = Math.round(new Date().getTime() / 1000);
-        const pastIcon = require("../../../../assets/img/ok_circle.png");
-        const futureIcon = require("../../../../assets/img/circle_outline.png");
+        const now = currentTime;
         const repaymentScheduleItems: JSX.Element[] = [];
         let maxDisplay = 0;
         let selected = false;
         let selectedPaymentSchedule = 0;
         repaymentSchedule.forEach((paymentSchedule) => {
             if (maxDisplay < 5) {
+                let repaymentState;
+
+                if (now > paymentSchedule) {
+                    if (this.state.missedPayments[paymentSchedule]) {
+                        repaymentState = "missed";
+                    } else {
+                        repaymentState = "past";
+                    }
+                } else {
+                    repaymentState = "future";
+                }
+
                 if (maxDisplay === 4 && repaymentSchedule.length > 5) {
                     repaymentScheduleItems.push(
                         <Schedule key={paymentSchedule}>
                             <ScheduleIconContainer>
-                                <ScheduleIcon src={futureIcon} />
+                                <ScheduleIcon state={repaymentState} />
                             </ScheduleIconContainer>
                             <Strikethrough />
                             <ShowMore>+ {repaymentSchedule.length - maxDisplay} more</ShowMore>
@@ -101,7 +143,7 @@ class ActiveInvestment extends React.Component<Props, State> {
                             key={paymentSchedule}
                         >
                             <ScheduleIconContainer>
-                                <ScheduleIcon src={now > paymentSchedule ? pastIcon : futureIcon} />
+                                <ScheduleIcon state={repaymentState} />
                             </ScheduleIconContainer>
                             <Strikethrough />
                             <PaymentDate>
