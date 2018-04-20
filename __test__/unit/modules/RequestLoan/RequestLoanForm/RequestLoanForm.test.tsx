@@ -32,6 +32,7 @@ describe('<RequestLoanForm />', () => {
 			web3,
 			accounts: ['accounts1'],
 			dharma,
+			tokens: [],
 			handleRequestDebtOrder: jest.fn(),
 			handleSetError: jest.fn()
 		};
@@ -269,44 +270,95 @@ describe('<RequestLoanForm />', () => {
 	describe('#validateForm', () => {
 		it('should call addError if there is error', () => {
 			const errors = {
+				loan: {
+					principalAmount: {
+						addError: jest.fn()
+					}
+				},
 				terms: {
+					interestRate: {
+						addError: jest.fn()
+					},
 					termLength: {
+						addError: jest.fn()
+					}
+				},
+				collateral: {
+					collateralAmount: {
+						addError: jest.fn()
+					},
+					collateralTokenSymbol: {
+						addError: jest.fn()
+					},
+					gracePeriodInDays: {
 						addError: jest.fn()
 					}
 				}
 			};
 			const formData = {
+				loan: {
+					principalAmount: 0
+				},
 				terms: {
-					termLength: 10.2
+					interestRate: 10,
+					termLength: 10
 				},
 				collateral: {
-					collateralized: false
+					collateralAmount: 10,
+					collateralTokenSymbol: 'REP',
+					gracePeriodInDays: 10,
 				}
 			};
 			const wrapper = shallow(<RequestLoanForm {... props} />);
 			wrapper.instance().validateForm(formData, errors);
-			expect(errors.terms.termLength.addError).toHaveBeenCalledWith('Term length value cannot have decimals');
+			expect(errors.loan.principalAmount.addError).toHaveBeenCalledWith('Value should be greater than 0');
 		});
 
 		it('should not call addError if there is no error', () => {
 			const errors = {
+				loan: {
+					principalAmount: {
+						addError: jest.fn()
+					}
+				},
 				terms: {
+					interestRate: {
+						addError: jest.fn()
+					},
 					termLength: {
+						addError: jest.fn()
+					}
+				},
+				collateral: {
+					collateralAmount: {
+						addError: jest.fn()
+					},
+					collateralTokenSymbol: {
+						addError: jest.fn()
+					},
+					gracePeriodInDays: {
 						addError: jest.fn()
 					}
 				}
 			};
+
 			const formData = {
+				loan: {
+					principalAmount: 10
+				},
 				terms: {
+					interestRate: 10,
 					termLength: 10
 				},
 				collateral: {
-					collateralized: false
+					collateralAmount: 10,
+					gracePeriodInDays: 10,
+					collateralTokenSymbol: 'REP'
 				}
 			};
 			const wrapper = shallow(<RequestLoanForm {... props} />);
 			wrapper.instance().validateForm(formData, errors);
-			expect(errors.terms.termLength.addError).not.toHaveBeenCalled();
+			expect(errors.loan.principalAmount.addError).not.toHaveBeenCalled();
 		});
 	});
 });

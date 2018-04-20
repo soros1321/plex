@@ -1,14 +1,14 @@
 import * as React from "react";
 import { PaperLayout } from "../../../layouts";
 import { browserHistory } from "react-router";
-import { schema, uiSchema } from "./schema";
+import { schema, uiSchema, numericalFieldsSchema } from "./schema";
 import { Header, JSONSchemaForm, MainWrapper, Bold, ConfirmationModal } from "../../../components";
 import { DebtOrderEntity, TokenEntity } from "../../../models";
 import * as Web3 from "web3";
 import Dharma from "@dharmaprotocol/dharma.js";
 import { BigNumber } from "bignumber.js";
 import { encodeUrlParams, debtOrderFromJSON, normalizeDebtOrder, withCommas } from "../../../utils";
-import { validateTermLength, validateInterestRate, validateCollateral } from "./validator";
+import { validateNumber, validateInterestRate, validateCollateral } from "./validator";
 const BitlyClient = require("bitly");
 import { web3Errors } from "../../../common/web3Errors";
 
@@ -255,23 +255,26 @@ class RequestLoanForm extends React.Component<Props, State> {
     }
 
     validateForm(formData: any, errors: any) {
-        if (formData.terms.termLength) {
-            const error = validateTermLength(formData.terms.termLength);
-            if (error) {
-                errors.terms.termLength.addError(error);
+        let error;
+        for (const groupName of Object.keys(numericalFieldsSchema)) {
+            for (const fieldName of Object.keys(numericalFieldsSchema[groupName])) {
+                error = validateNumber(
+                    formData[groupName][fieldName],
+                    numericalFieldsSchema[groupName][fieldName].maxValue,
+                    numericalFieldsSchema[groupName][fieldName].noDecimals,
+                );
+                if (error) {
+                    errors[groupName][fieldName].addError(error);
+                }
             }
         }
-        if (formData.terms.interestRate) {
-            const error = validateInterestRate(formData.terms.interestRate);
-            if (error) {
-                errors.terms.interestRate.addError(error);
-            }
+        error = validateInterestRate(formData.terms.interestRate);
+        if (error) {
+            errors.terms.interestRate.addError(error);
         }
-        if (formData.collateral.collateralized) {
-            const response = validateCollateral(this.props.tokens, formData.collateral);
-            if (response.error) {
-                errors.collateral[response.fieldName].addError(response.error);
-            }
+        const response = validateCollateral(this.props.tokens, formData.collateral);
+        if (response.error) {
+            errors.collateral[response.fieldName].addError(response.error);
         }
         return errors;
     }

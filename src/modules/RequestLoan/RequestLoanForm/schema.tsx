@@ -173,3 +173,32 @@ export const uiSchema = {
         },
     },
 };
+
+export const numericalFieldsSchema = {
+    loan: {
+        principalAmount: {
+            maxValue: 0,
+            noDecimals: false,
+        },
+    },
+    terms: {
+        interestRate: {
+            maxValue: 1677.7216,
+            noDecimals: false,
+        },
+        termLength: {
+            maxValue: 65535,
+            noDecimals: true,
+        },
+    },
+    collateral: {
+        collateralAmount: {
+            maxValue: 0,
+            noDecimals: false,
+        },
+        gracePeriodInDays: {
+            maxValue: 0,
+            noDecimals: true,
+        },
+    },
+};

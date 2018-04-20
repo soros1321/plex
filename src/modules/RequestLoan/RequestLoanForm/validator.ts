@@ -1,37 +1,19 @@
 import { TokenEntity } from "src/models";
 import { BigNumber } from "bignumber.js";
 
-export const validateTermLength = (termLength: number) => {
-    const maxAmount = 65535;
-    let error: string = "";
-    if (termLength % 1 !== 0) {
-        error = "Term length value cannot have decimals";
-    } else if (termLength < 0) {
-        error = "Term length value cannot be negative";
-    } else if (termLength > maxAmount) {
-        error = `Term length value cannot be greater than ${maxAmount}`;
-    }
-    return error;
-};
-
 export const validateInterestRate = (interestRate: number) => {
-    const maxAmount = 1677.7216;
     const maxDecimalPlaces = 4;
     let error: string = "";
-    if (interestRate < 0) {
-        error = "Interest amount cannot be negative";
-    } else if (interestRate > maxAmount) {
-        error = `Interest amount cannot be greater than ${maxAmount}`;
-    } else if (
-        interestRate % 1 !== 0 &&
-        interestRate.toString().split(".")[1].length > maxDecimalPlaces
-    ) {
+    if (interestRate % 1 !== 0 && interestRate.toString().split(".")[1].length > maxDecimalPlaces) {
         error = `Interest amount cannot have more than ${maxDecimalPlaces} decimal places`;
     }
     return error;
 };
 
-export const validateCollateral = (tokens: TokenEntity[], collateral: any) => {
+export const validateCollateral = (
+    tokens: TokenEntity[],
+    collateral: { collateralTokenSymbol: string; collateralAmount: number },
+) => {
     let response = { fieldName: "", error: "" };
     const selectedToken = tokens.find(function(token: TokenEntity) {
         return token.tokenSymbol === collateral.collateralTokenSymbol;
@@ -48,4 +30,18 @@ export const validateCollateral = (tokens: TokenEntity[], collateral: any) => {
         response = { fieldName: "collateralAmount", error: `Token allowance is insufficient` };
     }
     return response;
+};
+
+export const validateNumber = (value: number, maxValue: number, noDecimals: boolean) => {
+    let error: string = "";
+    if (value < 0) {
+        error = "Value cannot be negative";
+    } else if (value === 0) {
+        error = `Value should be greater than 0`;
+    } else if (maxValue > 0 && value > maxValue) {
+        error = `Value cannot be greater than ${maxValue}`;
+    } else if (value % 1 !== 0 && noDecimals) {
+        error = "Value cannot have decimals";
+    }
+    return error;
 };
