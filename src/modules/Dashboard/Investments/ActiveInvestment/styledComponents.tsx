@@ -403,6 +403,43 @@ export const DetailLink = StyledLink.extend`
     }
 `;
 
+export const SeizeCollateralButton = StyledButton.extend`
+    background-color: #e93d59 !important;
+    font-size: 13px !important;
+    border-color: #e93d59 !important;
+    min-width: auto !important;
+    padding: 0px 15px !important;
+    float: right;
+    line-height: 36px !important;
+
+    @media only screen and (max-width: 823px) {
+        margin-top: 5px;
+        padding: 4px 14px !important;
+        font-size: 10px !important;
+        line-height: 14px !important;
+        min-width: auto !important;
+    }
+    @media only screen and (max-width: 736px) {
+        margin-top: 5px;
+        padding: 2px 12px !important;
+        font-size: 8px !important;
+        line-height: 12px !important;
+        min-width: auto !important;
+    }
+    @media only screen and (max-width: 568px) {
+        margin-top: 5px;
+        padding: 4px 14px !important;
+        font-size: 10px !important;
+        line-height: 14px !important;
+        min-width: auto !important;
+    }
+    @media only screen and (max-width: 480px) {
+        padding: 3px 12px !important;
+        font-size: 8px !important;
+        line-height: 12px !important;
+    }
+`;
+
 export const TransferButton = StyledButton.extend`
     background-color: #e93d59 !important;
     font-size: 13px !important;

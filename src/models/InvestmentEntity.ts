@@ -4,8 +4,9 @@ export class InvestmentEntity {
     amortizationUnit: string;
     collateralAmount?: BigNumber;
     collateralized?: boolean;
+    collateralSeizable?: boolean;
     collateralTokenSymbol?: string;
-    creditor: string; // Or `beneficiary` from `debtRegistry`
+    creditor: string;
     earnedAmount: BigNumber;
     gracePeriodInDays?: BigNumber;
     interestRate: BigNumber;

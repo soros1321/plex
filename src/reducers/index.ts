@@ -1,18 +1,20 @@
 import { combineReducers } from "redux";
-import { web3Reducer } from "./web3Reducer";
-import { dharmaReducer } from "./dharmaReducer";
-import { toastReducer } from "./toastReducer";
 import { debtOrderReducer } from "./debtOrderReducer";
-import { tokenReducer } from "./tokenReducer";
+import { dharmaReducer } from "./dharmaReducer";
+import { investmentReducer } from "./investmentReducer";
 import { plexReducer } from "./plexReducer";
 import { routerReducer } from "react-router-redux";
+import { toastReducer } from "./toastReducer";
+import { tokenReducer } from "./tokenReducer";
+import { web3Reducer } from "./web3Reducer";
 
 export const reducers = combineReducers({
-    web3Reducer,
-    dharmaReducer,
     debtOrderReducer,
-    toastReducer,
-    tokenReducer,
+    dharmaReducer,
+    investmentReducer,
     plexReducer,
     routing: routerReducer,
+    toastReducer,
+    tokenReducer,
+    web3Reducer,
 });

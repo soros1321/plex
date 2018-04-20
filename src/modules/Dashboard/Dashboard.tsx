@@ -14,8 +14,10 @@ interface Props {
     dharma: Dharma;
     accounts: string[];
     pendingDebtOrders: DebtOrderEntity[];
+    investments: InvestmentEntity[];
     handleSetError: (errorMessage: string) => void;
     handleFillDebtOrder: (issuanceHash: string) => void;
+    setInvestments: (investments: InvestmentEntity[]) => void;
     web3: Web3;
     filledDebtOrders: DebtOrderEntity[];
     handleSetFilledDebtOrders: (filledDebtOrders: DebtOrderEntity[]) => void;
@@ -134,7 +136,6 @@ class Dashboard extends React.Component<Props, States> {
                 }
             }
         } catch (e) {
-            // this.props.handleSetError('Unable to get debt orders info');
             this.props.handleSetError(e.message);
         }
     }
@@ -189,11 +190,19 @@ class Dashboard extends React.Component<Props, States> {
                     investment.collateralized = true;
                     investment.collateralTokenSymbol = dharmaDebtOrder.collateralTokenSymbol;
                     investment.gracePeriodInDays = dharmaDebtOrder.gracePeriodInDays;
+
+                    const collateralizedAdapter = await dharma.adapters
+                        .collateralizedSimpleInterestLoan;
+                    const collateralSeizable = await collateralizedAdapter.canSeizeCollateral(
+                        issuanceHash,
+                    );
+
+                    investment.collateralSeizable = collateralSeizable;
                 }
 
                 investments.push(investment);
             }
-            this.setState({ investments });
+            this.props.setInvestments(investments);
         } catch (e) {
             // this.props.handleSetError('Unable to get investments info');
             this.props.handleSetError(e.message);
@@ -219,7 +228,9 @@ class Dashboard extends React.Component<Props, States> {
             debtOrders[index] = debtOrderFromJSON(JSON.stringify(debtOrders[index]));
         }
 
-        const { investments, activeTab, initiallyLoading, currentTime } = this.state;
+        const { activeTab, initiallyLoading, currentTime } = this.state;
+        const investments = this.props.investments;
+
         const tabs = [
             {
                 id: "1",

@@ -9,29 +9,31 @@ import {
     amortizationUnitToFrequency,
 } from "../../../../utils";
 import {
-    Wrapper,
-    ImageContainer,
-    IdenticonImage,
-    DetailContainer,
     Amount,
-    Url,
-    StatusActive,
-    StatusDefaulted,
-    Terms,
+    DetailContainer,
+    DetailLink,
+    Drawer,
+    IdenticonImage,
+    ImageContainer,
+    InfoItem,
+    InfoItemContent,
+    InfoItemTitle,
+    PaymentDate,
     RepaymentScheduleContainer,
     Schedule,
     ScheduleIconContainer,
-    Strikethrough,
-    PaymentDate,
+    SeizeCollateralButton,
     ShowMore,
+    StatusActive,
+    StatusDefaulted,
+    Strikethrough,
+    Terms,
     Title,
-    DetailLink,
-    Drawer,
-    InfoItem,
-    InfoItemTitle,
-    InfoItemContent,
-    // TransferButton
+    // TransferButton,
+    Url,
+    Wrapper,
 } from "./styledComponents";
+import { Bold, ConfirmationModal } from "../../../../components";
 import { ScheduleIcon } from "../../../../components/scheduleIcon/scheduleIcon";
 import { Row, Col, Collapse } from "reactstrap";
 import { TokenAmount } from "src/components";
@@ -40,12 +42,16 @@ interface Props {
     currentTime?: number;
     dharma: Dharma;
     investment: InvestmentEntity;
+    setError: (errorMessage: string) => void;
+    updateInvestment: (investment: InvestmentEntity) => void;
 }
 
 interface State {
     collapse: boolean;
     missedPayments: object;
     repaymentSchedule: number[];
+    seizingCollateral: boolean;
+    showSeizeCollateralModal: boolean;
 }
 
 class ActiveInvestment extends React.Component<Props, State> {
@@ -55,9 +61,16 @@ class ActiveInvestment extends React.Component<Props, State> {
             collapse: false,
             missedPayments: {},
             repaymentSchedule: [],
+            seizingCollateral: false,
+            showSeizeCollateralModal: false,
         };
+        this.handleSeizeCollateral = this.handleSeizeCollateral.bind(this);
+        this.handleSeizeCollateralButtonClicked = this.handleSeizeCollateralButtonClicked.bind(
+            this,
+        );
         this.handleTransfer = this.handleTransfer.bind(this);
         this.toggleDrawer = this.toggleDrawer.bind(this);
+        this.toggleShowSeizeCollateralModal = this.toggleShowSeizeCollateralModal.bind(this);
     }
 
     componentDidMount() {
@@ -70,8 +83,50 @@ class ActiveInvestment extends React.Component<Props, State> {
         console.log("Transfer: ", investment.issuanceHash);
     }
 
+    async handleSeizeCollateral() {
+        this.setState({ seizingCollateral: true });
+
+        // We assume that the investment is collateralized
+        const investment = this.props.investment;
+
+        try {
+            const transactionHash = await this.props.dharma.adapters.collateralizedSimpleInterestLoan.seizeCollateral(
+                investment.issuanceHash,
+            );
+
+            const transactionReceipt = await this.props.dharma.blockchain.awaitTransactionMinedAsync(
+                transactionHash,
+                1000,
+                60000,
+            );
+
+            if (!transactionReceipt || !transactionReceipt.status) {
+                throw new Error("Unable to seize borrower's collateral.");
+            }
+
+            investment.collateralSeizable = false;
+            this.props.updateInvestment(investment);
+        } catch (e) {
+            this.props.setError(e.message);
+        }
+
+        this.setState({
+            seizingCollateral: false,
+            showSeizeCollateralModal: false,
+        });
+    }
+
+    handleSeizeCollateralButtonClicked(event: React.MouseEvent<HTMLElement>) {
+        event.stopPropagation();
+        this.toggleShowSeizeCollateralModal();
+    }
+
     toggleDrawer() {
         this.setState({ collapse: !this.state.collapse });
+    }
+
+    toggleShowSeizeCollateralModal() {
+        this.setState({ showSeizeCollateralModal: !this.state.showSeizeCollateralModal });
     }
 
     async calculatePaymentsMissed() {
@@ -183,6 +238,25 @@ class ActiveInvestment extends React.Component<Props, State> {
             );
         }
 
+        let seizeCollateralModalContent = <div />;
+        if (
+            investment.collateralSeizable &&
+            investment.collateralAmount &&
+            investment.collateralTokenSymbol
+        ) {
+            seizeCollateralModalContent = (
+                <span>
+                    Debt agreement <Bold>{shortenString(investment.issuanceHash)}</Bold> has
+                    defaulted and its collateral is seizable. Would you like to seize the borrower's
+                    collateral of{" "}
+                    <TokenAmount
+                        tokenAmount={investment.collateralAmount}
+                        tokenSymbol={investment.collateralTokenSymbol}
+                    />
+                </span>
+            );
+        }
+
         const identiconImgSrc = getIdenticonImgSrc(investment.issuanceHash, 60, 0.1);
         return (
             <Wrapper onClick={this.toggleDrawer}>
@@ -205,11 +279,15 @@ class ActiveInvestment extends React.Component<Props, State> {
                                     </DetailLink>
                                 </Url>
                             </Col>
-                            {/*<Col xs="12" md="6">*/}
-                            {/*{investment.status === 'active' && (*/}
-                            {/*<TransferButton onClick={this.handleTransfer}>Transfer</TransferButton>*/}
-                            {/*)}*/}
-                            {/*</Col>*/}
+                            <Col xs="6" md="6">
+                                {investment.collateralSeizable && (
+                                    <SeizeCollateralButton
+                                        onClick={this.handleSeizeCollateralButtonClicked}
+                                    >
+                                        Seize Collateral
+                                    </SeizeCollateralButton>
+                                )}
+                            </Col>
                         </Row>
                         {investment.status === "active" ? (
                             <StatusActive>Active</StatusActive>
@@ -279,6 +357,18 @@ class ActiveInvestment extends React.Component<Props, State> {
                         </Row>
                     </Drawer>
                 </Collapse>
+                <ConfirmationModal
+                    awaitingTx={this.state.seizingCollateral}
+                    closeButtonText="No"
+                    content={seizeCollateralModalContent}
+                    modal={this.state.showSeizeCollateralModal}
+                    onSubmit={this.handleSeizeCollateral}
+                    onToggle={this.toggleShowSeizeCollateralModal}
+                    submitButtonText={
+                        this.state.seizingCollateral ? "Seizing Collateral..." : "Yes"
+                    }
+                    title={"Seize Collateral"}
+                />
             </Wrapper>
         );
     }
