@@ -36,7 +36,7 @@ describe("<ConfirmationModal />", () => {
     });
 
     it("should render the correct content in <ModalBody />", () => {
-        expect(wrapper.find(ModalBody).get(0).props.children).toBe(props.content);
+        expect(wrapper.find(ModalBody).get(0).props.children[0]).toBe(props.content);
     });
 
     it("should render a <ModalFooter /> component", () => {

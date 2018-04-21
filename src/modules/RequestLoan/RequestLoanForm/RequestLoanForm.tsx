@@ -334,6 +334,7 @@ class RequestLoanForm extends React.Component<Props, State> {
                         this.state.awaitingSignTx ? "Completing Request..." : "Complete Request"
                     }
                     awaitingTx={this.state.awaitingSignTx}
+                    displayMetamaskDependencies={true}
                 />
             </PaperLayout>
         );
