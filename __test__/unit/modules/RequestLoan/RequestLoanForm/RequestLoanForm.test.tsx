@@ -132,7 +132,7 @@ describe('<RequestLoanForm />', () => {
 					termLength: 10
 				},
 				collateral: {
-					collateralized: false
+					collateralized: true
 				}
 			};
 		});
