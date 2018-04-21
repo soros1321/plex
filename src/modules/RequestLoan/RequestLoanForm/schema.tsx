@@ -57,35 +57,40 @@ export const schema: JSONSchema4 = {
                 termLength: {
                     type: "number",
                     title: "Term Length",
-                    description: singleLineString`Enter the length of the entire debt agreement, in
-                    units of the chosen installments (e.g. a term length of 2 with an installment
-                    type of "monthly" would be equivalent to a 2 month long loan)`,
+                    description:
+                        'Enter the length of the entire debt agreement, in units of the chosen installments (e.g. a term length of 2 with an installment type of "monthly" would be equivalent to a 2 month long loan)',
                 },
             },
         },
         collateral: {
             type: "object",
-            title: "Collateralize your loan",
-            required: ["collateralAmount", "collateralTokenSymbol", "gracePeriodInDays"],
-            description: singleLineString`Collateral is an item of value that a borrower puts up for
-            possible seizure in the event that they do not pay back the full value of their loan.
-            Collateral protects lenders from borrower default by reducing the risk involved in a
-            debt agreement. In addition, collateral helps borrowers obtain loans they might not
-            otherwise receive given their credit history (or lack thereof).`,
+            title: "Will you offer collateral?",
             properties: {
-                collateralAmount: {
-                    type: "number",
-                    title: "Collateral Amount",
+                collateralized: {
+                    type: "boolean",
+                    title: "Collateralized",
+                    description: singleLineString`Collateral is an item of value that a borrower
+                    puts up for possible seizure in the event that they do not pay back the full
+                    value of their loan. Collateral protects lenders from borrower default by
+                    reducing the risk involved in a debt agreement. In addition, collateral helps
+                    borrowers obtain loans they might not otherwise receive given their credit
+                    history (or lack thereof).`,
                 },
-                collateralTokenSymbol: {
-                    $ref: "#/definitions/tokens",
-                },
-                gracePeriodInDays: {
-                    type: "number",
-                    title: "Grace Period",
-                    description: singleLineString`If a loan is in default after its term has
-                    expired, the grace period specifies the number of days before the collateral
-                    can be seized by the creditor.`,
+            },
+            dependencies: {
+                collateralized: {
+                    properties: {
+                        collateralAmount: {
+                            type: "number",
+                        },
+                        collateralTokenSymbol: {
+                            $ref: "#/definitions/tokens",
+                        },
+                        gracePeriodInDays: {
+                            type: "number",
+                        },
+                    },
+                    required: ["collateralAmount", "collateralTokenSymbol", "gracePeriodInDays"],
                 },
             },
         },
@@ -126,9 +131,16 @@ export const uiSchema = {
         },
     },
     collateral: {
+        collateralized: {
+            classNames: "group-field",
+            "ui:options": {
+                pressEnter: false,
+            },
+        },
         collateralAmount: {
             "ui:placeholder": "Amount of collateral",
             "ui:options": {
+                label: false,
                 pressEnter: false,
             },
             classNames: "inline-field width65",
@@ -139,14 +151,15 @@ export const uiSchema = {
                 label: false,
                 pressEnter: false,
             },
-            classNames: "inline-field width35 padding-top",
+            classNames: "inline-field width35",
         },
         gracePeriodInDays: {
             "ui:placeholder": "Grace period (days)",
             "ui:options": {
+                label: false,
                 pressEnter: false,
             },
-            classNames: "group-field",
+            classNames: "inline-field width65",
         },
     },
     terms: {
