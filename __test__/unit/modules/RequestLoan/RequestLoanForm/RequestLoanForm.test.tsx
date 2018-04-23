@@ -132,7 +132,9 @@ describe('<RequestLoanForm />', () => {
 					termLength: 10
 				},
 				collateral: {
-					collateralized: true
+					collateralAmount: 10,
+					collateralTokenSymbol: "MKR",
+					gracePeriodInDays: 3,
 				}
 			};
 		});
