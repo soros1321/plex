@@ -4,6 +4,7 @@ export class DebtOrderEntity {
     amortizationUnit: string;
     collateralAmount?: BigNumber;
     collateralized?: boolean;
+    collateralReturnable?: boolean;
     collateralTokenSymbol?: string;
     creditor?: string;
     debtor: string;

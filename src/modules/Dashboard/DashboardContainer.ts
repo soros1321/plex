@@ -7,12 +7,25 @@ import { fillDebtOrder } from "../FillLoan/FillLoanEntered/actions";
 import { setFilledDebtOrders } from "./actions";
 
 const mapStateToProps = (state: any) => {
+    const {
+        debtOrders,
+        filledDebtOrderIssuanceHashes,
+        pendingDebtOrderIssuanceHashes,
+    } = state.debtOrderReducer;
+
+    const filledDebtOrders = filledDebtOrderIssuanceHashes.map((issuanceHash: string) =>
+        debtOrders.get(issuanceHash),
+    );
+    const pendingDebtOrders = pendingDebtOrderIssuanceHashes.map((issuanceHash: string) =>
+        debtOrders.get(issuanceHash),
+    );
+
     return {
         accounts: state.web3Reducer.accounts,
         dharma: state.dharmaReducer.dharma,
-        filledDebtOrders: state.debtOrderReducer.filledDebtOrders,
+        filledDebtOrders: filledDebtOrders,
         investments: Array.from(state.investmentReducer.investments.values()),
-        pendingDebtOrders: state.debtOrderReducer.pendingDebtOrders,
+        pendingDebtOrders: pendingDebtOrders,
         web3: state.web3Reducer.web3,
     };
 };

@@ -405,7 +405,7 @@ export const DetailLink = StyledLink.extend`
     }
 `;
 
-export const MakeRepaymentButton = StyledButton.extend`
+export const ActionButton = StyledButton.extend`
     background-color: #e93d59 !important;
     font-size: 13px !important;
     border-color: #e93d59 !important;
@@ -442,7 +442,7 @@ export const MakeRepaymentButton = StyledButton.extend`
     }
 `;
 
-export const CancelButton = MakeRepaymentButton.extend`
+export const CancelButton = ActionButton.extend`
     border-color: #e93d59 !important;
 
     @media only screen and (max-width: 568px) {

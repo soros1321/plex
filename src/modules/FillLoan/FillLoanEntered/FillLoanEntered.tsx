@@ -24,6 +24,7 @@ import { DebtOrder } from "@dharmaprotocol/dharma.js/dist/types/src/types";
 import { BigNumber } from "bignumber.js";
 import { TokenEntity } from "../../../models";
 import { web3Errors } from "src/common/web3Errors";
+import { BLOCKCHAIN_API } from "../../../common/constants";
 import { BarLoader } from "react-spinners";
 
 interface Props {
@@ -157,7 +158,11 @@ class FillLoanEntered extends React.Component<Props, States> {
             debtOrder.creditor = accounts[0];
             const txHash = await dharma.order.fillAsync(debtOrder, { from: accounts[0] });
 
-            await dharma.blockchain.awaitTransactionMinedAsync(txHash, 1000, 60000);
+            await dharma.blockchain.awaitTransactionMinedAsync(
+                txHash,
+                BLOCKCHAIN_API.POLLING_INTERVAL,
+                BLOCKCHAIN_API.TIMEOUT,
+            );
 
             this.setState({ awaitingTransaction: false });
 

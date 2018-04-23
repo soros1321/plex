@@ -2,7 +2,9 @@ import { connect } from "react-redux";
 import { ActiveDebtOrder } from "./ActiveDebtOrder";
 import { BigNumber } from "bignumber.js";
 import { successfulRepayment, cancelDebtOrder } from "./actions";
+import { updateDebtOrder } from "../../../../actions/debtOrderActions";
 import { setError, setSuccess } from "../../../../components/Toast/actions";
+import { DebtOrderEntity } from "../../../../models";
 
 const mapStateToProps = (state: any) => {
     return {
@@ -20,6 +22,7 @@ const mapDispatchToProps = (dispatch: any) => {
         handleSetErrorToast: (errorMessage: string) => dispatch(setError(errorMessage)),
         handleSetSuccessToast: (successMessage: string) => dispatch(setSuccess(successMessage)),
         handleCancelDebtOrder: (issuanceHash: string) => dispatch(cancelDebtOrder(issuanceHash)),
+        updateDebtOrder: (debtOrder: DebtOrderEntity) => dispatch(updateDebtOrder(debtOrder)),
     };
 };
 

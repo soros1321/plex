@@ -1,3 +1,5 @@
+import { DebtOrderEntity } from "../models";
+
 export const loadState = () => {
     try {
         const serializedState = localStorage.getItem(
@@ -6,7 +8,13 @@ export const loadState = () => {
         if (serializedState === null) {
             return undefined;
         }
-        return JSON.parse(serializedState);
+
+        const state = JSON.parse(serializedState);
+        state.debtOrderReducer.debtOrders = new Map<string, DebtOrderEntity>(
+            state.debtOrderReducer.debtOrders,
+        );
+
+        return state;
     } catch (err) {
         return undefined;
     }

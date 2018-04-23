@@ -8,6 +8,7 @@ import {
     setTokenBalance,
 } from "./actions";
 import { setError } from "../../components/Toast/actions";
+import { BLOCKCHAIN_API } from "../../common/constants";
 
 import Dharma from "@dharmaprotocol/dharma.js";
 import { BigNumber } from "bignumber.js";
@@ -53,7 +54,11 @@ const mapDispatchToProps = (dispatch: any) => {
                         dispatch(setError("Unable to grant token balance via faucet"));
                     } else {
                         dharma.blockchain
-                            .awaitTransactionMinedAsync(jsonBody.txHash, 1000, 60000)
+                            .awaitTransactionMinedAsync(
+                                jsonBody.txHash,
+                                BLOCKCHAIN_API.POLLING_INTERVAL,
+                                BLOCKCHAIN_API.TIMEOUT,
+                            )
                             .then((res) => {
                                 dispatch(toggleTokenLoadingSpinner(tokenAddress, false));
                                 dispatch(setTokenBalance(tokenAddress, new BigNumber(balance)));

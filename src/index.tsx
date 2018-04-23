@@ -4,7 +4,7 @@ import { AppRouter } from "./router/router";
 import registerServiceWorker from "./registerServiceWorker";
 import "bootstrap/dist/css/bootstrap.css";
 import "./assets/css/index.css";
-import { loadState, saveState } from "./models";
+import { loadState, saveState, DebtOrderEntity } from "./models";
 
 import { createStore, applyMiddleware, compose } from "redux";
 import { Provider } from "react-redux";
@@ -29,7 +29,11 @@ store.subscribe(
     throttle(() => {
         saveState({
             debtOrderReducer: {
-                pendingDebtOrders: store.getState().debtOrderReducer.pendingDebtOrders,
+                debtOrders: store.getState().debtOrderReducer.debtOrders,
+                filledDebtOrderIssuanceHashes: [],
+                pendingDebtOrderIssuanceHashes: store.getState().debtOrderReducer
+                    .pendingDebtOrderIssuanceHashes,
+                singleDebtOrder: new DebtOrderEntity(),
             },
             plexReducer: store.getState().plexReducer,
         });

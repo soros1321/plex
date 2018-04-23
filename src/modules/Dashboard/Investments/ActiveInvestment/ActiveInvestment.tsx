@@ -37,6 +37,7 @@ import { Bold, ConfirmationModal } from "../../../../components";
 import { ScheduleIcon } from "../../../../components/scheduleIcon/scheduleIcon";
 import { Row, Col, Collapse } from "reactstrap";
 import { TokenAmount } from "src/components";
+import { BLOCKCHAIN_API } from "../../../../common/constants";
 
 interface Props {
     currentTime?: number;
@@ -96,8 +97,8 @@ class ActiveInvestment extends React.Component<Props, State> {
 
             const transactionReceipt = await this.props.dharma.blockchain.awaitTransactionMinedAsync(
                 transactionHash,
-                1000,
-                60000,
+                BLOCKCHAIN_API.POLLING_INTERVAL,
+                BLOCKCHAIN_API.TIMEOUT,
             );
 
             if (!transactionReceipt || !transactionReceipt.status) {

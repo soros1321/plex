@@ -23,7 +23,7 @@ import {
     InfoItem,
     InfoItemTitle,
     InfoItemContent,
-    MakeRepaymentButton,
+    ActionButton,
     PendingActionContainer,
     CancelButton,
 } from "src/modules/Dashboard/Debts/ActiveDebtOrder/styledComponents";
@@ -145,11 +145,17 @@ describe("<ActiveDebtOrder />", () => {
                 });
             });
 
-            it("should render a <MakeRepaymentButton /> if status active", () => {
+            it("should render a Make Repayment button if status active and collateral is not returnable", () => {
                 props.debtOrder.status = "active";
                 wrapper.setProps({ debtOrder: props.debtOrder });
                 detailContainer = wrapper.find(DetailContainer);
-                expect(detailContainer.find(MakeRepaymentButton).length).toEqual(1);
+                expect(detailContainer.find(ActionButton).length).toEqual(1);
+                expect(
+                    detailContainer
+                        .find(ActionButton)
+                        .first()
+                        .props().children,
+                ).toEqual("Make Repayment");
             });
 
             it("should render <StatusActive /> if active", () => {
@@ -285,7 +291,7 @@ describe("<ActiveDebtOrder />", () => {
                     props.debtOrder.status = "pending";
                     wrapper.setProps({ props });
                     detailContainer = wrapper.find(DetailContainer);
-                    expect(detailContainer.find(MakeRepaymentButton).length).toEqual(0);
+                    expect(detailContainer.find(ActionButton).length).toEqual(0);
                 });
 
                 it("should render <StatusPending />", () => {
@@ -415,7 +421,7 @@ describe("<ActiveDebtOrder />", () => {
             const event = {
                 stopPropagation: jest.fn(),
             };
-            wrapper.find(MakeRepaymentButton).simulate("click", event);
+            wrapper.find(ActionButton).simulate("click", event);
             expect(spy).toHaveBeenCalledWith(event);
             spy.mockRestore();
         });

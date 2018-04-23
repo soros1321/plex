@@ -25,7 +25,7 @@ import {
     InfoItem,
     InfoItemTitle,
     InfoItemContent,
-    MakeRepaymentButton,
+    ActionButton,
     Schedule,
     ScheduleIconContainer,
     Strikethrough,
@@ -42,6 +42,7 @@ import { BigNumber } from "bignumber.js";
 import Dharma from "@dharmaprotocol/dharma.js";
 import { TokenAmount } from "src/components";
 import { web3Errors } from "src/common/web3Errors";
+import { BLOCKCHAIN_API } from "../../../../common/constants";
 
 interface Props {
     currentTime?: number;
@@ -56,31 +57,41 @@ interface Props {
     handleSetErrorToast: (errorMessage: string) => void;
     handleSetSuccessToast: (successMessage: string) => void;
     handleCancelDebtOrder: (issuanceHash: string) => void;
+    updateDebtOrder: (debtOrder: DebtOrderEntity) => void;
 }
 
 interface State {
-    collapse: boolean;
-    makeRepayment: boolean;
-    awaitingRepaymentTx: boolean;
     awaitingCancelTx: boolean;
-    missedPayments: object;
+    awaitingRepaymentTx: boolean;
+    collapse: boolean;
     confirmationModal: boolean;
+    makeRepayment: boolean;
+    missedPayments: object;
+    returningCollateral: boolean;
+    showReturnCollateralModal: boolean;
 }
 
 class ActiveDebtOrder extends React.Component<Props, State> {
     constructor(props: Props) {
         super(props);
         this.state = {
-            collapse: false,
-            makeRepayment: false,
-            awaitingRepaymentTx: false,
             awaitingCancelTx: false,
-            missedPayments: {},
+            awaitingRepaymentTx: false,
+            collapse: false,
             confirmationModal: false,
+            makeRepayment: false,
+            missedPayments: {},
+            returningCollateral: false,
+            showReturnCollateralModal: false,
         };
         this.toggleDrawer = this.toggleDrawer.bind(this);
         this.toggleRepaymentModal = this.toggleRepaymentModal.bind(this);
+        this.toggleReturnCollateralModal = this.toggleReturnCollateralModal.bind(this);
         this.handleMakeRepaymentClick = this.handleMakeRepaymentClick.bind(this);
+        this.handleReturnCollateral = this.handleReturnCollateral.bind(this);
+        this.handleReturnCollateralButtonClicked = this.handleReturnCollateralButtonClicked.bind(
+            this,
+        );
         this.handleRepaymentFormSubmission = this.handleRepaymentFormSubmission.bind(this);
         this.confirmationModalToggle = this.confirmationModalToggle.bind(this);
         this.handleCancelDebtOrderClick = this.handleCancelDebtOrderClick.bind(this);
@@ -100,9 +111,52 @@ class ActiveDebtOrder extends React.Component<Props, State> {
         this.setState({ makeRepayment: !this.state.makeRepayment });
     }
 
+    toggleReturnCollateralModal() {
+        this.setState({ showReturnCollateralModal: !this.state.showReturnCollateralModal });
+    }
+
     handleMakeRepaymentClick(event: React.MouseEvent<HTMLElement>) {
         event.stopPropagation();
         this.toggleRepaymentModal();
+    }
+
+    handleReturnCollateralButtonClicked(event: React.MouseEvent<HTMLElement>) {
+        event.stopPropagation();
+        this.toggleReturnCollateralModal();
+    }
+
+    async handleReturnCollateral() {
+        this.setState({ returningCollateral: true });
+
+        // We assume that the debtOrder is collateralized
+        const debtOrder = this.props.debtOrder;
+
+        try {
+            const transactionHash = await this.props.dharma.adapters.collateralizedSimpleInterestLoan.returnCollateral(
+                debtOrder.issuanceHash,
+            );
+
+            const transactionReceipt = await this.props.dharma.blockchain.awaitTransactionMinedAsync(
+                transactionHash,
+                BLOCKCHAIN_API.POLLING_INTERVAL,
+                BLOCKCHAIN_API.TIMEOUT,
+            );
+
+            if (!transactionReceipt || !transactionReceipt.status) {
+                throw new Error("Unable to return collateral.");
+            }
+
+            debtOrder.collateralReturnable = false;
+            debtOrder.status = "inactive";
+            this.props.updateDebtOrder(debtOrder);
+        } catch (e) {
+            this.props.handleSetErrorToast(e.message);
+        }
+
+        this.setState({
+            returningCollateral: false,
+            showReturnCollateralModal: false,
+        });
     }
 
     confirmationModalToggle() {
@@ -150,7 +204,11 @@ class ActiveDebtOrder extends React.Component<Props, State> {
                 dharma.order
                     .cancelOrderAsync(dharmaDebtOrder, { from: accounts[0] })
                     .then((txHash) => {
-                        return dharma.blockchain.awaitTransactionMinedAsync(txHash, 1000, 60000);
+                        return dharma.blockchain.awaitTransactionMinedAsync(
+                            txHash,
+                            BLOCKCHAIN_API.POLLING_INTERVAL,
+                            BLOCKCHAIN_API.TIMEOUT,
+                        );
                     })
                     .then((receipt) => {
                         return dharma.blockchain.getErrorLogs(receipt.transactionHash);
@@ -203,7 +261,11 @@ class ActiveDebtOrder extends React.Component<Props, State> {
         dharma.servicing
             .makeRepayment(this.props.debtOrder.issuanceHash, tokenAmount, tokenAddress)
             .then((txHash) => {
-                return dharma.blockchain.awaitTransactionMinedAsync(txHash, 1000, 60000);
+                return dharma.blockchain.awaitTransactionMinedAsync(
+                    txHash,
+                    BLOCKCHAIN_API.POLLING_INTERVAL,
+                    BLOCKCHAIN_API.TIMEOUT,
+                );
             })
             .then((receipt) => {
                 return dharma.blockchain.getErrorLogs(receipt.transactionHash);
@@ -373,6 +435,42 @@ class ActiveDebtOrder extends React.Component<Props, State> {
             );
         }
 
+        let actionButton = null;
+        if (debtOrder.status === "active") {
+            if (debtOrder.collateralReturnable) {
+                actionButton = (
+                    <ActionButton onClick={this.handleReturnCollateralButtonClicked}>
+                        Return Collateral
+                    </ActionButton>
+                );
+            } else {
+                actionButton = (
+                    <ActionButton onClick={this.handleMakeRepaymentClick}>
+                        Make Repayment
+                    </ActionButton>
+                );
+            }
+        }
+
+        let returnCollateralModalContent = <div />;
+        if (
+            debtOrder.collateralReturnable &&
+            debtOrder.collateralAmount &&
+            debtOrder.collateralTokenSymbol
+        ) {
+            returnCollateralModalContent = (
+                <span>
+                    Debt agreement <Bold>{shortenString(debtOrder.issuanceHash)}</Bold> has been
+                    fully paid and its collateral is returnable to you. Would you like to return the
+                    collateral of{" "}
+                    <TokenAmount
+                        tokenAmount={debtOrder.collateralAmount}
+                        tokenSymbol={debtOrder.collateralTokenSymbol}
+                    />?
+                </span>
+            );
+        }
+
         return (
             <Wrapper onClick={this.toggleDrawer}>
                 <Row>
@@ -391,11 +489,7 @@ class ActiveDebtOrder extends React.Component<Props, State> {
                                 <Url>{detailLink}</Url>
                             </Col>
                             <Col xs="6" md="6">
-                                {debtOrder.status === "active" && (
-                                    <MakeRepaymentButton onClick={this.handleMakeRepaymentClick}>
-                                        Make Repayment
-                                    </MakeRepaymentButton>
-                                )}
+                                {actionButton}
                             </Col>
                         </Row>
                         {debtOrder.status === "active" ? (
@@ -509,6 +603,18 @@ class ActiveDebtOrder extends React.Component<Props, State> {
                     awaitingTx={this.state.awaitingCancelTx}
                     submitButtonText={this.state.awaitingCancelTx ? "Canceling Order..." : "Yes"}
                     displayMetamaskDependencies={true}
+                />
+                <ConfirmationModal
+                    awaitingTx={this.state.returningCollateral}
+                    closeButtonText="No"
+                    content={returnCollateralModalContent}
+                    modal={this.state.showReturnCollateralModal}
+                    onSubmit={this.handleReturnCollateral}
+                    onToggle={this.toggleReturnCollateralModal}
+                    submitButtonText={
+                        this.state.returningCollateral ? "Returning Collateral..." : "Yes"
+                    }
+                    title={"Return Collateral"}
                 />
             </Wrapper>
         );

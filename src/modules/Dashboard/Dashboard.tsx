@@ -117,8 +117,15 @@ class Dashboard extends React.Component<Props, States> {
                 if (termsContractType === "CollateralizedSimpleInterestLoan") {
                     debtOrder.collateralAmount = dharmaDebtOrder.collateralAmount;
                     debtOrder.collateralized = true;
+                    debtOrder.collateralReturnable = await dharma.adapters.collateralizedSimpleInterestLoan.canReturnCollateral(
+                        issuanceHash,
+                    );
                     debtOrder.collateralTokenSymbol = dharmaDebtOrder.collateralTokenSymbol;
                     debtOrder.gracePeriodInDays = dharmaDebtOrder.gracePeriodInDays;
+
+                    if (debtOrder.collateralReturnable) {
+                        debtOrder.status = "active";
+                    }
                 }
 
                 filledDebtOrders.push(debtOrder);

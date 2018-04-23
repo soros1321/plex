@@ -19,6 +19,7 @@ import { Collapse } from "reactstrap";
 import { ClipLoader } from "react-spinners";
 import { displayBalance } from "src/utils/webUtils";
 import { web3Errors } from "../../common/web3Errors";
+import { BLOCKCHAIN_API } from "../../common/constants";
 
 interface Props {
     web3: Web3;
@@ -168,7 +169,11 @@ class TradingPermissions extends React.Component<Props, State> {
                     );
                 }
 
-                await dharma.blockchain.awaitTransactionMinedAsync(txHash, 1000, 10000);
+                await dharma.blockchain.awaitTransactionMinedAsync(
+                    txHash,
+                    BLOCKCHAIN_API.POLLING_INTERVAL,
+                    BLOCKCHAIN_API.TIMEOUT,
+                );
 
                 selectedToken.tradingPermitted = this.isAllowanceUnlimited(
                     await this.getTokenAllowance(selectedToken.address),
