@@ -1,4 +1,5 @@
 import * as React from "react";
+import * as _ from "lodash";
 import { Router, Route, IndexRoute, browserHistory } from "react-router";
 import { syncHistoryWithStore } from "react-router-redux";
 import { AppContainer } from "../AppContainer";
@@ -20,21 +21,11 @@ import * as Web3 from "web3";
 import { web3Connected, dharmaInstantiated, setAccounts } from "./actions";
 import { setError } from "../components/Toast/actions";
 import { web3Errors } from "../common/web3Errors";
+import { SUPPORTED_NETWORK_IDS } from "../common/constants";
 const promisify = require("tiny-promisify");
 
 // Import Dharma libraries
 import Dharma from "@dharmaprotocol/dharma.js";
-
-// Import Currently Deployed Dharma contracts (should only be done in test context -- otherwise)
-import {
-    DebtRegistry,
-    DebtKernel,
-    RepaymentRouter,
-    TokenTransferProxy,
-    TokenRegistry,
-    DebtToken,
-    SimpleInterestTermsContract,
-} from "@dharmaprotocol/contracts";
 
 interface Props {
     store: any;
@@ -61,7 +52,8 @@ class AppRouter extends React.Component<Props, {}> {
 
     async instantiateDharma(web3: Web3) {
         const { dispatch } = this.props.store;
-        const networkId = await promisify(web3.version.getNetwork)();
+        const networkIdString = await promisify(web3.version.getNetwork)();
+        const networkId = parseInt(networkIdString, 10);
         const accounts = await promisify(web3.eth.getAccounts)();
 
         if (!accounts.length) {
@@ -71,32 +63,13 @@ class AppRouter extends React.Component<Props, {}> {
 
         dispatch(setAccounts(accounts));
 
-        if (
-            !(
-                networkId in DebtKernel.networks &&
-                networkId in RepaymentRouter.networks &&
-                networkId in TokenTransferProxy.networks &&
-                networkId in TokenRegistry.networks &&
-                networkId in DebtToken.networks &&
-                networkId in DebtRegistry.networks &&
-                networkId in SimpleInterestTermsContract.networks
-            )
-        ) {
+        if (!_.includes(SUPPORTED_NETWORK_IDS, networkId)) {
             dispatch(setError(web3Errors.UNABLE_TO_FIND_CONTRACTS));
             return;
         }
-        const dharmaConfig = {
-            kernelAddress: DebtKernel.networks[networkId].address,
-            repaymentRouterAddress: RepaymentRouter.networks[networkId].address,
-            tokenTransferProxyAddress: TokenTransferProxy.networks[networkId].address,
-            tokenRegistryAddress: TokenRegistry.networks[networkId].address,
-            debtTokenAddress: DebtToken.networks[networkId].address,
-            debtRegistryAddress: DebtRegistry.networks[networkId].address,
-            simpleInterestTermsContractAddress:
-                SimpleInterestTermsContract.networks[networkId].address,
-        };
 
-        const dharma = new Dharma(web3.currentProvider, dharmaConfig);
+        const dharma = new Dharma(web3.currentProvider);
+
         dispatch(dharmaInstantiated(dharma));
     }
 
