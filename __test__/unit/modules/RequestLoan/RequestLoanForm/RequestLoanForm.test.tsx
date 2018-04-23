@@ -119,9 +119,7 @@ describe('<RequestLoanForm />', () => {
 	});
 
 	describe('#handleSubmit', () => {
-		let formData;
-		beforeEach(() => {
-			formData = {
+		const formData = {
 				loan: {
 					principalAmount: 10,
 					principalTokenSymbol: 'REP'
@@ -136,8 +134,19 @@ describe('<RequestLoanForm />', () => {
 					collateralTokenSymbol: "MKR",
 					gracePeriodInDays: 3,
 				}
-			};
-		});
+		};
+
+		const collateralizedLoanOrder = {
+			principalTokenSymbol: formData.loan.principalTokenSymbol,
+			principalAmount: new BigNumber(formData.loan.principalAmount * 10 ** 18),
+			interestRate: new BigNumber(formData.terms.interestRate),
+			amortizationUnit: formData.terms.amortizationUnit,
+			termLength: new BigNumber(formData.terms.termLength),
+			collateralAmount: new BigNumber(formData.collateral.collateralAmount),
+			collateralTokenSymbol: formData.collateral.collateralTokenSymbol,
+			gracePeriodInDays: new BigNumber(formData.collateral.gracePeriodInDays),
+		};
+
 		it('should clear error', async () => {
 			const wrapper = shallow(<RequestLoanForm {... props} />);
 			wrapper.instance().handleChange(formData);
@@ -148,16 +157,6 @@ describe('<RequestLoanForm />', () => {
 		it('should call Dharma#toDebtOrder', async () => {
 			const wrapper = shallow(<RequestLoanForm {... props} />);
 			wrapper.instance().handleChange(formData);
-			const collateralizedLoanOrder = {
-				principalTokenSymbol: formData.loan.principalTokenSymbol,
-				principalAmount: new BigNumber(formData.loan.principalAmount * 10 ** 18),
-				interestRate: new BigNumber(formData.terms.interestRate),
-				amortizationUnit: formData.terms.amortizationUnit,
-				termLength: new BigNumber(formData.terms.termLength),
-				collateralAmount: new BigNumber(formData.collateral.collateralAmount),
-				collateralTokenSymbol: formData.collateral.collateralTokenSymbol,
-				gracePeriodInDays: new BigNumber(formData.collateral.gracePeriodInDays),
-			};
 			await wrapper.instance().handleSubmit();
 			expect(dharma.adapters.collateralizedSimpleInterestLoan.toDebtOrder).toHaveBeenCalledWith(collateralizedLoanOrder);
 		});

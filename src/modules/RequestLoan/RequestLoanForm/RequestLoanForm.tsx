@@ -105,7 +105,7 @@ class RequestLoanForm extends React.Component<Props, State> {
 
             let loanOrder = {
                 principalTokenSymbol,
-                principalAmount: new BigNumber(principalAmount * 10 ** 18),
+                principalAmount: new BigNumber(principalAmount * 10 ** 18), // scale up user input
                 interestRate: new BigNumber(interestRate),
                 amortizationUnit,
                 termLength: new BigNumber(termLength),
@@ -116,6 +116,7 @@ class RequestLoanForm extends React.Component<Props, State> {
                 collateralTokenSymbol,
                 gracePeriodInDays: new BigNumber(gracePeriodInDays),
             };
+
             const collateralizedLoanOrder = Object.assign(loanOrder, collateralData);
 
             const debtOrder = await dharma.adapters.collateralizedSimpleInterestLoan.toDebtOrder(
