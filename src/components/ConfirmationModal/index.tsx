@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Row, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
 import { ClipLoader } from "react-spinners";
+import { MetamaskDependenciesContainer } from "./styledComponents";
 
 interface Props {
     modal: boolean;
@@ -12,6 +13,7 @@ interface Props {
     onSubmit: () => void;
     disabled?: boolean;
     awaitingTx?: boolean;
+    displayMetamaskDependencies?: boolean;
 }
 
 class ConfirmationModal extends React.Component<Props, {}> {
@@ -34,7 +36,7 @@ class ConfirmationModal extends React.Component<Props, {}> {
     }
 
     render() {
-        const { disabled, awaitingTx } = this.props;
+        const { disabled, awaitingTx, displayMetamaskDependencies } = this.props;
 
         return (
             <div>
@@ -45,10 +47,19 @@ class ConfirmationModal extends React.Component<Props, {}> {
                     backdrop={"static"}
                 >
                     <ModalHeader toggle={this.handleToggle}>{this.props.title}</ModalHeader>
-                    <ModalBody>{this.props.content}</ModalBody>
+                    <ModalBody>
+                        {this.props.content}
+                        {!!awaitingTx &&
+                            !!displayMetamaskDependencies && (
+                                <MetamaskDependenciesContainer>
+                                    Please confirm the order on Metamask. If a pop up window is not
+                                    opening, navigate to the upper right toolbar.
+                                </MetamaskDependenciesContainer>
+                            )}
+                    </ModalBody>
                     <ModalFooter>
                         <Row className="button-container">
-                            <Col xs="12" md="6">
+                            <Col xs="12" sm="6" md="6">
                                 <Button
                                     className="button secondary width-95"
                                     disabled={!!disabled || !!awaitingTx}
@@ -57,7 +68,7 @@ class ConfirmationModal extends React.Component<Props, {}> {
                                     {this.props.closeButtonText}
                                 </Button>
                             </Col>
-                            <Col xs="12" md="6" className="align-right">
+                            <Col xs="12" sm="6" md="6" className="align-right">
                                 <Button
                                     className="button width-95"
                                     disabled={!!disabled || !!awaitingTx}

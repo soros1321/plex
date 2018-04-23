@@ -138,6 +138,7 @@ class ActiveDebtOrder extends React.Component<Props, State> {
                 handleSetErrorToast("Unable to get debt order info");
                 return;
             }
+            this.setState({ awaitingCancelTx: true });
 
             const dharmaDebtOrder = debtOrderFromJSON(debtOrder.json);
             if (dharmaDebtOrder.debtor !== accounts[0]) {
@@ -149,7 +150,6 @@ class ActiveDebtOrder extends React.Component<Props, State> {
                 dharma.order
                     .cancelOrderAsync(dharmaDebtOrder, { from: accounts[0] })
                     .then((txHash) => {
-                        this.setState({ awaitingCancelTx: true });
                         return dharma.blockchain.awaitTransactionMinedAsync(txHash, 1000, 60000);
                     })
                     .then((receipt) => {
@@ -184,6 +184,7 @@ class ActiveDebtOrder extends React.Component<Props, State> {
         } catch (e) {
             this.confirmationModalToggle();
             this.props.handleSetErrorToast(e.message);
+            this.setState({ awaitingCancelTx: false });
         }
     }
 
@@ -507,6 +508,7 @@ class ActiveDebtOrder extends React.Component<Props, State> {
                     closeButtonText="No"
                     awaitingTx={this.state.awaitingCancelTx}
                     submitButtonText={this.state.awaitingCancelTx ? "Canceling Order..." : "Yes"}
+                    displayMetamaskDependencies={true}
                 />
             </Wrapper>
         );
