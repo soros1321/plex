@@ -142,7 +142,7 @@ describe('<RequestLoanForm />', () => {
 			interestRate: new BigNumber(formData.terms.interestRate),
 			amortizationUnit: formData.terms.amortizationUnit,
 			termLength: new BigNumber(formData.terms.termLength),
-			collateralAmount: new BigNumber(formData.collateral.collateralAmount),
+			collateralAmount: new BigNumber(formData.collateral.collateralAmount * 10 ** 18),
 			collateralTokenSymbol: formData.collateral.collateralTokenSymbol,
 			gracePeriodInDays: new BigNumber(formData.collateral.gracePeriodInDays),
 		};

@@ -112,7 +112,7 @@ class RequestLoanForm extends React.Component<Props, State> {
             };
 
             const collateralData = {
-                collateralAmount: new BigNumber(collateralAmount),
+                collateralAmount: new BigNumber(collateralAmount * 10 ** 18), // scale up user input
                 collateralTokenSymbol,
                 gracePeriodInDays: new BigNumber(gracePeriodInDays),
             };
