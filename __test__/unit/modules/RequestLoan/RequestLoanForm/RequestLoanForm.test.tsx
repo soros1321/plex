@@ -148,15 +148,18 @@ describe('<RequestLoanForm />', () => {
 		it('should call Dharma#toDebtOrder', async () => {
 			const wrapper = shallow(<RequestLoanForm {... props} />);
 			wrapper.instance().handleChange(formData);
-			const expectedSimpleInterestLoan = {
+			const collateralizedLoanOrder = {
 				principalTokenSymbol: formData.loan.principalTokenSymbol,
 				principalAmount: new BigNumber(formData.loan.principalAmount * 10 ** 18),
 				interestRate: new BigNumber(formData.terms.interestRate),
 				amortizationUnit: formData.terms.amortizationUnit,
-				termLength: new BigNumber(formData.terms.termLength)
+				termLength: new BigNumber(formData.terms.termLength),
+				collateralAmount: new BigNumber(formData.collateral.collateralAmount),
+				collateralTokenSymbol: formData.collateral.collateralTokenSymbol,
+				gracePeriodInDays: new BigNumber(formData.collateral.gracePeriodInDays),
 			};
 			await wrapper.instance().handleSubmit();
-			await expect(dharma.adapters.simpleInterestLoan.toDebtOrder).toHaveBeenCalledWith(expectedSimpleInterestLoan);
+			expect(dharma.adapters.collateralizedSimpleInterestLoan.toDebtOrder).toHaveBeenCalledWith(collateralizedLoanOrder);
 		});
 
 		it('should call Dharma#getIssuanceHash', async () => {
