@@ -39,18 +39,35 @@ class InvestmentRow extends React.Component<Props, State> {
 
     async determineStatus(dharma: Dharma) {
         const { investment } = this.props;
+
         if (!dharma || !investment) {
             return;
         }
+
+        const status = await this.isDelinquent(dharma, investment) &&
+            this.collateralWithdrawn(dharma, investment)
+            ? "Delinquent"
+            : "Paid";
+
+        this.setState({
+            status,
+        });
+    }
+
+    async isDelinquent(dharma: Dharma, investment: InvestmentEntity): Promise<boolean>  {
         const earnedAmount = await dharma.servicing.getValueRepaid(investment.issuanceHash);
+
         const totalExpectedEarning = await dharma.servicing.getTotalExpectedRepayment(
             investment.issuanceHash,
         );
-        this.setState({
-            status: new BigNumber(earnedAmount).lt(new BigNumber(totalExpectedEarning))
-                ? "Delinquent"
-                : "Paid",
-        });
+
+        return new BigNumber(earnedAmount).lt(new BigNumber(totalExpectedEarning));
+    }
+
+    async collateralWithdrawn(dharma: Dharma, investment: InvestmentEntity): Promise<boolean>  {
+        return await dharma.adapters.collateralizedSimpleInterestLoan.isCollateralWithdrawn(
+            investment.issuanceHash
+        );
     }
 
     toggleDrawer() {
