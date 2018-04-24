@@ -245,9 +245,11 @@ class RequestLoanForm extends React.Component<Props, State> {
                 errors.terms.interestRate.addError(error);
             }
         }
-        const response = validateCollateral(this.props.tokens, formData.collateral);
-        if (response.error) {
-            errors.collateral[response.fieldName].addError(response.error);
+        if (formData.collateral) {
+            const response = validateCollateral(this.props.tokens, formData.collateral);
+            if (response.error) {
+                errors.collateral[response.fieldName].addError(response.error);
+            }
         }
         return errors;
     }
