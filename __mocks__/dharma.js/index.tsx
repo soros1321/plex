@@ -55,7 +55,9 @@ const adapters = {
 	},
 	collateralizedSimpleInterestLoan: {
 		fromDebtOrder: jest.fn(),
-		toDebtOrder: jest.fn(),
+		toDebtOrder: jest.fn(async (collateralizedLoanOrder) => {
+			return {...collateralizedLoanOrder};
+		}),
 	}
 };
 
