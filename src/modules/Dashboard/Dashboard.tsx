@@ -147,14 +147,30 @@ class Dashboard extends React.Component<Props, States> {
         }
     }
 
+    /**
+     * Returns true if the collateral (for a debt agreement associated with the given issuance
+     * hash) has been returned or seized.
+     *
+     * @param {Dharma} dharma
+     * @param {string} issuanceHash
+     * @returns {Promise<boolean>}
+     */
+    async collateralWithdrawn(dharma: Dharma, issuanceHash: string): Promise<boolean> {
+        return await dharma.adapters.collateralizedSimpleInterestLoan.isCollateralWithdrawn(
+            issuanceHash,
+        );
+    }
+
     async getInvestmentsAsync(dharma: Dharma) {
         try {
             if (!dharma || !this.props.accounts || !this.props.accounts.length) {
                 return;
             }
+
             const { accounts } = this.props;
             const issuanceHashes = await dharma.servicing.getInvestmentsAsync(accounts[0]);
             let investments: InvestmentEntity[] = [];
+
             for (let issuanceHash of issuanceHashes) {
                 const debtRegistryEntry = await dharma.servicing.getDebtRegistryEntry(issuanceHash);
 
@@ -170,12 +186,10 @@ class Dashboard extends React.Component<Props, States> {
                 )) as any;
                 const repaymentSchedule = await adapter.getRepaymentSchedule(debtRegistryEntry);
                 const earnedAmount = await dharma.servicing.getValueRepaid(issuanceHash);
-                const totalExpectedEarning = await dharma.servicing.getTotalExpectedRepayment(
-                    issuanceHash,
-                );
-                const status = new BigNumber(earnedAmount).gte(new BigNumber(totalExpectedEarning))
-                    ? "inactive"
-                    : "active";
+
+                const collateralWithdrawn = await this.collateralWithdrawn(dharma, issuanceHash);
+                const status = collateralWithdrawn ? "inactive" : "active";
+
                 const investment: InvestmentEntity = {
                     creditor: debtRegistryEntry.beneficiary,
                     termsContract: debtRegistryEntry.termsContract,
