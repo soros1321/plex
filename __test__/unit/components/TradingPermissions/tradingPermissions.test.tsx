@@ -7,7 +7,7 @@ import MockDharma from '../../../../__mocks__/dharma.js';
 import { BigNumber } from 'bignumber.js';
 const promisify = require('tiny-promisify');
 import {
-	TradingPermissionsContainer,
+	TradingPermissionsWrapper,
 	TradingPermissionsTitle,
 	TokenSymbol,
 	TokenBalance,
@@ -45,12 +45,12 @@ describe('TradingPermissions (Unit)', () => {
 			expect(tradingPermissions.length).toEqual(1);
 		});
 
-		it('should not render <TradingPermissionsContainer /> if there is no tokens', () => {
+		it('should not render <TradingPermissionsWrapper /> if there is no tokens', () => {
 			props.tokens = null;
 			const tradingPermissions = shallow(<TradingPermissions {...props} />);
-			expect(tradingPermissions.find(TradingPermissionsContainer).length).toEqual(0);
+			expect(tradingPermissions.find(TradingPermissionsWrapper).length).toEqual(0);
 			tradingPermissions.setProps({ tokens: [] });
-			expect(tradingPermissions.find(TradingPermissionsContainer).length).toEqual(0);
+			expect(tradingPermissions.find(TradingPermissionsWrapper).length).toEqual(0);
 		});
 
 		describe('#only 1 token', () => {
@@ -65,38 +65,38 @@ describe('TradingPermissions (Unit)', () => {
 				];
 			});
 
-			it('should render <TradingPermissionContainer />', () => {
+			it('should render <TradingPermissionsWrapper />', () => {
 				const tradingPermissions = shallow(<TradingPermissions {...props} />);
-				expect(tradingPermissions.find(TradingPermissionsContainer).length).toEqual(1);
+				expect(tradingPermissions.find(TradingPermissionsWrapper).length).toEqual(1);
 			});
 
 			it('should render a <Toggle />', () => {
 				const tradingPermissions = shallow(<TradingPermissions {...props} />);
-				expect(tradingPermissions.find(TradingPermissionsContainer).find(Toggle).length).toEqual(1);
+				expect(tradingPermissions.find(TradingPermissionsWrapper).find(Toggle).length).toEqual(1);
 			});
 
 			it('should render a <ShowMoreButton />', () => {
 				const tradingPermissions = shallow(<TradingPermissions {...props} />);
-				expect(tradingPermissions.find(TradingPermissionsContainer).find(ShowMoreButton).length).toEqual(1);
+				expect(tradingPermissions.find(TradingPermissionsWrapper).find(ShowMoreButton).length).toEqual(1);
 			});
 
 			it('should setState when <ShowMoreButton /> is clicked', () => {
 				const tradingPermissions = shallow(<TradingPermissions {...props} />);
 				const spy = jest.spyOn(tradingPermissions.instance(), 'setState');
 				const collapse = tradingPermissions.state('collapse');
-				tradingPermissions.find(TradingPermissionsContainer).find(ShowMoreButton).simulate('click');
+				tradingPermissions.find(TradingPermissionsWrapper).find(ShowMoreButton).simulate('click');
 				expect(spy).toHaveBeenCalledWith({ collapse: !collapse });
 			});
 
 			it('should render a <FaucetButton />', () => {
 				const tradingPermissions = shallow(<TradingPermissions {...props} />);
-				expect(tradingPermissions.find(TradingPermissionsContainer).find(Toggle).at(0).dive().find(FaucetButton).length).toEqual(1);
+				expect(tradingPermissions.find(TradingPermissionsWrapper).find(Toggle).at(0).dive().find(FaucetButton).length).toEqual(1);
 			});
 
 			it('should call handleFaucet when <FaucetButton /> is clicked', () => {
 				const tradingPermissions = shallow(<TradingPermissions {...props} />);
 				const spy = jest.spyOn(tradingPermissions.instance(), 'handleFaucet');
-				tradingPermissions.find(TradingPermissionsContainer).find(Toggle).at(0).dive().find(FaucetButton).at(0).simulate('click');
+				tradingPermissions.find(TradingPermissionsWrapper).find(Toggle).at(0).dive().find(FaucetButton).at(0).simulate('click');
 				expect(spy).toHaveBeenCalled();
 			});
 		});
@@ -133,12 +133,12 @@ describe('TradingPermissions (Unit)', () => {
 
 			it('should render 2 <Toggle /> inside <Collapse /> when there is 4 tokens', () => {
 				const tradingPermissions = shallow(<TradingPermissions {...props} />);
-				expect(tradingPermissions.find(TradingPermissionsContainer).find(Collapse).find(Toggle).length).toEqual(2);
+				expect(tradingPermissions.find(TradingPermissionsWrapper).find(Collapse).find(Toggle).length).toEqual(2);
 			});
 
 			it('should render <Toggle /> with disabled = true', () => {
 				const tradingPermissions = shallow(<TradingPermissions {...props} />);
-				expect(tradingPermissions.find(TradingPermissionsContainer).find(Toggle).at(1).prop('disabled')).toEqual(true);
+				expect(tradingPermissions.find(TradingPermissionsWrapper).find(Toggle).at(1).prop('disabled')).toEqual(true);
 			});
 		});
 

@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { StyledButton } from "../StyledComponents";
 
-export const TradingPermissionsContainer = styled.div`
+export const TradingPermissionsWrapper = styled.div`
     width: inherit;
     &.left {
         position: fixed;

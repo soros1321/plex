@@ -3,9 +3,10 @@ import { Toggle } from "../Toggle";
 import * as Web3 from "web3";
 import Dharma from "@dharmaprotocol/dharma.js";
 import { BigNumber } from "bignumber.js";
+import { WrapETH } from "../../components/WrapETH/WrapETH";
 import {
     LoaderContainer,
-    TradingPermissionsContainer,
+    TradingPermissionsWrapper,
     TradingPermissionsTitle,
     TokenSymbol,
     TokenBalance,
@@ -297,7 +298,7 @@ class TradingPermissions extends React.Component<Props, State> {
         }
 
         return (
-            <TradingPermissionsContainer className={this.props.className}>
+            <TradingPermissionsWrapper className={this.props.className}>
                 <TradingPermissionsTitle>{"Token Permissions "}</TradingPermissionsTitle>
                 {tokenItems}
                 <Collapse isOpen={this.state.collapse}>{tokenItemsMore}</Collapse>
@@ -311,7 +312,8 @@ class TradingPermissions extends React.Component<Props, State> {
                         }
                     />
                 </ShowMoreButton>
-            </TradingPermissionsContainer>
+                <WrapETH />
+            </TradingPermissionsWrapper>
         );
     }
 }

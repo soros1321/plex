@@ -7,9 +7,9 @@ interface Props {
     modal: boolean;
     title: string;
     content: JSX.Element;
-    closeButtonText: string;
+    closeButtonText?: string;
     submitButtonText: string;
-    onToggle: () => void;
+    onToggle?: () => void;
     onSubmit: () => void;
     disabled?: boolean;
     awaitingTx?: boolean;
@@ -28,7 +28,9 @@ class ConfirmationModal extends React.Component<Props, {}> {
     }
 
     handleToggle() {
-        this.props.onToggle();
+        if (this.props.onToggle) {
+            this.props.onToggle();
+        }
     }
 
     handleSubmit() {
@@ -37,6 +39,10 @@ class ConfirmationModal extends React.Component<Props, {}> {
 
     render() {
         const { disabled, awaitingTx, displayMetamaskDependencies } = this.props;
+
+        const submitButtonClass = this.props.closeButtonText
+            ? "button width-95"
+            : "button width-100";
 
         return (
             <div>
@@ -59,18 +65,20 @@ class ConfirmationModal extends React.Component<Props, {}> {
                     </ModalBody>
                     <ModalFooter>
                         <Row className="button-container">
-                            <Col xs="12" sm="6" md="6">
+                            {this.props.closeButtonText && (
+                                <Col>
+                                    <Button
+                                        className="button secondary width-95"
+                                        disabled={!!disabled || !!awaitingTx}
+                                        onClick={this.handleToggle}
+                                    >
+                                        {this.props.closeButtonText}
+                                    </Button>
+                                </Col>
+                            )}
+                            <Col className={"align-right"}>
                                 <Button
-                                    className="button secondary width-95"
-                                    disabled={!!disabled || !!awaitingTx}
-                                    onClick={this.handleToggle}
-                                >
-                                    {this.props.closeButtonText}
-                                </Button>
-                            </Col>
-                            <Col xs="12" sm="6" md="6" className="align-right">
-                                <Button
-                                    className="button width-95"
+                                    className={submitButtonClass}
                                     disabled={!!disabled || !!awaitingTx}
                                     onClick={this.handleSubmit}
                                 >
