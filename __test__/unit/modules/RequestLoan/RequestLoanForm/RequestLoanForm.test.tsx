@@ -1,5 +1,5 @@
 import * as React from "react";
-import { shallow } from "enzyme";
+import { shallow, ShallowWrapper } from "enzyme";
 import { RequestLoanForm } from "../../../../../src/modules/RequestLoan/RequestLoanForm/RequestLoanForm";
 import { PaperLayout } from "../../../../../src/layouts";
 import { browserHistory } from "react-router";
@@ -20,7 +20,8 @@ describe("<RequestLoanForm />", () => {
     let web3;
     let dharma;
     let props;
-    let wrapper;
+
+    let wrapper: ShallowWrapper;
 
     beforeEach(() => {
         web3 = new MockWeb3();
