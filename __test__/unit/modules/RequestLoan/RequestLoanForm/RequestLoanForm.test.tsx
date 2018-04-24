@@ -13,7 +13,12 @@ import {
 import MockWeb3 from "../../../../../__mocks__/web3";
 import MockDharma from "../../../../../__mocks__/dharma.js";
 import { BigNumber } from "bignumber.js";
-import { encodeUrlParams, debtOrderFromJSON, normalizeDebtOrder } from "../../../../../src/utils";
+import {
+    encodeUrlParams,
+    debtOrderFromJSON,
+    normalizeDebtOrder,
+    convertRawNumberToScaledBigNumber,
+} from "../../../../../src/utils";
 import MockBitlyClient from "../../../../../__mocks__/BitlyClient";
 
 describe("<RequestLoanForm />", () => {
@@ -142,11 +147,14 @@ describe("<RequestLoanForm />", () => {
 
         const collateralizedLoanOrder = {
             principalTokenSymbol: formData.loan.principalTokenSymbol,
-            principalAmount: new BigNumber(formData.loan.principalAmount * 10 ** 18),
+            principalAmount: convertRawNumberToScaledBigNumber(formData.loan.principalAmount, 18),
             interestRate: new BigNumber(formData.terms.interestRate),
             amortizationUnit: formData.terms.amortizationUnit,
             termLength: new BigNumber(formData.terms.termLength),
-            collateralAmount: new BigNumber(formData.collateral.collateralAmount * 10 ** 18),
+            collateralAmount: convertRawNumberToScaledBigNumber(
+                formData.collateral.collateralAmount,
+                18,
+            ),
             collateralTokenSymbol: formData.collateral.collateralTokenSymbol,
             gracePeriodInDays: new BigNumber(formData.collateral.gracePeriodInDays),
         };

@@ -7,7 +7,13 @@ import { DebtOrderEntity, TokenEntity } from "../../../models";
 import * as Web3 from "web3";
 import Dharma from "@dharmaprotocol/dharma.js";
 import { BigNumber } from "bignumber.js";
-import { encodeUrlParams, debtOrderFromJSON, normalizeDebtOrder, withCommas } from "../../../utils";
+import {
+    encodeUrlParams,
+    debtOrderFromJSON,
+    normalizeDebtOrder,
+    withCommas,
+    convertRawNumberToScaledBigNumber,
+} from "../../../utils";
 import { validateTermLength, validateInterestRate, validateCollateral } from "./validator";
 const BitlyClient = require("bitly");
 import { web3Errors } from "../../../common/web3Errors";
@@ -105,14 +111,14 @@ class RequestLoanForm extends React.Component<Props, State> {
 
             let loanOrder = {
                 principalTokenSymbol,
-                principalAmount: new BigNumber(principalAmount * 10 ** 18), // scale up user input
+                principalAmount: convertRawNumberToScaledBigNumber(principalAmount, 18),
                 interestRate: new BigNumber(interestRate),
                 amortizationUnit,
                 termLength: new BigNumber(termLength),
             };
 
             const collateralData = {
-                collateralAmount: new BigNumber(collateralAmount * 10 ** 18), // scale up user input
+                collateralAmount: convertRawNumberToScaledBigNumber(collateralAmount, 18),
                 collateralTokenSymbol,
                 gracePeriodInDays: new BigNumber(gracePeriodInDays),
             };
