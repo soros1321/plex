@@ -140,14 +140,32 @@ class Dashboard extends React.Component<Props, States> {
         }
     }
 
+    async collateralWithdrawn(dharma: Dharma, issuanceHash: string): Promise<boolean>  {
+        return await dharma.adapters.collateralizedSimpleInterestLoan.isCollateralWithdrawn(
+            issuanceHash
+        );
+    }
+
+    async isDelinquent(dharma: Dharma, issuanceHash: string): Promise<boolean>  {
+        const earnedAmount = await dharma.servicing.getValueRepaid(issuanceHash);
+
+        const totalExpectedEarning = await dharma.servicing.getTotalExpectedRepayment(
+            issuanceHash,
+        );
+
+        return new BigNumber(earnedAmount).lt(new BigNumber(totalExpectedEarning));
+    }
+
     async getInvestmentsAsync(dharma: Dharma) {
         try {
             if (!dharma || !this.props.accounts || !this.props.accounts.length) {
                 return;
             }
+
             const { accounts } = this.props;
             const issuanceHashes = await dharma.servicing.getInvestmentsAsync(accounts[0]);
             let investments: InvestmentEntity[] = [];
+
             for (let issuanceHash of issuanceHashes) {
                 const debtRegistryEntry = await dharma.servicing.getDebtRegistryEntry(issuanceHash);
 
@@ -163,10 +181,9 @@ class Dashboard extends React.Component<Props, States> {
                 )) as any;
                 const repaymentSchedule = await adapter.getRepaymentSchedule(debtRegistryEntry);
                 const earnedAmount = await dharma.servicing.getValueRepaid(issuanceHash);
-                const totalExpectedEarning = await dharma.servicing.getTotalExpectedRepayment(
-                    issuanceHash,
-                );
-                const status = new BigNumber(earnedAmount).gte(new BigNumber(totalExpectedEarning))
+
+                const status = await this.isDelinquent(dharma, issuanceHash) &&
+                    await this.collateralWithdrawn(dharma, issuanceHash)
                     ? "inactive"
                     : "active";
                 const investment: InvestmentEntity = {
