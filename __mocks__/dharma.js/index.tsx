@@ -52,6 +52,12 @@ const adapters = {
 		fromDebtOrder: mockFromDebtOrder,
 		getRepaymentSchedule: mockGetRepaymentSchedule,
 		toDebtOrder: mockToDebtOrder
+	},
+	collateralizedSimpleInterestLoan: {
+		fromDebtOrder: jest.fn(),
+		toDebtOrder: jest.fn(async (collateralizedLoanOrder) => {
+			return {...collateralizedLoanOrder};
+		}),
 	}
 };
 
