@@ -37,6 +37,22 @@ class InvestmentRow extends React.Component<Props, State> {
         }
     }
 
+    /**
+     * Return true if the amount repaid is less than the amount owned for a
+     * debt agreement associated with the given issuance hash.
+     *
+     * @param {Dharma} dharma
+     * @param {string} issuanceHash
+     * @returns {Promise<boolean>}
+     */
+    async isDelinquent(dharma: Dharma, issuanceHash: string): Promise<boolean> {
+        const earnedAmount = await dharma.servicing.getValueRepaid(issuanceHash);
+
+        const totalExpectedEarning = await dharma.servicing.getTotalExpectedRepayment(issuanceHash);
+
+        return new BigNumber(earnedAmount).lt(new BigNumber(totalExpectedEarning));
+    }
+
     async determineStatus(dharma: Dharma) {
         const { investment } = this.props;
 
@@ -44,15 +60,9 @@ class InvestmentRow extends React.Component<Props, State> {
             return;
         }
 
-        const earnedAmount = await dharma.servicing.getValueRepaid(investment.issuanceHash);
+        const delinquent = await this.isDelinquent(dharma, investment.issuanceHash);
 
-        const totalExpectedEarning = await dharma.servicing.getTotalExpectedRepayment(
-            investment.issuanceHash,
-        );
-
-        const status = new BigNumber(earnedAmount).lt(new BigNumber(totalExpectedEarning))
-            ? "Delinquent"
-            : "Paid";
+        const status = delinquent ? "Delinquent" : "Paid";
 
         this.setState({
             status,

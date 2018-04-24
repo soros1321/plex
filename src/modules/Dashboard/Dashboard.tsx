@@ -154,22 +154,6 @@ class Dashboard extends React.Component<Props, States> {
         );
     }
 
-    /**
-     * Return true if the amount repaid is less than the amount owned for a
-     * debt agreement associated with the given issuance hash.
-     *
-     * @param {Dharma} dharma
-     * @param {string} issuanceHash
-     * @returns {Promise<boolean>}
-     */
-    async isDelinquent(dharma: Dharma, issuanceHash: string): Promise<boolean> {
-        const earnedAmount = await dharma.servicing.getValueRepaid(issuanceHash);
-
-        const totalExpectedEarning = await dharma.servicing.getTotalExpectedRepayment(issuanceHash);
-
-        return new BigNumber(earnedAmount).lt(new BigNumber(totalExpectedEarning));
-    }
-
     async getInvestmentsAsync(dharma: Dharma) {
         try {
             if (!dharma || !this.props.accounts || !this.props.accounts.length) {
@@ -196,11 +180,9 @@ class Dashboard extends React.Component<Props, States> {
                 const repaymentSchedule = await adapter.getRepaymentSchedule(debtRegistryEntry);
                 const earnedAmount = await dharma.servicing.getValueRepaid(issuanceHash);
 
-                const status =
-                    (await this.isDelinquent(dharma, issuanceHash)) &&
-                    (await this.collateralWithdrawn(dharma, issuanceHash))
-                        ? "inactive"
-                        : "active";
+                const collateralWithdrawn = await this.collateralWithdrawn(dharma, issuanceHash);
+                const status = collateralWithdrawn ? "inactive" : "active";
+
                 const investment: InvestmentEntity = {
                     creditor: debtRegistryEntry.beneficiary,
                     termsContract: debtRegistryEntry.termsContract,
