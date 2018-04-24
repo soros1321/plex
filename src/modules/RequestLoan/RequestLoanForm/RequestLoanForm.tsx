@@ -12,7 +12,7 @@ import {
     debtOrderFromJSON,
     normalizeDebtOrder,
     withCommas,
-    convertRawNumberToScaledBigNumber,
+    numberToScaledBigNumber,
 } from "../../../utils";
 import { validateTermLength, validateInterestRate, validateCollateral } from "./validator";
 const BitlyClient = require("bitly");
@@ -111,14 +111,14 @@ class RequestLoanForm extends React.Component<Props, State> {
 
             let loanOrder = {
                 principalTokenSymbol,
-                principalAmount: convertRawNumberToScaledBigNumber(principalAmount, 18),
+                principalAmount: numberToScaledBigNumber(principalAmount, 18),
                 interestRate: new BigNumber(interestRate),
                 amortizationUnit,
                 termLength: new BigNumber(termLength),
             };
 
             const collateralData = {
-                collateralAmount: convertRawNumberToScaledBigNumber(collateralAmount, 18),
+                collateralAmount: numberToScaledBigNumber(collateralAmount, 18),
                 collateralTokenSymbol,
                 gracePeriodInDays: new BigNumber(gracePeriodInDays),
             };

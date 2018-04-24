@@ -43,6 +43,6 @@ export const displayBalance = (balance: BigNumber, numDecimals: number) => {
     return balance.shift(-numDecimals).toFormat();
 };
 
-export const convertRawNumberToScaledBigNumber = (balance: number, numDecimals: number) => {
+export const numberToScaledBigNumber = (balance: number, numDecimals: number) => {
     return new BigNumber(balance).times(new BigNumber(10).pow(numDecimals));
 };

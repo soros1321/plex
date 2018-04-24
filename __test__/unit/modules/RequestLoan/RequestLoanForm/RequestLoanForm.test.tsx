@@ -17,7 +17,7 @@ import {
     encodeUrlParams,
     debtOrderFromJSON,
     normalizeDebtOrder,
-    convertRawNumberToScaledBigNumber,
+    numberToScaledBigNumber,
 } from "../../../../../src/utils";
 import MockBitlyClient from "../../../../../__mocks__/BitlyClient";
 const singleLineString = require("single-line-string");
@@ -148,14 +148,11 @@ describe("<RequestLoanForm />", () => {
 
         const collateralizedLoanOrder = {
             principalTokenSymbol: formData.loan.principalTokenSymbol,
-            principalAmount: convertRawNumberToScaledBigNumber(formData.loan.principalAmount, 18),
+            principalAmount: numberToScaledBigNumber(formData.loan.principalAmount, 18),
             interestRate: new BigNumber(formData.terms.interestRate),
             amortizationUnit: formData.terms.amortizationUnit,
             termLength: new BigNumber(formData.terms.termLength),
-            collateralAmount: convertRawNumberToScaledBigNumber(
-                formData.collateral.collateralAmount,
-                18,
-            ),
+            collateralAmount: numberToScaledBigNumber(formData.collateral.collateralAmount, 18),
             collateralTokenSymbol: formData.collateral.collateralTokenSymbol,
             gracePeriodInDays: new BigNumber(formData.collateral.gracePeriodInDays),
         };
