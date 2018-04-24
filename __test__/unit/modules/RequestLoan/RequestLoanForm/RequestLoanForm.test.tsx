@@ -20,6 +20,7 @@ import {
     convertRawNumberToScaledBigNumber,
 } from "../../../../../src/utils";
 import MockBitlyClient from "../../../../../__mocks__/BitlyClient";
+const singleLineString = require("single-line-string");
 
 describe("<RequestLoanForm />", () => {
     let web3;
@@ -226,11 +227,41 @@ describe("<RequestLoanForm />", () => {
     });
 
     describe("#handleSignDebtOrder", () => {
-        let debtOrder;
-        beforeEach(() => {
-            debtOrder =
-                '{"principalToken":"0x9b62bd396837417ce319e2e5c8845a5a960010ea","principalAmount":"10","termsContract":"0x1c907384489d939400fa5c6571d8aad778213d74","termsContractParameters":"0x0000000000000000000000000000008500000000000000000000000000000064","kernelVersion":"0x89c5b853e9e32bf47c7da1ccb02e981b74c47f2f","issuanceVersion":"0x1d8e76d2022e017c6c276b44cb2e4c71bd3cc3de","debtor":"0x431194c3e0f35bc7f1266ec6bb85e0c5ec554935","debtorFee":"0","creditor":"0x0000000000000000000000000000000000000000","creditorFee":"0","relayer":"0x0000000000000000000000000000000000000000","relayerFee":"0","underwriter":"0x0000000000000000000000000000000000000000","underwriterFee":"0","underwriterRiskRating":"0","expirationTimestampInSec":"1524613355","salt":"0","debtorSignature":{"v":1,"r":"sometext","s":"sometext"},"creditorSignature":{"v":27,"r":"0xc5c0aaf7b812cb865aef48958e2d39686a13c292f8bd4a82d7b43d833fb5047d","s":"0x2fbbe9f0b8e12ed2875905740fa010bbe710c3e0c131f1efe14fb41bb7921788"},"underwriterSignature":{"r":"","s":"","v":0}}';
-        });
+        const debtOrder = singleLineString`
+			{
+			   "principalToken":"0x9b62bd396837417ce319e2e5c8845a5a960010ea",
+			   "principalAmount":"10",
+			   "termsContract":"0x1c907384489d939400fa5c6571d8aad778213d74",
+			   "termsContractParameters":"0x0000000000000000000000000000008500000000000000000000000000000064",
+			   "kernelVersion":"0x89c5b853e9e32bf47c7da1ccb02e981b74c47f2f",
+			   "issuanceVersion":"0x1d8e76d2022e017c6c276b44cb2e4c71bd3cc3de",
+			   "debtor":"0x431194c3e0f35bc7f1266ec6bb85e0c5ec554935",
+			   "debtorFee":"0",
+			   "creditor":"0x0000000000000000000000000000000000000000",
+			   "creditorFee":"0",
+			   "relayer":"0x0000000000000000000000000000000000000000",
+			   "relayerFee":"0",
+			   "underwriter":"0x0000000000000000000000000000000000000000",
+			   "underwriterFee":"0",
+			   "underwriterRiskRating":"0",
+			   "expirationTimestampInSec":"1524613355",
+			   "salt":"0",
+			   "debtorSignature":{
+			      "v":1,
+			      "r":"sometext",
+			      "s":"sometext"
+			   },
+			   "creditorSignature":{
+			      "v":27,
+			      "r":"0xc5c0aaf7b812cb865aef48958e2d39686a13c292f8bd4a82d7b43d833fb5047d",
+			      "s":"0x2fbbe9f0b8e12ed2875905740fa010bbe710c3e0c131f1efe14fb41bb7921788"
+			   },
+			   "underwriterSignature":{
+			      "r":"",
+			      "s":"",
+			      "v":0
+			   }
+			}`;
 
         it("should clear error", async () => {
             await wrapper.instance().handleSignDebtOrder();
