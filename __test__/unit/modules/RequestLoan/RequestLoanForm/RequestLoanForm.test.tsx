@@ -67,14 +67,14 @@ describe("<RequestLoanForm />", () => {
 
     describe("#handleChange", () => {
         it("should set formData", () => {
-            const spy = jest.spyOn(RequestLoanForm.prototype, "setState");
+            const spy = jest.spyOn(wrapper.instance(), "setState");
             const formData = {};
             wrapper.instance().handleChange(formData);
             expect(spy).toHaveBeenCalledWith({ formData });
         });
 
         it("should set principalAmount", () => {
-            const spy = jest.spyOn(RequestLoanForm.prototype, "setState");
+            const spy = jest.spyOn(wrapper.instance(), "setState");
             const formData = {
                 loan: {
                     principalAmount: new BigNumber(10),
@@ -85,7 +85,7 @@ describe("<RequestLoanForm />", () => {
         });
 
         it("should set principalTokenSymbol", () => {
-            const spy = jest.spyOn(RequestLoanForm.prototype, "setState");
+            const spy = jest.spyOn(wrapper.instance(), "setState");
             const formData = {
                 loan: {
                     principalTokenSymbol: "REP",
@@ -98,7 +98,7 @@ describe("<RequestLoanForm />", () => {
         });
 
         it("should set description", () => {
-            const spy = jest.spyOn(RequestLoanForm.prototype, "setState");
+            const spy = jest.spyOn(wrapper.instance(), "setState");
             const formData = {
                 loan: {
                     description: "Some description",
@@ -109,7 +109,7 @@ describe("<RequestLoanForm />", () => {
         });
 
         it("should set interestRate", () => {
-            const spy = jest.spyOn(RequestLoanForm.prototype, "setState");
+            const spy = jest.spyOn(wrapper.instance(), "setState");
             const formData = {
                 terms: {
                     interestRate: new BigNumber(3.2),
@@ -262,7 +262,7 @@ describe("<RequestLoanForm />", () => {
 
     describe("#confirmationModalToggle", () => {
         it("should set confirmationModal state", () => {
-            const spy = jest.spyOn(RequestLoanForm.prototype, "setState");
+            const spy = jest.spyOn(wrapper.instance(), "setState");
             const confirmationModal = wrapper.state("confirmationModal");
             wrapper.instance().confirmationModalToggle();
             expect(spy).toHaveBeenCalledWith({ confirmationModal: !confirmationModal });
