@@ -186,7 +186,7 @@ class RequestLoanForm extends React.Component<Props, State> {
                 return;
             }
 
-            const generatedDebtOrder = await this.props.dharma.adapters.collateralizedSimpleInterestLoan.fromDebtOrder(
+            const collateralizedLoanOrder = await this.props.dharma.adapters.collateralizedSimpleInterestLoan.fromDebtOrder(
                 debtOrder,
             );
 
@@ -196,11 +196,11 @@ class RequestLoanForm extends React.Component<Props, State> {
                 termsContractParameters: debtOrder.termsContractParameters,
                 underwriter: debtOrder.underwriter,
                 underwriterRiskRating: debtOrder.underwriteRiskRating,
-                amortizationUnit: generatedDebtOrder.amortizationUnit,
-                interestRate: generatedDebtOrder.interestRate,
+                amortizationUnit: collateralizedLoanOrder.amortizationUnit,
+                interestRate: collateralizedLoanOrder.interestRate,
                 principalAmount: debtOrder.principalAmount,
                 principalTokenSymbol,
-                termLength: generatedDebtOrder.termLength,
+                termLength: collateralizedLoanOrder.termLength,
                 issuanceHash,
                 repaidAmount: new BigNumber(0),
                 repaymentSchedule: [],
@@ -210,9 +210,9 @@ class RequestLoanForm extends React.Component<Props, State> {
                 description,
                 fillLoanShortUrl,
                 collateralized: true,
-                collateralAmount: generatedDebtOrder.collateralAmount,
-                collateralTokenSymbol: generatedDebtOrder.collateralTokenSymbol,
-                gracePeriodInDays: generatedDebtOrder.gracePeriodInDays,
+                collateralAmount: collateralizedLoanOrder.collateralAmount,
+                collateralTokenSymbol: collateralizedLoanOrder.collateralTokenSymbol,
+                gracePeriodInDays: collateralizedLoanOrder.gracePeriodInDays,
             };
 
             this.props.handleRequestDebtOrder(storeDebtOrder);
