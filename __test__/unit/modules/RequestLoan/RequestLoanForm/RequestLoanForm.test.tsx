@@ -20,6 +20,8 @@ describe("<RequestLoanForm />", () => {
     let web3;
     let dharma;
     let props;
+    let wrapper;
+
     beforeEach(() => {
         web3 = new MockWeb3();
         dharma = new MockDharma();
@@ -31,14 +33,11 @@ describe("<RequestLoanForm />", () => {
             handleRequestDebtOrder: jest.fn(),
             handleSetError: jest.fn(),
         };
+
+        wrapper = shallow(<RequestLoanForm {...props} />);
     });
 
     describe("#render", () => {
-        let wrapper;
-        beforeEach(() => {
-            wrapper = shallow(<RequestLoanForm {...props} />);
-        });
-
         it("should render", () => {
             expect(wrapper.length).toEqual(1);
         });
@@ -69,7 +68,6 @@ describe("<RequestLoanForm />", () => {
     describe("#handleChange", () => {
         it("should set formData", () => {
             const spy = jest.spyOn(RequestLoanForm.prototype, "setState");
-            const wrapper = shallow(<RequestLoanForm {...props} />);
             const formData = {};
             wrapper.instance().handleChange(formData);
             expect(spy).toHaveBeenCalledWith({ formData });
@@ -77,7 +75,6 @@ describe("<RequestLoanForm />", () => {
 
         it("should set principalAmount", () => {
             const spy = jest.spyOn(RequestLoanForm.prototype, "setState");
-            const wrapper = shallow(<RequestLoanForm {...props} />);
             const formData = {
                 loan: {
                     principalAmount: new BigNumber(10),
@@ -89,7 +86,6 @@ describe("<RequestLoanForm />", () => {
 
         it("should set principalTokenSymbol", () => {
             const spy = jest.spyOn(RequestLoanForm.prototype, "setState");
-            const wrapper = shallow(<RequestLoanForm {...props} />);
             const formData = {
                 loan: {
                     principalTokenSymbol: "REP",
@@ -103,7 +99,6 @@ describe("<RequestLoanForm />", () => {
 
         it("should set description", () => {
             const spy = jest.spyOn(RequestLoanForm.prototype, "setState");
-            const wrapper = shallow(<RequestLoanForm {...props} />);
             const formData = {
                 loan: {
                     description: "Some description",
@@ -115,7 +110,6 @@ describe("<RequestLoanForm />", () => {
 
         it("should set interestRate", () => {
             const spy = jest.spyOn(RequestLoanForm.prototype, "setState");
-            const wrapper = shallow(<RequestLoanForm {...props} />);
             const formData = {
                 terms: {
                     interestRate: new BigNumber(3.2),
@@ -155,10 +149,7 @@ describe("<RequestLoanForm />", () => {
             gracePeriodInDays: new BigNumber(formData.collateral.gracePeriodInDays),
         };
 
-        let wrapper;
-
         beforeEach(() => {
-            wrapper = shallow(<RequestLoanForm {...props} />);
             wrapper.instance().handleChange(formData);
         });
 
@@ -232,13 +223,11 @@ describe("<RequestLoanForm />", () => {
         });
 
         it("should clear error", async () => {
-            const wrapper = shallow(<RequestLoanForm {...props} />);
             await wrapper.instance().handleSignDebtOrder();
             expect(props.handleSetError).toHaveBeenCalledWith("");
         });
 
         it("should set error when there is no debtOrder", async () => {
-            const wrapper = shallow(<RequestLoanForm {...props} />);
             wrapper.setState({ debtOrder: null });
             await wrapper.instance().handleSignDebtOrder();
             expect(props.handleSetError).toHaveBeenCalledWith(
@@ -247,7 +236,6 @@ describe("<RequestLoanForm />", () => {
         });
 
         it("should call Dharma#asDebtor", async () => {
-            const wrapper = shallow(<RequestLoanForm {...props} />);
             wrapper.setState({ debtOrder });
             const expectedDebtOrder = debtOrderFromJSON(debtOrder);
             await wrapper.instance().handleSignDebtOrder();
@@ -255,7 +243,6 @@ describe("<RequestLoanForm />", () => {
         });
 
         it("should call bitly.shorten", async () => {
-            const wrapper = shallow(<RequestLoanForm {...props} />);
             const bitly = new MockBitlyClient("accesstoken");
             wrapper.setState({ debtOrder, bitly });
             await wrapper.instance().handleSignDebtOrder();
@@ -263,7 +250,6 @@ describe("<RequestLoanForm />", () => {
         });
 
         it("should set error when bitly fails", async () => {
-            const wrapper = shallow(<RequestLoanForm {...props} />);
             const bitly = new MockBitlyClient("accesstoken");
             bitly.shorten = jest.fn(async (value) => {
                 return { status_code: 400 };
@@ -277,7 +263,6 @@ describe("<RequestLoanForm />", () => {
     describe("#confirmationModalToggle", () => {
         it("should set confirmationModal state", () => {
             const spy = jest.spyOn(RequestLoanForm.prototype, "setState");
-            const wrapper = shallow(<RequestLoanForm {...props} />);
             const confirmationModal = wrapper.state("confirmationModal");
             wrapper.instance().confirmationModalToggle();
             expect(spy).toHaveBeenCalledWith({ confirmationModal: !confirmationModal });
@@ -298,7 +283,6 @@ describe("<RequestLoanForm />", () => {
                     termLength: 10.2,
                 },
             };
-            const wrapper = shallow(<RequestLoanForm {...props} />);
             wrapper.instance().validateForm(formData, errors);
             expect(errors.terms.termLength.addError).toHaveBeenCalledWith(
                 "Term length value cannot have decimals",
@@ -318,7 +302,6 @@ describe("<RequestLoanForm />", () => {
                     termLength: 10,
                 },
             };
-            const wrapper = shallow(<RequestLoanForm {...props} />);
             wrapper.instance().validateForm(formData, errors);
             expect(errors.terms.termLength.addError).not.toHaveBeenCalled();
         });
