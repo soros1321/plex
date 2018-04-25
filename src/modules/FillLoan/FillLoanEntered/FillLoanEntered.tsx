@@ -278,7 +278,12 @@ class FillLoanEntered extends React.Component<Props, States> {
             ) {
                 leftInfoItems.push({
                     title: "Collateral",
-                    content: `${collateralAmount} ${collateralTokenSymbol}`,
+                    content: (
+                        <TokenAmount
+                            tokenAmount={collateralAmount}
+                            tokenSymbol={collateralTokenSymbol}
+                        />
+                    ),
                 });
                 rightInfoItems.push({
                     title: "Grace period",

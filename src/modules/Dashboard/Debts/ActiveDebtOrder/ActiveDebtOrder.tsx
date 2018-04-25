@@ -420,7 +420,10 @@ class ActiveDebtOrder extends React.Component<Props, State> {
                     <InfoItem>
                         <InfoItemTitle>Collateral</InfoItemTitle>
                         <InfoItemContent>
-                            {debtOrder.collateralAmount + " " + debtOrder.collateralTokenSymbol}
+                            <TokenAmount
+                                tokenAmount={debtOrder.collateralAmount!}
+                                tokenSymbol={debtOrder.collateralTokenSymbol!}
+                            />
                         </InfoItemContent>
                     </InfoItem>
                 </Col>
