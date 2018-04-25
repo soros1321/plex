@@ -14,6 +14,16 @@ export const loadState = () => {
             state.debtOrderReducer.debtOrders,
         );
 
+        // TODO(kayvon): set default values for those properties of `state` that are not saved to
+        // local storage.
+        if (!state.debtOrderReducer.pendingDebtOrderIssuanceHashes) {
+            state.debtOrderReducer.pendingDebtOrderIssuanceHashes = [];
+        }
+
+        if (!state.debtOrderReducer.filledDebtOrderIssuanceHashes) {
+            state.debtOrderReducer.filledDebtOrderIssuanceHashes = [];
+        }
+
         return state;
     } catch (err) {
         return undefined;
