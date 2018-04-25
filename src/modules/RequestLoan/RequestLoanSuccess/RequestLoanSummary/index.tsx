@@ -66,7 +66,10 @@ class RequestLoanSummary extends React.Component<Props, State> {
             <InfoItem>
                 <Title>Collateral</Title>
                 <Content>
-                    {debtOrder.collateralAmount} {debtOrder.collateralTokenSymbol}
+                    <TokenAmount
+                        tokenAmount={debtOrder.collateralAmount!}
+                        tokenSymbol={debtOrder.collateralTokenSymbol!}
+                    />
                 </Content>
             </InfoItem>
         ) : null;
